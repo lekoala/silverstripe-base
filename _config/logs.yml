@@ -1,0 +1,29 @@
+# https://docs.silverstripe.org/en/4/developer_guides/debugging/error_handling/
+---
+Name: dev-errors
+Only:
+  environment: dev
+---
+SilverStripe\Core\Injector\Injector:
+  Psr\Log\LoggerInterface:
+    calls:
+      LogFileHandler: [ pushHandler, [ %$LogFileHandler ] ]
+  LogFileHandler:
+    class: Monolog\Handler\StreamHandler
+    constructor:
+      - "./debug.log"
+      - "debug"
+---
+Name: live-errors
+Except:
+  environment: dev
+---
+SilverStripe\Core\Injector\Injector:
+  Psr\Log\LoggerInterface:
+    calls:
+      LogFileHandler: [ pushHandler, [ %$LogFileHandler ] ]
+  LogFileHandler:
+    class: Monolog\Handler\StreamHandler
+    constructor:
+      - "./silverstripe.log"
+      - "notice"

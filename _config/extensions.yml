@@ -1,0 +1,12 @@
+SilverStripe\SiteConfig\SiteConfig:
+  extensions:
+    - LeKoala\Base\SiteConfigExtension
+    - LeKoala\Base\Theme\ThemeSiteConfigExtension
+    - LeKoala\Base\Extensions\SocialExtension
+SilverStripe\CMS\Controllers\ContentController:
+  extensions:
+    - LeKoala\Base\Theme\ThemeControllerExtension
+LeKoala\Base\Blocks\Block:
+  extensions:
+    - LeKoala\Base\Extensions\SortableExtension
+    - LeKoala\Base\Extensions\SmartDataObjectExtension

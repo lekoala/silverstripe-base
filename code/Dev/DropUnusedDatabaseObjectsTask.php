@@ -1,0 +1,250 @@
+<?php
+namespace LeKoala\Base\Dev;
+
+use SilverStripe\ORM\DB;
+use SilverStripe\Dev\BuildTask;
+use SilverStripe\Core\ClassInfo;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\Control\Director;
+
+/**
+ * DropUnusedDatabaseObjectsTask
+ *
+ * SilverStripe never delete your tables or fields. Be careful if your database has other tables than SilverStripe!
+ *
+ * @author lekoala
+ */
+class DropUnusedDatabaseObjectsTask extends BuildTask
+{
+
+    protected $title = "Drop Unused Database Objects";
+    protected $description = 'Drop unused tables and fields from your db by comparing current database tables with your dataobjects.';
+    private static $segment = 'DropUnusedDatabaseObjectsTask';
+
+    public function run($request)
+    {
+        $tables = $request->getVar('tables') ? : true;
+        $fields = $request->getVar('fields') ? : true;
+        $go = $request->getVar('go');
+        if ($tables) {
+            echo ('Will delete all unused tables. Pass ?tables=false to target only fields.<br/>');
+        }
+        if ($fields) {
+            echo ('Will delete all unused fields. Pass ?fields=false to target only tables.<br/>');
+        }
+        if (!$go) {
+            echo ('Previewing what this task is about to do. Set ?go=1 to really delete the fields and tables');
+        } else {
+            echo ("Let's clean this up!");
+        }
+        echo ('<hr/>');
+        $this->removeTables($request);
+        $this->removeFields($request);
+    }
+
+    protected function removeFields($request)
+    {
+        $conn = DB::get_conn();
+        $schema = DB::get_schema();
+        $dataObjectSchema = DataObject::getSchema();
+        $classes = $this->getClassesWithTables();
+        $tableList = $schema->tableList();
+
+        $go = $request->getVar('go');
+
+        $this->message('<h2>Fields</h2>');
+
+        $empty = true;
+
+        foreach ($classes as $class) {
+            $table = $dataObjectSchema->tableName($class);
+            $lcTable = strtolower($table);
+
+            // It does not exist in the list, no need to worry about
+            if (!isset($tableList[$lcTable])) {
+                continue;
+            }
+            $toDrop = [];
+
+            $fields = $dataObjectSchema->databaseFields($class);
+            $list = $schema->fieldList($lcTable);
+
+            // We can compare DataObject schema with actual schema
+            foreach ($list as $fieldName => $type) {
+                /// Never drop ID
+                if ($fieldName == 'ID') {
+                    continue;
+                }
+                if (!isset($fields[$fieldName])) {
+                    $toDrop[] = $fieldName;
+                }
+            }
+
+            if (empty($toDrop)) {
+                continue;
+            }
+
+            $empty = false;
+            if ($go) {
+                $this->dropColumns($table, $toDrop);
+                $this->message("Dropped " . implode(',', $toDrop) . " for $table", "obsolete");
+            } else {
+                $this->message("Would drop " . implode(',', $toDrop) . " for $table", "obsolete");
+            }
+        }
+
+        if($empty) {
+            $this->message("No fields to remove", "repaired");
+        }
+    }
+
+    protected function removeTables($request)
+    {
+        $conn = DB::get_conn();
+        $schema = DB::get_schema();
+        $dataObjectSchema = DataObject::getSchema();
+        $classes = $this->getClassesWithTables();
+        $tableList = $schema->tableList();
+        $tablesToRemove = $tableList;
+
+        $go = $request->getVar('go');
+
+        $this->message('<h2>Tables</h2>');
+
+        foreach ($classes as $class) {
+            $table = $dataObjectSchema->tableName($class);
+            $lcTable = strtolower($table);
+
+            // It does not exist in the list, keep to remove later
+            if (!isset($tableList[$lcTable])) {
+                continue;
+            }
+
+            // Remove from the list
+            self::removeFromArray($lcTable, $tablesToRemove);
+            self::removeFromArray($lcTable . '_live', $tablesToRemove);
+            self::removeFromArray($lcTable . '_versions', $tablesToRemove);
+
+            // Relations
+            $hasMany = $class::config()->has_many;
+            if (!empty($hasMany)) {
+                foreach ($hasMany as $rel => $obj) {
+                    self::removeFromArray($lcTable . '_' . strtolower($rel), $tablesToRemove);
+                }
+            }
+            $manyMany = $class::config()->many_many;
+            if (!empty($manyMany)) {
+                foreach ($manyMany as $rel => $obj) {
+                    self::removeFromArray($lcTable . '_' . strtolower($rel), $tablesToRemove);
+                }
+            }
+        }
+
+        //at this point, we should only have orphans table in dbTables var
+        foreach ($tablesToRemove as $lcTable => $table) {
+            if ($go) {
+                DB::query('DROP TABLE `' . $table . '`');
+                $this->message("Dropped $table", 'obsolete');
+            } else {
+                $this->message("Would drop $table", 'obsolete');
+            }
+        }
+
+        if(empty($tablesToRemove)) {
+            $this->message("No table to remove", "repaired");
+        }
+    }
+
+    /**
+     * @return array
+     */
+    protected function getClassesWithTables()
+    {
+        return ClassInfo::dataClassesFor(DataObject::class);
+    }
+
+    public static function removeFromArray($val, &$arr)
+    {
+        if (isset($arr[$val])) {
+            unset($arr[$val]);
+        }
+    }
+
+    public function dropColumns($table, $columns)
+    {
+        switch (get_class(DB::get_conn())) {
+            case 'SQLite3Database':
+                $this->sqlLiteDropColumns($table, $columns);
+                break;
+            default:
+                $this->sqlDropColumns($table, $columns);
+                break;
+        }
+    }
+
+    public function sqlDropColumns($table, $columns)
+    {
+        DB::query("ALTER TABLE \"$table\" DROP \"" . implode('", DROP "', $columns) . "\"");
+    }
+
+    public function sqlLiteDropColumns($table, $columns)
+    {
+        $newColsSpec = $newCols = [];
+        foreach (DB::get_conn()->fieldList($table) as $name => $spec) {
+            if (in_array($name, $columns)) {
+                continue;
+            }
+            $newColsSpec[] = "\"$name\" $spec";
+            $newCols[] = "\"$name\"";
+        }
+
+        $queries = [
+            "BEGIN TRANSACTION",
+            "CREATE TABLE \"{$table}_cleanup\" (" . implode(',', $newColsSpec) . ")",
+            "INSERT INTO \"{$table}_cleanup\" SELECT " . implode(',', $newCols) . " FROM \"$table\"",
+            "DROP TABLE \"$table\"",
+            "ALTER TABLE \"{$table}_cleanup\" RENAME TO \"{$table}\"",
+            "COMMIT"
+        ];
+
+        foreach ($queries as $query) {
+            DB::query($query . ';');
+        }
+    }
+
+    protected function message($message, $type = 'info')
+    {
+        if (Director::is_cli()) {
+            $cli_map = [
+                'created' => '+',
+                'changed' => '+',
+                'repaired' => '+',
+                'obsolete' => '-',
+                'deleted' => '-',
+                'notice' => '-',
+                'error' => '-',
+            ];
+
+            $message = strip_tags($message);
+            if(isset($cli_map[$type])) {
+                $message = $cli_map[$type] .' ' . $message;
+            }
+            echo "  $message\n";
+        } else {
+            $web_map = [
+                'created' => 'green',
+                'changed' => 'green',
+                'repaired' => 'green',
+                'obsolete' => 'red',
+                'deleted' => 'red',
+                'notice' => 'orange',
+                'error' => 'red',
+            ];
+            $color = '#000000';
+            if(isset($web_map[$type])) {
+                $color = $web_map[$type];
+            }
+            echo "<div style=\"color:$color\">$message</div>";
+        }
+    }
+}
