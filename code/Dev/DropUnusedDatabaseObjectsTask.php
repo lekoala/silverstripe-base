@@ -22,17 +22,20 @@ class DropUnusedDatabaseObjectsTask extends BuildTask
 
     public function run($request)
     {
-        $tables = $request->getVar('tables') ? : true;
-        $fields = $request->getVar('fields') ? : true;
-        $go = $request->getVar('go');
-        if ($tables) {
-            echo ('Will delete all unused tables. Pass ?tables=false to target only fields.<br/>');
-        }
-        if ($fields) {
-            echo ('Will delete all unused fields. Pass ?fields=false to target only tables.<br/>');
-        }
+        parent::run($request);
+
+        $this->addOption("tables", "Clean unused tables", true);
+        $this->addOption("fields", "Clean unused fields", true);
+        $this->addOption("go", "Set this to 1 to proceed", 0);
+
+        $options = $this->askOptions();
+
+        $tables = $options['tables'];
+        $fields = $options['fields'];
+        $go = $options['go'];
+
         if (!$go) {
-            echo ('Previewing what this task is about to do. Set ?go=1 to really delete the fields and tables');
+            echo ('Previewing what this task is about to do.');
         } else {
             echo ("Let's clean this up!");
         }

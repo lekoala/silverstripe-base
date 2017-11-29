@@ -33,7 +33,22 @@ class NewsPageController extends \PageController
         // Exclude unpublished and future items
         $list = $list->where('Published IS NOT NULL AND Published <= \'' . date('Y-m-d') . '\'');
 
-        $paginatedList = new PaginatedList($list);
+        return $list;
+    }
+
+    public function PaginatedList()
+    {
+        $paginatedList = new PaginatedList($this->DisplayedItems(), $this->getRequest());
+        $paginatedList->setPageLength(6);
         return $paginatedList;
+    }
+
+    public function PopularItems($n = 3)
+    {
+        return $this->DisplayedItems()->sort('ViewCount DESC')->limit($n);
+    }
+
+    public function ArchivesList() {
+
     }
 }

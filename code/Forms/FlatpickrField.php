@@ -6,6 +6,7 @@ use SilverStripe\Forms\TextField;
 use SilverStripe\View\Requirements;
 
 /**
+ * @link https://chmln.github.io/flatpickr
  */
 class FlatpickrField extends TextField
 {
@@ -17,7 +18,7 @@ class FlatpickrField extends TextField
     protected $locale = null;
 
     /**
-     * Input mask data config
+     * Config array
      *
      * @var array
      */
@@ -157,10 +158,10 @@ class FlatpickrField extends TextField
 
         $this->setAttribute('data-flatpickr', json_encode($this->config));
 
-        Requirements::css('https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css');
-        Requirements::javascript('https://cdn.jsdelivr.net/npm/flatpickr');
+        Requirements::css('https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.1.3/flatpickr.min.css');
+        Requirements::javascript('https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.1.3/flatpickr.js');
         if ($lang != 'en') {
-            Requirements::javascript("https://npmcdn.com/flatpickr/dist/l10n/" . $lang . ".js");
+            Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.1.3/l10n/$lang.js");
         }
         Requirements::javascript('base/javascript/FlatpickrField.js');
         return parent::Field($properties);

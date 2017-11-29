@@ -2,6 +2,7 @@
 namespace LeKoala\Base;
 
 use \Exception;
+use SilverStripe\i18n\i18n;
 use SilverStripe\View\Requirements;
 use LeKoala\Base\Helpers\ClassHelper;
 use SilverStripe\ORM\ValidationResult;
@@ -50,11 +51,22 @@ class ContentController extends DefaultController
         }
     }
 
+    /**
+     * Add AlertifyJS requirements
+     *
+     * @link http://alertifyjs.com
+     */
     protected function requireAlertifyJS()
     {
-        Requirements::javascript('base/javascript/alertify/alertify.min.js');
-        Requirements::css('base/javascript/alertify/css/alertify.min.css');
-        Requirements::css('base/javascript/alertify/css/themes/default.min.css');
+        Requirements::javascript('https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.11.0/alertify.min.js');
+        $dir = i18n::get_script_direction();
+        if ($dir == 'rtl') {
+            Requirements::css('https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.11.0/css/alertify.rtl.min.css');
+            Requirements::css('https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.11.0/css/themes/default.rtl.min.css');
+        } else {
+            Requirements::css('https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.11.0/css/alertify.min.css');
+            Requirements::css('https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.11.0/css/themes/default.min.css');
+        }
     }
 
     /**

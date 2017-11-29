@@ -10,7 +10,8 @@ LeKoala\Base\Blocks\Block:
   extensions:
     - LeKoala\Base\Extensions\SortableExtension
     - LeKoala\Base\Extensions\SmartDataObjectExtension
-LeKoala\News\NewsItem:
+LeKoala\Base\News\NewsItem:
   extensions:
-    - LeKoala\Base\Extensions\SlugExtension
+    - LeKoala\Base\Extensions\URLSegmentExtension
     - LeKoala\Base\Extensions\SmartDataObjectExtension
+    - LeKoala\Base\Tags\TaggableExtension

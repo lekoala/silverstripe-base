@@ -6,7 +6,7 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\Control\Director;
 use SilverStripe\Dev\BuildTask as DefaultBuildTask;
 
-class BuildTask extends DefaultBuildTask
+abstract class BuildTask extends DefaultBuildTask
 {
     protected $request;
     protected $options = [];

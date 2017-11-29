@@ -12,6 +12,7 @@ use LeKoala\Base\Forms\InputMaskField;
 use LeKoala\Base\Forms\SmartUploadField;
 use LeKoala\Base\Forms\InputMaskDateField;
 use LeKoala\Base\Forms\FlatpickrField;
+use SilverStripe\ORM\DB;
 
 /**
  * @property string $Title
@@ -25,6 +26,7 @@ class NewsItem extends DataObject
         "Title" => "Varchar(191)",
         "Content" => "HTMLText",
         "Published" => DBDate::class,
+        "ViewCount" => "Int",
     ];
     private static $has_one = [
         "Image" => Image::class,
@@ -51,12 +53,19 @@ class NewsItem extends DataObject
         return $fields;
     }
 
+    public function updateViewCount()
+    {
+        $table = $this->baseTable();
+        DB::query("UPDATE $table SET ViewCount = ViewCount+1 WHERE ID = " . $this->ID);
+    }
+
     public function Link()
     {
         return $this->Page()->Link('read/' . $this->Slug);
     }
 
-    public function Summary() {
+    public function Summary()
+    {
         /* @var $obj HTMLText */
         $obj = $this->dbObject('Content');
         return $obj->Summary();

@@ -124,7 +124,7 @@ class InputMaskField extends TextField
         foreach ($this->config as $k => $v) {
             $this->setAttribute('data-inputmask-' . $k, $v);
         }
-        Requirements::javascript('base/javascript/inputmask/min/jquery.inputmask.bundle.min.js');
+        Requirements::javascript('https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/3.3.4/jquery.inputmask.bundle.min.js');
         Requirements::javascript('base/javascript/InputMaskField.js');
         return parent::Field($properties);
     }
