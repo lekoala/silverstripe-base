@@ -2,6 +2,7 @@
   $("div.select2 select").entwine({
     onadd: function() {
       var opts = this.data("config");
+      opts.width = '100%';
       opts.createTag = function(params) {
         var term = $.trim(params.term);
 

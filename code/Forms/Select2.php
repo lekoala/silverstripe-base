@@ -165,6 +165,8 @@ trait Select2
         $this->setAttribute('data-config', \json_encode($this->config));
 
         Requirements::css('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/css/select2.min.css');
+        Requirements::css('/base/css/Select2Field.css');
+        // Requirements::css('https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.10/select2-bootstrap.min.css');
         Requirements::javascript('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.js');
         if ($lang != 'en') {
             Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/i18n/$lang.js");
