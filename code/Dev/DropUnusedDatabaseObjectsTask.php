@@ -2,7 +2,6 @@
 namespace LeKoala\Base\Dev;
 
 use SilverStripe\ORM\DB;
-use SilverStripe\Dev\BuildTask;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Control\Director;
@@ -93,7 +92,7 @@ class DropUnusedDatabaseObjectsTask extends BuildTask
             }
         }
 
-        if($empty) {
+        if ($empty) {
             $this->message("No fields to remove", "repaired");
         }
     }
@@ -150,7 +149,7 @@ class DropUnusedDatabaseObjectsTask extends BuildTask
             }
         }
 
-        if(empty($tablesToRemove)) {
+        if (empty($tablesToRemove)) {
             $this->message("No table to remove", "repaired");
         }
     }
@@ -212,39 +211,4 @@ class DropUnusedDatabaseObjectsTask extends BuildTask
         }
     }
 
-    protected function message($message, $type = 'info')
-    {
-        if (Director::is_cli()) {
-            $cli_map = [
-                'created' => '+',
-                'changed' => '+',
-                'repaired' => '+',
-                'obsolete' => '-',
-                'deleted' => '-',
-                'notice' => '-',
-                'error' => '-',
-            ];
-
-            $message = strip_tags($message);
-            if(isset($cli_map[$type])) {
-                $message = $cli_map[$type] .' ' . $message;
-            }
-            echo "  $message\n";
-        } else {
-            $web_map = [
-                'created' => 'green',
-                'changed' => 'green',
-                'repaired' => 'green',
-                'obsolete' => 'red',
-                'deleted' => 'red',
-                'notice' => 'orange',
-                'error' => 'red',
-            ];
-            $color = '#000000';
-            if(isset($web_map[$type])) {
-                $color = $web_map[$type];
-            }
-            echo "<div style=\"color:$color\">$message</div>";
-        }
-    }
 }

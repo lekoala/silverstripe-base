@@ -7,8 +7,11 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\Forms\FormAction;
 use LeKoala\Base\News\NewsCategory;
 use SilverStripe\ORM\FieldType\DBDate;
-use LeKoala\Base\FormFields\SmartUploadField;
 use LeKoala\Base\Actions\CustomAction;
+use LeKoala\Base\Forms\InputMaskField;
+use LeKoala\Base\Forms\SmartUploadField;
+use LeKoala\Base\Forms\InputMaskDateField;
+use LeKoala\Base\Forms\FlatpickrField;
 
 /**
  * @property string $Title
@@ -31,6 +34,9 @@ class NewsItem extends DataObject
     private static $owns = [
         "Image"
     ];
+    private static $summary_fields = [
+        "Title", "Image.CMSThumbnail", "Published"
+    ];
 
     private static $default_sort = 'Published DESC';
 
@@ -41,12 +47,21 @@ class NewsItem extends DataObject
         $Image = new SmartUploadField("Image");
         $Image->setIsMultiUpload(false);
         $fields->addFieldToTab('Root.Main', $Image);
+
+        $fields->replaceField('Published', new FlatpickrField('Published'));
+
         return $fields;
     }
 
-    public function doSomething($data, $form, $controller)
+    public function Link()
     {
+        return $this->Page()->Link('read/' . $this->Slug);
+    }
 
+    public function Summary() {
+        /* @var $obj HTMLText */
+        $obj = $this->dbObject('Content');
+        return $obj->Summary();
     }
 
     public function doPublish($data, $form, $controller)
@@ -65,12 +80,14 @@ class NewsItem extends DataObject
     {
         $actions = parent::getCMSActions();
 
-        if ($this->Published) {
-            $action = new CustomAction("doUnpublish", "Unpublish");
-            $actions->push($action);
-        } else {
-            $action = new CustomAction("doPublish", "Publish");
-            $actions->push($action);
+        if ($this->ID) {
+            if ($this->Published) {
+                $action = new CustomAction("doUnpublish", "Unpublish");
+                $actions->push($action);
+            } else {
+                $action = new CustomAction("doPublish", "Publish");
+                $actions->push($action);
+            }
         }
 
         return $actions;

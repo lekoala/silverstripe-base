@@ -2,3 +2,4 @@
 #SilverStripe\Core\Injector\Injector:
 #  SilverStripe\AssetAdmin\Forms\UploadField:
 #    class: LeKoala\Base\FormFields\UploadField
+

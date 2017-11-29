@@ -9,7 +9,7 @@ use SilverStripe\Assets\Image;
 use SilverStripe\Assets\File;
 
 /**
- * 
+ *
  */
 class SmartDataObjectExtension extends DataExtension
 {
@@ -103,7 +103,7 @@ class SmartDataObjectExtension extends DataExtension
 
             // Let's replace all base UploadFields with SmartUploadFields
             if ($class === UploadField::class) {
-                $newField = new \LeKoala\Base\FormFields\SmartUploadField($dataField->getName(), $dataField->Title(), $dataField->getItems());
+                $newField = new \LeKoala\Base\Forms\SmartUploadField($dataField->getName(), $dataField->Title(), $dataField->getItems());
                 $fields->replaceField($dataField->getName(), $newField);
             }
 
@@ -111,7 +111,7 @@ class SmartDataObjectExtension extends DataExtension
             if ($class === GridField::class) {
                 // Let's replace many_many files grids with proper UploadFields
                 if (\in_array($dataField->getName(), $manyManyFiles)) {
-                    $newField = new \LeKoala\Base\FormFields\SmartUploadField($dataField->getName(), $dataField->Title(), $dataField->getList());
+                    $newField = new \LeKoala\Base\Forms\SmartUploadField($dataField->getName(), $dataField->Title(), $dataField->getList());
                     $fields->replaceField($dataField->getName(), $newField);
                 }
             }

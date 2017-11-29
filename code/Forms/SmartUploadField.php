@@ -1,9 +1,8 @@
 <?php
-namespace LeKoala\Base\FormFields;
+namespace LeKoala\Base\Forms;
 
 use SilverStripe\ORM\SS_List;
 use SilverStripe\AssetAdmin\Forms\UploadField as DefaultUploadField;
-
 
 /**
  *

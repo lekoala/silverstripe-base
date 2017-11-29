@@ -79,6 +79,8 @@ class ActionsGridFieldItemRequest extends DataExtension
             return $this->httpError(403);
         }
 
+        // TODO: add security check
+
         $message = null;
         $error = false;
         try {

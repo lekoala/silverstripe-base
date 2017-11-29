@@ -5,6 +5,8 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\Control\Controller;
+use SilverStripe\Admin\CMSProfileController;
 
 /**
  *
@@ -20,6 +22,12 @@ class DataObjectActionsExtension extends DataExtension
     {
         // Pages don't need to be improved
         if($this->owner instanceof SiteTree) {
+            return;
+        }
+
+        // Not implemented in CMSProfileController
+        $ctrl = Controller::curr();
+        if($ctrl instanceof CMSProfileController) {
             return;
         }
 
