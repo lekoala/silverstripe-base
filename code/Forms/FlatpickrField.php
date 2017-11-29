@@ -58,6 +58,7 @@ class FlatpickrField extends TextField
         } else {
             unset($this->config[$key]);
         }
+        return $this;
     }
 
     public function getEnableTime()
@@ -67,7 +68,7 @@ class FlatpickrField extends TextField
 
     public function setEnableTime($value)
     {
-        $this->setConfig('enableTime', $value);
+        return $this->setConfig('enableTime', $value);
     }
 
     public function getAltInput()
@@ -77,7 +78,7 @@ class FlatpickrField extends TextField
 
     public function setAltInput($value)
     {
-        $this->setConfig('altInput', $value);
+        return $this->setConfig('altInput', $value);
     }
 
     public function getMinDate()
@@ -87,7 +88,7 @@ class FlatpickrField extends TextField
 
     public function setMinDate($value)
     {
-        $this->setConfig('minDate', $value);
+        return $this->setConfig('minDate', $value);
     }
 
     public function getMaxDate()
@@ -97,7 +98,7 @@ class FlatpickrField extends TextField
 
     public function setMaxDate($value)
     {
-        $this->setConfig('maxDate', $value);
+        return $this->setConfig('maxDate', $value);
     }
 
     public function getDefaultDate()
@@ -107,7 +108,7 @@ class FlatpickrField extends TextField
 
     public function setDefaultDate($value)
     {
-        $this->setConfig('defaultDate', $value);
+        return $this->setConfig('defaultDate', $value);
     }
 
     /**
@@ -133,6 +134,18 @@ class FlatpickrField extends TextField
         $this->locale = $locale;
         return $this;
     }
+
+    /**
+     * This is required (and ignored) because DBDate use this to scaffold the field
+     *
+     * @param boolean $bool
+     * @return $this
+     */
+    public function setHTML5($bool)
+    {
+        return $this;
+    }
+
 
     public function Field($properties = array())
     {

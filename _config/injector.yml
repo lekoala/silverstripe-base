@@ -1,5 +1,6 @@
+SilverStripe\Core\Injector\Injector:
+  SilverStripe\Forms\DateField:
+    class: LeKoala\Base\Forms\FlatpickrField
 # This does not work because DBForeignKey injects based on FileHandled::class
-#SilverStripe\Core\Injector\Injector:
 #  SilverStripe\AssetAdmin\Forms\UploadField:
 #    class: LeKoala\Base\FormFields\UploadField
-

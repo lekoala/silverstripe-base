@@ -52,6 +52,7 @@ class InputMaskField extends TextField
         } else {
             unset($this->config[$key]);
         }
+        return $this;
     }
 
 
@@ -86,7 +87,7 @@ class InputMaskField extends TextField
 
     public function setDataFormat($value)
     {
-        $this->setConfig('dataformat', $value);
+        return $this->setConfig('dataformat', $value);
     }
 
     public function getAlias()
@@ -96,7 +97,7 @@ class InputMaskField extends TextField
 
     public function setAlias($value)
     {
-        $this->setConfig('alias', $value);
+        return $this->setConfig('alias', $value);
     }
 
     public function getMask()
@@ -106,7 +107,7 @@ class InputMaskField extends TextField
 
     public function setMask($value)
     {
-        $this->setConfig('mask', $value);
+        return $this->setConfig('mask', $value);
     }
 
     public function getAttributes()

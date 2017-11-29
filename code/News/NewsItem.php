@@ -48,8 +48,6 @@ class NewsItem extends DataObject
         $Image->setIsMultiUpload(false);
         $fields->addFieldToTab('Root.Main', $Image);
 
-        $fields->replaceField('Published', new FlatpickrField('Published'));
-
         return $fields;
     }
 
