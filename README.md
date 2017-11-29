@@ -58,6 +58,12 @@ the values defined by your customer.
 
 Define sessionMessage on your controller and display messages using Alertify library
 
+### Dev tools
+
+- Cleanup your database of unused fields or tables
+- Generate fake records
+- Use SQLite3 in your tests because it's otherwise too slow
+
 ## Maintainer
 
 LeKoala - thomas@lekoala.be
