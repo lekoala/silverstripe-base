@@ -3,6 +3,8 @@
 By default, SilverStripe lack some really common stuff I find myself doing in most of my websites.
 This module aims to provides basic functionnalities that can be easily used on a website.
 
+This module is under heavy work in progress, things breaks and will change. Use at your own risks.
+
 ## Requirements
 
 * SilverStripe ^4.0
