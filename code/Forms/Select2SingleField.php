@@ -2,6 +2,7 @@
 namespace LeKoala\Base\Forms;
 
 use SilverStripe\Forms\DropdownField;
+use SilverStripe\ORM\DataObjectInterface;
 
 /**
  * @link https://select2.org

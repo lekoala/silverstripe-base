@@ -1,3 +1,6 @@
+SilverStripe\CMS\Model\SiteTree:
+  extensions:
+    - LeKoala\Base\Extensions\SocialShareExtension
 SilverStripe\SiteConfig\SiteConfig:
   extensions:
     - LeKoala\Base\SiteConfigExtension
@@ -15,3 +18,7 @@ LeKoala\Base\News\NewsItem:
     - LeKoala\Base\Extensions\URLSegmentExtension
     - LeKoala\Base\Extensions\SmartDataObjectExtension
     - LeKoala\Base\Tags\TaggableExtension
+    - LeKoala\Base\Extensions\SocialShareExtension
+LeKoala\Base\Tags\Tag:
+  extensions:
+    - LeKoala\Base\Extensions\URLSegmentExtension

@@ -1,7 +1,16 @@
 <?php
 namespace LeKoala\Base\News;
 
+use SilverStripe\ORM\DB;
+use SilverStripe\ORM\DataList;
+use LeKoala\Base\News\NewsItem;
+use SilverStripe\ORM\ArrayList;
+use SilverStripe\View\ArrayData;
+use SilverStripe\ORM\GroupedList;
 use SilverStripe\ORM\PaginatedList;
+use SilverStripe\ORM\FieldType\DBDate;
+use SilverStripe\ORM\Queries\SQLSelect;
+use SilverStripe\ORM\FieldType\DBDatetime;
 
 
 /**
@@ -12,33 +21,98 @@ class NewsPageController extends \PageController
     private static $allowed_actions = [
         "index",
         "read",
+        "archives",
+        "tags",
+        "search",
     ];
 
+    /**
+     * @var DataList
+     */
+    protected $list;
+
+    public function init()
+    {
+        parent::init();
+
+        $this->list = $this->DisplayedItems();
+    }
     public function index()
     {
+
+        // Use non namespaced name
+        return $this->renderWith(['NewsPage', 'Page']);
+    }
+
+    public function search()
+    {
+        $ID = $this->getRequest()->getVar('q');
+        if ($ID) {
+            // Use array notation for parameters to make sure it's properly passed as params
+            $this->list = $this->list->where(["Title LIKE ?" => ['%' . $ID . '%']]);
+        }
+
+        // Use non namespaced name
+        return $this->renderWith(['NewsPage', 'Page']);
+    }
+    public function archives()
+    {
+        $ID = $this->getRequest()->param('ID');
+        if ($ID) {
+            // Use array notation for parameters to make sure it's properly passed as params
+            $this->list = $this->list->where(["Published LIKE ?" => [$ID . '%']]);
+        }
+
+        // Use non namespaced name
+        return $this->renderWith(['NewsPage', 'Page']);
+    }
+
+    public function tags()
+    {
+        $ID = $this->getRequest()->param('ID');
+        if ($ID) {
+            $Tag = $this->TagsList()->filter('URLSegment', $ID)->first();
+
+            if ($Tag) {
+                $this->list = $this->list->filter('Tags.ID', $Tag->ID);
+            }
+        }
+
         // Use non namespaced name
         return $this->renderWith(['NewsPage', 'Page']);
     }
 
     public function read()
     {
-         // Use non namespaced name
-        return $this->renderWith(['NewsPage', 'Page']);
+        $ID = $this->getRequest()->param('ID');
+        if (!$ID) {
+            return $this->httpError(404);
+        }
+
+        $Item = NewsItem::get()->filter('URLSegment',$ID)->first();
+        if (!$Item) {
+            return $this->httpError(404);
+        }
+
+        return $this->renderWith(['NewsPage_read', 'Page'], ['Item' => $Item]);
     }
 
+    /**
+     * @return DataList
+     */
     public function DisplayedItems()
     {
         $list = $this->data()->Items();
 
         // Exclude unpublished and future items
-        $list = $list->where('Published IS NOT NULL AND Published <= \'' . date('Y-m-d') . '\'');
+        $list = $list->where(NewsItem::defaultWhere());
 
         return $list;
     }
 
     public function PaginatedList()
     {
-        $paginatedList = new PaginatedList($this->DisplayedItems(), $this->getRequest());
+        $paginatedList = new PaginatedList($this->list, $this->getRequest());
         $paginatedList->setPageLength(6);
         return $paginatedList;
     }
@@ -48,7 +122,49 @@ class NewsPageController extends \PageController
         return $this->DisplayedItems()->sort('ViewCount DESC')->limit($n);
     }
 
-    public function ArchivesList() {
+    public function ArchivesList()
+    {
+        $format = '%Y-%m';
+        $Published = DB::get_conn()->formattedDatetimeClause('"Published"', $format);
+        $fields = [
+            'Published' => $Published,
+            'Total' => "COUNT('\"Published\"')"
+        ];
+        $Singleton = NewsItem::singleton();
+        $table = $Singleton->baseTable();
+        $query = SQLSelect::create($fields, $table)
+            ->addGroupBy($Published)
+            ->addOrderBy('"Published" DESC')
+            ->addWhere(['"Published" <= ?' => DBDatetime::now()->Format(DBDatetime::ISO_DATETIME)]);
 
+        $posts = $query->execute();
+        $result = ArrayList::create();
+        foreach ($posts as $post) {
+            $date = DBDate::create();
+            $date->setValue(strtotime($post['Published']));
+            $year = $date->Format('y');
+            $month = $date->Format('MM');
+            $title = ucwords($date->Format('MMMM y')) . ' (' . $post['Total'] . ')';
+
+            $result->push(ArrayData::create([
+                'Title' => $title,
+                'Link' => $this->Link() . 'archives/' . $post['Published'],
+            ]));
+        }
+
+        return $result;
+    }
+
+    public function GroupedList()
+    {
+        $list = $this->DisplayedItems();
+        $groupedList = new GroupedList($list);
+        return $groupedList;
+    }
+
+    public function TagsList()
+    {
+        $list = $this->DisplayedItems()->relation('Tags');
+        return $list;
     }
 }

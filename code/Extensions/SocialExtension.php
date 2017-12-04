@@ -74,23 +74,4 @@ class SocialExtension extends DataExtension
         return 'https://www.pinterest.com/' . $this->owner->Pinterest;
     }
 
-    public function FacebookShareUrl()
-    {
-        $link = $this->owner->Link();
-        return 'https://www.facebook.com/sharer/sharer.php?u=' . urlencode(Director::absoluteURL($link));
-    }
-
-    public function TwitterShareUrl()
-    {
-        $link = $this->owner->Link();
-        return 'http://twitter.com/share?url=' . urlencode(Director::absoluteURL($link)) . '&text=' . urlencode($this->owner->Title);
-    }
-
-    public function EmailLink()
-    {
-        $link = $this->owner->Link();
-        $body = _t('SocialExtension.DISCOVER', 'I discovered ') . ' "' . $this->owner->Title . '" \n' .
-            _t('SocialExtension.SEE', 'You can see it here :') . ' ' . Director::absoluteURL($link);
-        return 'mailto:?subject=' . $this->owner->Title . '&body=' . htmlentities($body);
-    }
 }

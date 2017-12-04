@@ -14,10 +14,4 @@ class Tag extends DataObject
         "Title" => "Varchar(191)",
     ];
 
-    private static $indexes = [
-        "TitleUnique" => [
-            "type" => "unique",
-            "columns" => ["Title"]
-        ],
-    ];
 }

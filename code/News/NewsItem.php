@@ -53,15 +53,35 @@ class NewsItem extends DataObject
         return $fields;
     }
 
+    public static function defaultWhere()
+    {
+        return 'Published IS NOT NULL AND Published <= \'' . date('Y-m-d') . '\'';
+    }
+
     public function updateViewCount()
     {
         $table = $this->baseTable();
         DB::query("UPDATE $table SET ViewCount = ViewCount+1 WHERE ID = " . $this->ID);
     }
 
+    public function Year()
+    {
+        return date('Y', strtotime($this->Published));
+    }
+
+    public function Month()
+    {
+        return date('Y-m', strtotime($this->Published));
+    }
+
     public function Link()
     {
-        return $this->Page()->Link('read/' . $this->Slug);
+        return $this->Page()->Link('read/' . $this->URLSegment);
+    }
+
+    public function updateURLSegment(&$segment)
+    {
+        $segment = date('Y-m-d', strtotime($this->Published)) . '-' . $segment;
     }
 
     public function Summary()
@@ -74,6 +94,7 @@ class NewsItem extends DataObject
     public function doPublish($data, $form, $controller)
     {
         $this->Published = date('Y-m-d H:i:s');
+        $this->URLSegment = null; // Refresh
         $this->write();
     }
 

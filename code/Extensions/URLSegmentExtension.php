@@ -35,14 +35,36 @@ class URLSegmentExtension extends DataExtension
         if ($segment === null) {
             $segment = $this->owner->URLSegment;
         }
+        if(!$segment) {
+            return false;
+        }
         $class = get_class($this->owner);
         return $class::get()->exclude('ID', $this->owner->ID)->filter("URLSegment", $segment)->first();
     }
 
+    public function getBaseURLSegment()
+    {
+        $segment = $this->owner->getTitle();
+
+        if($this->owner->hasMethod('updateURLSegment')) {
+            $this->owner->updateURLSegment($segment);
+        }
+
+        $filter = new URLSegmentFilter();
+        $baseSegment = $filter->filter($segment);
+
+        if (\is_numeric($baseSegment)) {
+            return false;
+        }
+        return $baseSegment;
+    }
+
     public function generateURLSegment()
     {
-        $filter = new URLSegmentFilter();
-        $baseSegment = $segment = $filter->filter($this->owner->getTitle());
+        $baseSegment = $segment = $this->getBaseURLSegment();
+        if (!$baseSegment) {
+            return;
+        }
         $duplicate = $this->getDuplicateRecord($segment);
 
         $i = 0;
@@ -57,8 +79,8 @@ class URLSegmentExtension extends DataExtension
 
     public function onBeforeWrite()
     {
-        // Generate segment if no segment or numeric segment
-        if (!$this->owner->URLSegment || is_numeric($this->owner->URLSegment)) {
+        // Generate segment if no segment
+        if (!$this->owner->URLSegment && $this->getBaseURLSegment()) {
             $this->owner->URLSegment = $this->generateURLSegment();
         }
     }
