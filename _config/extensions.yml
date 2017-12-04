@@ -8,6 +8,7 @@ SilverStripe\SiteConfig\SiteConfig:
     - LeKoala\Base\Extensions\SocialExtension
 SilverStripe\CMS\Controllers\ContentController:
   extensions:
+    - LeKoala\Base\SimpleSearchControllerExtension
     - LeKoala\Base\Theme\ThemeControllerExtension
 LeKoala\Base\Blocks\Block:
   extensions:

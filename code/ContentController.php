@@ -120,6 +120,7 @@ class ContentController extends DefaultController
         ]);
     }
 
+
     /**
      * Get the session for this app
      *

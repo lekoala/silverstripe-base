@@ -1,18 +1,18 @@
 <?php
 namespace LeKoala\Base\News;
 
+use SilverStripe\ORM\DB;
 use SilverStripe\Assets\Image;
 use LeKoala\Base\News\NewsPage;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Forms\FormAction;
 use LeKoala\Base\News\NewsCategory;
-use SilverStripe\ORM\FieldType\DBDate;
 use LeKoala\Base\Actions\CustomAction;
 use LeKoala\Base\Forms\InputMaskField;
+use SilverStripe\ORM\FieldType\DBDate;
+use LeKoala\Base\Forms\FlatpickrField;
 use LeKoala\Base\Forms\SmartUploadField;
 use LeKoala\Base\Forms\InputMaskDateField;
-use LeKoala\Base\Forms\FlatpickrField;
-use SilverStripe\ORM\DB;
 
 /**
  * @property string $Title
