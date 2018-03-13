@@ -7,9 +7,10 @@ use SilverStripe\Assets\Image;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\TextField;
 use SilverStripe\Control\Director;
-use LeKoala\Base\Helpers\ZipHelper;
+use SilverStripe\Forms\FieldGroup;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\ORM\DataExtension;
+use LeKoala\Base\Helpers\ZipHelper;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 
 /**
@@ -60,24 +61,30 @@ class ThemeSiteConfigExtension extends DataExtension
         $ColorsHeader = new HeaderField("ColorsHeader", "Colors");
         $themeTab->push($ColorsHeader);
 
+        $ColorsGroup = new FieldGroup();
+        $themeTab->push($ColorsGroup);
+
         $PrimaryColor = new TextField('PrimaryColor');
-        $themeTab->push($PrimaryColor);
+        $ColorsGroup->push($PrimaryColor);
 
         $SecondaryColor = new TextField('SecondaryColor');
-        $themeTab->push($SecondaryColor);
+        $ColorsGroup->push($SecondaryColor);
 
         $ThemeColor = new TextField('ThemeColor');
-        $ThemeColor->setDescription("Select a color that gives a good contrast with your Icon");
+        $ThemeColor->setTooltip("Select a color that gives a good contrast with your Icon");
         $themeTab->push($ThemeColor);
 
         $FontsHeader = new HeaderField("FontsHeader", "Fonts");
         $themeTab->push($FontsHeader);
 
+        $FontsGroup = new FieldGroup();
+        $themeTab->push($FontsGroup);
+
         $HeaderFont = new TextField("HeaderFont");
-        $themeTab->push($HeaderFont);
+        $FontsGroup->push($HeaderFont);
 
         $BodyFont = new TextField("BodyFont");
-        $themeTab->push($BodyFont);
+        $FontsGroup->push($BodyFont);
 
         $GoogleFonts = new TextField("GoogleFonts");
         $GoogleFonts->setAttribute('placeholder', "Open+Sans|Roboto");

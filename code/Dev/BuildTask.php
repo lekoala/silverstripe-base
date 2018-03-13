@@ -4,22 +4,79 @@ namespace LeKoala\Base\Dev;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Control\Director;
+use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Dev\BuildTask as DefaultBuildTask;
 
+/**
+ * This is an improved BuildTask
+ */
 abstract class BuildTask extends DefaultBuildTask
 {
+    // Message constants
+    const CREATED = 'created';
+    const CHANGED = 'changed';
+    const REPAIRED = 'repaired';
+    const OBSOLETE = 'obsolete';
+    const DELETE = 'delete';
+    const NOTICE = 'notice';
+    const ERROR = 'error';
+
+    /**
+     * @var SilverStripe\Control\HTTPReques
+     */
     protected $request;
+
+    /**
+     * @var array
+     */
     protected $options = [];
 
     public function run($request)
     {
+        $this->outputHeader();
         $this->request = $request;
+        $this->init();
+        $this->outputFooter();
+    }
+
+    protected function init() {
+        // Call you own code here in your subclasses
+    }
+
+    protected function outputHeader() {
+        $taskTitle=  $this->getTitle();
+        if(Director::is_cli()) {
+
+        }
+        else {
+            $html = "<!DOCTYPE html><html><head><title>$taskTitle</title>";
+            $html .= '<link rel="stylesheet" type="text/css" href="/resources/base/css/buildtask.css" />';
+            $html .= '</head><body><div class="info header"><h1>Running Task ' . $taskTitle . '</h1></div><div class="build">';
+            echo $html;
+        }
+    }
+
+    protected function outputFooter()
+    {
+        if(Director::is_cli()) {
+
+        }
+        else {
+            $html = "</div></body>";
+            echo $html;
+        }
+    }
+
+    protected function regenerateClassManifest()
+    {
+        ClassLoader::inst()->getManifest()->regenerate(false);
+        $this->message("The class manifest has been rebuilt", "created");
     }
 
     protected function getRequest()
     {
         if (!$this->request) {
-            die('Make sure to call parent::run($request)');
+            die('Make sure to call parent::run($request) in your own class');
         }
         return $this->request;
     }

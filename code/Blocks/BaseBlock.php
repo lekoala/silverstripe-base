@@ -11,6 +11,11 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\View\ViewableData;
 use LeKoala\Base\Helpers\ClassHelper;
 
+/**
+ * This is the class you need to extend to create your own block
+ *
+ * Also see BlocksCreateTask to create to blocks for you
+ */
 class BaseBlock extends ViewableData
 {
     protected $_block;

@@ -11,29 +11,12 @@ use SilverStripe\Control\Director;
  */
 class ThemeControllerExtension extends Extension
 {
+    use KnowsThemeDir;
 
     public function onAfterInit()
     {
         $this->requireGoogleFonts();
         $this->requireThemeStyles();
-    }
-
-    /**
-     * Get current theme dir
-     *
-     * @return string
-     */
-    public function getThemeDir()
-    {
-        $themes = SSViewer::get_themes();
-        if ($themes) {
-            do {
-                $mainTheme = array_shift($themes);
-            } while (strpos($mainTheme, '$') === 0);
-
-            return 'themes/' . $mainTheme;
-        }
-        return project();
     }
 
     protected function requireGoogleFonts()

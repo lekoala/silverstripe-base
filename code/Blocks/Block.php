@@ -27,9 +27,9 @@ use Symbiote\GridFieldExtensions\GridFieldOrderableRows;
 use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
 
 /**
- *
+ * The block dataobject is used to actually store the data
  */
-class Block extends DataObject
+final class Block extends DataObject
 {
     private static $table_name = 'Block'; // When using namespace, specify table name
 

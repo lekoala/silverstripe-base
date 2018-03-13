@@ -23,3 +23,6 @@ LeKoala\Base\News\NewsItem:
 LeKoala\Base\Tags\Tag:
   extensions:
     - LeKoala\Base\Extensions\URLSegmentExtension
+SilverStripe\Forms\FormField:
+  extensions:
+    - LeKoala\Base\Forms\Extensions\TooltipExtension
