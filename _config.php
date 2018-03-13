@@ -2,6 +2,7 @@
 
 use SilverStripe\Control\Director;
 use SilverStripe\SQLite\SQLite3Database;
+use SilverStripe\SQLite\SQLite;
 use SilverStripe\ORM\Search\FulltextSearchable;
 
 if (!function_exists('bm')) {

@@ -5,13 +5,11 @@ use SilverStripe\Forms\Tab;
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\Image;
 use SilverStripe\Forms\FieldList;
-use TractorCow\Colorpicker\Color;
 use SilverStripe\Forms\TextField;
 use SilverStripe\Control\Director;
 use LeKoala\Base\Helpers\ZipHelper;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\ORM\DataExtension;
-use TractorCow\Colorpicker\Forms\ColorField;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 
 /**
@@ -20,9 +18,9 @@ use SilverStripe\AssetAdmin\Forms\UploadField;
 class ThemeSiteConfigExtension extends DataExtension
 {
     private static $db = [
-        "PrimaryColor" => Color::class,
-        "SecondaryColor" => Color::class,
-        "ThemeColor" => Color::class,
+        "PrimaryColor" => "Varchar",
+        "SecondaryColor" => "Varchar",
+        "ThemeColor" => "Varchar",
         "HeaderFont" => "Varchar",
         "BodyFont" => "Varchar",
         "GoogleFonts" => "Varchar",
@@ -40,15 +38,15 @@ class ThemeSiteConfigExtension extends DataExtension
 
     public function onAfterWrite()
     {
-        if($this->owner->LogoID) {
+        if ($this->owner->LogoID) {
             $Logo = $this->owner->Logo();
-            if(!$Logo->isPublished()) {
+            if (!$Logo->isPublished()) {
                 $Logo->doPublish();
             }
         }
-        if($this->owner->IconID) {
+        if ($this->owner->IconID) {
             $Icon = $this->owner->Icon();
-            if(!$Icon->isPublished()) {
+            if (!$Icon->isPublished()) {
                 $Icon->doPublish();
             }
         }
@@ -62,13 +60,13 @@ class ThemeSiteConfigExtension extends DataExtension
         $ColorsHeader = new HeaderField("ColorsHeader", "Colors");
         $themeTab->push($ColorsHeader);
 
-        $PrimaryColor = new ColorField('PrimaryColor');
+        $PrimaryColor = new TextField('PrimaryColor');
         $themeTab->push($PrimaryColor);
 
-        $SecondaryColor = new ColorField('SecondaryColor');
+        $SecondaryColor = new TextField('SecondaryColor');
         $themeTab->push($SecondaryColor);
 
-        $ThemeColor = new ColorField('ThemeColor');
+        $ThemeColor = new TextField('ThemeColor');
         $ThemeColor->setDescription("Select a color that gives a good contrast with your Icon");
         $themeTab->push($ThemeColor);
 
@@ -112,10 +110,10 @@ class ThemeSiteConfigExtension extends DataExtension
         $path = preg_replace('/\/+/', '/', Director::baseURL() . $path . '/');
 
         // A mask color, used by macOS safari and touch bar (should look good with a white icon)
-        $mask = $this->owner->PrimaryColor ? '#' . $this->owner->PrimaryColor : '#000000';
+        $mask = $this->owner->PrimaryColor ? '#' . trim($this->owner->PrimaryColor, '#') : '#000000';
 
         // A contrast color for the icon, used by Windows Metro and Android
-        $theme =  $this->owner->ThemeColor ? '#' . $this->owner->ThemeColor : '#ffffff';
+        $theme = $this->owner->ThemeColor ? '#' . trim($this->owner->ThemeColor, '#') : '#ffffff';
         return $this->owner->customise(
             array(
                 'Path' => $path,
@@ -125,11 +123,16 @@ class ThemeSiteConfigExtension extends DataExtension
         )->renderWith('Favicons');
     }
 
-    public function getThemeAssetsDir()
+    public function getThemeAssetURL()
     {
-        $dir = Director::baseFolder() . '/assets/_theme';
+        return '/assets/_theme/' . $this->owner->ID;
+    }
+
+    public function getThemeAssetsFolder()
+    {
+        $dir = Director::publicFolder() . $this->getThemeAssetURL();
         if (!is_dir($dir)) {
-            mkdir($dir, 0755);
+            mkdir($dir, 0755, true);
         }
         return $dir;
     }
@@ -152,7 +155,7 @@ class ThemeSiteConfigExtension extends DataExtension
         $tmpName = \tempnam(TEMP_PATH, 'ss');
         \file_put_contents($tmpName, $FaviconData);
 
-        $dir = $this->getThemeAssetsDir();
+        $dir = $this->getThemeAssetsFolder();
 
         $ZipArchive = new \ZipArchive;
         $res = $ZipArchive->open($tmpName);

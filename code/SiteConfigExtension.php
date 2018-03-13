@@ -10,15 +10,16 @@ use SilverStripe\Control\Director;
 use SilverStripe\View\Requirements;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\Forms\TextareaField;
-use TractorCow\Colorpicker\Forms\ColorField;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
 use SilverStripe\Forms\HeaderField;
+use LeKoala\Base\Forms\Builder;
 
 class SiteConfigExtension extends DataExtension
 {
     private static $db = [
         // Contact Details
+        "ContactInfos" => "Text",
         "ContactAddress" => "Varchar(191)",
         "ContactEmail" => "Varchar(191)",
         "ContactPhone" => "Varchar",
@@ -39,6 +40,9 @@ class SiteConfigExtension extends DataExtension
         $ContactsHeader = new HeaderField('ContactsHeader', 'Contacts');
         $fields->addFieldToTab('Root.Main', $ContactsHeader);
 
+        $ContactInfos = new TextareaField('ContactInfos');
+        $fields->addFieldToTab('Root.Main', $ContactInfos);
+
         $ContactEmail = new TextField('ContactEmail');
         $fields->addFieldToTab('Root.Main', $ContactEmail);
 
@@ -49,7 +53,7 @@ class SiteConfigExtension extends DataExtension
         $fields->addFieldToTab('Root.Main', $ContactAddress);
 
         // Emails
-        $EmailsHeader = new HeaderField('EmailsHeader','Email');
+        $EmailsHeader = new HeaderField('EmailsHeader', 'Email');
         $fields->addFieldToTab('Root.Main', $EmailsHeader);
 
         $DefaultFromEmail = new TextField('DefaultFromEmail');
@@ -78,6 +82,11 @@ class SiteConfigExtension extends DataExtension
         $externalServicesTab->push($GoogleMapsApiKey);
     }
 
+    public function ContactAddressMapLink()
+    {
+        return 'https://www.google.com/maps/search/?api=1&query=' . urlencode($this->owner->ContactAddress);
+    }
+
     public function requireGoogleMaps()
     {
         if (!$this->owner->GoogleMapsApiKey) {
@@ -87,11 +96,12 @@ class SiteConfigExtension extends DataExtension
         return true;
     }
 
-    public function requireGoogleAnalytics() {
-        if(!Director::isLive()) {
+    public function requireGoogleAnalytics()
+    {
+        if (!Director::isLive()) {
             return false;
         }
-        if(!$this->owner->GoogleAnalyticsCode) {
+        if (!$this->owner->GoogleAnalyticsCode) {
             return false;
         }
 
@@ -105,7 +115,7 @@ ga('create', {$this->owner->GoogleAnalyticsCode}, 'auto');
 ga('send', 'pageview');
 JS;
 
-        Requirements::customScript($script,"GoogleAnalytics");
+        Requirements::customScript($script, "GoogleAnalytics");
         return true;
     }
 

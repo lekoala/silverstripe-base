@@ -7,12 +7,13 @@ use SilverStripe\View\SSViewer;
 use SilverStripe\Control\Director;
 
 /**
- * 
+ *
  */
 class ThemeControllerExtension extends Extension
 {
 
-    public function onAfterInit() {
+    public function onAfterInit()
+    {
         $this->requireGoogleFonts();
         $this->requireThemeStyles();
     }
@@ -26,10 +27,13 @@ class ThemeControllerExtension extends Extension
     {
         $themes = SSViewer::get_themes();
         if ($themes) {
-            $mainTheme = array_shift($themes);
+            do {
+                $mainTheme = array_shift($themes);
+            } while (strpos($mainTheme, '$') === 0);
+
             return 'themes/' . $mainTheme;
         }
-        return '';
+        return project();
     }
 
     protected function requireGoogleFonts()
@@ -43,16 +47,17 @@ class ThemeControllerExtension extends Extension
     protected function requireThemeStyles()
     {
         $themeDir = $this->getThemeDir();
-        $cssDir = $themeDir . '/css';
 
-        $files = glob($cssDir . '/*.css');
+        $cssPath = Director::baseFolder() . '/' . $themeDir . '/css';
+
+        $files = glob($cssPath . '/*.css');
 
         // Files are included in order, please name them accordingly
         foreach ($files as $file) {
             $name = basename($file);
             if (strpos($file, '-theme.css') !== false) {
                 // This file requires variable replacement
-                $this->replaceVarsInCssFile($file);
+                Requirements::css($this->replaceVarsInCssFile($file));
             } else {
                 // Simply include it
                 Requirements::themedCSS($name);
@@ -60,35 +65,48 @@ class ThemeControllerExtension extends Extension
         }
     }
 
+    /**
+     * This allows to use CSS3 variable as configurable variables in your themes
+     *
+     * :root {
+     * --header-font: "Roboto", serif;
+     * }
+     *
+     * Will look for the HeaderFont property and be replaced accordingly
+     *
+     * @param string $cssFile The path to the file with CSS3 variables
+     * @return string The path to the file with variable replaced
+     */
     protected function replaceVarsInCssFile($cssFile)
     {
         $SiteConfig = $this->owner->SiteConfig();
         $themeDir = $this->getThemeDir();
-        $cssFile = Director::baseFolder() . '/' . $cssFile;
 
         // Build the name of the file
-        $css = 'assets/_theme/styles-' . basename($themeDir) . '-' . $SiteConfig->ID . '.css';
-        $filename = Director::baseFolder() . '/' . $css;
-        $dir = dirname($filename);
-        if (!is_dir($dir)) {
-            mkdir($dir, 0755);
+        $newName = basename($themeDir) . '/' . basename($cssFile);
+        $cssURL = $SiteConfig->getThemeAssetURL() . '/' . $newName;
+        $outputFile = $SiteConfig->getThemeAssetsFolder() . '/' . $newName;
+
+        $outputDir = dirname($outputFile);
+        if (!is_dir($outputDir)) {
+            mkdir($outputDir, 0755, true);
         }
 
         // Compare filemaketime and SiteConfig last edited
-        $buildFileTime = filemtime($filename);
-        $sourceFileTime = filemtime($cssFile);
-        $lastEdited = strtotime($SiteConfig->LastEdited);
+        if (is_file($outputFile)) {
+            $buildFileTime = filemtime($outputFile);
+            $sourceFileTime = filemtime($cssFile);
+            $lastEdited = strtotime($SiteConfig->LastEdited);
 
-        if ($buildFileTime >= $sourceFileTime && $buildFileTime >= $lastEdited) {
-            Requirements::css($css);
-            return;
+            // Nothing has changed, return the output file url
+            if ($buildFileTime >= $sourceFileTime && $buildFileTime >= $lastEdited) {
+                return $cssURL;
+            }
         }
 
-        // $usagesRegex = "/var\s?\((?P<name>[a-z-]*),?\s?(?P<default>[a-z-]*)\)/";
-
         $cssFileContent = file_get_contents($cssFile);
-        
-        // Get css variables default values if none are set in SiteConfig
+
+        // Get css variables and use default values if they are not set in SiteConfig
         $declarationRegex = "/--(?P<name>[a-z-]*):\s?(?P<value>[\"'A-Za-z-#0-9(),\s]*)/";
         $declarationsMatches = null;
         preg_match_all($declarationRegex, $cssFileContent, $declarationsMatches);
@@ -100,22 +118,23 @@ class ThemeControllerExtension extends Extension
             if (!$value) {
                 $declarationValue = $value;
             }
-            if(strpos($dbName, 'Color') !== false) {
-                $value = '#' . $value;
+            // For color field, normalize value to HEX
+            if (strpos($dbName, 'Color') !== false) {
+                $value = '#' . trim($value, '#');
             }
             $replaceRegex = "/var\s?\(--" . $declarationName . ",?\s?([a-z-#0-9]*)\)/";
             $replaceCount = 0;
             $cssFileContent = preg_replace($replaceRegex, $value, $cssFileContent, -1, $replaceCount);
         }
-        
+
         // Minify
         $minifier = Requirements::backend()->getMinifier();
         if ($minifier) {
-            $cssFileContent = $minifier->minify($cssFileContent, 'css', $filename);
+            $cssFileContent = $minifier->minify($cssFileContent, 'css', $outputFile);
         }
-        \file_put_contents($filename, $cssFileContent);
+        \file_put_contents($outputFile, $cssFileContent);
 
-        Requirements::css($css);
+        return $cssURL;
     }
 
 }
