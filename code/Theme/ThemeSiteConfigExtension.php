@@ -7,6 +7,7 @@ use SilverStripe\Assets\Image;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\TextField;
 use SilverStripe\Control\Director;
+use LeKoala\Base\Forms\ColorField;
 use SilverStripe\Forms\FieldGroup;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\ORM\DataExtension;
@@ -64,15 +65,15 @@ class ThemeSiteConfigExtension extends DataExtension
         $ColorsGroup = new FieldGroup();
         $themeTab->push($ColorsGroup);
 
-        $PrimaryColor = new TextField('PrimaryColor');
+        $PrimaryColor = new ColorField('PrimaryColor');
         $ColorsGroup->push($PrimaryColor);
 
-        $SecondaryColor = new TextField('SecondaryColor');
+        $SecondaryColor = new ColorField('SecondaryColor');
         $ColorsGroup->push($SecondaryColor);
 
-        $ThemeColor = new TextField('ThemeColor');
+        $ThemeColor = new ColorField('ThemeColor');
         $ThemeColor->setTooltip("Select a color that gives a good contrast with your Icon");
-        $themeTab->push($ThemeColor);
+        $ColorsGroup->push($ThemeColor);
 
         $FontsHeader = new HeaderField("FontsHeader", "Fonts");
         $themeTab->push($FontsHeader);
