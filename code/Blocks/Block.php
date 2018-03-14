@@ -50,11 +50,17 @@ final class Block extends DataObject
         'Image'
     ];
     private static $summary_fields = [
-        'TypeName', 'Summary'
+        'BlockType' => 'Block Type',
+        'Summary' => 'Summary',
     ];
     private static $defaults = [
         'Type' => ContentBlock::class,
     ];
+
+    public static function Requirements()
+    {
+
+    }
 
     public function forTemplate()
     {
@@ -63,7 +69,7 @@ final class Block extends DataObject
 
     public function getTitle()
     {
-        $type = $this->TypeName();
+        $type = $this->BlockType();
         if ($this->ID) {
             return $type . ' #' . $this->ID;
         }
@@ -167,19 +173,8 @@ final class Block extends DataObject
     {
         parent::onAfterWrite();
 
-        // Update Page Content
+        // Update Page Content to reflect updated block content
         $this->Page()->write();
-    }
-
-    protected static function getThemes()
-    {
-        return SSViewer::config()->themes;
-    }
-
-    protected static function getMainTheme()
-    {
-        $themes = self::getThemes();
-        return $themes[0];
     }
 
     /**
@@ -188,10 +183,10 @@ final class Block extends DataObject
      *
      * @return string
      */
-    public function TypeName()
+    public function BlockType()
     {
         if (!$this->Type) {
-            'Undefined';
+            '(Undefined)';
         }
         return self::getBlockName($this->Type);
     }
@@ -299,7 +294,7 @@ final class Block extends DataObject
      */
     public function getClass()
     {
-        return 'Block Block-' . $this->TypeName();
+        return 'Block Block-' . $this->BlockType();
     }
 
     /**
@@ -403,7 +398,7 @@ final class Block extends DataObject
         $dataFields = $fields->dataFields();
         foreach ($dataFields as $dataField) {
             if ($dataField instanceof UploadField) {
-                $dataField->setFolderName('Blocks/' . $this->PageID . '/' . $this->TypeName());
+                $dataField->setFolderName('Blocks/' . $this->PageID . '/' . $this->BlockType());
                 $dataField->setIsMultiUpload(false);
             }
         }
