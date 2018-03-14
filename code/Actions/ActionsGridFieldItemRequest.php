@@ -1,6 +1,5 @@
 <?php
 namespace LeKoala\Base\Actions;
-
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Admin\LeftAndMain;
@@ -9,7 +8,6 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest;
-
 /**
  * Decorates {@link GridDetailForm_ItemRequest} to use new form actions and buttons.
  *
@@ -17,6 +15,7 @@ use SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest;
  * on DataObjects
  *
  * @link https://github.com/unclecheese/silverstripe-gridfield-betterbuttons
+ * @property \SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest|\LeKoala\Base\Actions\ActionsGridFieldItemRequest $owner
  */
 class ActionsGridFieldItemRequest extends DataExtension
 {
@@ -27,7 +26,6 @@ class ActionsGridFieldItemRequest extends DataExtension
         'doSaveAndClose',
         'doCustomAction',
     );
-
     /**
      * Updates the detail form to include new form actions and buttons
      *
@@ -36,23 +34,19 @@ class ActionsGridFieldItemRequest extends DataExtension
     public function updateItemEditForm($form)
     {
         $CMSActions = $this->owner->record->getCMSActions();
-
         /* @var $actions FieldList */
         $actions = $form->Actions();
         foreach ($CMSActions as $action) {
             $actions->push($action);
         }
-
         // Move delete at the end
         $deleteAction = $actions->fieldByName('action_doDelete');
         if ($deleteAction) {
             $actions->remove($deleteAction);
             $actions->push($deleteAction);
-
             // Really you don't want to click on it by mistake!
             $deleteAction->setAttribute('style', 'position:absolute;right:1em;');
         }
-
         // Move cancel at the end
         $cancelButton = $actions->fieldByName('cancelbutton');
         if ($cancelButton) {
@@ -60,7 +54,6 @@ class ActionsGridFieldItemRequest extends DataExtension
             $actions->push($cancelButton);
         }
     }
-
     /**
      * Handles custom actions
      *
@@ -70,17 +63,13 @@ class ActionsGridFieldItemRequest extends DataExtension
     public function doCustomAction($data, $form)
     {
         $action = key($data['action_doCustomAction']);
-
         $controller = $this->getToplevelController();
         $record = $this->owner->record;
-
         // Check permission
         if (!$this->owner->record->canEdit()) {
             return $this->httpError(403);
         }
-
         // TODO: add security check
-
         $message = null;
         $error = false;
         try {
@@ -94,9 +83,7 @@ class ActionsGridFieldItemRequest extends DataExtension
             $error = true;
             $message = $ex->getMessage();
         }
-
         $isNewRecord = $record->ID == 0;
-
         // Build default message
         if (!$message) {
             $message = _t(
@@ -108,18 +95,14 @@ class ActionsGridFieldItemRequest extends DataExtension
                 )
             );
         }
-
         $status = 'good';
         if ($error) {
             $status = 'bad';
         }
-
         $form->sessionMessage($message, $status, ValidationResult::CAST_HTML);
-
         // Redirect after save
         return $this->redirectAfterSave($isNewRecord);
     }
-
     /**
      * Saves the form and goes back to list view
      *
@@ -129,13 +112,11 @@ class ActionsGridFieldItemRequest extends DataExtension
     public function doSaveAndClose($data, $form)
     {
         $result = $this->owner->doSave($data, $form);
-
         // Redirect after save
         $controller = $this->getToplevelController();
         $controller->getResponse()->addHeader("X-Pjax", "Content");
         return $controller->redirect($this->getBackLink());
     }
-
     /**
      * Gets the top level controller.
      *
@@ -151,7 +132,6 @@ class ActionsGridFieldItemRequest extends DataExtension
         }
         return $c;
     }
-
     /**
      * Gets the back link
      *
@@ -175,10 +155,8 @@ class ActionsGridFieldItemRequest extends DataExtension
         if (!$backlink) {
             $backlink = $toplevelController->Link();
         }
-
         return $backlink;
     }
-
     /**
      * Response object for this request after a successful save
      *

@@ -1,6 +1,5 @@
 <?php
 namespace LeKoala\Base\News;
-
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\DataList;
 use LeKoala\Base\News\NewsItem;
@@ -11,10 +10,12 @@ use SilverStripe\ORM\PaginatedList;
 use SilverStripe\ORM\FieldType\DBDate;
 use SilverStripe\ORM\Queries\SQLSelect;
 use SilverStripe\ORM\FieldType\DBDatetime;
-
-
 /**
+ * Class \LeKoala\Base\News\NewsPageController
  *
+ * @property \LeKoala\Base\News\NewsPage dataRecord
+ * @method \LeKoala\Base\News\NewsPage data()
+ * @mixin \LeKoala\Base\News\NewsPage dataRecord
  */
 class NewsPageController extends \PageController
 {
@@ -25,25 +26,20 @@ class NewsPageController extends \PageController
         "tags",
         "search",
     ];
-
     /**
      * @var DataList
      */
     protected $list;
-
     public function init()
     {
         parent::init();
-
         $this->list = $this->DisplayedItems();
     }
     public function index()
     {
-
         // Use non namespaced name
         return $this->renderWith(['NewsPage', 'Page']);
     }
-
     public function search()
     {
         $ID = $this->getRequest()->getVar('q');
@@ -51,7 +47,6 @@ class NewsPageController extends \PageController
             // Use array notation for parameters to make sure it's properly passed as params
             $this->list = $this->list->where(["Title LIKE ?" => ['%' . $ID . '%']]);
         }
-
         // Use non namespaced name
         return $this->renderWith(['NewsPage', 'Page']);
     }
@@ -62,66 +57,53 @@ class NewsPageController extends \PageController
             // Use array notation for parameters to make sure it's properly passed as params
             $this->list = $this->list->where(["Published LIKE ?" => [$ID . '%']]);
         }
-
         // Use non namespaced name
         return $this->renderWith(['NewsPage', 'Page']);
     }
-
     public function tags()
     {
         $ID = $this->getRequest()->param('ID');
         if ($ID) {
             $Tag = $this->TagsList()->filter('URLSegment', $ID)->first();
-
             if ($Tag) {
                 $this->list = $this->list->filter('Tags.ID', $Tag->ID);
             }
         }
-
         // Use non namespaced name
         return $this->renderWith(['NewsPage', 'Page']);
     }
-
     public function read()
     {
         $ID = $this->getRequest()->param('ID');
         if (!$ID) {
             return $this->httpError(404);
         }
-
         $Item = NewsItem::get()->filter('URLSegment',$ID)->first();
         if (!$Item) {
             return $this->httpError(404);
         }
-
         return $this->renderWith(['NewsPage_read', 'Page'], ['Item' => $Item]);
     }
-
     /**
      * @return DataList
      */
     public function DisplayedItems()
     {
         $list = $this->data()->Items();
-
         // Exclude unpublished and future items
         $list = $list->where(NewsItem::defaultWhere());
-
         return $list;
     }
-
     public function PaginatedList()
     {
         $paginatedList = new PaginatedList($this->list, $this->getRequest());
         $paginatedList->setPageLength(6);
         return $paginatedList;
     }
-
     public function PopularItems($n = 3)
     {
         return $this->DisplayedItems()->sort('ViewCount DESC')->limit($n);
     }
-
     public function ArchivesList()
     {
         $format = '%Y-%m';
@@ -136,7 +118,6 @@ class NewsPageController extends \PageController
             ->addGroupBy($Published)
             ->addOrderBy('"Published" DESC')
             ->addWhere(['"Published" <= ?' => DBDatetime::now()->Format(DBDatetime::ISO_DATETIME)]);
-
         $posts = $query->execute();
         $result = ArrayList::create();
         foreach ($posts as $post) {
@@ -145,23 +126,19 @@ class NewsPageController extends \PageController
             $year = $date->Format('y');
             $month = $date->Format('MM');
             $title = ucwords($date->Format('MMMM y')) . ' (' . $post['Total'] . ')';
-
             $result->push(ArrayData::create([
                 'Title' => $title,
                 'Link' => $this->Link() . 'archives/' . $post['Published'],
             ]));
         }
-
         return $result;
     }
-
     public function GroupedList()
     {
         $list = $this->DisplayedItems();
         $groupedList = new GroupedList($list);
         return $groupedList;
     }
-
     public function TagsList()
     {
         $list = $this->DisplayedItems()->relation('Tags');

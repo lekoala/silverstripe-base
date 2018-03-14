@@ -1,5 +1,5 @@
 $Content
 
 <% if ButtonID %>
-<a href="$Button.Link" class="btn" $Button.Attrs>$Button.Title</a>
+<% include BlockButton %>
 <% end_if %>

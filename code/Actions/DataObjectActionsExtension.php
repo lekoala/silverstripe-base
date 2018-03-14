@@ -1,15 +1,15 @@
 <?php
 namespace LeKoala\Base\Actions;
-
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Controller;
 use SilverStripe\Admin\CMSProfileController;
-
 /**
+ * Class \LeKoala\Base\Actions\DataObjectActionsExtension
  *
+ * @property \LeKoala\Base\Blocks\Block|\LeKoala\Base\News\NewsItem|\LeKoala\Base\Tags\Tag|\SilverStripe\Assets\File|\SilverStripe\SiteConfig\SiteConfig|\SilverStripe\CMS\Model\SiteTree|\SilverStripe\ORM\DataObject|\SilverStripe\Security\Group|\SilverStripe\Security\Member|\LeKoala\Base\Actions\DataObjectActionsExtension $owner
  */
 class DataObjectActionsExtension extends DataExtension
 {
@@ -24,13 +24,11 @@ class DataObjectActionsExtension extends DataExtension
         if($this->owner instanceof SiteTree) {
             return;
         }
-
         // Not implemented in CMSProfileController
         $ctrl = Controller::curr();
         if($ctrl instanceof CMSProfileController) {
             return;
         }
-
         if($this->owner->ID) {
             $label = 'Save and Close';
         }
@@ -42,7 +40,6 @@ class DataObjectActionsExtension extends DataExtension
         // Full reference here: vendor\silverstripe\admin\client\src\font\icons-reference.html
         $saveAndClose->addExtraClass('font-icon-level-up');
         $saveAndClose->setUseButtonTag(true);
-
         $actions->push($saveAndClose);
     }
 }

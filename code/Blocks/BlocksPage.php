@@ -1,6 +1,5 @@
 <?php
 namespace LeKoala\Base\Blocks;
-
 use Page;
 use LeKoala\Base\Blocks\Block;
 use SilverStripe\Forms\TextField;
@@ -15,7 +14,6 @@ use SilverStripe\Forms\GridField\GridFieldPaginator;
 use Symbiote\GridFieldExtensions\GridFieldOrderableRows;
 use SilverStripe\Forms\GridField\GridFieldToolbarHeader;
 use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
-
 /**
  * A page mode of blocks
  *
@@ -24,15 +22,15 @@ use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
  *
  * This means that blocks versioning will follow page versioning and everything
  * is published at the same time
+ *
+ * @method \SilverStripe\ORM\DataList|\LeKoala\Base\Blocks\Block[] Blocks()
  */
 class BlocksPage extends Page
 {
     private static $table_name = 'BlocksPage'; // When using namespace, specify table name
-
     private static $has_many = [
         "Blocks" => Block::class
     ];
-
     public function getContent()
     {
         if (isset($_GET['live']) && Director::isDev()) {
@@ -40,30 +38,23 @@ class BlocksPage extends Page
         }
         return $this->getField('Content');
     }
-
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
-
         $BlocksConfig = GridFieldConfig_RecordEditor::create();
         $BlocksConfig->addComponent(new GridFieldOrderableRows());
         $BlocksConfig->removeComponentsByType(GridFieldPageCount::class);
         $BlocksConfig->removeComponentsByType(GridFieldPaginator::class);
         $BlocksConfig->removeComponentsByType(GridFieldToolbarHeader::class);
-
         $Blocks = new GridField('Blocks', '', $this->Blocks(), $BlocksConfig);
         $fields->replaceField('Content', $Blocks);
-
         return $fields;
     }
-
     protected function onBeforeWrite()
     {
         parent::onBeforeWrite();
-
         $this->Content = $this->renderContent();
     }
-
     /**
      * Render all blocks to get a full html document
      *
@@ -84,5 +75,4 @@ class BlocksPage extends Page
         }
         return $Content;
     }
-
 }

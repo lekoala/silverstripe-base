@@ -1,11 +1,15 @@
 <?php
 namespace LeKoala\Base\Extensions;
-
 use SilverStripe\Forms\FieldList;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\View\Parsers\URLSegmentFilter;
-
+/**
+ * Class \LeKoala\Base\Extensions\URLSegmentExtension
+ *
+ * @property \LeKoala\Base\News\NewsItem|\LeKoala\Base\Tags\Tag|\LeKoala\Base\Extensions\URLSegmentExtension $owner
+ * @property string $URLSegment
+ */
 class URLSegmentExtension extends DataExtension
 {
     private static $db = [
@@ -17,11 +21,9 @@ class URLSegmentExtension extends DataExtension
             "columns" => ["URLSegment"]
         ],
     ];
-
     public function updateCMSFields(FieldList $fields)
     {
     }
-
     public function validate(ValidationResult $validationResult)
     {
         $duplicate = $this->getDuplicateRecord();
@@ -29,7 +31,6 @@ class URLSegmentExtension extends DataExtension
             $validationResult->addFieldError("URLSegment", "Segment already used by record #" . $duplicate->ID);
         }
     }
-
     public function getDuplicateRecord($segment = null)
     {
         if ($segment === null) {
@@ -41,24 +42,19 @@ class URLSegmentExtension extends DataExtension
         $class = get_class($this->owner);
         return $class::get()->exclude('ID', $this->owner->ID)->filter("URLSegment", $segment)->first();
     }
-
     public function getBaseURLSegment()
     {
         $segment = $this->owner->getTitle();
-
         if($this->owner->hasMethod('updateURLSegment')) {
             $this->owner->updateURLSegment($segment);
         }
-
         $filter = new URLSegmentFilter();
         $baseSegment = $filter->filter($segment);
-
         if (\is_numeric($baseSegment)) {
             return false;
         }
         return $baseSegment;
     }
-
     public function generateURLSegment()
     {
         $baseSegment = $segment = $this->getBaseURLSegment();
@@ -66,17 +62,14 @@ class URLSegmentExtension extends DataExtension
             return;
         }
         $duplicate = $this->getDuplicateRecord($segment);
-
         $i = 0;
         while ($duplicate) {
             $i++;
             $segment = $baseSegment . '-' . $i;
             $duplicate = $this->getDuplicateRecord($segment);
         }
-
         return $segment;
     }
-
     public function onBeforeWrite()
     {
         // Generate segment if no segment
@@ -84,5 +77,4 @@ class URLSegmentExtension extends DataExtension
             $this->owner->URLSegment = $this->generateURLSegment();
         }
     }
-
 }

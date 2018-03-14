@@ -25,14 +25,29 @@ use LeKoala\Base\Extensions\SortableExtension;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 use Symbiote\GridFieldExtensions\GridFieldOrderableRows;
 use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
+use GuzzleHttp\Psr7\UploadedFile;
+use SilverStripe\Forms\TabSet;
+use SilverStripe\Forms\Tab;
 
 /**
  * The block dataobject is used to actually store the data
+ *
+ * @property string $Type
+ * @property string $Content
+ * @property string $Data
+ * @property int $Sort
+ * @property int $ImageID
+ * @property int $PageID
+ * @method \SilverStripe\Assets\Image Image()
+ * @method \LeKoala\Base\Blocks\BlocksPage Page()
+ * @method \SilverStripe\ORM\ManyManyList|\SilverStripe\Assets\Image[] Images()
+ * @method \SilverStripe\ORM\ManyManyList|\SilverStripe\Assets\File[] Files()
+ * @mixin \LeKoala\Base\Extensions\SortableExtension
+ * @mixin \LeKoala\Base\Extensions\SmartDataObjectExtension
  */
 final class Block extends DataObject
 {
     private static $table_name = 'Block'; // When using namespace, specify table name
-
     private static $db = [
         'Type' => 'Varchar(191)',
         'Content' => 'HTMLText',
@@ -56,26 +71,18 @@ final class Block extends DataObject
     private static $defaults = [
         'Type' => ContentBlock::class,
     ];
-
-    public static function Requirements()
-    {
-
-    }
-
     public function forTemplate()
     {
         return $this->Content;
     }
-
     public function getTitle()
     {
         $type = $this->BlockType();
         if ($this->ID) {
-            return $type . ' #' . $this->ID;
+            return $type;
         }
         return 'New ' . $type;
     }
-
     /**
      * Each block type can have one "collection" of items
      *
@@ -88,12 +95,10 @@ final class Block extends DataObject
     {
         $inst = $this->getTypeInstance();
         $list = $inst->Collection();
-
         if ($list) {
             return $list->filter('BlockID', $this->ID);
         }
     }
-
     /**
      * Each block type can have one shared "collection" of items
      *
@@ -106,39 +111,41 @@ final class Block extends DataObject
         $inst = $this->getTypeInstance();
         return $inst->SharedCollection();
     }
-
     public function renderWithTemplate()
     {
         $template = 'Blocks/' . $this->BlockClass();
-
         // Make sure theme exists in the list (not set in cms)
         $themes = SSViewer::get_themes();
         $configThemes = SSViewer::config()->themes;
         SSViewer::set_themes($configThemes);
         $chosenTemplate = SSViewer::chooseTemplate($template);
-
         // Render template
         $result = null;
         if ($chosenTemplate) {
             $typeInst = $this->getTypeInstance();
             $data = $this->DataArray();
-
             // TODO: we could iterate over the data list instead of relying on predefined key
             if (isset($data['Items'])) {
                 $data['Items'] = self::normalizeIndexedList($data['Items']);
             }
-
             // Somehow, data is not nested properly if not wrapped beforehand with ArrayData
             $arrayData = new ArrayData($data);
-
             $result = (string)$typeInst->renderWith($template, $arrayData);
         }
         // Restore themes just in case to prevent any side effect
         SSViewer::set_themes($themes);
-
         return $result;
     }
-
+    /**
+     * Class helper to use in your templates
+     *
+     * @param string $name
+     * @return string
+     */
+    public function Cls($name)
+    {
+        return 'Block-' . $this->BlockType() . '-' . $name;
+    }
     /**
      * Convert an indexed array to an ArrayList
      * This allows loops, etc in the template
@@ -149,34 +156,26 @@ final class Block extends DataObject
     protected static function normalizeIndexedList($indexedList)
     {
         $list = new ArrayList();
-
         foreach ($indexedList as $index => $item) {
             $item['ID'] = $index;
             $list->push($item);
         }
-
         return $list;
     }
-
     public function onBeforeWrite()
     {
         parent::onBeforeWrite();
-
         $Content = $this->renderWithTemplate();
-
         if ($Content) {
             $this->Content = $Content;
         }
     }
-
     public function onAfterWrite()
     {
         parent::onAfterWrite();
-
         // Update Page Content to reflect updated block content
         $this->Page()->write();
     }
-
     /**
      * Get a name for this type
      * Basically calling getBlockName with the Type
@@ -190,7 +189,6 @@ final class Block extends DataObject
         }
         return self::getBlockName($this->Type);
     }
-
     /**
      * Get unqualified class of the block's type
      *
@@ -200,7 +198,6 @@ final class Block extends DataObject
     {
         return ClassHelper::getClassWithoutNamespace($this->Type);
     }
-
     /**
      * Extend __get to allow loading data from Data store
      *
@@ -213,10 +210,8 @@ final class Block extends DataObject
         if (strpos($name, 'Data[') === 0) {
             return $this->getInData($name);
         }
-
         return parent::__get($name);
     }
-
     /**
      * Extend hasField to allow loading data from Data store
      *
@@ -229,10 +224,8 @@ final class Block extends DataObject
         if (strpos($name, 'Data[') === 0) {
             return true;
         }
-
         return parent::hasField($name);
     }
-
     /**
      * Split Name[Input][Sub][Value] notation
      *
@@ -250,7 +243,6 @@ final class Block extends DataObject
         }
         return $matches;
     }
-
     /**
      * Get nested data
      *
@@ -260,7 +252,6 @@ final class Block extends DataObject
     public function getInData($key)
     {
         $matches = self::extractNameParts($key);
-
         $arr = $this->DataArray();
         $val = $arr;
         foreach ($matches as $part) {
@@ -272,7 +263,6 @@ final class Block extends DataObject
         }
         return $val;
     }
-
     /**
      * Consistently returns an array regardless of what is in Data
      *
@@ -285,7 +275,6 @@ final class Block extends DataObject
         }
         return [];
     }
-
     /**
      * When looping in template, wrap the blocks content is wrapped in a
      * div with theses classes
@@ -296,7 +285,6 @@ final class Block extends DataObject
     {
         return 'Block Block-' . $this->BlockType();
     }
-
     /**
      * Get a viewable block instance wrapping this block
      *
@@ -312,7 +300,6 @@ final class Block extends DataObject
         }
         return new ContentBlock($this);
     }
-
     /**
      * Returns a summary to be displayed in the gridfield
      *
@@ -323,40 +310,47 @@ final class Block extends DataObject
         // Read from content
         $summary = trim(\strip_tags($this->Content));
         $shortSummary = \substr($summary, 0, 100);
-
         // Collapse whitespace
         $shortSummary = preg_replace('/\s+/', ' ', $shortSummary);
-
+        if (!$shortSummary) {
+            if ($this->ImageID) {
+                $shortSummary = $this->Image()->getTitle();
+            }
+        }
         // Avoid escaping issues
         $text = new DBHTMLText('Summary');
         $text->setValue($shortSummary);
-
         return $text;
     }
-
+    public function getCMSActions()
+    {
+        $actions = parent::getCMSActions();
+        return $actions;
+    }
     public function getCMSFields()
     {
-        $fields = parent::getCMSFields();
-
+        // $fields = parent::getCMSFields();
+        $fields = new BlockFieldList();
+        $fields->push(new TabSet("Root", $mainTab = new Tab("Main")));
+        // ! Fields must be added to Root.Main to work properly
+        $fields->addFieldsToTab('Root.Main', new HiddenField('ID'));
+        $fields->addFieldsToTab('Root.Main', new HiddenField('Data'));
+        $fields->addFieldsToTab('Root.Main', new HiddenField('PageID'));
+        // Show debug infos
         if (Director::isDev() && isset($_GET['debug'])) {
             $json = '';
             if ($this->Data) {
                 $json = \json_encode(json_decode($this->Data), \JSON_PRETTY_PRINT);
+                $debugData = new LiteralField('JsonData', '<pre><code>' . $json . '</code></pre>');
+            } else {
+                $debugData = new LiteralField('JsonData', '<div class="message info">Does not contain any data</div>');
             }
-            $fields->addFieldsToTab('Root.Data', new LiteralField('JsonData', '<code>' . $json . '</code>'));
+            $fields->addFieldsToTab('Root.Debug', $debugData);
         }
-
-        // Remove many many
-        $fields->removeByName('Images');
-        $fields->removeByName('Files');
-
-        // Some default setup
+        // Only show valid types in a dropdown
         $ValidTypes = self::listValidTypes();
         $Type = new DropdownField('Type', $this->fieldLabel('Type'), $ValidTypes);
-        $fields->replaceField('Type', $Type);
-
-        $fields->removeByName('Content');
-
+        $fields->addFieldsToTab('Root.Main', $Type);
          // Handle Collection GridField
         $list = $this->Collection();
         if ($list) {
@@ -369,7 +363,6 @@ final class Block extends DataObject
             $grid = new GridField($class, $singleton->plural_name(), $list, $gridConfig);
             $fields->addFieldToTab('Root.Main', $grid);
         }
-
          // Handle Shared Collection GridField
         $list = $this->SharedCollection();
         if ($list) {
@@ -382,15 +375,13 @@ final class Block extends DataObject
             $grid = new GridField($class, $singleton->plural_name() . ' (shared)', $list, $gridConfig);
             $fields->addFieldToTab('Root.Main', $grid);
         }
-
         // Allow type instance to extends fields
+        // Defined fields are processed later on for default behaviour
         $inst = $this->getTypeInstance();
-        if (method_exists($inst, 'updateFields')) {
-            $inst->updateFields($fields);
-        }
-
+        $inst->updateFields($fields);
         // Adjust uploaders
-        $Image = $fields->dataFieldByName('Image');
+        $Image = UploadField::create('Image');
+        $fields->addFieldsToTab('Root.Main', $Image);
         if ($Image) {
             $Image->setFolderName('Blocks/' . $this->PageID);
             $Image->setIsMultiUpload(false);
@@ -402,23 +393,15 @@ final class Block extends DataObject
                 $dataField->setIsMultiUpload(false);
             }
         }
-
-        // Always hide pages
-        $Page = $fields->dataFieldByName('PageID');
-        if ($Page) {
-            $fields->replaceField('PageID', new HiddenField('PageID'));
-        }
-
+        // Allow regular extension to work
+        $this->extend('updateCMSFields', $fields);
         return $fields;
     }
-
     public function validate()
     {
         $result = parent::validate();
-
         return $result;
     }
-
     /**
      * List all classes extending BaseBlock
      *
@@ -427,13 +410,10 @@ final class Block extends DataObject
     public static function listBlocks()
     {
         $blocks = ClassInfo::subclassesFor(BaseBlock::class);
-
         // Remove BaseBlock
         \array_shift($blocks);
-
         return $blocks;
     }
-
     /**
      * Get a list of blocks mapped by class => name
      *
@@ -447,7 +427,6 @@ final class Block extends DataObject
         }
         return $list;
     }
-
     /**
      * Get a list of blocks mapped by unqualified class => class
      *
@@ -461,7 +440,6 @@ final class Block extends DataObject
         }
         return $list;
     }
-
     /**
      * Get a more human readable name
      * TODO: i18n

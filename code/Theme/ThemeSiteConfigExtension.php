@@ -1,6 +1,5 @@
 <?php
 namespace LeKoala\Base\Theme;
-
 use SilverStripe\Forms\Tab;
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\Image;
@@ -13,9 +12,22 @@ use SilverStripe\Forms\HeaderField;
 use SilverStripe\ORM\DataExtension;
 use LeKoala\Base\Helpers\ZipHelper;
 use SilverStripe\AssetAdmin\Forms\UploadField;
-
 /**
+ * Class \LeKoala\Base\Theme\ThemeSiteConfigExtension
  *
+ * @property \SilverStripe\SiteConfig\SiteConfig|\LeKoala\Base\Theme\ThemeSiteConfigExtension $owner
+ * @property string $PrimaryColor
+ * @property string $SecondaryColor
+ * @property string $ThemeColor
+ * @property string $HeaderFont
+ * @property string $BodyFont
+ * @property string $GoogleFonts
+ * @property int $LogoID
+ * @property int $IconID
+ * @property int $FaviconID
+ * @method \SilverStripe\Assets\Image Logo()
+ * @method \SilverStripe\Assets\Image Icon()
+ * @method \SilverStripe\Assets\File Favicon()
  */
 class ThemeSiteConfigExtension extends DataExtension
 {
@@ -32,12 +44,10 @@ class ThemeSiteConfigExtension extends DataExtension
         "Icon" => Image::class,
         "Favicon" => File::class,
     ];
-
     private static $owns = [
         "Logo",
         "Icon",
     ];
-
     public function onAfterWrite()
     {
         if ($this->owner->LogoID) {
@@ -53,58 +63,43 @@ class ThemeSiteConfigExtension extends DataExtension
             }
         }
     }
-
     public function updateCMSFields(FieldList $fields)
     {
         $themeTab = new Tab("Theme");
         $fields->addFieldToTab('Root', $themeTab);
-
         $ColorsHeader = new HeaderField("ColorsHeader", "Colors");
         $themeTab->push($ColorsHeader);
-
         $ColorsGroup = new FieldGroup();
         $themeTab->push($ColorsGroup);
-
         $PrimaryColor = new ColorField('PrimaryColor');
         $ColorsGroup->push($PrimaryColor);
-
         $SecondaryColor = new ColorField('SecondaryColor');
         $ColorsGroup->push($SecondaryColor);
-
         $ThemeColor = new ColorField('ThemeColor');
         $ThemeColor->setTooltip("Select a color that gives a good contrast with your Icon");
         $ColorsGroup->push($ThemeColor);
-
         $FontsHeader = new HeaderField("FontsHeader", "Fonts");
         $themeTab->push($FontsHeader);
-
         $FontsGroup = new FieldGroup();
         $themeTab->push($FontsGroup);
-
         $HeaderFont = new TextField("HeaderFont");
         $FontsGroup->push($HeaderFont);
-
         $BodyFont = new TextField("BodyFont");
         $FontsGroup->push($BodyFont);
-
         $GoogleFonts = new TextField("GoogleFonts");
         $GoogleFonts->setAttribute('placeholder', "Open+Sans|Roboto");
         $themeTab->push($GoogleFonts);
-
         $ImagesHeader = new HeaderField("ImagesHeader", "Images");
         $themeTab->push($ImagesHeader);
-
         /* @var $Logo UploadField */
         $Logo = UploadField::create("Logo");
         $Logo->setFolderName("Theme");
         $Logo->setAllowedFileCategories("image/supported");
         $themeTab->push($Logo);
-
         $Icon = UploadField::create("Icon");
         $Icon->setFolderName("Theme");
         $Icon->setAllowedFileCategories("image/supported");
         $themeTab->push($Icon);
-
         /* @var $Favicon UploadField */
         $Favicon = UploadField::create("Favicon");
         $Favicon->setFolderName("Theme");
@@ -112,14 +107,11 @@ class ThemeSiteConfigExtension extends DataExtension
         $Favicon->setDescription("Upload the zip file generated with <a href=\"https://realfavicongenerator.net/\" target=\"_blank\">Real Favicon Generator</a>. Theme Color will be used as background for your icon.");
         $themeTab->push($Favicon);
     }
-
     public function Favicons($path = '')
     {
         $path = preg_replace('/\/+/', '/', Director::baseURL() . $path . '/');
-
         // A mask color, used by macOS safari and touch bar (should look good with a white icon)
         $mask = $this->owner->PrimaryColor ? '#' . trim($this->owner->PrimaryColor, '#') : '#000000';
-
         // A contrast color for the icon, used by Windows Metro and Android
         $theme = $this->owner->ThemeColor ? '#' . trim($this->owner->ThemeColor, '#') : '#ffffff';
         return $this->owner->customise(
@@ -130,12 +122,10 @@ class ThemeSiteConfigExtension extends DataExtension
             )
         )->renderWith('Favicons');
     }
-
     public function getThemeAssetURL()
     {
         return '/assets/_theme/' . $this->owner->ID;
     }
-
     public function getThemeAssetsFolder()
     {
         $dir = Director::publicFolder() . $this->getThemeAssetURL();
@@ -144,30 +134,23 @@ class ThemeSiteConfigExtension extends DataExtension
         }
         return $dir;
     }
-
     public function onBeforeWrite()
     {
         $changedFields = $this->owner->getChangedFields(true, 2);
-
         if (isset($changedFields['FaviconID'])) {
             $this->unpackFaviconArchive();
         }
     }
-
     protected function unpackFaviconArchive()
     {
         /* @var $Favicon File */
         $Favicon = $this->owner->Favicon();
         $FaviconData = $Favicon->getString();
-
         $tmpName = \tempnam(TEMP_PATH, 'ss');
         \file_put_contents($tmpName, $FaviconData);
-
         $dir = $this->getThemeAssetsFolder();
-
         $ZipArchive = new \ZipArchive;
         $res = $ZipArchive->open($tmpName);
-
         if ($res === true) {
             $ZipArchive->extractTo($dir);
             $ZipArchive->close();

@@ -1,15 +1,15 @@
 <?php
 namespace LeKoala\Base\Extensions;
-
 use SilverStripe\Forms\FieldList;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Assets\Image;
 use SilverStripe\Assets\File;
-
 /**
+ * Automatically publish files and images related to this data object
  *
+ * @property \LeKoala\Base\Blocks\Block|\LeKoala\Base\News\NewsItem|\LeKoala\Base\Extensions\SmartDataObjectExtension $owner
  */
 class SmartDataObjectExtension extends DataExtension
 {
@@ -20,7 +20,6 @@ class SmartDataObjectExtension extends DataExtension
             File::class,
         ];
     }
-
     protected function getAllFileRelations()
     {
         return [
@@ -29,28 +28,24 @@ class SmartDataObjectExtension extends DataExtension
             'many_many' => $this->getManyManyFileRelations(),
         ];
     }
-
     protected function getHasOneFileRelations()
     {
         $config = $this->owner->config();
         $rel = $config->has_one;
         return $this->findFileRelations($rel);
     }
-
     protected function getHasManyFileRelations()
     {
         $config = $this->owner->config();
         $rel = $config->has_many;
         return $this->findFileRelations($rel);
     }
-
     protected function getManyManyFileRelations()
     {
         $config = $this->owner->config();
         $rel = $config->many_many;
         return $this->findFileRelations($rel);
     }
-
     protected function findFileRelations($arr)
     {
         if (!$arr) {
@@ -65,12 +60,15 @@ class SmartDataObjectExtension extends DataExtension
         }
         return $res;
     }
-
     public function onAfterWrite()
     {
-        //TODO: only do this if not using Versioned extension
+        $record = $this->owner;
+        // If the owner is versioned, do no do this!
+        $ownerIsVersioned = $record && $record->hasExtension(Versioned::class);
+        if($ownerIsVersioned) {
+            return;
+        }
         $relations = $this->getAllFileRelations();
-
         foreach ($relations as $type => $names) {
             foreach ($names as $name) {
                 if ($type == 'has_one') {
@@ -91,22 +89,17 @@ class SmartDataObjectExtension extends DataExtension
             }
         }
     }
-
     public function updateCMSFields(FieldList $fields)
     {
         $dataFields = $fields->dataFields();
-
         $manyManyFiles = $this->getManyManyFileRelations();
-
         foreach ($dataFields as $dataField) {
             $class = get_class($dataField);
-
             // Let's replace all base UploadFields with SmartUploadFields
             if ($class === UploadField::class) {
                 $newField = new \LeKoala\Base\Forms\SmartUploadField($dataField->getName(), $dataField->Title(), $dataField->getItems());
                 $fields->replaceField($dataField->getName(), $newField);
             }
-
             // Adjust GridFields
             if ($class === GridField::class) {
                 // Let's replace many_many files grids with proper UploadFields
@@ -117,5 +110,4 @@ class SmartDataObjectExtension extends DataExtension
             }
         }
     }
-
 }

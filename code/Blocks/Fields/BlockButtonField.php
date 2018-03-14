@@ -8,32 +8,33 @@ use SilverStripe\Forms\CompositeField;
 
 class BlockButtonField extends CompositeField
 {
-    protected $titleField;
-    protected $linkField;
-    protected $newWindowField;
-
     public function __construct($name, $title = null, $value = null)
     {
         $children = new FieldList();
 
-        $titleField = TextField::create(
+        $TitleField = TextField::create(
             "{$name}[Title]",
             'Title'
         );
-        $children->push($titleField);
+        $children->push($TitleField);
 
-        $linkField = TextField::create(
+        $LinkField = TextField::create(
             "{$name}[Link]",
             'Link'
         );
-        $children->push($linkField);
+        $children->push($LinkField);
 
-
-        $newWindowField = CheckboxField::create(
+        $NewWindowField = CheckboxField::create(
             "{$name}[NewWindow]",
             'Open in new window?'
         );
-        $children->push($newWindowField);
+        $children->push($NewWindowField);
+
+        $ExtraClassesField = TextField::create(
+            "{$name}[ExtraClasses]",
+            'Extra Classes'
+        );
+        $children->push($ExtraClassesField);
 
         parent::__construct($children);
 
@@ -50,7 +51,6 @@ class BlockButtonField extends CompositeField
         }
     }
 
-
     public function setValue($value, $data = null)
     {
         if (is_array($value)) {
@@ -63,6 +63,9 @@ class BlockButtonField extends CompositeField
             if (isset($value['NewWindow'])) {
                 $this->getNewWindowField()->setValue($value['NewWindow']);
             }
+            if (isset($value['ExtraClasses'])) {
+                $this->getExtraClassesField()->setValue($value['ExtraClasses']);
+            }
         }
         return parent::setValue($value, $data);
     }
@@ -72,15 +75,23 @@ class BlockButtonField extends CompositeField
         $name = $this->name;
         return $this->fieldByName("{$name}[Title]");
     }
+
     public function getLinkField()
     {
         $name = $this->name;
         return $this->fieldByName("{$name}[Link]");
     }
+
     public function getNewWindowField()
     {
         $name = $this->name;
         return $this->fieldByName("{$name}[NewWindow]");
+    }
+
+    public function getExtraClassesField()
+    {
+        $name = $this->name;
+        return $this->fieldByName("{$name}[ExtraClasses]");
     }
 
 }

@@ -1,8 +1,11 @@
 <?php
 namespace LeKoala\Base\Extensions;
-
 use SilverStripe\ORM\DataExtension;
-
+/**
+ * Class \LeKoala\Base\Extensions\BootstrapPageExtension
+ *
+ * @property \LeKoala\Base\Extensions\BootstrapPageExtension $owner
+ */
 class BootstrapPageExtension extends DataExtension
 {
     /**
@@ -14,7 +17,6 @@ class BootstrapPageExtension extends DataExtension
     {
         return $this->owner->isCurrent() ? 'active' : '';
     }
-
     /**
      * Return "" or "section" depending on if this is the {@link SiteTree::isSection()} current section.
      *
@@ -24,7 +26,6 @@ class BootstrapPageExtension extends DataExtension
     {
         return $this->owner->isSection() ? 'section' : '';
     }
-
     /**
      * Return "", "active" or "section" depending on if this page is the current page, or not on the current page
      * but in the current section.
