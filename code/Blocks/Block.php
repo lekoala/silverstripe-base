@@ -47,6 +47,7 @@ use SilverStripe\Forms\Tab;
  */
 final class Block extends DataObject
 {
+    const ITEMS_KEY = 'Items';
     private static $table_name = 'Block'; // When using namespace, specify table name
     private static $db = [
         'Type' => 'Varchar(191)',
@@ -124,9 +125,8 @@ final class Block extends DataObject
         if ($chosenTemplate) {
             $typeInst = $this->getTypeInstance();
             $data = $this->DataArray();
-            // TODO: we could iterate over the data list instead of relying on predefined key
-            if (isset($data['Items'])) {
-                $data['Items'] = self::normalizeIndexedList($data['Items']);
+            if (isset($data[self::ITEMS_KEY])) {
+                $data[self::ITEMS_KEY] = self::normalizeIndexedList($data[self::ITEMS_KEY]);
             }
             // Somehow, data is not nested properly if not wrapped beforehand with ArrayData
             $arrayData = new ArrayData($data);
@@ -156,11 +156,55 @@ final class Block extends DataObject
     protected static function normalizeIndexedList($indexedList)
     {
         $list = new ArrayList();
+        $i = 0;
+        $c = count($indexedList);
         foreach ($indexedList as $index => $item) {
-            $item['ID'] = $index;
+            $i++;
+
+            // Add standard iterator stuff
+            $FirstLast = '';
+            if ($i === 1) {
+                $FirstLast = 'first';
+            } else if ($i === $c) {
+                $FirstLast = 'last';
+            }
+            $item['Pos'] = $index;
+            $item['FirstLast'] = $FirstLast;
+
+            // Handle files
+            foreach ($item as $k => $v) {
+                if (is_array($v) && !empty($v['Files'])) {
+                    $files = $v['Files'];
+                    if (count($files) == 1) {
+                        $item[$k] = self::getPublishedImageByID($files[0]);
+                    } else {
+                        $imageList = new ArrayList();
+                        foreach ($files as $fileID) {
+                            $imageList->push(self::getPublishedImageByID($fileID));
+                        }
+                        $item[$k] = $imageList;
+                    }
+                }
+            }
+
             $list->push($item);
         }
         return $list;
+    }
+    /**
+     * @param int $ID
+     * @return Image
+     */
+    public static function getPublishedImageByID($ID)
+    {
+        $image = Image::get()->byID($ID);
+
+        // This is just annoying
+        if (!$image->isPublished()) {
+            $image->doPublish();
+        }
+
+        return $image;
     }
     public function onBeforeWrite()
     {
@@ -351,7 +395,10 @@ final class Block extends DataObject
         $ValidTypes = self::listValidTypes();
         $Type = new DropdownField('Type', $this->fieldLabel('Type'), $ValidTypes);
         $fields->addFieldsToTab('Root.Main', $Type);
-         // Handle Collection GridField
+        // Show uploader
+        $Image = UploadField::create('Image');
+        $fields->addFieldsToTab('Root.Main', $Image);
+        // Handle Collection GridField
         $list = $this->Collection();
         if ($list) {
             $class = $list->dataClass();
@@ -363,7 +410,7 @@ final class Block extends DataObject
             $grid = new GridField($class, $singleton->plural_name(), $list, $gridConfig);
             $fields->addFieldToTab('Root.Main', $grid);
         }
-         // Handle Shared Collection GridField
+        // Handle Shared Collection GridField
         $list = $this->SharedCollection();
         if ($list) {
             $class = $list->dataClass();
@@ -379,22 +426,24 @@ final class Block extends DataObject
         // Defined fields are processed later on for default behaviour
         $inst = $this->getTypeInstance();
         $inst->updateFields($fields);
+        // Allow regular extension to work
+        $this->extend('updateCMSFields', $fields);
         // Adjust uploaders
-        $Image = UploadField::create('Image');
-        $fields->addFieldsToTab('Root.Main', $Image);
+        $uploadFolder = 'Blocks/' . $this->PageID;
+        $Image = $fields->dataFieldByName('Image');
         if ($Image) {
-            $Image->setFolderName('Blocks/' . $this->PageID);
+            $Image->setFolderName(uploadFolder);
+            $Image->setAllowedMaxFileNumber(1);
             $Image->setIsMultiUpload(false);
         }
         $dataFields = $fields->dataFields();
         foreach ($dataFields as $dataField) {
             if ($dataField instanceof UploadField) {
-                $dataField->setFolderName('Blocks/' . $this->PageID . '/' . $this->BlockType());
+                $dataField->setFolderName($uploadFolder . '/' . $this->BlockType());
+                $dataField->setAllowedMaxFileNumber(1);
                 $dataField->setIsMultiUpload(false);
             }
         }
-        // Allow regular extension to work
-        $this->extend('updateCMSFields', $fields);
         return $fields;
     }
     public function validate()

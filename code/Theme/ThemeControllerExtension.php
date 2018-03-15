@@ -85,7 +85,7 @@ class ThemeControllerExtension extends Extension
             $dbName = str_replace(' ', '', ucwords(str_replace('-', ' ', $declarationName)));
             $value = $SiteConfig->$dbName;
             if (!$value) {
-                $declarationValue = $value;
+                $value = $declarationValue;
             }
             // For color field, normalize value to HEX
             if (strpos($dbName, 'Color') !== false) {

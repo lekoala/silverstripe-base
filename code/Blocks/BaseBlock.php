@@ -29,38 +29,9 @@ class BaseBlock extends ViewableData
     }
 
     /**
-     * Get an image defined in data
-     *
-     * Also ensures that this image is published because ownership will not work properly
-     *
-     * @param int|string $ID id or key or array like { "Files": [ "int" ] }
-     * @return Image
-     */
-    public function ImageByID($ID)
-    {
-        if (!\is_numeric($ID)) {
-            if (\is_string($ID)) {
-                $ID = $this->_block->getInData($ID);
-            }
-            if (\is_array($ID)) {
-                $ID = $ID['Files'][0];
-            }
-            if (\is_object($ID)) {
-                $ID = $ID->Files[0];
-            }
-        }
-        $image = Image::get()->byID($ID);
-
-        // This is just annoying
-        if (!$image->isPublished()) {
-            $image->doPublish();
-        }
-
-        return $image;
-    }
-
-    /**
      * Allow direct queries from the template
+     *
+     * Use wisely...
      *
      * @param string $class
      * @return DataList

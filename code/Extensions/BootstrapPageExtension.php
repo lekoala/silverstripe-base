@@ -1,5 +1,6 @@
 <?php
 namespace LeKoala\Base\Extensions;
+
 use SilverStripe\ORM\DataExtension;
 /**
  * Class \LeKoala\Base\Extensions\BootstrapPageExtension

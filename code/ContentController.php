@@ -1,5 +1,6 @@
 <?php
 namespace LeKoala\Base;
+
 use \Exception;
 use SilverStripe\i18n\i18n;
 use SilverStripe\Control\Director;
@@ -31,6 +32,7 @@ class ContentController extends DefaultController
      * @var Psr\SimpleCache\CacheInterface
      */
     public $cache;
+
     protected function init()
     {
         if (Director::isTest()) {
@@ -40,6 +42,13 @@ class ContentController extends DefaultController
         $this->warnIfWrongCacheIsUsed();
         $this->displayFlashMessage();
     }
+
+    public function BodyClass()
+    {
+        $parts = explode('\\', get_class($this->data()));
+        return end($parts);
+    }
+
     /**
      * A simple way to http protected a website (for staging for instance)
      * This is required because somehow the default mechanism shipped with SilverStripe is
@@ -52,7 +61,7 @@ class ContentController extends DefaultController
         $user = Environment::getEnv('SS_DEFAULT_ADMIN_USERNAME');
         $password = Environment::getEnv('SS_DEFAULT_ADMIN_PASSWORD');
         header('Cache-Control: no-cache, must-revalidate, max-age=0');
-        $hasSuppliedCredentials = ! (empty($_SERVER['PHP_AUTH_USER']) && empty($_SERVER['PHP_AUTH_PW']));
+        $hasSuppliedCredentials = !(empty($_SERVER['PHP_AUTH_USER']) && empty($_SERVER['PHP_AUTH_PW']));
         if ($hasSuppliedCredentials) {
             $isNotAuthenticated = ($_SERVER['PHP_AUTH_USER'] != $user || $_SERVER['PHP_AUTH_PW'] != $password);
         } else {
@@ -64,6 +73,7 @@ class ContentController extends DefaultController
             exit;
         }
     }
+
     /**
      * Because you really should! Speed increase by a 2x magnitude
      */
@@ -73,6 +83,7 @@ class ContentController extends DefaultController
             $this->getLogger()->info("OPCode cache is not enabled. To get maximum performance, enable it in php.ini");
         }
     }
+
     /**
      * Add AlertifyJS requirements
      *
@@ -90,6 +101,7 @@ class ContentController extends DefaultController
             Requirements::css('https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.11.0/css/themes/default.min.css');
         }
     }
+
     /**
      * Display the flash message if any using Alertifyjs
      *
@@ -121,6 +133,7 @@ class ContentController extends DefaultController
         $js = "alertify.notify('$msg', '$type', 0);";
         Requirements::customScript($js);
     }
+
     /**
      * Set a message to the session, for display next time a page is shown.
      *
@@ -137,6 +150,7 @@ class ContentController extends DefaultController
             'Cast' => $cast,
         ]);
     }
+
     /**
      * Get the session for this app
      *
@@ -147,6 +161,7 @@ class ContentController extends DefaultController
     {
         return $this->getRequest()->getSession();
     }
+
     /**
      * Get the cache for this app
      *
@@ -157,6 +172,7 @@ class ContentController extends DefaultController
     {
         return $this->cache;
     }
+
     /**
      * Get logger
      *
