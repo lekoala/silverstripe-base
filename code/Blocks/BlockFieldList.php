@@ -9,6 +9,7 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormField;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Forms\HeaderField;
+use SilverStripe\Forms\CheckboxField;
 
 class BlockFieldList extends FieldList
 {
@@ -57,6 +58,11 @@ class BlockFieldList extends FieldList
     public function addUpload($name = "ImageID", $title = null)
     {
         return $this->addField(UploadField::class, $name, $title);
+    }
+
+    public function addCheckbox($name = "IsEnabled", $title = null)
+    {
+        return $this->addField(CheckboxField::class, $name, $title);
     }
 
     public function addText($name = "Title", $title = null)

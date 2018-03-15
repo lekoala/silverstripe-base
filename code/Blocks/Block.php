@@ -394,6 +394,7 @@ final class Block extends DataObject
         // Only show valid types in a dropdown
         $ValidTypes = self::listValidTypes();
         $Type = new DropdownField('Type', $this->fieldLabel('Type'), $ValidTypes);
+        $Type->setAttribute('onchange',"jQuery('#Form_ItemEditForm_action_doSave').click()");
         $fields->addFieldsToTab('Root.Main', $Type);
         // Show uploader
         $Image = UploadField::create('Image');

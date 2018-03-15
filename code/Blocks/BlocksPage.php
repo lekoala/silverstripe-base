@@ -1,5 +1,6 @@
 <?php
 namespace LeKoala\Base\Blocks;
+
 use Page;
 use LeKoala\Base\Blocks\Block;
 use SilverStripe\Forms\TextField;
@@ -54,6 +55,18 @@ class BlocksPage extends Page
     {
         parent::onBeforeWrite();
         $this->Content = $this->renderContent();
+    }
+    public function onBeforeDelete()
+    {
+        parent::onBeforeDelete();
+
+        // Cleanup blocks assets
+        foreach ($this->Blocks() as $block) {
+            if ($block->ImageID) {
+                $block->Image()->delete();
+            }
+            // TODO: cleanup files in Data
+        }
     }
     /**
      * Render all blocks to get a full html document
