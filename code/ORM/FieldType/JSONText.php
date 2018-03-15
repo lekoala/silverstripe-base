@@ -51,6 +51,36 @@ class JSONText extends DBString
         return HiddenField::create($this->getName());
     }
 
+    /**
+     * @return mixed
+     */
+    public function decode()
+    {
+        if (!$this->value) {
+            return false;
+        }
+        return json_decode($this->value);
+    }
+
+    /**
+     * @return array
+     */
+    public function decodeArray()
+    {
+        if (!$this->value) {
+            return [];
+        }
+        return json_decode($this->value, JSON_OBJECT_AS_ARRAY);
+    }
+
+    /**
+     * @return string
+     */
+    public function pretty()
+    {
+        return json_encode(json_decode($this->value), JSON_PRETTY_PRINT);
+    }
+
     public function saveInto($dataObject)
     {
         if ($this->value && \is_array($this->value)) {

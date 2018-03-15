@@ -2,13 +2,12 @@
 namespace LeKoala\Base\Dev;
 
 use SilverStripe\ORM\DB;
+use LeKoala\Base\Dev\BuildTask;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Control\Director;
 
 /**
- * DropUnusedDatabaseObjectsTask
- *
  * SilverStripe never delete your tables or fields. Be careful if your database has other tables than SilverStripe!
  *
  * @author lekoala

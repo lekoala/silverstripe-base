@@ -45,8 +45,14 @@ class ContentController extends DefaultController
 
     public function BodyClass()
     {
-        $parts = explode('\\', get_class($this->data()));
-        return end($parts);
+        /* @var $page Page */
+        $page = $this->data();
+        $parts = explode('\\', get_class($page));
+        $class = end($parts);
+        if($page->hasMethod('updateBodyClass')) {
+            $page->updateBodyClass($class);
+        }
+        return $class;
     }
 
     /**

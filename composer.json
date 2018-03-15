@@ -16,10 +16,13 @@
     ],
     "require": {
         "php": ">=5.6",
-        "silverstripe/framework": "^4.0",
-        "silverstripe/siteconfig": "^4.0",
+        "silverstripe/framework": "^4.1",
+        "silverstripe/siteconfig": "^4.1",
         "axllent/silverstripe-minifier": "^1.0",
-        "symbiote/silverstripe-gridfieldextensions": "^3.1"
+        "symbiote/silverstripe-gridfieldextensions": "^3.1",
+        "bummzack/sortablefile": "^2.0",
+        "wilr/silverstripe-googlesitemaps": "^2.0",
+        "jonom/focuspoint": "^3.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^5.7",

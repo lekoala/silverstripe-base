@@ -9,7 +9,7 @@ use SilverStripe\Admin\CMSProfileController;
 /**
  * Class \LeKoala\Base\Actions\DataObjectActionsExtension
  *
- * @property \LeKoala\Base\Blocks\Block|\LeKoala\Base\News\NewsItem|\LeKoala\Base\Tags\Tag|\SilverStripe\Assets\File|\SilverStripe\SiteConfig\SiteConfig|\SilverStripe\CMS\Model\SiteTree|\SilverStripe\ORM\DataObject|\SilverStripe\Security\Group|\SilverStripe\Security\Member|\LeKoala\Base\Actions\DataObjectActionsExtension $owner
+ * @property \LeKoala\Base\Blocks\Block|\LeKoala\Base\News\NewsItem|\LeKoala\Base\Tags\Tag|\SilverStripe\Assets\File|\SilverStripe\Assets\Image|\SilverStripe\SiteConfig\SiteConfig|\SilverStripe\CMS\Model\SiteTree|\SilverStripe\ORM\DataObject|\SilverStripe\Security\Group|\SilverStripe\Security\Member|\LeKoala\Base\Actions\DataObjectActionsExtension $owner
  */
 class DataObjectActionsExtension extends DataExtension
 {

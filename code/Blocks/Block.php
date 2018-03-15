@@ -62,6 +62,10 @@ final class Block extends DataObject
         "Images" => Image::class,
         "Files" => File::class,
     ];
+    private static $many_many_extraFields = [
+        'Images' => ['SortOrder' => 'Int'],
+        'Files' => ['SortOrder' => 'Int'],
+    ];
     private static $owns = [
         'Image'
     ];
@@ -112,6 +116,27 @@ final class Block extends DataObject
         $inst = $this->getTypeInstance();
         return $inst->SharedCollection();
     }
+
+    /**
+     * Get sorted images
+     *
+     * @return \SilverStripe\ORM\ManyManyList
+     */
+    public function SortedImages()
+    {
+        return $this->Images()->Sort('SortOrder');
+    }
+
+    /**
+     * Get sorted files
+     *
+     * @return \SilverStripe\ORM\ManyManyList
+     */
+    public function SortedFiles()
+    {
+        return $this->Files()->Sort('SortOrder');
+    }
+
     public function renderWithTemplate()
     {
         $template = 'Blocks/' . $this->BlockClass();
@@ -170,6 +195,7 @@ final class Block extends DataObject
             }
             $item['Pos'] = $index;
             $item['FirstLast'] = $FirstLast;
+            $item['EvenOdd'] = $i % 2 ? 'even' : 'odd';
 
             // Handle files
             foreach ($item as $k => $v) {
@@ -394,7 +420,7 @@ final class Block extends DataObject
         // Only show valid types in a dropdown
         $ValidTypes = self::listValidTypes();
         $Type = new DropdownField('Type', $this->fieldLabel('Type'), $ValidTypes);
-        $Type->setAttribute('onchange',"jQuery('#Form_ItemEditForm_action_doSave').click()");
+        $Type->setAttribute('onchange', "jQuery('#Form_ItemEditForm_action_doSave').click()");
         $fields->addFieldsToTab('Root.Main', $Type);
         // Show uploader
         $Image = UploadField::create('Image');

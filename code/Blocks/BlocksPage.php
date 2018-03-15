@@ -1,6 +1,5 @@
 <?php
 namespace LeKoala\Base\Blocks;
-
 use Page;
 use LeKoala\Base\Blocks\Block;
 use SilverStripe\Forms\TextField;
@@ -15,6 +14,7 @@ use SilverStripe\Forms\GridField\GridFieldPaginator;
 use Symbiote\GridFieldExtensions\GridFieldOrderableRows;
 use SilverStripe\Forms\GridField\GridFieldToolbarHeader;
 use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
+use LeKoala\Base\ORM\FieldType\JSONText;
 /**
  * A page mode of blocks
  *
@@ -24,14 +24,38 @@ use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
  * This means that blocks versioning will follow page versioning and everything
  * is published at the same time
  *
+ * @property string $BlocksList
  * @method \SilverStripe\ORM\DataList|\LeKoala\Base\Blocks\Block[] Blocks()
  */
 class BlocksPage extends Page
 {
     private static $table_name = 'BlocksPage'; // When using namespace, specify table name
+    private static $db = [
+        "BlocksList" => JSONText::class
+    ];
     private static $has_many = [
         "Blocks" => Block::class
     ];
+    public function updateBodyClass(&$class)
+    {
+        if (is_callable('parent::updateBodyClass')) {
+            parent::updateBodyClass($class);
+        }
+        $arr = $this->getBlocksListArray();
+        if (!empty($arr)) {
+            $class .= ' Starts-' . $arr[0];
+        }
+    }
+    /**
+     * @return array
+     */
+    public function getBlocksListArray()
+    {
+        if (!$this->BlocksList) {
+            return [];
+        }
+        return $this->dbObject('BlocksList')->decodeArray();
+    }
     public function getContent()
     {
         if (isset($_GET['live']) && Director::isDev()) {
@@ -46,7 +70,7 @@ class BlocksPage extends Page
         $BlocksConfig->addComponent(new GridFieldOrderableRows());
         $BlocksConfig->removeComponentsByType(GridFieldPageCount::class);
         $BlocksConfig->removeComponentsByType(GridFieldPaginator::class);
-        $BlocksConfig->removeComponentsByType(GridFieldToolbarHeader::class);
+        // We need to keep GridFieldToolbarHeader otherwise sorting does not work
         $Blocks = new GridField('Blocks', '', $this->Blocks(), $BlocksConfig);
         $fields->replaceField('Content', $Blocks);
         return $fields;
@@ -55,11 +79,12 @@ class BlocksPage extends Page
     {
         parent::onBeforeWrite();
         $this->Content = $this->renderContent();
+        $list = array_unique($this->Blocks()->column('Type'));
+        $this->BlocksList = $list;
     }
     public function onBeforeDelete()
     {
         parent::onBeforeDelete();
-
         // Cleanup blocks assets
         foreach ($this->Blocks() as $block) {
             if ($block->ImageID) {
