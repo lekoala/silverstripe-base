@@ -432,7 +432,7 @@ final class Block extends DataObject
         $uploadFolder = 'Blocks/' . $this->PageID;
         $Image = $fields->dataFieldByName('Image');
         if ($Image) {
-            $Image->setFolderName(uploadFolder);
+            $Image->setFolderName($uploadFolder);
             $Image->setAllowedMaxFileNumber(1);
             $Image->setIsMultiUpload(false);
         }
