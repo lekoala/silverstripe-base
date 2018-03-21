@@ -1,20 +1,22 @@
 <?php
 namespace LeKoala\Base\Blocks;
+
 use Page;
 use LeKoala\Base\Blocks\Block;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\Forms\TextField;
 use SilverStripe\Control\Director;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Security\Permission;
 use SilverStripe\SiteConfig\SiteConfig;
+use LeKoala\Base\ORM\FieldType\JSONText;
 use LeKoala\Base\Contact\ContactSubmission;
 use SilverStripe\Forms\GridField\GridField;
-use SilverStripe\Forms\GridField\GridFieldPageCount;
 use SilverStripe\Forms\GridField\GridFieldPaginator;
+use SilverStripe\Forms\GridField\GridFieldPageCount;
 use Symbiote\GridFieldExtensions\GridFieldOrderableRows;
 use SilverStripe\Forms\GridField\GridFieldToolbarHeader;
 use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
-use LeKoala\Base\ORM\FieldType\JSONText;
 /**
  * A page mode of blocks
  *
@@ -45,6 +47,30 @@ class BlocksPage extends Page
         if (!empty($arr)) {
             $class .= ' Starts-' . $arr[0];
         }
+    }
+    /**
+     * This helper methods helps you to generate anchorable menu for your blocks
+     *
+     * @return ArrayList
+     */
+    public function MenuAnchorsItems()
+    {
+        $list = new ArrayList();
+
+        $anchors = $this->Blocks()->exclude(['HTMLID' => null]);
+        foreach ($anchors as $block) {
+            $title = $block->MenuTitle;
+            if (!$title) {
+                $title = $block->Title;
+            }
+            $list->push([
+                'Link' => $this->Link() . '#' . $block->HTMLID,
+                'Title' => $title,
+                'MenuTitle' => $title,
+            ]);
+        }
+
+        return $list;
     }
     /**
      * @return array
@@ -103,8 +129,16 @@ class BlocksPage extends Page
     {
         $Content = '';
         foreach ($this->Blocks() as $Block) {
+            $Content .= '<section';
+            $htmlid = $Block->HTMLID;
+            if ($htmlid) {
+                $Content .= ' id="' . $htmlid . '"';
+            }
             $class = $Block->getClass();
-            $Content .= '<section class="' . $class . '">';
+            if ($class) {
+                $Content .= ' class="' . $class . '"';
+            }
+            $Content .= '>';
             if ($refreshBlocks) {
                 $Block->write();
             }

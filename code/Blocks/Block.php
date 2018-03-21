@@ -1,6 +1,5 @@
 <?php
 namespace LeKoala\Base\Blocks;
-
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\Image;
 use SilverStripe\ORM\DataList;
@@ -28,11 +27,14 @@ use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
 use GuzzleHttp\Psr7\UploadedFile;
 use SilverStripe\Forms\TabSet;
 use SilverStripe\Forms\Tab;
-
+use SilverStripe\Forms\TextField;
 /**
  * The block dataobject is used to actually store the data
  *
  * @property string $Type
+ * @property string $Title
+ * @property string $MenuTitle
+ * @property string $HTMLID
  * @property string $Content
  * @property string $Data
  * @property int $Sort
@@ -51,6 +53,8 @@ final class Block extends DataObject
     private static $table_name = 'Block'; // When using namespace, specify table name
     private static $db = [
         'Type' => 'Varchar(191)',
+        'MenuTitle' => 'Varchar(191)',
+        'HTMLID' => 'Varchar(191)',
         'Content' => 'HTMLText',
         'Data' => JSONText::class,
     ];
@@ -116,7 +120,6 @@ final class Block extends DataObject
         $inst = $this->getTypeInstance();
         return $inst->SharedCollection();
     }
-
     /**
      * Get sorted images
      *
@@ -126,7 +129,6 @@ final class Block extends DataObject
     {
         return $this->Images()->Sort('SortOrder');
     }
-
     /**
      * Get sorted files
      *
@@ -136,7 +138,6 @@ final class Block extends DataObject
     {
         return $this->Files()->Sort('SortOrder');
     }
-
     public function renderWithTemplate()
     {
         $template = 'Blocks/' . $this->BlockClass();
@@ -185,7 +186,6 @@ final class Block extends DataObject
         $c = count($indexedList);
         foreach ($indexedList as $index => $item) {
             $i++;
-
             // Add standard iterator stuff
             $FirstLast = '';
             if ($i === 1) {
@@ -196,7 +196,6 @@ final class Block extends DataObject
             $item['Pos'] = $index;
             $item['FirstLast'] = $FirstLast;
             $item['EvenOdd'] = $i % 2 ? 'even' : 'odd';
-
             // Handle files
             foreach ($item as $k => $v) {
                 if (is_array($v) && !empty($v['Files'])) {
@@ -212,7 +211,6 @@ final class Block extends DataObject
                     }
                 }
             }
-
             $list->push($item);
         }
         return $list;
@@ -224,17 +222,32 @@ final class Block extends DataObject
     public static function getPublishedImageByID($ID)
     {
         $image = Image::get()->byID($ID);
-
         // This is just annoying
         if (!$image->isPublished()) {
             $image->doPublish();
         }
-
         return $image;
+    }
+    /**
+     * Generate a new valid html id
+     *
+     * @return string
+     */
+    protected function generateNewHTMLID()
+    {
+        $HTMLID = $this->BlockType();
+        $i = $this->Page()->Blocks()->filter('Type', $this->Type)->exclude('ID', $this->ID)->count();
+        if ($i > 0) {
+            $HTMLID .= '-' . $i;
+        }
+        return $HTMLID;
     }
     public function onBeforeWrite()
     {
         parent::onBeforeWrite();
+        if (!$this->HTMLID && $this->config()->always_assign_id) {
+            $this->HTMLID = $this->generateNewHTMLID();
+        }
         $Content = $this->renderWithTemplate();
         if ($Content) {
             $this->Content = $Content;
@@ -401,11 +414,16 @@ final class Block extends DataObject
     {
         // $fields = parent::getCMSFields();
         $fields = new BlockFieldList();
-        $fields->push(new TabSet("Root", $mainTab = new Tab("Main")));
+        $mainTab = new Tab("Main");
+        $settingsTab = new Tab("Settings");
+        $fields->push(new TabSet("Root", $mainTab, $settingsTab));
         // ! Fields must be added to Root.Main to work properly
-        $fields->addFieldsToTab('Root.Main', new HiddenField('ID'));
-        $fields->addFieldsToTab('Root.Main', new HiddenField('Data'));
-        $fields->addFieldsToTab('Root.Main', new HiddenField('PageID'));
+        $mainTab->push(new HiddenField('ID'));
+        $mainTab->push(new HiddenField('Data'));
+        $mainTab->push(new HiddenField('PageID'));
+        // Settings
+        $settingsTab->push(new TextField('MenuTitle', 'Menu Title'));
+        $settingsTab->push(new TextField('HTMLID', 'HTML ID'));
         // Show debug infos
         if (Director::isDev() && isset($_GET['debug'])) {
             $json = '';
