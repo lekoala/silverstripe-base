@@ -13,6 +13,8 @@ use SilverStripe\Forms\CheckboxField;
 
 class BlockFieldList extends FieldList
 {
+    protected $defaultTab = 'Main';
+
     protected function normalizeTitle($name, $title = null)
     {
         if ($title === null) {
@@ -42,7 +44,7 @@ class BlockFieldList extends FieldList
         $title = $this->normalizeTitle($name, $title);
         $name = $this->normalizeName($name);
         $field = $class::create($name, $title);
-        $this->addFieldsToTab('Root.Main', $field);
+        $this->addFieldsToTab('Root.' . $this->defaultTab, $field);
         return $field;
     }
 
@@ -78,5 +80,25 @@ class BlockFieldList extends FieldList
     public function addButton($name = "Button", $title = null)
     {
         return $this->addField(BlockButtonField::class, $name, $title);
+    }
+
+    /**
+     * Get the value of defaultTab
+     */
+    public function getDefaultTab()
+    {
+        return $this->defaultTab;
+    }
+
+    /**
+     * Set the value of defaultTab
+     *
+     * @return  self
+     */
+    public function setDefaultTab($defaultTab)
+    {
+        $this->defaultTab = $defaultTab;
+
+        return $this;
     }
 }

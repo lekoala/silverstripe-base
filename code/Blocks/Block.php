@@ -156,12 +156,18 @@ final class Block extends DataObject
         if ($chosenTemplate) {
             $typeInst = $this->getTypeInstance();
             $data = $this->DataArray();
+            // We have items to normalize
             if (isset($data[self::ITEMS_KEY])) {
                 $data[self::ITEMS_KEY] = self::normalizeIndexedList($data[self::ITEMS_KEY]);
             }
             // Somehow, data is not nested properly if not wrapped beforehand with ArrayData
             $arrayData = new ArrayData($data);
+            // Maybe we need to disable hash rewriting
+            if($typeInst->hasMethod('disableAnchorRewriting')) {
+                SSViewer::setRewriteHashLinksDefault($typeInst->disableAnchorRewriting());
+            }
             $result = (string)$typeInst->renderWith($template, $arrayData);
+            SSViewer::setRewriteHashLinksDefault(true);
         }
         // Restore themes just in case to prevent any side effect
         SSViewer::set_themes($themes);
@@ -418,9 +424,6 @@ final class Block extends DataObject
         $mainTab->push(new HiddenField('ID'));
         $mainTab->push(new HiddenField('Data'));
         $mainTab->push(new HiddenField('PageID'));
-        // Settings
-        $settingsTab->push(new TextField('MenuTitle', 'Menu Title'));
-        $settingsTab->push(new TextField('HTMLID', 'HTML ID'));
         // Show debug infos
         if (Director::isDev() && isset($_GET['debug'])) {
             $json = '';
@@ -436,7 +439,15 @@ final class Block extends DataObject
         $ValidTypes = self::listValidTypes();
         $Type = new DropdownField('Type', $this->fieldLabel('Type'), $ValidTypes);
         $Type->setAttribute('onchange', "jQuery('#Form_ItemEditForm_action_doSave').click()");
-        $fields->addFieldsToTab('Root.Main', $Type);
+        if($this->ID) {
+            $settingsTab->push($Type);
+        }
+        else {
+            $mainTab->push($Type);
+        }
+        // Other settings
+        $settingsTab->push(new TextField('MenuTitle', 'Menu Title'));
+        $settingsTab->push(new TextField('HTMLID', 'HTML ID'));
         // Show uploader
         $Image = UploadField::create('Image');
         $fields->addFieldsToTab('Root.Main', $Image);
