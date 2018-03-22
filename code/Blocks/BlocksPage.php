@@ -37,6 +37,10 @@ class BlocksPage extends Page
     private static $has_many = [
         "Blocks" => Block::class
     ];
+    private static $cascade_deletes = [
+        "Blocks"
+    ];
+    protected static $is_writing = false;
     public function updateBodyClass(&$class)
     {
         if (is_callable('parent::updateBodyClass')) {
@@ -105,17 +109,6 @@ class BlocksPage extends Page
         $list = array_unique($this->Blocks()->column('Type'));
         $this->BlocksList = $list;
     }
-    public function onBeforeDelete()
-    {
-        parent::onBeforeDelete();
-        // Cleanup blocks assets
-        foreach ($this->Blocks() as $block) {
-            if ($block->ImageID) {
-                $block->Image()->delete();
-            }
-            // TODO: cleanup files in Data
-        }
-    }
     /**
      * Render all blocks to get a full html document
      *
@@ -125,6 +118,7 @@ class BlocksPage extends Page
     public function renderContent($refreshBlocks = false)
     {
         $Content = '';
+        Block::$auto_update_page = false;
         foreach ($this->Blocks() as $Block) {
             $Content .= '<section';
             $htmlid = $Block->HTMLID;
@@ -142,6 +136,7 @@ class BlocksPage extends Page
             $Content .= (string)$Block->forTemplate();
             $Content .= '</section>';
         }
+        Block::$auto_update_page = true;
         return $Content;
     }
 }

@@ -1,5 +1,6 @@
 <?php
 namespace LeKoala\Base\Blocks;
+
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\Image;
 use SilverStripe\ORM\DataList;
@@ -70,6 +71,9 @@ final class Block extends DataObject
         'Images' => ['SortOrder' => 'Int'],
         'Files' => ['SortOrder' => 'Int'],
     ];
+    private static $cascade_deletes = [
+        'Image', 'Images', 'Files'
+    ];
     private static $owns = [
         'Image'
     ];
@@ -80,6 +84,7 @@ final class Block extends DataObject
     private static $defaults = [
         'Type' => ContentBlock::class,
     ];
+    public static $auto_update_page = true;
     public function forTemplate()
     {
         return $this->Content;
@@ -181,11 +186,13 @@ final class Block extends DataObject
      */
     protected static function normalizeIndexedList($indexedList)
     {
+        static $counter = 0;
         $list = new ArrayList();
         $i = 0;
         $c = count($indexedList);
         foreach ($indexedList as $index => $item) {
             $i++;
+            $counter++;
             // Add standard iterator stuff
             $FirstLast = '';
             if ($i === 1) {
@@ -194,6 +201,7 @@ final class Block extends DataObject
                 $FirstLast = 'last';
             }
             $item['Pos'] = $index;
+            $item['Counter'] = $counter;
             $item['FirstLast'] = $FirstLast;
             $item['EvenOdd'] = $i % 2 ? 'even' : 'odd';
             // Handle files
@@ -243,8 +251,10 @@ final class Block extends DataObject
     public function onAfterWrite()
     {
         parent::onAfterWrite();
-        // Update Page Content to reflect updated block content
-        $this->Page()->write();
+        if (self::$auto_update_page) {
+            // Update Page Content to reflect updated block content
+            $this->Page()->write();
+        }
     }
     /**
      * Get a name for this type

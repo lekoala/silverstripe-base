@@ -6,6 +6,7 @@ use SilverStripe\ORM\DataExtension;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Controller;
 use SilverStripe\Admin\CMSProfileController;
+use SilverStripe\SiteConfig\SiteConfig;
 /**
  * Class \LeKoala\Base\Actions\DataObjectActionsExtension
  *
@@ -22,6 +23,10 @@ class DataObjectActionsExtension extends DataExtension
     {
         // Pages don't need to be improved
         if($this->owner instanceof SiteTree) {
+            return;
+        }
+        // SiteConfig doesn't need to be improved
+        if($this->owner instanceof SiteConfig) {
             return;
         }
         // Not implemented in CMSProfileController
