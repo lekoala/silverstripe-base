@@ -20,6 +20,9 @@ LeKoala\Base\News\NewsItem:
     - LeKoala\Base\Extensions\SmartDataObjectExtension
     - LeKoala\Base\Tags\TaggableExtension
     - LeKoala\Base\Extensions\SocialShareExtension
+LeKoala\Base\News\NewsCategory:
+  extensions:
+    - LeKoala\Base\Extensions\URLSegmentExtension
 LeKoala\Base\Tags\Tag:
   extensions:
     - LeKoala\Base\Extensions\URLSegmentExtension

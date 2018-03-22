@@ -7,7 +7,7 @@ use SilverStripe\View\Parsers\URLSegmentFilter;
 /**
  * Class \LeKoala\Base\Extensions\URLSegmentExtension
  *
- * @property \LeKoala\Base\News\NewsItem|\LeKoala\Base\Tags\Tag|\LeKoala\Base\Extensions\URLSegmentExtension $owner
+ * @property \LeKoala\Base\News\NewsCategory|\LeKoala\Base\News\NewsItem|\LeKoala\Base\Tags\Tag|\LeKoala\Base\Extensions\URLSegmentExtension $owner
  * @property string $URLSegment
  */
 class URLSegmentExtension extends DataExtension

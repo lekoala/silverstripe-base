@@ -23,6 +23,7 @@ class NewsPageController extends \PageController
     private static $allowed_actions = [
         "index",
         "read",
+        "category",
         "archives",
         "tags",
         "search",
@@ -47,7 +48,7 @@ class NewsPageController extends \PageController
             // Use array notation for parameters to make sure it's properly passed as params
             $this->list = $this->list->where(["Title LIKE ?" => ['%' . $ID . '%']]);
         }
-        return $this->render();
+        return $this->render(['Query' => $ID]);
     }
     public function archives()
     {
@@ -57,6 +58,19 @@ class NewsPageController extends \PageController
             $this->list = $this->list->where(["Published LIKE ?" => [$ID . '%']]);
         }
         return $this->render();
+    }
+    public function category()
+    {
+        $ID = $this->getRequest()->param('ID');
+        $Category = null;
+        if ($ID) {
+            $Category = NewsCategory::get()->filter('URLSegment', $ID)->first();
+            if ($Category) {
+                // Use array notation for parameters to make sure it's properly passed as params
+                $this->list = $this->list->where(["CategoryID = ?" => [$Category->ID]]);
+            }
+        }
+        return $this->render(['CurrentCategory' => $Category]);
     }
     public function tags()
     {
@@ -101,6 +115,27 @@ class NewsPageController extends \PageController
     {
         return $this->DisplayedItems()->sort('ViewCount DESC')->limit($n);
     }
+    public function YearsList()
+    {
+        $ID = null;
+        if ($this->action == 'archives') {
+            $ID = $this->getRequest()->param('ID');
+        }
+        $Singleton = NewsItem::singleton();
+        $table = $Singleton->baseTable();
+        $years = DB::prepared_query("SELECT YEAR(Published) FROM $table WHERE Published IS NOT NULL AND Published <= ?", [
+            DBDatetime::now()->Format(DBDatetime::ISO_DATETIME)
+        ])->column();
+        $result = ArrayList::create();
+        foreach ($years as $year) {
+            $result->push(ArrayData::create([
+                'Title' => $year,
+                'Link' => $this->Link() . 'archives/' . $year,
+                'Current' => $ID == $year ? true : false,
+            ]));
+        }
+        return $result;
+    }
     public function ArchivesList()
     {
         $format = '%Y-%m';
@@ -114,6 +149,7 @@ class NewsPageController extends \PageController
         $query = SQLSelect::create($fields, $table)
             ->addGroupBy($Published)
             ->addOrderBy('"Published" DESC')
+            ->addWhere('Published IS NOT NULL')
             ->addWhere(['"Published" <= ?' => DBDatetime::now()->Format(DBDatetime::ISO_DATETIME)]);
         $posts = $query->execute();
         $result = ArrayList::create();
@@ -139,6 +175,11 @@ class NewsPageController extends \PageController
     public function TagsList()
     {
         $list = $this->DisplayedItems()->relation('Tags');
+        return $list;
+    }
+    public function CategoriesList()
+    {
+        $list = NewsCategory::get();
         return $list;
     }
 }
