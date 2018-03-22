@@ -1,6 +1,5 @@
 <?php
 namespace LeKoala\Base\Blocks;
-
 use Page;
 use LeKoala\Base\Blocks\Block;
 use SilverStripe\ORM\ArrayList;
@@ -56,7 +55,6 @@ class BlocksPage extends Page
     public function MenuAnchorsItems()
     {
         $list = new ArrayList();
-
         $anchors = $this->Blocks()->exclude(['HTMLID' => null]);
         foreach ($anchors as $block) {
             $title = $block->MenuTitle;
@@ -69,7 +67,6 @@ class BlocksPage extends Page
                 'MenuTitle' => $title,
             ]);
         }
-
         return $list;
     }
     /**

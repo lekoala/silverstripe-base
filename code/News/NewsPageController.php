@@ -1,5 +1,6 @@
 <?php
 namespace LeKoala\Base\News;
+
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\DataList;
 use LeKoala\Base\News\NewsItem;
@@ -37,8 +38,7 @@ class NewsPageController extends \PageController
     }
     public function index()
     {
-        // Use non namespaced name
-        return $this->renderWith(['NewsPage', 'Page']);
+        return $this->render();
     }
     public function search()
     {
@@ -47,8 +47,7 @@ class NewsPageController extends \PageController
             // Use array notation for parameters to make sure it's properly passed as params
             $this->list = $this->list->where(["Title LIKE ?" => ['%' . $ID . '%']]);
         }
-        // Use non namespaced name
-        return $this->renderWith(['NewsPage', 'Page']);
+        return $this->render();
     }
     public function archives()
     {
@@ -57,8 +56,7 @@ class NewsPageController extends \PageController
             // Use array notation for parameters to make sure it's properly passed as params
             $this->list = $this->list->where(["Published LIKE ?" => [$ID . '%']]);
         }
-        // Use non namespaced name
-        return $this->renderWith(['NewsPage', 'Page']);
+        return $this->render();
     }
     public function tags()
     {
@@ -69,8 +67,7 @@ class NewsPageController extends \PageController
                 $this->list = $this->list->filter('Tags.ID', $Tag->ID);
             }
         }
-        // Use non namespaced name
-        return $this->renderWith(['NewsPage', 'Page']);
+        return $this->render();
     }
     public function read()
     {
@@ -78,11 +75,11 @@ class NewsPageController extends \PageController
         if (!$ID) {
             return $this->httpError(404);
         }
-        $Item = NewsItem::get()->filter('URLSegment',$ID)->first();
+        $Item = NewsItem::get()->filter('URLSegment', $ID)->first();
         if (!$Item) {
             return $this->httpError(404);
         }
-        return $this->renderWith(['NewsPage_read', 'Page'], ['Item' => $Item]);
+        return $this->render(['Item' => $Item]);
     }
     /**
      * @return DataList

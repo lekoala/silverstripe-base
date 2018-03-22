@@ -59,6 +59,7 @@ class NewsItem extends DataObject
         $Image = new SmartUploadField("Image");
         $Image->setIsMultiUpload(false);
         $fields->addFieldToTab('Root.Main', $Image);
+        $fields->makeFieldReadonly('ViewCount');
         return $fields;
     }
     public static function defaultWhere()
@@ -85,6 +86,9 @@ class NewsItem extends DataObject
     public function updateURLSegment(&$segment)
     {
         $segment = date('Y-m-d', strtotime($this->Published)) . '-' . $segment;
+    }
+    public function forTemplate() {
+        return $this->renderWith('LeKoala\Base\News\NewsItem');
     }
     public function Summary()
     {

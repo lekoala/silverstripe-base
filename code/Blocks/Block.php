@@ -28,11 +28,11 @@ use GuzzleHttp\Psr7\UploadedFile;
 use SilverStripe\Forms\TabSet;
 use SilverStripe\Forms\Tab;
 use SilverStripe\Forms\TextField;
+use SilverStripe\View\Parsers\URLSegmentFilter;
 /**
  * The block dataobject is used to actually store the data
  *
  * @property string $Type
- * @property string $Title
  * @property string $MenuTitle
  * @property string $HTMLID
  * @property string $Content
@@ -228,25 +228,12 @@ final class Block extends DataObject
         }
         return $image;
     }
-    /**
-     * Generate a new valid html id
-     *
-     * @return string
-     */
-    protected function generateNewHTMLID()
-    {
-        $HTMLID = $this->BlockType();
-        $i = $this->Page()->Blocks()->filter('Type', $this->Type)->exclude('ID', $this->ID)->count();
-        if ($i > 0) {
-            $HTMLID .= '-' . $i;
-        }
-        return $HTMLID;
-    }
     public function onBeforeWrite()
     {
         parent::onBeforeWrite();
-        if (!$this->HTMLID && $this->config()->always_assign_id) {
-            $this->HTMLID = $this->generateNewHTMLID();
+        if (!$this->HTMLID && $this->MenuTitle) {
+            $filter = new URLSegmentFilter;
+            $this->HTMLID = $filter->filter($this->MenuTitle);
         }
         $Content = $this->renderWithTemplate();
         if ($Content) {
