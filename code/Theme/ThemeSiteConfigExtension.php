@@ -12,6 +12,7 @@ use SilverStripe\Forms\HeaderField;
 use SilverStripe\ORM\DataExtension;
 use LeKoala\Base\Helpers\ZipHelper;
 use SilverStripe\AssetAdmin\Forms\UploadField;
+use SilverStripe\Forms\DropdownField;
 /**
  * Class \LeKoala\Base\Theme\ThemeSiteConfigExtension
  *
@@ -19,8 +20,10 @@ use SilverStripe\AssetAdmin\Forms\UploadField;
  * @property string $PrimaryColor
  * @property string $SecondaryColor
  * @property string $ThemeColor
- * @property string $HeaderFont
- * @property string $BodyFont
+ * @property string $HeaderFontFamily
+ * @property int $HeaderFontWeight
+ * @property string $BodyFontFamily
+ * @property int $BodyFontWeight
  * @property string $GoogleFonts
  * @property int $LogoID
  * @property int $IconID
@@ -35,8 +38,10 @@ class ThemeSiteConfigExtension extends DataExtension
         "PrimaryColor" => "Varchar",
         "SecondaryColor" => "Varchar",
         "ThemeColor" => "Varchar",
-        "HeaderFont" => "Varchar",
-        "BodyFont" => "Varchar",
+        "HeaderFontFamily" => "Varchar",
+        "HeaderFontWeight" => "Int",
+        "BodyFontFamily" => "Varchar",
+        "BodyFontWeight" => "Int",
         "GoogleFonts" => "Varchar",
     ];
     private static $has_one = [
@@ -63,10 +68,25 @@ class ThemeSiteConfigExtension extends DataExtension
             }
         }
     }
+    public static function listFontWeights()
+    {
+        return [
+            100 => 'thin',
+            200 => 'extra-light',
+            300 => 'light',
+            400 => 'regular',
+            500 => 'medium',
+            600 => 'semi-bold',
+            700 => 'bold',
+            800 => 'extra-bold',
+            900 => 'black',
+        ];
+    }
     public function updateCMSFields(FieldList $fields)
     {
         $themeTab = new Tab("Theme");
         $fields->addFieldToTab('Root', $themeTab);
+        //
         $ColorsHeader = new HeaderField("ColorsHeader", "Colors");
         $themeTab->push($ColorsHeader);
         $ColorsGroup = new FieldGroup();
@@ -78,17 +98,23 @@ class ThemeSiteConfigExtension extends DataExtension
         $ThemeColor = new ColorField('ThemeColor');
         $ThemeColor->setTooltip("Select a color that gives a good contrast with your Icon");
         $ColorsGroup->push($ThemeColor);
+        //
         $FontsHeader = new HeaderField("FontsHeader", "Fonts");
         $themeTab->push($FontsHeader);
         $FontsGroup = new FieldGroup();
         $themeTab->push($FontsGroup);
-        $HeaderFont = new TextField("HeaderFont");
+        $HeaderFont = new TextField("HeaderFontFamily");
         $FontsGroup->push($HeaderFont);
-        $BodyFont = new TextField("BodyFont");
+        $HeaderFontWeight = new DropdownField("HeaderFontWeight", $this->owner->fieldLabel('HeaderFontWeight'), self::listFontWeights());
+        $FontsGroup->push($HeaderFontWeight);
+        $BodyFont = new TextField("BodyFontFamily");
         $FontsGroup->push($BodyFont);
+        $BodyFontWeight = new DropdownField("BodyFontWeight", $this->owner->fieldLabel('BodyFontWeight'), self::listFontWeights());
+        $FontsGroup->push($BodyFontWeight);
         $GoogleFonts = new TextField("GoogleFonts");
         $GoogleFonts->setAttribute('placeholder', "Open+Sans|Roboto");
         $themeTab->push($GoogleFonts);
+        //
         $ImagesHeader = new HeaderField("ImagesHeader", "Images");
         $themeTab->push($ImagesHeader);
         /* @var $Logo UploadField */
