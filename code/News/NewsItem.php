@@ -1,15 +1,17 @@
 <?php
 namespace LeKoala\Base\News;
+
 use SilverStripe\ORM\DB;
+use SilverStripe\Assets\File;
 use SilverStripe\Assets\Image;
 use LeKoala\Base\News\NewsPage;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Forms\FormAction;
 use LeKoala\Base\News\NewsCategory;
 use LeKoala\Base\Actions\CustomAction;
+use LeKoala\Base\Forms\FlatpickrField;
 use LeKoala\Base\Forms\InputMaskField;
 use SilverStripe\ORM\FieldType\DBDate;
-use LeKoala\Base\Forms\FlatpickrField;
 use LeKoala\Base\Forms\SmartUploadField;
 use LeKoala\Base\Forms\InputMaskDateField;
 /**
@@ -21,9 +23,11 @@ use LeKoala\Base\Forms\InputMaskDateField;
  * @property int $ViewCount
  * @property string $URLSegment
  * @property int $ImageID
+ * @property int $FileID
  * @property int $PageID
  * @property int $CategoryID
  * @method \SilverStripe\Assets\Image Image()
+ * @method \SilverStripe\Assets\File File()
  * @method \LeKoala\Base\News\NewsPage Page()
  * @method \LeKoala\Base\News\NewsCategory Category()
  * @method \SilverStripe\ORM\ManyManyList|\LeKoala\Base\Tags\Tag[] Tags()
@@ -43,14 +47,16 @@ class NewsItem extends DataObject
     ];
     private static $has_one = [
         "Image" => Image::class,
+        "File" => File::class,
         "Page" => NewsPage::class,
         "Category" => NewsCategory::class,
     ];
     private static $owns = [
-        "Image"
+        "Image",
+        "File",
     ];
     private static $summary_fields = [
-        "Title", "Image.CMSThumbnail", "Published"
+        "Title", "Thumbnail.CMSThumbnail", "Published"
     ];
     private static $default_sort = 'Published DESC';
     public function getCMSFields()
@@ -58,9 +64,23 @@ class NewsItem extends DataObject
         $fields = parent::getCMSFields();
         $Image = new SmartUploadField("Image");
         $Image->setIsMultiUpload(false);
+        $Image->setAllowedFileCategories("image/supported");
         $fields->addFieldToTab('Root.Main', $Image);
+        $File = new SmartUploadField("File");
+        $File->setIsMultiUpload(false);
+        $fields->addFieldToTab('Root.Main', $File);
         $fields->makeFieldReadonly('ViewCount');
         return $fields;
+    }
+    public function Thumbnail()
+    {
+        if ($this->ImageID) {
+            return $this->Image();
+        }
+        if ($this->CategoryID && $this->Category()->ImageID) {
+            return $this->Category()->Image();
+        }
+        return false;
     }
     public static function defaultWhere()
     {
@@ -87,7 +107,8 @@ class NewsItem extends DataObject
     {
         $segment = date('Y-m-d', strtotime($this->Published)) . '-' . $segment;
     }
-    public function forTemplate() {
+    public function forTemplate()
+    {
         return $this->renderWith('LeKoala\Base\News\NewsItem');
     }
     public function Summary()
@@ -120,5 +141,25 @@ class NewsItem extends DataObject
             }
         }
         return $actions;
+    }
+    public function PrevItemID()
+    {
+        $map = array_keys($this->Page()->Items()->getIDList());
+        $offset = array_search($this->ID, $map);
+        return isset($map[$offset - 1]) ? $map[$offset - 1] : false;
+    }
+    public function PrevItem()
+    {
+        return NewsItem::get()->byID($this->PrevItemID());
+    }
+    public function NextItemID()
+    {
+        $map = array_keys($this->Page()->Items()->getIDList());
+        $offset = array_search($this->ID, $map);
+        return isset($map[$offset + 1]) ? $map[$offset + 1] : false;
+    }
+    public function NextItem()
+    {
+        return NewsItem::get()->byID($this->NextItemID());
     }
 }

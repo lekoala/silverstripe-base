@@ -123,9 +123,9 @@ class NewsPageController extends \PageController
         }
         $Singleton = NewsItem::singleton();
         $table = $Singleton->baseTable();
-        $years = DB::prepared_query("SELECT YEAR(Published) FROM $table WHERE Published IS NOT NULL AND Published <= ?", [
+        $years = array_unique(DB::prepared_query("SELECT YEAR(Published) FROM $table WHERE Published IS NOT NULL AND Published <= ?", [
             DBDatetime::now()->Format(DBDatetime::ISO_DATETIME)
-        ])->column();
+        ])->column());
         $result = ArrayList::create();
         foreach ($years as $year) {
             $result->push(ArrayData::create([
