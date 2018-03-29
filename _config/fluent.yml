@@ -1,0 +1,26 @@
+---
+Name: basefluentconfig
+After:
+  - '#versionedfiles'
+Only:
+  moduleexists:
+    - 'tractorcow/silverstripe-fluent'
+---
+# Always ignore fields ending with 9 for convenience
+TractorCow\Fluent\Extension\FluentExtension:
+  data_exclude:
+    - Varchar(9)
+    - Varchar(59)
+    - Varchar(99)
+    - Varchar(199)
+# Add extensions to SilverStripe
+SilverStripe\SiteConfig\SiteConfig:
+  extensions:
+    - 'TractorCow\Fluent\Extension\FluentExtension'
+# Add extensions to our base classes
+LeKoala\Base\News\NewsItem:
+  extensions:
+    - 'TractorCow\Fluent\Extension\FluentExtension'
+LeKoala\Base\Blocks\Block:
+  extensions:
+    - 'TractorCow\Fluent\Extension\FluentExtension'

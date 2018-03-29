@@ -15,7 +15,7 @@ use SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest;
  * on DataObjects
  *
  * @link https://github.com/unclecheese/silverstripe-gridfield-betterbuttons
- * @property \SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest|\LeKoala\Base\Actions\ActionsGridFieldItemRequest $owner
+ * @property \SilverStripe\Versioned\VersionedGridFieldItemRequest|\SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest|\LeKoala\Base\Actions\ActionsGridFieldItemRequest $owner
  */
 class ActionsGridFieldItemRequest extends DataExtension
 {

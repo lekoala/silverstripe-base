@@ -4,6 +4,7 @@ namespace LeKoala\Base\Dev;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Control\Director;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Dev\BuildTask as DefaultBuildTask;
 
@@ -35,11 +36,11 @@ abstract class BuildTask extends DefaultBuildTask
     {
         $this->outputHeader();
         $this->request = $request;
-        $this->init();
+        $this->init($request);
         $this->outputFooter();
     }
 
-    protected function init() {
+    protected function init(HTTPRequest $request) {
         // Call you own code here in your subclasses
     }
 

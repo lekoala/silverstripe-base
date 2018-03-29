@@ -35,14 +35,14 @@ use SilverStripe\Forms\DropdownField;
 class ThemeSiteConfigExtension extends DataExtension
 {
     private static $db = [
-        "PrimaryColor" => "Varchar",
-        "SecondaryColor" => "Varchar",
-        "ThemeColor" => "Varchar",
-        "HeaderFontFamily" => "Varchar",
+        "PrimaryColor" => "Varchar(9)",
+        "SecondaryColor" => "Varchar(9)",
+        "ThemeColor" => "Varchar(9)",
+        "HeaderFontFamily" => "Varchar(59)",
         "HeaderFontWeight" => "Int",
-        "BodyFontFamily" => "Varchar",
+        "BodyFontFamily" => "Varchar(59)",
         "BodyFontWeight" => "Int",
-        "GoogleFonts" => "Varchar",
+        "GoogleFonts" => "Varchar(99)",
     ];
     private static $has_one = [
         "Logo" => Image::class,

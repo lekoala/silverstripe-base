@@ -34,17 +34,17 @@ class SiteConfigExtension extends DataExtension
         // Contact Details
         "ContactInfos" => "Text",
         "ContactAddress" => "Varchar(191)",
-        "ContactEmail" => "Varchar(191)",
+        "ContactEmail" => "Varchar(199)",
         "ContactPhone" => "Varchar",
         // Emails
-        "DefaultFromEmail" => "Varchar(191)",
+        "DefaultFromEmail" => "Varchar(199)",
         "EmailFooter" => "Text",
         // Footer
         "FooterText" => "HTMLText",
         "Copyright" => "HTMLText",
         // External Services
-        "GoogleAnalyticsCode" => "Varchar",
-        "GoogleMapsApiKey" => "Varchar",
+        "GoogleAnalyticsCode" => "Varchar(59)",
+        "GoogleMapsApiKey" => "Varchar(59)",
     ];
     public function updateCMSFields(FieldList $fields)
     {

@@ -1,6 +1,5 @@
 <?php
 namespace LeKoala\Base\Blocks;
-
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\Image;
 use SilverStripe\ORM\DataList;
@@ -47,6 +46,7 @@ use SilverStripe\View\Parsers\URLSegmentFilter;
  * @method \SilverStripe\ORM\ManyManyList|\SilverStripe\Assets\File[] Files()
  * @mixin \LeKoala\Base\Extensions\SortableExtension
  * @mixin \LeKoala\Base\Extensions\SmartDataObjectExtension
+ * @mixin \TractorCow\Fluent\Extension\FluentExtension
  */
 final class Block extends DataObject
 {
@@ -55,7 +55,7 @@ final class Block extends DataObject
     private static $db = [
         'Type' => 'Varchar(191)',
         'MenuTitle' => 'Varchar(191)',
-        'HTMLID' => 'Varchar(191)',
+        'HTMLID' => 'Varchar(59)',
         'Content' => 'HTMLText',
         'Data' => JSONText::class,
     ];

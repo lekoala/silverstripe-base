@@ -5,6 +5,7 @@ use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\CompositeField;
+use SilverStripe\Forms\FieldGroup;
 
 class BlockButtonField extends CompositeField
 {
@@ -24,17 +25,21 @@ class BlockButtonField extends CompositeField
         );
         $children->push($LinkField);
 
+        $group = FieldGroup::create();
+        $children->push($group);
+
         $NewWindowField = CheckboxField::create(
             "{$name}[NewWindow]",
             'Open in new window?'
         );
-        $children->push($NewWindowField);
+        $group->push($NewWindowField);
 
         $ExtraClassesField = TextField::create(
             "{$name}[ExtraClasses]",
-            'Extra Classes'
+            ''
         );
-        $children->push($ExtraClassesField);
+        $ExtraClassesField->setAttribute('placeholder','Extra Classes');
+        $group->push($ExtraClassesField);
 
         parent::__construct($children);
 

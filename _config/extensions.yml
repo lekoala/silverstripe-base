@@ -1,3 +1,7 @@
+SilverStripe\Admin\LeftAndMain:
+  extensions:
+    - LeKoala\Base\BaseLeftAndMainExtension
+    - LeKoala\Base\Blocks\BlocksLeftAndMainExtension
 SilverStripe\CMS\Model\SiteTree:
   extensions:
     - LeKoala\Base\Extensions\SocialShareExtension
@@ -20,6 +24,7 @@ LeKoala\Base\News\NewsItem:
     - LeKoala\Base\Extensions\SmartDataObjectExtension
     - LeKoala\Base\Tags\TaggableExtension
     - LeKoala\Base\Extensions\SocialShareExtension
+    - LeKoala\Base\Extensions\EmbeddableExtension
 LeKoala\Base\News\NewsCategory:
   extensions:
     - LeKoala\Base\Extensions\URLSegmentExtension

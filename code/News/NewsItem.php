@@ -1,6 +1,5 @@
 <?php
 namespace LeKoala\Base\News;
-
 use SilverStripe\ORM\DB;
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\Image;
@@ -14,6 +13,7 @@ use LeKoala\Base\Forms\InputMaskField;
 use SilverStripe\ORM\FieldType\DBDate;
 use LeKoala\Base\Forms\SmartUploadField;
 use LeKoala\Base\Forms\InputMaskDateField;
+use LeKoala\Base\VideoEmbed\VideoEmbed;
 /**
  * Class \LeKoala\Base\News\NewsItem
  *
@@ -22,6 +22,7 @@ use LeKoala\Base\Forms\InputMaskDateField;
  * @property string $Published
  * @property int $ViewCount
  * @property string $URLSegment
+ * @property string $EmbedURL
  * @property int $ImageID
  * @property int $FileID
  * @property int $PageID
@@ -35,6 +36,8 @@ use LeKoala\Base\Forms\InputMaskDateField;
  * @mixin \LeKoala\Base\Extensions\SmartDataObjectExtension
  * @mixin \LeKoala\Base\Tags\TaggableExtension
  * @mixin \LeKoala\Base\Extensions\SocialShareExtension
+ * @mixin \LeKoala\Base\Extensions\EmbeddableExtension
+ * @mixin \TractorCow\Fluent\Extension\FluentExtension
  */
 class NewsItem extends DataObject
 {

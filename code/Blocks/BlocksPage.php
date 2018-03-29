@@ -5,16 +5,17 @@ use LeKoala\Base\Blocks\Block;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\Forms\TextField;
 use SilverStripe\Control\Director;
+use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Security\Permission;
 use SilverStripe\SiteConfig\SiteConfig;
 use LeKoala\Base\ORM\FieldType\JSONText;
 use LeKoala\Base\Contact\ContactSubmission;
 use SilverStripe\Forms\GridField\GridField;
-use SilverStripe\Forms\GridField\GridFieldPaginator;
 use SilverStripe\Forms\GridField\GridFieldPageCount;
-use Symbiote\GridFieldExtensions\GridFieldOrderableRows;
+use SilverStripe\Forms\GridField\GridFieldPaginator;
 use SilverStripe\Forms\GridField\GridFieldToolbarHeader;
+use Symbiote\GridFieldExtensions\GridFieldOrderableRows;
 use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
 /**
  * A page mode of blocks
@@ -25,15 +26,11 @@ use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
  * This means that blocks versioning will follow page versioning and everything
  * is published at the same time
  *
- * @property string $BlocksList
  * @method \SilverStripe\ORM\DataList|\LeKoala\Base\Blocks\Block[] Blocks()
  */
 class BlocksPage extends Page
 {
     private static $table_name = 'BlocksPage'; // When using namespace, specify table name
-    private static $db = [
-        "BlocksList" => JSONText::class
-    ];
     private static $has_many = [
         "Blocks" => Block::class
     ];
@@ -78,10 +75,7 @@ class BlocksPage extends Page
      */
     public function getBlocksListArray()
     {
-        if (!$this->BlocksList) {
-            return [];
-        }
-        return $this->dbObject('BlocksList')->decodeArray();
+        return array_unique($this->Blocks()->column('Type'));
     }
     public function getContent()
     {
@@ -89,6 +83,12 @@ class BlocksPage extends Page
             return $this->renderContent(true);
         }
         return $this->getField('Content');
+    }
+    public function getCMSActions()
+    {
+        $fields = parent::getCMSActions();
+        $fields->addFieldToTab('ActionMenus.MoreOptions', FormAction::create('doPublishBlocks', 'Publish all blocks'));
+        return $fields;
     }
     public function getCMSFields()
     {
@@ -106,8 +106,6 @@ class BlocksPage extends Page
     {
         parent::onBeforeWrite();
         $this->Content = $this->renderContent();
-        $list = array_unique($this->Blocks()->column('Type'));
-        $this->BlocksList = $list;
     }
     /**
      * Render all blocks to get a full html document

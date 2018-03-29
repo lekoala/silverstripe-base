@@ -9,7 +9,7 @@ use SilverStripe\Assets\File;
 /**
  * Automatically publish files and images related to this data object
  *
- * @property \LeKoala\Base\Blocks\Block|\LeKoala\Base\News\NewsItem|\LeKoala\Base\Extensions\SmartDataObjectExtension $owner
+ * @property \LeKoala\Base\Blocks\Block|\LeKoala\Base\News\NewsItem|\PortfolioItem|\LeKoala\Base\Extensions\SmartDataObjectExtension $owner
  */
 class SmartDataObjectExtension extends DataExtension
 {

@@ -19,14 +19,14 @@ class SocialExtension extends DataExtension
 {
     //TODO: find a more flexible way to deal with various type of social networks
     private static $db = [
-        "Facebook" => "Varchar(191)",
-        "Twitter" => "Varchar(191)",
-        "LinkedIn" => "Varchar(191)",
-        "Youtube" => "Varchar(191)",
-        "Vimeo" => "Varchar(191)",
-        "Flickr" => "Varchar(191)",
-        "Instagram" => "Varchar(191)",
-        "Pinterest" => "Varchar(191)",
+        "Facebook" => "Varchar(59)",
+        "Twitter" => "Varchar(59)",
+        "LinkedIn" => "Varchar(59)",
+        "Youtube" => "Varchar(59)",
+        "Vimeo" => "Varchar(59)",
+        "Flickr" => "Varchar(59)",
+        "Instagram" => "Varchar(59)",
+        "Pinterest" => "Varchar(59)",
     ];
     public function updateCMSFields(FieldList $fields)
     {

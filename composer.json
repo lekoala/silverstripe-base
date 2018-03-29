@@ -22,7 +22,8 @@
         "symbiote/silverstripe-gridfieldextensions": "^3.1",
         "bummzack/sortablefile": "^2.0",
         "wilr/silverstripe-googlesitemaps": "^2.0",
-        "jonom/focuspoint": "^3.0"
+        "jonom/focuspoint": "^3.0",
+        "unclecheese/display-logic": "^2.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^5.7",

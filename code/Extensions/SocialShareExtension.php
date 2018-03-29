@@ -7,7 +7,7 @@ use SilverStripe\ORM\DataExtension;
  * Class \LeKoala\Base\Extensions\SocialShareExtension
  *
  * @link http://www.sharelinkgenerator.com/
- * @property \LeKoala\Base\News\NewsItem|\SilverStripe\CMS\Model\SiteTree|\LeKoala\Base\Extensions\SocialShareExtension $owner
+ * @property \LeKoala\Base\News\NewsItem|\PortfolioItem|\SilverStripe\CMS\Model\SiteTree|\LeKoala\Base\Extensions\SocialShareExtension $owner
  */
 class SocialShareExtension extends DataExtension
 {

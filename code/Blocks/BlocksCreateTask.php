@@ -3,16 +3,17 @@ namespace LeKoala\Base\Dev;
 
 use SilverStripe\Core\Kernel;
 use LeKoala\Base\Blocks\Block;
-use SilverStripe\View\SSViewer;
 use LeKoala\Base\Dev\BuildTask;
+use SilverStripe\View\SSViewer;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Control\Director;
 use SilverStripe\View\ThemeManifest;
+use LeKoala\Base\Theme\KnowsThemeDir;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\DevBuildController;
 use SilverStripe\View\ThemeResourceLoader;
 use SilverStripe\Core\Manifest\ClassLoader;
-use LeKoala\Base\Theme\KnowsThemeDir;
 
 /**
  * Assist in building blocks for your website
@@ -27,7 +28,7 @@ class BlocksCreateTask extends BuildTask
     protected $description = 'Create block classes and styles based on your templates.';
     private static $segment = 'BlocksCreateTask';
 
-    public function init()
+    public function init(HTTPRequest $request)
     {
         $themeBlocksPath = Director::baseFolder() . DIRECTORY_SEPARATOR . $this->getThemeDir() . '/templates/Blocks';
         $mysiteBlocksPath = Director::baseFolder() . DIRECTORY_SEPARATOR . project() . '/templates/Blocks';
