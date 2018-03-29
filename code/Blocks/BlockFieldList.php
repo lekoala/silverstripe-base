@@ -14,6 +14,7 @@ use SilverStripe\Forms\CheckboxField;
 class BlockFieldList extends FieldList
 {
     protected $defaultTab = 'Main';
+    protected $defaultKey = 'Data';
 
     protected function normalizeTitle($name, $title = null)
     {
@@ -26,17 +27,39 @@ class BlockFieldList extends FieldList
         return $title;
     }
 
-    protected function normalizeName($name)
+    protected function normalizeName($name, $baseKey = null)
     {
+        if ($baseKey === null) {
+            $baseKey = $this->defaultKey;
+        }
         if (is_array($name)) {
             $itemsKey = Block::ITEMS_KEY;
             $idx = $name[0];
             $key = $name[1];
-            $name = "Data[$itemsKey][$idx][$key]";
+            $name = $baseKey . '[' . $itemsKey . '][' . $idx . '][' . $key . ']';
         } else {
-            $name = "Data[$name]";
+            $name = $baseKey . '[' . $name . ']';
         }
         return $name;
+    }
+
+    /**
+     * Convenience methods to add settings
+     *
+     * @param callable $cb
+     * @return void
+     */
+    public function addSettings($cb)
+    {
+        $tab = $this->getDefaultTab();
+        $key = $this->getDefaultKey();
+        $this->setDefaultTab('Settings');
+        $this->setDefaultKey('Settings');
+
+        $cb($this);
+
+        $this->setDefaultTab($tab);
+        $this->setDefaultKey($key);
     }
 
     public function addField($class, $name, $title)
@@ -53,7 +76,7 @@ class BlockFieldList extends FieldList
         static $i = 0;
         $i++;
         $field = HeaderField::create("H[$i]", $title, $level);
-        $this->addFieldsToTab('Root.Main', $field);
+        $this->addFieldsToTab('Root.' . $this->defaultTab, $field);
         return $field;
     }
 
@@ -98,6 +121,26 @@ class BlockFieldList extends FieldList
     public function setDefaultTab($defaultTab)
     {
         $this->defaultTab = $defaultTab;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of defaultKey
+     */
+    public function getDefaultKey()
+    {
+        return $this->defaultKey;
+    }
+
+    /**
+     * Set the value of defaultKey
+     *
+     * @return  self
+     */
+    public function setDefaultKey($defaultKey)
+    {
+        $this->defaultKey = $defaultKey;
 
         return $this;
     }

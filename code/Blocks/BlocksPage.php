@@ -17,6 +17,8 @@ use SilverStripe\Forms\GridField\GridFieldPaginator;
 use SilverStripe\Forms\GridField\GridFieldToolbarHeader;
 use Symbiote\GridFieldExtensions\GridFieldOrderableRows;
 use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
+use SilverStripe\GraphQL\Controller;
+use SilverStripe\Dev\TaskRunner;
 /**
  * A page mode of blocks
  *
@@ -105,7 +107,18 @@ class BlocksPage extends Page
     protected function onBeforeWrite()
     {
         parent::onBeforeWrite();
-        $this->Content = $this->renderContent();
+        $refreshBlocks = false;
+        // We should refresh if a block has been updated later than the page
+        $maxBlockEdited = strtotime($this->Blocks()->max('LastEdited'));
+        if ($maxBlockEdited > strtotime($this->LastEdited)) {
+            $refreshBlocks = true;
+        }
+        // In site publisher, always refresh
+        // $ctrl = Controller::curr();
+        // if($ctrl instanceof TaskRunner) {
+        //     $refreshBlocks = true;
+        // }
+        $this->Content = $this->renderContent($refreshBlocks);
     }
     /**
      * Render all blocks to get a full html document

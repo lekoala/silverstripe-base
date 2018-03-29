@@ -1,5 +1,6 @@
 <?php
 namespace LeKoala\Base\Blocks;
+
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\Image;
 use SilverStripe\ORM\DataList;
@@ -37,6 +38,7 @@ use SilverStripe\View\Parsers\URLSegmentFilter;
  * @property string $HTMLID
  * @property string $Content
  * @property string $Data
+ * @property string $Settings
  * @property int $Sort
  * @property int $ImageID
  * @property int $PageID
@@ -53,11 +55,14 @@ final class Block extends DataObject
     const ITEMS_KEY = 'Items';
     private static $table_name = 'Block'; // When using namespace, specify table name
     private static $db = [
-        'Type' => 'Varchar(191)',
+        'Type' => 'Varchar(59)',
         'MenuTitle' => 'Varchar(191)',
         'HTMLID' => 'Varchar(59)',
         'Content' => 'HTMLText',
+        // Localized data
         'Data' => JSONText::class,
+        // Unlocalized data
+        'Settings' => JSONText::class,
     ];
     private static $has_one = [
         "Image" => Image::class,
@@ -80,6 +85,9 @@ final class Block extends DataObject
     private static $summary_fields = [
         'BlockType' => 'Block Type',
         'Summary' => 'Summary',
+    ];
+    private static $translate = [
+        "MenuTitle", "Content", "Data"
     ];
     private static $defaults = [
         'Type' => ContentBlock::class,
@@ -156,6 +164,8 @@ final class Block extends DataObject
         if ($chosenTemplate) {
             $typeInst = $this->getTypeInstance();
             $data = $this->DataArray();
+            $settings = $this->SettingsArray();
+            $data = array_merge($data, $settings);
             // We have items to normalize
             if (isset($data[self::ITEMS_KEY])) {
                 $data[self::ITEMS_KEY] = self::normalizeIndexedList($data[self::ITEMS_KEY]);
@@ -163,7 +173,7 @@ final class Block extends DataObject
             // Somehow, data is not nested properly if not wrapped beforehand with ArrayData
             $arrayData = new ArrayData($data);
             // Maybe we need to disable hash rewriting
-            if($typeInst->hasMethod('disableAnchorRewriting')) {
+            if ($typeInst->hasMethod('disableAnchorRewriting')) {
                 SSViewer::setRewriteHashLinksDefault($typeInst->disableAnchorRewriting());
             }
             $result = (string)$typeInst->renderWith($template, $arrayData);
@@ -294,7 +304,11 @@ final class Block extends DataObject
     {
         // A Data field
         if (strpos($name, 'Data[') === 0) {
-            return $this->getInData($name);
+            return $this->getIn($name, $this->DataArray());
+        }
+        // A Settings field
+        if (strpos($name, 'Settings[') === 0) {
+            return $this->getIn($name, $this->SettingsArray());
         }
         return parent::__get($name);
     }
@@ -308,6 +322,10 @@ final class Block extends DataObject
     {
         // A Data field
         if (strpos($name, 'Data[') === 0) {
+            return true;
+        }
+        // A Settings field
+        if (strpos($name, 'Settings[') === 0) {
             return true;
         }
         return parent::hasField($name);
@@ -333,12 +351,12 @@ final class Block extends DataObject
      * Get nested data
      *
      * @param string $key
+     * @param array $arr
      * @return string
      */
-    public function getInData($key)
+    public function getIn($key, $arr)
     {
         $matches = self::extractNameParts($key);
-        $arr = $this->DataArray();
         $val = $arr;
         foreach ($matches as $part) {
             if (isset($val[$part])) {
@@ -357,7 +375,19 @@ final class Block extends DataObject
     public function DataArray()
     {
         if ($this->Data) {
-            return \json_decode($this->Data, \JSON_OBJECT_AS_ARRAY);
+            return json_decode($this->Data, JSON_OBJECT_AS_ARRAY);
+        }
+        return [];
+    }
+    /**
+     * Consistently returns an array regardless of what is in Settings
+     *
+     * @return array
+     */
+    public function SettingsArray()
+    {
+        if ($this->Settings) {
+            return json_decode($this->Settings, JSON_OBJECT_AS_ARRAY);
         }
         return [];
     }
@@ -423,26 +453,33 @@ final class Block extends DataObject
         // ! Fields must be added to Root.Main to work properly
         $mainTab->push(new HiddenField('ID'));
         $mainTab->push(new HiddenField('Data'));
+        $mainTab->push(new HiddenField('Settings'));
         $mainTab->push(new HiddenField('PageID'));
         // Show debug infos
         if (Director::isDev() && isset($_GET['debug'])) {
             $json = '';
             if ($this->Data) {
                 $json = \json_encode(json_decode($this->Data), \JSON_PRETTY_PRINT);
-                $debugData = new LiteralField('JsonData', '<pre><code>' . $json . '</code></pre>');
+                $debugData = new LiteralField('JsonData', '<pre>Data: <code>' . $json . '</code></pre>');
             } else {
                 $debugData = new LiteralField('JsonData', '<div class="message info">Does not contain any data</div>');
             }
             $fields->addFieldsToTab('Root.Debug', $debugData);
+            if ($this->Settings) {
+                $json = \json_encode(json_decode($this->Settings), \JSON_PRETTY_PRINT);
+                $debugSettings = new LiteralField('JsonSettings', '<pre>Settings: <code>' . $json . '</code></pre>');
+            } else {
+                $debugSettings = new LiteralField('JsonSettings', '<div class="message info">Does not contain any settings</div>');
+            }
+            $fields->addFieldsToTab('Root.Debug', $debugSettings);
         }
         // Only show valid types in a dropdown
         $ValidTypes = self::listValidTypes();
         $Type = new DropdownField('Type', $this->fieldLabel('Type'), $ValidTypes);
         $Type->setAttribute('onchange', "jQuery('#Form_ItemEditForm_action_doSave').click()");
-        if($this->ID) {
+        if ($this->ID) {
             $settingsTab->push($Type);
-        }
-        else {
+        } else {
             $mainTab->push($Type);
         }
         // Other settings

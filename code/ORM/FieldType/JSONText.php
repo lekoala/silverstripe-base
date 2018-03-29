@@ -3,7 +3,9 @@ namespace LeKoala\Base\ORM\FieldType;
 
 use SilverStripe\ORM\DB;
 use SilverStripe\Forms\HiddenField;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\FieldType\DBString;
+use SilverStripe\ORM\Connect\MySQLDatabase;
 
 /**
  * JSONText storage
@@ -18,10 +20,13 @@ class JSONText extends DBString
      */
     public function requireField()
     {
+        $charset = Config::inst()->get(MySQLDatabase::class, 'charset');
+        $collation = Config::inst()->get(MySQLDatabase::class, 'collation');
+
         $parts = [
             'datatype' => 'mediumtext',
-            'character set' => 'utf8',
-            'collate' => 'utf8_general_ci',
+            'character set'=> $charset,
+            'collate'=> $collation,
             'arrayValue' => $this->arrayValue
         ];
 
@@ -83,27 +88,25 @@ class JSONText extends DBString
 
     public function saveInto($dataObject)
     {
-        if ($this->value && \is_array($this->value)) {
-            $this->value = \json_encode($this->value);
+        if ($this->value && is_array($this->value)) {
+            $this->value = json_encode($this->value);
         }
         parent::saveInto($dataObject);
     }
 
     public function setValue($value, $record = null, $markChanged = true)
     {
-        if (\is_array($value)) {
+        if (is_array($value)) {
             $value = json_encode($value);
         }
-
         return parent::setValue($value, $record, $markChanged);
     }
 
     public function prepValueForDB($value)
     {
-        if (\is_array($value)) {
+        if (is_array($value)) {
             $value = json_encode($value);
         }
-
         return parent::prepValueForDB($value);
     }
 
