@@ -25,7 +25,21 @@ class ColorField extends TextField
      */
     protected $config = [];
 
-    private static $default_config = [];
+    /**
+     * @config
+     * @var string
+     */
+    private static $version = '1.8.0';
+
+    /**
+     * @config
+     * @var array
+     */
+    private static $default_config = [
+        "preferredFormat" => "hex",
+        "showInitial" => true,
+        "showInput" => true,
+    ];
 
     public function __construct($name, $title = null, $value = '', $maxLength = null, $form = null)
     {
@@ -105,8 +119,9 @@ class ColorField extends TextField
 
         $this->setAttribute('data-config', json_encode($config));
 
-        Requirements::css('https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.css');
-        Requirements::javascript('https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.js');
+        $version = $this->config()->version;
+        Requirements::css("https://cdnjs.cloudflare.com/ajax/libs/spectrum/$version/spectrum.min.css");
+        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/spectrum/$version/spectrum.min.js");
         if ($lang != 'en') {
         }
         Requirements::javascript('base/javascript/ColorField.js');

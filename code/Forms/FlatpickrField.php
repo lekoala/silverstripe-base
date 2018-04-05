@@ -24,6 +24,16 @@ class FlatpickrField extends TextField
      */
     protected $config = [];
 
+    /**
+     * @config
+     * @var string
+     */
+    private static $version = '4.4.3';
+
+    /**
+     * @config
+     * @var array
+     */
     private static $default_config = [
         'altInput' => true,
     ];
@@ -158,10 +168,11 @@ class FlatpickrField extends TextField
 
         $this->setAttribute('data-flatpickr', json_encode($this->config));
 
-        Requirements::css('https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.1.3/flatpickr.min.css');
-        Requirements::javascript('https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.1.3/flatpickr.js');
+        $version = $this->config()->version;
+        Requirements::css("https://cdnjs.cloudflare.com/ajax/libs/flatpickr/$version/flatpickr.min.css");
+        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/flatpickr/$version/flatpickr.js");
         if ($lang != 'en') {
-            Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.1.3/l10n/$lang.js");
+            Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/flatpickr/$version/l10n/$lang.js");
         }
         Requirements::javascript('base/javascript/FlatpickrField.js');
         return parent::Field($properties);
