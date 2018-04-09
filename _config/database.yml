@@ -1,0 +1,10 @@
+---
+Name: base-mysql
+After: '#databaseconnectors'
+---
+# Because there is really no reason to use regular utf8
+SilverStripe\ORM\Connect\MySQLDatabase:
+  connection_charset: utf8mb4
+  connection_collation: utf8mb4_unicode_ci
+  charset: utf8mb4
+  collation: utf8mb4_unicode_ci

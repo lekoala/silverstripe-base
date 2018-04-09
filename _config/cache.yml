@@ -1,4 +1,13 @@
 ---
+Before:
+  - '#corecache'
+---
+SilverStripe\Core\Injector\Injector:
+  RedisClient:
+    class: 'Predis\Client'
+    constructor:
+      0: 'tcp://127.0.0.1:6379'
+---
 After:
   - '#corecache'
 ---
@@ -7,3 +16,9 @@ SilverStripe\Core\Injector\Injector:
     factory: SilverStripe\Core\Cache\CacheFactory
     constructor:
       namespace: "myCache"
+# Add this to your mysite/_config/cache.yml if you use redis
+#   RedisCacheFactory:
+#     class: 'LeKoala\Base\Cache\RedisCacheFactory'
+#     constructor:
+#       client: '%$RedisClient'
+#   SilverStripe\Core\Cache\CacheFactory: '%$RedisCacheFactory'

@@ -40,6 +40,7 @@ class ContentController extends DefaultController
         }
         parent::init();
         $this->warnIfWrongCacheIsUsed();
+        $this->ensureTempFolderExists();
         $this->displayFlashMessage();
     }
 
@@ -49,7 +50,7 @@ class ContentController extends DefaultController
         $page = $this->data();
         $parts = explode('\\', get_class($page));
         $class = end($parts);
-        if($page->hasMethod('updateBodyClass')) {
+        if ($page->hasMethod('updateBodyClass')) {
             $page->updateBodyClass($class);
         }
         return $class;
@@ -87,6 +88,20 @@ class ContentController extends DefaultController
     {
         if ($this->getCache() instanceof Symfony\Component\Cache\Simple\FilesystemCache) {
             $this->getLogger()->info("OPCode cache is not enabled. To get maximum performance, enable it in php.ini");
+        }
+    }
+
+    /**
+     * Temp folder should always be there
+     */
+    protected function ensureTempFolderExists()
+    {
+        if (!Director::isDev()) {
+            return;
+        }
+        $tempFolder = Director::baseFolder() . '/silverstripe-cache';
+        if (!is_dir($tempFolder)) {
+            mkdir($tempFolder, 0755);
         }
     }
 

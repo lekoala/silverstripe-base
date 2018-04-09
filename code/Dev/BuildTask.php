@@ -157,6 +157,9 @@ abstract class BuildTask extends DefaultBuildTask
             if (isset($cli_map[$type])) {
                 $message = $cli_map[$type] . ' ' . $message;
             }
+            if(!is_string($message)) {
+                $message = json_encode($message);
+            }
             echo "  $message\n";
         } else {
             $web_map = [
@@ -172,7 +175,14 @@ abstract class BuildTask extends DefaultBuildTask
             if (isset($web_map[$type])) {
                 $color = $web_map[$type];
             }
-            echo "<div style=\"color:$color\">$message</div>";
+            if(!is_string($message)) {
+                $message = print_r($message, true);
+                echo "<pre style=\"color:$color\">$message</pre>";
+            }
+            else {
+                echo "<div style=\"color:$color\">$message</div>";
+            }
+
         }
     }
 }
