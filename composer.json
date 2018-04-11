@@ -32,6 +32,9 @@
         "lekoala/silverstripe-debugbar": "*",
         "silverleague/ideannotator": "3.x-dev"
     },
+    "suggest": {
+        "predis/predis": "Use Redis as a cache"
+    },
     "extra": {
         "installer-name": "base",
         "expose": [
