@@ -6,7 +6,7 @@ if (!function_exists('bm')) {
     function bm($cb = null)
     {
         \LeKoala\Dev\Benchmark::run($cb);
-    };
+    }
 }
 
 if (Director::isDev()) {
