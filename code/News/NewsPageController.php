@@ -8,6 +8,7 @@ use SilverStripe\ORM\ArrayList;
 use SilverStripe\View\ArrayData;
 use SilverStripe\ORM\GroupedList;
 use SilverStripe\ORM\PaginatedList;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\ORM\FieldType\DBDate;
 use SilverStripe\ORM\Queries\SQLSelect;
 use SilverStripe\ORM\FieldType\DBDatetime;
@@ -37,7 +38,7 @@ class NewsPageController extends \PageController
         parent::init();
         $this->list = $this->DisplayedItems();
     }
-    public function index()
+    public function index(HTTPRequest $request)
     {
         return $this->render();
     }

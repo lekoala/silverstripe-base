@@ -2,6 +2,7 @@
 namespace LeKoala\Base\Contact;
 use SilverStripe\Control\Email\Email;
 use LeKoala\Base\Contact\ContactSubmission;
+use SilverStripe\Control\HTTPRequest;
 /**
  * Class \LeKoala\Base\Contact\ContactPageController
  *
@@ -15,7 +16,7 @@ class ContactPageController extends \PageController
         "index",
         "doSend",
     ];
-    public function index()
+    public function index(HTTPRequest $request)
     {
         // $this->sendDummyEmail();
         $this->SiteConfig()->requireGoogleMaps();
