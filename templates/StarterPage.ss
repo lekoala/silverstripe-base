@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="$ContentLocale">
+<html lang="$ContentLocale"<% if $i18nScriptDirection %> dir="$i18nScriptDirection"<% end_if %>>
 <head>
 	<% base_tag %>
 	<title><% if $MetaTitle %>$MetaTitle<% else %>$Title<% end_if %> | $SiteConfig.Title</title>
@@ -10,7 +10,7 @@
     $SiteConfig.Favicons
 </head>
 
-<body class="$BodyClass" <% if $i18nScriptDirection %>dir="$i18nScriptDirection"<% end_if %>>
+<body class="$BodyClass">
 
 <div class="wrapper">
 	<% include Header %>

@@ -3,11 +3,15 @@ namespace LeKoala\Base;
 
 use \Exception;
 use SilverStripe\i18n\i18n;
+use SilverStripe\Security\Member;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Environment;
+use SilverStripe\Security\Security;
 use SilverStripe\View\Requirements;
 use LeKoala\Base\Helpers\ClassHelper;
 use SilverStripe\ORM\ValidationResult;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Security\IdentityStore;
 use SilverStripe\CMS\Controllers\ContentController as DefaultController;
 /**
  * A more opiniated base controller for your app
@@ -39,9 +43,36 @@ class ContentController extends DefaultController
             $this->requireHttpBasicAuth();
         }
         parent::init();
+
         $this->warnIfWrongCacheIsUsed();
-        $this->ensureTempFolderExists();
+
+        // A few helpful things in dev mode
+        if (Director::isDev()) {
+            $this->ensureTempFolderExists();
+            $this->allowAutologin();
+        }
+
         $this->displayFlashMessage();
+    }
+
+      /**
+     * Controller's default action handler.  It will call the method named in "$Action", if that method
+     * exists. If "$Action" isn't given, it will use "index" as a default.
+     *
+     * @param HTTPRequest $request
+     * @param string $action
+     *
+     * @return DBHTMLText|HTTPResponse
+     */
+    protected function handleAction($request, $action)
+    {
+        try {
+            $result = parent::handleAction($request, $action);
+        }
+        catch (Exception $ex) {
+            d($ex);
+        }
+        return $result;
     }
 
     public function BodyClass()
@@ -52,6 +83,9 @@ class ContentController extends DefaultController
         $class = end($parts);
         if ($page->hasMethod('updateBodyClass')) {
             $page->updateBodyClass($class);
+        }
+        if($page->URLSegment == 'Security') {
+            $class .= ' Security';
         }
         return $class;
     }
@@ -83,6 +117,8 @@ class ContentController extends DefaultController
 
     /**
      * Because you really should! Speed increase by a 2x magnitude
+     *
+     * @return void
      */
     protected function warnIfWrongCacheIsUsed()
     {
@@ -93,15 +129,30 @@ class ContentController extends DefaultController
 
     /**
      * Temp folder should always be there
+     *
+     * @return void
      */
     protected function ensureTempFolderExists()
     {
-        if (!Director::isDev()) {
-            return;
-        }
         $tempFolder = Director::baseFolder() . '/silverstripe-cache';
         if (!is_dir($tempFolder)) {
             mkdir($tempFolder, 0755);
+        }
+    }
+
+    /**
+     * Easily login on dev sites
+     * Do not run this on production
+     *
+     * @return void
+     */
+    protected function allowAutologin() {
+        $request = $this->getRequest();
+        if($request->getVar('autologin')) {
+            $admin = Security::findAnAdministrator();
+            // $admin->login() is deprecated
+            $identityStore = Injector::inst()->get(IdentityStore::class);
+            $identityStore->logIn($admin, true, $request);
         }
     }
 

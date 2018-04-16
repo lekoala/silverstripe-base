@@ -1,9 +1,10 @@
 <?php
 namespace LeKoala\Base\Theme;
-use SilverStripe\Core\Extension;
-use SilverStripe\View\Requirements;
+
 use SilverStripe\View\SSViewer;
+use SilverStripe\Core\Extension;
 use SilverStripe\Control\Director;
+use SilverStripe\View\Requirements;
 /**
  * Class \LeKoala\Base\Theme\ThemeControllerExtension
  *
@@ -29,16 +30,18 @@ class ThemeControllerExtension extends Extension
         $themeDir = $this->getThemeDir();
         $cssPath = Director::baseFolder() . '/' . $themeDir . '/css';
         $files = glob($cssPath . '/*.css');
+        $SiteConfig = $this->owner->SiteConfig();
         // Files are included in order, please name them accordingly
         foreach ($files as $file) {
-            $name = basename($file);
             if (strpos($file, '-theme.css') !== false) {
-                // This file requires variable replacement
-                Requirements::css($this->replaceVarsInCssFile($file));
-            } else {
-                // Simply include it
-                Requirements::themedCSS($name);
+                continue;
             }
+            $name = basename($file);
+            Requirements::themedCSS($name);
+        }
+        if($SiteConfig->CssTheme) {
+            $themedFile = $cssPath .'/' . $SiteConfig->CssTheme;
+            Requirements::css($this->replaceVarsInCssFile($themedFile));
         }
     }
     /**

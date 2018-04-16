@@ -12,7 +12,10 @@ trait KnowsThemeDir
      */
     public function getThemeDir()
     {
-        $themes = SSViewer::get_themes();
+        $themes = SSViewer::config()->uninherited('themes');
+        if(!$themes) {
+            $themes = SSViewer::get_themes();
+        }
         if ($themes) {
             do {
                 $mainTheme = array_shift($themes);

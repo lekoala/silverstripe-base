@@ -1,5 +1,6 @@
 <?php
 namespace LeKoala\Base\Theme;
+
 use SilverStripe\Forms\Tab;
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\Image;
@@ -34,6 +35,7 @@ use SilverStripe\Forms\DropdownField;
  */
 class ThemeSiteConfigExtension extends DataExtension
 {
+    use KnowsThemeDir;
     private static $db = [
         "PrimaryColor" => "Varchar(9)",
         "SecondaryColor" => "Varchar(9)",
@@ -42,6 +44,7 @@ class ThemeSiteConfigExtension extends DataExtension
         "HeaderFontWeight" => "Int",
         "BodyFontFamily" => "Varchar(59)",
         "BodyFontWeight" => "Int",
+        "CssTheme" => "Varchar(59)",
         "GoogleFonts" => "Varchar(99)",
     ];
     private static $has_one = [
@@ -68,6 +71,11 @@ class ThemeSiteConfigExtension extends DataExtension
             }
         }
     }
+    /**
+     * Get all font weight with a human readable value
+     *
+     * @return array
+     */
     public static function listFontWeights()
     {
         return [
@@ -81,6 +89,23 @@ class ThemeSiteConfigExtension extends DataExtension
             800 => 'extra-bold',
             900 => 'black',
         ];
+    }
+    /**
+     * List all *-theme.css files in current theme
+     *
+     * @return array
+     */
+    public function listCssThemes()
+    {
+        $themeDir = $this->getThemeDir();
+        $cssPath = Director::baseFolder() . '/' . $themeDir . '/css';
+        $files = glob($cssPath . '/*-theme.css');
+        $arr = [];
+        foreach ($files as $file) {
+            $name = basename($file);
+            $arr[$name] = str_replace('-theme.css','',$name);
+        }
+        return $arr;
     }
     public function updateCMSFields(FieldList $fields)
     {
@@ -113,7 +138,9 @@ class ThemeSiteConfigExtension extends DataExtension
         $FontsGroup->push($BodyFontWeight);
         $GoogleFonts = new TextField("GoogleFonts");
         $GoogleFonts->setAttribute('placeholder', "Open+Sans|Roboto");
-        $themeTab->push($GoogleFonts);
+        $cssThemes = $this->listCssThemes();
+        $CssTheme = new DropdownField("CssTheme", $this->owner->fieldLabel('CssTheme'), $cssThemes);
+        $themeTab->push($CssTheme);
         //
         $ImagesHeader = new HeaderField("ImagesHeader", "Images");
         $themeTab->push($ImagesHeader);
