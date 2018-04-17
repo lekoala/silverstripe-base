@@ -11,9 +11,15 @@ use SilverStripe\Forms\TextareaField;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Forms\EmailField;
 use SilverStripe\Forms\PasswordField;
+use SilverStripe\Forms\DropdownField;
 
 class BuildableFieldList extends FieldList
 {
+    /**
+     * @var string
+     */
+    protected $i18nEntity = 'GLOBAL';
+
     /**
      * Slightly improve way to normalize titles in forms
      *
@@ -27,7 +33,10 @@ class BuildableFieldList extends FieldList
             if (is_array($name)) {
                 $name = $name[1];
             }
-            $title = FormField::name_to_label($name);
+            $fallback = FormField::name_to_label($name);
+            // Attempt translation
+            $validKey = str_replace(['[', ']', '_'], '', $name);
+            $title = _t($this->i18nEntity . '.' . $validKey, $fallback);
         }
         return $title;
     }
@@ -44,6 +53,9 @@ class BuildableFieldList extends FieldList
         foreach ($attributes as $k => $v) {
             if ($k == 'class') {
                 $object->addExtraClass($v);
+            }
+            else if ($k == 'options') {
+                $object->setSource($v);
             } else {
                 $object->setAttribute($v);
             }
@@ -143,6 +155,19 @@ class BuildableFieldList extends FieldList
     /**
      * @param string $name
      * @param string $title
+     * @param array $src
+     * @param array $attributes
+     * @return DropdownField
+     */
+    public function addDropdown($name = "Option", $title = null, $src = [], $attributes = [])
+    {
+        $attributes['options'] = $src;
+        return $this->addField(DropdownField::class, $name, $title, $attributes);
+    }
+
+    /**
+     * @param string $name
+     * @param string $title
      * @param array $attributes
      * @return TextField
      */
@@ -162,4 +187,24 @@ class BuildableFieldList extends FieldList
         return $this->addField(TextareaField::class, $name, $title, $attributes);
     }
 
+
+    /**
+     * Get the value of i18nEntity
+     */
+    public function getI18nEntity()
+    {
+        return $this->i18nEntity;
+    }
+
+    /**
+     * Set the value of i18nEntity
+     *
+     * @return  self
+     */
+    public function setI18nEntity($i18nEntity)
+    {
+        $this->i18nEntity = $i18nEntity;
+
+        return $this;
+    }
 }

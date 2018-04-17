@@ -13,6 +13,7 @@ use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Security\IdentityStore;
 use SilverStripe\CMS\Controllers\ContentController as DefaultController;
+use SilverStripe\Control\Cookie;
 /**
  * A more opiniated base controller for your app
  *
@@ -48,15 +49,7 @@ class ContentController extends DefaultController
         }
         parent::init();
 
-        // Allow lang to be set by the request. This must happen after parent::init()
-        $lang = $this->getRequest()->getVar('lang');
-        if ($lang) {
-            if (strlen($lang) == 2) {
-                $lang = i18n::get_closest_translation($lang);
-            }
-            i18n::set_locale($lang);
-        }
-
+        $this->setLangFromRequest();
         $this->warnIfWrongCacheIsUsed();
 
         // A few helpful things in dev mode
@@ -116,6 +109,27 @@ class ContentController extends DefaultController
             $class .= ' Security';
         }
         return $class;
+    }
+
+    /**
+     *  Allow lang to be set by the request. This must happen after parent::init()
+     *
+     * @return void
+     */
+    protected function setLangFromRequest()
+    {
+        $lang = $this->getRequest()->getVar('lang');
+        if ($lang) {
+            if (strlen($lang) == 2) {
+                $lang = i18n::get_closest_translation($lang);
+            }
+            Cookie::set('ChosenLocale', $lang);
+            i18n::set_locale($lang);
+        }
+        $chosenLocale = Cookie::get('ChosenLocale');
+        if ($chosenLocale && preg_match('/^[a-z]{2}_[A-Z]{2}$/', $chosenLocale)) {
+            i18n::set_locale($chosenLocale);
+        }
     }
 
     /**
