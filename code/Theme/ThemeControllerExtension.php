@@ -33,14 +33,15 @@ class ThemeControllerExtension extends Extension
         $SiteConfig = $this->owner->SiteConfig();
         // Files are included in order, please name them accordingly
         foreach ($files as $file) {
+            // Skip theme files, they should be included through SiteConfig
             if (strpos($file, '-theme.css') !== false) {
                 continue;
             }
             $name = basename($file);
             Requirements::themedCSS($name);
         }
-        if($SiteConfig->CssTheme) {
-            $themedFile = $cssPath .'/' . $SiteConfig->CssTheme;
+        if ($SiteConfig->CssTheme) {
+            $themedFile = $cssPath . '/' . $SiteConfig->CssTheme;
             Requirements::css($this->replaceVarsInCssFile($themedFile));
         }
     }
@@ -68,7 +69,7 @@ class ThemeControllerExtension extends Extension
         if (!is_dir($outputDir)) {
             mkdir($outputDir, 0755, true);
         }
-        // Compare filemaketime and SiteConfig last edited
+        // Compare filemtime and SiteConfig last edited
         if (is_file($outputFile)) {
             $buildFileTime = filemtime($outputFile);
             $sourceFileTime = filemtime($cssFile);
@@ -87,12 +88,9 @@ class ThemeControllerExtension extends Extension
         foreach ($declarations as $declarationName => $declarationValue) {
             $dbName = str_replace(' ', '', ucwords(str_replace('-', ' ', $declarationName)));
             $value = $SiteConfig->$dbName;
+            // There is no value, use default
             if (!$value) {
                 $value = $declarationValue;
-            }
-            // For color field, normalize value to HEX
-            if (strpos($dbName, 'Color') !== false) {
-                $value = '#' . trim($value, '#');
             }
             $replaceRegex = "/var\s?\(--" . $declarationName . ",?\s?([a-z-#0-9]*)\)/";
             $replaceCount = 0;
@@ -103,7 +101,7 @@ class ThemeControllerExtension extends Extension
         if ($minifier) {
             $cssFileContent = $minifier->minify($cssFileContent, 'css', $outputFile);
         }
-        \file_put_contents($outputFile, $cssFileContent);
+        file_put_contents($outputFile, $cssFileContent);
         return $cssURL;
     }
 }

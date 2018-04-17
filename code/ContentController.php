@@ -75,15 +75,31 @@ class ContentController extends DefaultController
         return $result;
     }
 
+    /**
+     * The class to be applied on your body tag
+     *
+     * Called <body class="$BodyClass"> in your templates
+     *
+     * @return string
+     */
     public function BodyClass()
     {
         /* @var $page Page */
         $page = $this->data();
+
+        // Append class name
         $parts = explode('\\', get_class($page));
         $class = end($parts);
+
+        // Append action
+        $class .= ' ' . ucfirst($this->action) . 'Action';
+
+        // Allow custom extension point
         if ($page->hasMethod('updateBodyClass')) {
             $page->updateBodyClass($class);
         }
+
+        // On Security (which extends a default controller), add Security
         if($page->URLSegment == 'Security') {
             $class .= ' Security';
         }

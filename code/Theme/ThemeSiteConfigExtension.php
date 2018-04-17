@@ -40,6 +40,7 @@ class ThemeSiteConfigExtension extends DataExtension
         "PrimaryColor" => "Varchar(9)",
         "SecondaryColor" => "Varchar(9)",
         "ThemeColor" => "Varchar(9)",
+        "MaskColor" => "Varchar(9)",
         "HeaderFontFamily" => "Varchar(59)",
         "HeaderFontWeight" => "Int",
         "BodyFontFamily" => "Varchar(59)",
@@ -103,7 +104,7 @@ class ThemeSiteConfigExtension extends DataExtension
         $arr = [];
         foreach ($files as $file) {
             $name = basename($file);
-            $arr[$name] = str_replace('-theme.css','',$name);
+            $arr[$name] = str_replace('-theme.css', '', $name);
         }
         return $arr;
     }
@@ -111,36 +112,44 @@ class ThemeSiteConfigExtension extends DataExtension
     {
         $themeTab = new Tab("Theme");
         $fields->addFieldToTab('Root', $themeTab);
-        //
-        $ColorsHeader = new HeaderField("ColorsHeader", "Colors");
-        $themeTab->push($ColorsHeader);
-        $ColorsGroup = new FieldGroup();
-        $themeTab->push($ColorsGroup);
-        $PrimaryColor = new ColorField('PrimaryColor');
-        $ColorsGroup->push($PrimaryColor);
-        $SecondaryColor = new ColorField('SecondaryColor');
-        $ColorsGroup->push($SecondaryColor);
-        $ThemeColor = new ColorField('ThemeColor');
-        $ThemeColor->setTooltip("Select a color that gives a good contrast with your Icon");
-        $ColorsGroup->push($ThemeColor);
-        //
-        $FontsHeader = new HeaderField("FontsHeader", "Fonts");
-        $themeTab->push($FontsHeader);
-        $FontsGroup = new FieldGroup();
-        $themeTab->push($FontsGroup);
-        $HeaderFont = new TextField("HeaderFontFamily");
-        $FontsGroup->push($HeaderFont);
-        $HeaderFontWeight = new DropdownField("HeaderFontWeight", $this->owner->fieldLabel('HeaderFontWeight'), self::listFontWeights());
-        $FontsGroup->push($HeaderFontWeight);
-        $BodyFont = new TextField("BodyFontFamily");
-        $FontsGroup->push($BodyFont);
-        $BodyFontWeight = new DropdownField("BodyFontWeight", $this->owner->fieldLabel('BodyFontWeight'), self::listFontWeights());
-        $FontsGroup->push($BodyFontWeight);
-        $GoogleFonts = new TextField("GoogleFonts");
-        $GoogleFonts->setAttribute('placeholder', "Open+Sans|Roboto");
+           // If we have themes, allow to configure some css variables in them
         $cssThemes = $this->listCssThemes();
-        $CssTheme = new DropdownField("CssTheme", $this->owner->fieldLabel('CssTheme'), $cssThemes);
-        $themeTab->push($CssTheme);
+        if (!empty($cssThemes)) {
+            // Colors
+            $ColorsHeader = new HeaderField("ColorsHeader", "Colors");
+            $themeTab->push($ColorsHeader);
+            $ColorsGroup = new FieldGroup();
+            $themeTab->push($ColorsGroup);
+            $PrimaryColor = new ColorField('PrimaryColor');
+            $ColorsGroup->push($PrimaryColor);
+            $SecondaryColor = new ColorField('SecondaryColor');
+            $ColorsGroup->push($SecondaryColor);
+            $ThemeColor = new ColorField('ThemeColor');
+            $ColorsGroup->push($ThemeColor);
+            $MaskColor = new ColorField('MaskColor');
+            $ColorsGroup->push($MaskColor);
+            // Fonts
+            $FontsHeader = new HeaderField("FontsHeader", "Fonts");
+            $themeTab->push($FontsHeader);
+            $FontsGroup = new FieldGroup();
+            $themeTab->push($FontsGroup);
+            $HeaderFont = new TextField("HeaderFontFamily");
+            $FontsGroup->push($HeaderFont);
+            $HeaderFontWeight = new DropdownField("HeaderFontWeight", $this->owner->fieldLabel('HeaderFontWeight'), self::listFontWeights());
+            $HeaderFontWeight->setHasEmptyDefault(true);
+            $FontsGroup->push($HeaderFontWeight);
+            $BodyFont = new TextField("BodyFontFamily");
+            $FontsGroup->push($BodyFont);
+            $BodyFontWeight = new DropdownField("BodyFontWeight", $this->owner->fieldLabel('BodyFontWeight'), self::listFontWeights());
+            $BodyFontWeight->setHasEmptyDefault(true);
+            $FontsGroup->push($BodyFontWeight);
+            $GoogleFonts = new TextField("GoogleFonts");
+            $GoogleFonts->setAttribute('placeholder', "Open+Sans|Roboto");
+            // Theme
+            $CssTheme = new DropdownField("CssTheme", $this->owner->fieldLabel('CssTheme'), $cssThemes);
+            $CssTheme->setHasEmptyDefault(true);
+            $themeTab->push($CssTheme);
+        }
         //
         $ImagesHeader = new HeaderField("ImagesHeader", "Images");
         $themeTab->push($ImagesHeader);
@@ -160,13 +169,19 @@ class ThemeSiteConfigExtension extends DataExtension
         $Favicon->setDescription("Upload the zip file generated with <a href=\"https://realfavicongenerator.net/\" target=\"_blank\">Real Favicon Generator</a>. Theme Color will be used as background for your icon.");
         $themeTab->push($Favicon);
     }
+    /**
+     * Render your favicons with proper markup
+     *
+     * @param string $path
+     * @return void
+     */
     public function Favicons($path = '')
     {
         $path = preg_replace('/\/+/', '/', Director::baseURL() . $path . '/');
         // A mask color, used by macOS safari and touch bar (should look good with a white icon)
-        $mask = $this->owner->PrimaryColor ? '#' . trim($this->owner->PrimaryColor, '#') : '#000000';
+        $mask = $this->owner->MaskColor ? $this->owner->MaskColor : '#000000';
         // A contrast color for the icon, used by Windows Metro and Android
-        $theme = $this->owner->ThemeColor ? '#' . trim($this->owner->ThemeColor, '#') : '#ffffff';
+        $theme = $this->owner->ThemeColor ? $this->owner->ThemeColor : '#ffffff';
         return $this->owner->customise(
             array(
                 'Path' => $path,
@@ -194,13 +209,18 @@ class ThemeSiteConfigExtension extends DataExtension
             $this->unpackFaviconArchive();
         }
     }
+    /**
+     * Unpack a favicon archive into theme asset folder
+     *
+     * @return void
+     */
     protected function unpackFaviconArchive()
     {
         /* @var $Favicon File */
         $Favicon = $this->owner->Favicon();
         $FaviconData = $Favicon->getString();
-        $tmpName = \tempnam(TEMP_PATH, 'ss');
-        \file_put_contents($tmpName, $FaviconData);
+        $tmpName = tempnam(TEMP_PATH, 'ss');
+        file_put_contents($tmpName, $FaviconData);
         $dir = $this->getThemeAssetsFolder();
         $ZipArchive = new \ZipArchive;
         $res = $ZipArchive->open($tmpName);
