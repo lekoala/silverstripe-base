@@ -33,17 +33,35 @@ class BuildableFieldList extends FieldList
     }
 
     /**
+     * Apply attributes to a form object
+     *
+     * @param FormField $object
+     * @param array $attributes
+     * @return FormField
+     */
+    protected function applyAttributes($object, $attributes)
+    {
+        foreach ($attributes as $k => $v) {
+            if ($k == 'class') {
+                $object->addExtraClass($v);
+            } else {
+                $object->setAttribute($v);
+            }
+        }
+        return $object;
+    }
+
+    /**
      * Quickly add an action to a list
      *
      * @param string $name
      * @param string $title
+     * @param array $attributes
      * @return FormAction
      */
-    public function addAction($name, $title = "")
+    public function addAction($name, $title = "", $attributes = [])
     {
-        $title = $this->normalizeTitle($name, $title);
-        $action = new FormAction($name, $title);
-        $this->push($action);
+        return $this->addField(FormAction::class, $name, $title, $attributes);
     }
 
     /**
@@ -52,12 +70,14 @@ class BuildableFieldList extends FieldList
      * @param string $class
      * @param string $name
      * @param string $title
-     * @return void
+     * @param array $attributes
+     * @return FormField
      */
-    public function addField($class, $name, $title = "")
+    public function addField($class, $name, $title = "", $attributes = [])
     {
         $title = $this->normalizeTitle($name, $title);
         $field = $class::create($name, $title);
+        $field = $this->applyAttributes($field, $attributes);
         $this->push($field);
         return $field;
     }
@@ -79,61 +99,67 @@ class BuildableFieldList extends FieldList
     /**
      * @param string $name
      * @param string $title
+     * @param array $attributes
      * @return UploadField
      */
-    public function addUpload($name = "ImageID", $title = null)
+    public function addUpload($name = "ImageID", $title = null, $attributes = [])
     {
-        return $this->addField(UploadField::class, $name, $title);
+        return $this->addField(UploadField::class, $name, $title, $attributes);
     }
 
     /**
      * @param string $name
      * @param string $title
+     * @param array $attributes
      * @return CheckboxField
      */
-    public function addCheckbox($name = "IsEnabled", $title = null)
+    public function addCheckbox($name = "IsEnabled", $title = null, $attributes = [])
     {
-        return $this->addField(CheckboxField::class, $name, $title);
+        return $this->addField(CheckboxField::class, $name, $title, $attributes);
     }
 
     /**
      * @param string $name
      * @param string $title
+     * @param array $attributes
      * @return PasswordField
      */
-    public function addPassword($name = "Password", $title = null)
+    public function addPassword($name = "Password", $title = null, $attributes = [])
     {
-        return $this->addField(PasswordField::class, $name, $title);
+        return $this->addField(PasswordField::class, $name, $title, $attributes);
     }
 
     /**
      * @param string $name
      * @param string $title
+     * @param array $attributes
      * @return EmailField
      */
-    public function addEmail($name = "Email", $title = null)
+    public function addEmail($name = "Email", $title = null, $attributes = [])
     {
-        return $this->addField(EmailField::class, $name, $title);
+        return $this->addField(EmailField::class, $name, $title, $attributes);
     }
 
     /**
      * @param string $name
      * @param string $title
+     * @param array $attributes
      * @return TextField
      */
-    public function addText($name = "Title", $title = null)
+    public function addText($name = "Title", $title = null, $attributes = [])
     {
-        return $this->addField(TextField::class, $name, $title);
+        return $this->addField(TextField::class, $name, $title, $attributes);
     }
 
     /**
      * @param string $name
      * @param string $title
+     * @param array $attributes
      * @return TextareaField
      */
-    public function addTextarea($name = "Description", $title = null)
+    public function addTextarea($name = "Description", $title = null, $attributes = [])
     {
-        return $this->addField(TextareaField::class, $name, $title);
+        return $this->addField(TextareaField::class, $name, $title, $attributes);
     }
 
 }

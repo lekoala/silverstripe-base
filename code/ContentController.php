@@ -39,10 +39,23 @@ class ContentController extends DefaultController
 
     protected function init()
     {
+        // Ensure you load with "defer" your libs!
+        // @link https://flaviocopes.com/javascript-async-defer/#tldr-tell-me-whats-the-best
+        Requirements::backend()->setWriteJavascriptToBody(false);
+
         if (Director::isTest()) {
             $this->requireHttpBasicAuth();
         }
         parent::init();
+
+        // Allow lang to be set by the request. This must happen after parent::init()
+        $lang = $this->getRequest()->getVar('lang');
+        if ($lang) {
+            if (strlen($lang) == 2) {
+                $lang = i18n::get_closest_translation($lang);
+            }
+            i18n::set_locale($lang);
+        }
 
         $this->warnIfWrongCacheIsUsed();
 
@@ -55,7 +68,7 @@ class ContentController extends DefaultController
         $this->displayFlashMessage();
     }
 
-      /**
+    /**
      * Controller's default action handler.  It will call the method named in "$Action", if that method
      * exists. If "$Action" isn't given, it will use "index" as a default.
      *
@@ -68,8 +81,7 @@ class ContentController extends DefaultController
     {
         try {
             $result = parent::handleAction($request, $action);
-        }
-        catch (Exception $ex) {
+        } catch (Exception $ex) {
             d($ex);
         }
         return $result;
@@ -100,7 +112,7 @@ class ContentController extends DefaultController
         }
 
         // On Security (which extends a default controller), add Security
-        if($page->URLSegment == 'Security') {
+        if ($page->URLSegment == 'Security') {
             $class .= ' Security';
         }
         return $class;
@@ -162,9 +174,10 @@ class ContentController extends DefaultController
      *
      * @return void
      */
-    protected function allowAutologin() {
+    protected function allowAutologin()
+    {
         $request = $this->getRequest();
-        if($request->getVar('autologin')) {
+        if ($request->getVar('autologin')) {
             $admin = Security::findAnAdministrator();
             // $admin->login() is deprecated
             $identityStore = Injector::inst()->get(IdentityStore::class);

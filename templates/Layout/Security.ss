@@ -1,4 +1,13 @@
 <div class="container">
-    $Content
-    $Form
+    <% if SiteConfig.IconID %>
+    <div class="text-center my-4">
+        $SiteConfig.Icon.ScaleHeight(50)
+    </div>
+    <% end_if %>
+    <div class="my-4">
+        $Content
+    </div>
+    <div class="my-4">
+        $Form
+    </div>
 </div>
