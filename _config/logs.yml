@@ -1,5 +1,36 @@
 # https://docs.silverstripe.org/en/4/developer_guides/debugging/error_handling/
 # See also base config in vendor\silverstripe\framework\_config\logging.yml
+#
+# Available levels in monolog:
+# DEBUG (100): Detailed debug information.
+# INFO (200): Interesting events. Examples: User logs in, SQL logs.
+# NOTICE (250): Normal but significant events.
+# WARNING (300): Exceptional occurrences that are not errors. Examples: Use of deprecated APIs, poor use of an API, undesirable things that are not necessarily wrong.
+# ERROR (400): Runtime errors that do not require immediate action but should typically be logged and monitored.
+# CRITICAL (500): Critical conditions. Example: Application component unavailable, unexpected exception.
+# ALERT (550): Action must be taken immediately. Example: Entire website down, database unavailable, etc. This should trigger the SMS alerts and wake you up.
+# EMERGENCY (600): Emergency: system is unusable.
+---
+Name: errors
+---
+SilverStripe\Core\Injector\Injector:
+  Psr\Log\LoggerInterface:
+    calls:
+      ErrorLogFileHandler: [ pushHandler, [ %$ErrorLogFileHandler ] ]
+  CustomLineFormatter:
+    class: Monolog\Formatter\LineFormatter
+    constructor:
+      - "[%datetime%] [%level_name%] %message% %context% %extra%\n" # no channel by default
+      - null
+      - false
+      - true # ignore empty context and extra
+  ErrorLogFileHandler:
+    class: Monolog\Handler\StreamHandler
+    constructor:
+      - "../errors.log"
+      - "notice"
+    properties:
+      Formatter: %$CustomLineFormatter
 ---
 Name: dev-errors
 Only:
@@ -8,12 +39,21 @@ Only:
 SilverStripe\Core\Injector\Injector:
   Psr\Log\LoggerInterface:
     calls:
-      LogFileHandler: [ pushHandler, [ %$LogFileHandler ] ]
-  LogFileHandler:
+      DebugLogFileHandler: [ pushHandler, [ %$DebugFilteredLogFileHandler ] ]
+  DebugLogFileHandler:
     class: Monolog\Handler\StreamHandler
     constructor:
       - "../debug.log"
       - "debug"
+    properties:
+      Formatter: %$CustomLineFormatter
+  # A filtered log that only logs debug && notices messages
+  DebugFilteredLogFileHandler:
+    class: Monolog\Handler\FilterHandler
+    constructor:
+      - %$DebugLogFileHandler
+      - "debug"
+      - "notice"
 ---
 Name: live-errors
 Except:
@@ -22,12 +62,13 @@ Except:
 SilverStripe\Core\Injector\Injector:
   Psr\Log\LoggerInterface:
     calls:
-      LogFileHandler: [ pushHandler, [ %$LogFileHandler ]]
-  LogFileHandler:
-    class: Monolog\Handler\StreamHandler
-    constructor:
-      - "../silverstripe.log"
-      - "notice"
-    properties:
-      Formatter: %$Monolog\Formatter\HtmlFormatter
-      ContentType: text/html
+      SysLogHandler: [ pushHandler, [ %$SysLogHandler ]]
+  # Syslog should be used for major events and handled accordingly
+  SysLogHandler:
+      class: Monolog\Handler\SyslogHandler
+      constructor:
+        - "silverstripe"
+        - "user"
+        - "error"
+      properties:
+          Formatter: %$CustomLineFormatter
