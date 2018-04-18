@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container my-auto">
     <% if SiteConfig.IconID %>
     <div class="text-center my-4 animated fadeIn">
         $SiteConfig.Icon.ScaleHeight(50)

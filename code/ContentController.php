@@ -14,6 +14,7 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Security\IdentityStore;
 use SilverStripe\CMS\Controllers\ContentController as DefaultController;
 use SilverStripe\Control\Cookie;
+use LeKoala\Base\View\Alertify;
 /**
  * A more opiniated base controller for your app
  *
@@ -203,24 +204,6 @@ class ContentController extends DefaultController
     }
 
     /**
-     * Add AlertifyJS requirements
-     *
-     * @link http://alertifyjs.com
-     */
-    protected function requireAlertifyJS()
-    {
-        Requirements::javascript('https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.11.0/alertify.min.js');
-        $dir = i18n::get_script_direction();
-        if ($dir == 'rtl') {
-            Requirements::css('https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.11.0/css/alertify.rtl.min.css');
-            Requirements::css('https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.11.0/css/themes/default.rtl.min.css');
-        } else {
-            Requirements::css('https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.11.0/css/alertify.min.css');
-            Requirements::css('https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.11.0/css/themes/default.min.css');
-        }
-    }
-
-    /**
      * Display the flash message if any using Alertifyjs
      *
      * @link http://alertifyjs.com/
@@ -237,19 +220,8 @@ class ContentController extends DefaultController
             return;
         }
         $this->getSession()->clear('FlashMessage');
-        $this->requireAlertifyJS();
-        $msg = addslashes($FlashMessage['Message']);
-        $type = $FlashMessage['Type'];
-        switch ($type) {
-            case 'good':
-                $type = 'success';
-                break;
-            case 'bad':
-                $type = 'error';
-                break;
-        }
-        $js = "alertify.notify('$msg', '$type', 0);";
-        Requirements::customScript($js);
+        Alertify::requirements();
+        Alertify::show($FlashMessage['Message'], $FlashMessage['Type']);
     }
 
     /**
@@ -267,6 +239,24 @@ class ContentController extends DefaultController
             'Type' => $type,
             'Cast' => $cast,
         ]);
+    }
+
+    /**
+     * @param string $message
+     * @return void
+     */
+    public function success($message)
+    {
+        $this->sessionMessage($message, 'good');
+    }
+
+    /**
+     * @param string $message
+     * @return void
+     */
+    public function error($message)
+    {
+        $this->sessionMessage($message, 'bad');
     }
 
     /**
