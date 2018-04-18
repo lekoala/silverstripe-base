@@ -59,6 +59,9 @@ class ContentController extends DefaultController
         }
 
         $this->displayFlashMessage();
+
+        // Switch channel for clearer logs
+        $this->logger = $this->logger->withName('app');
     }
 
     /**

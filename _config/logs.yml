@@ -20,7 +20,7 @@ SilverStripe\Core\Injector\Injector:
   CustomLineFormatter:
     class: Monolog\Formatter\LineFormatter
     constructor:
-      - "[%datetime%] [%level_name%] %message% %context% %extra%\n" # no channel by default
+      - null
       - null
       - false
       - true # ignore empty context and extra
