@@ -76,11 +76,11 @@ class ContentController extends DefaultController
      */
     protected function handleAction($request, $action)
     {
-        try {
+        // try {
             $result = parent::handleAction($request, $action);
-        } catch (Exception $ex) {
-            d($ex);
-        }
+        // } catch (ValidationEx $ex) {
+        //     d($ex);
+        // }
         return $result;
     }
 
@@ -232,7 +232,7 @@ class ContentController extends DefaultController
      * @param string|bool $cast Cast type; One of the CAST_ constant definitions.
      * Bool values will be treated as plain text flag.
      */
-    public function sessionMessage($message, $type = ValidationResult::TYPE_ERROR, $cast = ValidationResult::CAST_TEXT)
+    public function sessionMessage($message, $type = ValidationResult::TYPE_spERROR, $cast = ValidationResult::CAST_TEXT)
     {
         $this->getSession()->set('FlashMessage', [
             'Message' => $message,
