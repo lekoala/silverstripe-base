@@ -54,9 +54,14 @@ class NewsItem extends DataObject
         "Page" => NewsPage::class,
         "Category" => NewsCategory::class,
     ];
+    private static $many_many = [
+        "Images" => Image::class
+    ];
+
     private static $owns = [
         "Image",
         "File",
+        "Images",
     ];
     private static $summary_fields = [
         "Title", "Thumbnail.CMSThumbnail", "Published"
