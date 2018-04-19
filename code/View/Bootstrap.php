@@ -7,6 +7,12 @@ use SilverStripe\Core\Config\Configurable;
 
 /**
  * Helpers for bootstrap 4
+ *
+ * You can also use in your config.yml
+ *
+ * Page:
+ *   extensions:
+ *     - LeKoala\Base\Extensions\BootstrapPageExtension
  */
 class Bootstrap
 {
@@ -29,6 +35,8 @@ class Bootstrap
         Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/jquery/$jquery_version/jquery.min.js", ['defer' => true]);
         // with Popper JS but no jQuery
         Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/$bootstrap_version/js/bootstrap.bundle.js", ['defer' => true]);
+        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.0/js.cookie.min.js", ['defer' => true]);
+        Requirements::javascript("base/javascript/BootstrapHelpers.js", ['defer' => true]);
     }
 
     /**

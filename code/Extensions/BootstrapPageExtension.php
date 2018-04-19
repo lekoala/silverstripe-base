@@ -2,6 +2,9 @@
 namespace LeKoala\Base\Extensions;
 
 use SilverStripe\ORM\DataExtension;
+use SilverStripe\View\SSViewer;
+use SilverStripe\View\ArrayData;
+use SilverStripe\Control\Cookie;
 /**
  * Class \LeKoala\Base\Extensions\BootstrapPageExtension
  *
@@ -41,5 +44,48 @@ class BootstrapPageExtension extends DataExtension
             return 'section';
         }
         return '';
+    }
+    /**
+     * Gives a bootstrap alert
+     *
+     * @param string $Content
+     * @param string $Type
+     * @param boolean $Dismissible
+     * @param string $ID
+     * @return string
+     */
+    public function BootstrapAlert($Content, $Type = 'info', $Dismissible = true, $ID = null)
+    {
+        if ($ID === null && $Dismissible) {
+            $ID = md5($Content);
+        }
+        if($Dismissible && $this->BootstrapAlertDismissed($ID)) {
+            return '';
+        }
+        $tpl = new SSViewer('Bootstrap/Alert');
+        $data = new ArrayData([
+            'Content' => $Content,
+            'Type' => $Type,
+            'Dismissible' => $Dismissible,
+            'ID' => $ID
+        ]);
+        return $tpl->process($data);
+    }
+    /**
+     * Check if a given alert is dismissed
+     *
+     * @param string $ID
+     * @return bool
+     */
+    public function BootstrapAlertDismissed($ID)
+    {
+        $DismissedAlerts = Cookie::get('DismissedAlerts');
+        if($DismissedAlerts) {
+            $Decoded = json_decode($DismissedAlerts);
+            if(in_array($ID, $Decoded)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
