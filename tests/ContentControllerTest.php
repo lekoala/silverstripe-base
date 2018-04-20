@@ -2,10 +2,12 @@
 
 namespace LeKoala\Base\Test;
 
+use Psr\Log\LoggerInterface;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Control\Controller;
 use LeKoala\Base\ContentController;
+use Psr\SimpleCache\CacheInterface;
 use SilverStripe\View\Requirements;
+use SilverStripe\Control\Controller;
 use SilverStripe\SiteConfig\SiteConfig;
 
 class ContentControllerTest extends SapphireTest
@@ -20,8 +22,8 @@ class ContentControllerTest extends SapphireTest
     {
         $inst = ContentController::create();
 
-        $this->assertInstanceOf(Psr\Log\LoggerInterface::class, $inst->getLogger());
-        $this->assertInstanceOf(Psr\SimpleCache\CacheInterface::class, $inst->getCache());
+        $this->assertTrue($inst->getLogger() instanceof LoggerInterface);
+        $this->assertTrue($inst->getCache() instanceof CacheInterface);
     }
 
     public function testRequirements() {
