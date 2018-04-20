@@ -1,3 +1,6 @@
+SilverStripe\ORM\DataObject:
+  extensions:
+    - LeKoala\Base\Extensions\BaseDataObjectExtension
 SilverStripe\Admin\LeftAndMain:
   extensions:
     - LeKoala\Base\BaseLeftAndMainExtension

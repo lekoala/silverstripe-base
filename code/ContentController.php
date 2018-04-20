@@ -28,7 +28,7 @@ class ContentController extends DefaultController
      */
     private static $dependencies = [
         'logger' => '%$Psr\Log\LoggerInterface',
-        'cache' => '%$Psr\SimpleCache\CacheInterface.myCache', // see _config/cache.yml
+        'cache' => '%$Psr\SimpleCache\CacheInterface.app', // see _config/cache.yml
     ];
     /**
      * @var Psr\Log\LoggerInterface

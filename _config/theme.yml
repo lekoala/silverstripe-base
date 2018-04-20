@@ -1,6 +1,7 @@
 SilverStripe\SiteConfig\SiteConfig:
   extensions:
     - LeKoala\Base\Theme\ThemeSiteConfigExtension
-SilverStripe\CMS\Controllers\ContentController:
+# SilverStripe\CMS\Controllers\ContentController:
+LeKoala\Base\ContentController:
   extensions:
     - LeKoala\Base\Theme\ThemeControllerExtension

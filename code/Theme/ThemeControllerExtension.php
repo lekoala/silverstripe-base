@@ -5,6 +5,7 @@ use SilverStripe\View\SSViewer;
 use SilverStripe\Core\Extension;
 use SilverStripe\Control\Director;
 use SilverStripe\View\Requirements;
+use SilverStripe\Admin\AdminRootController;
 /**
  * Class \LeKoala\Base\Theme\ThemeControllerExtension
  *
@@ -15,8 +16,13 @@ class ThemeControllerExtension extends Extension
     use KnowsThemeDir;
     public function onAfterInit()
     {
+        // Not a real request but a pseudo controller
+        if(!$this->owner->getRequest()->getURL()) {
+            return;
+        }
         $this->requireGoogleFonts();
         $this->requireThemeStyles();
+
     }
     protected function requireGoogleFonts()
     {

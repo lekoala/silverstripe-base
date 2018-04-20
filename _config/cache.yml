@@ -1,3 +1,4 @@
+# https://docs.silverstripe.org/en/4/developer_guides/performance/caching/
 ---
 Before:
   - '#corecache'
@@ -12,10 +13,10 @@ After:
   - '#corecache'
 ---
 SilverStripe\Core\Injector\Injector:
-  Psr\SimpleCache\CacheInterface.myCache:
+  Psr\SimpleCache\CacheInterface.app:
     factory: SilverStripe\Core\Cache\CacheFactory
     constructor:
-      namespace: "myCache"
+      namespace: "app"
 # Add this to your mysite/_config/cache.yml if you use redis
 #   RedisCacheFactory:
 #     class: 'LeKoala\Base\Cache\RedisCacheFactory'

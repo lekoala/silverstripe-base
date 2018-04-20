@@ -10,6 +10,8 @@ use SilverStripe\SiteConfig\SiteConfig;
 /**
  * Class \LeKoala\Base\Actions\DataObjectActionsExtension
  *
+ * Maybe some day we don't have to do it ourself...
+ * @link https://github.com/silverstripe/silverstripe-cms/issues/2047
  * @property \LeKoala\Base\Blocks\Block|\LeKoala\Base\News\NewsCategory|\LeKoala\Base\News\NewsItem|\LeKoala\Base\Tags\Tag|\TimelineItem|\PortfolioCategory|\PortfolioItem|\SilverStripe\Assets\File|\SilverStripe\Assets\Image|\SilverStripe\SiteConfig\SiteConfig|\SilverStripe\Versioned\ChangeSetItem|\SilverStripe\CMS\Model\SiteTree|\SilverStripe\ORM\DataObject|\SilverStripe\Security\Group|\SilverStripe\Security\Member|\LeKoala\Base\Actions\DataObjectActionsExtension $owner
  */
 class DataObjectActionsExtension extends DataExtension

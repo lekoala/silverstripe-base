@@ -4,14 +4,15 @@ namespace LeKoala\Base\Forms;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\EmailField;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\CheckboxField;
-use SilverStripe\Forms\TextareaField;
-use SilverStripe\AssetAdmin\Forms\UploadField;
-use SilverStripe\Forms\EmailField;
-use SilverStripe\Forms\PasswordField;
 use SilverStripe\Forms\DropdownField;
+use SilverStripe\Forms\PasswordField;
+use SilverStripe\Forms\TextareaField;
+use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\AssetAdmin\Forms\UploadField;
 
 class BuildableFieldList extends FieldList
 {
@@ -20,6 +21,17 @@ class BuildableFieldList extends FieldList
      */
     protected $i18nEntity = 'GLOBAL';
 
+    /**
+     * Returns an instance of BuildableFieldList from a FieldList
+     *
+     * @param FieldList $fields
+     * @return self
+     */
+    public static function fromFieldList(FieldList $fields)
+    {
+        $arr = $fields->toArray();
+        return new self($arr);
+    }
     /**
      * Slightly improve way to normalize titles in forms
      *
@@ -62,6 +74,14 @@ class BuildableFieldList extends FieldList
             }
         }
         return $object;
+    }
+
+    /**
+     * @param string $name
+     * @return GridField
+     */
+    public function getGridField($name) {
+        return $this->dataFieldByName($name);
     }
 
     /**
