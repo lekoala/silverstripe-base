@@ -18,6 +18,9 @@ class XmlHelper
      */
     public static function beautifyXml($xml)
     {
+        if(!$xml) {
+            return '';
+        }
         $domxml = new DOMDocument('1.0');
         $domxml->preserveWhiteSpace = false;
         $domxml->formatOutput = true;

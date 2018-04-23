@@ -177,33 +177,6 @@ trait Select2
     }
 
     /**
-     * Extract a string value into an array of values
-     *
-     * @param string|array $value
-     * @return array
-     */
-    protected function stringDecode($value)
-    {
-        // Handle empty case
-        if (empty($value)) {
-            return array();
-        }
-
-        // Value might be an array, return it
-        if(is_array($value)) {
-            return $value;
-        }
-
-        // If json deserialisation fails, then fallover to legacy format
-        $result = json_decode($value, true);
-        if ($result !== false) {
-            return $result;
-        }
-
-        throw new InvalidArgumentException("Invalid string encoded value for multi select field");
-    }
-
-    /**
      * Validate this field
      *
      * @param Validator $validator
