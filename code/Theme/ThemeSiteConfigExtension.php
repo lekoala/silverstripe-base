@@ -14,6 +14,7 @@ use SilverStripe\ORM\DataExtension;
 use LeKoala\Base\Helpers\ZipHelper;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Forms\DropdownField;
+use LeKoala\Base\ORM\FieldType\Color;
 /**
  * Class \LeKoala\Base\Theme\ThemeSiteConfigExtension
  *
@@ -37,10 +38,10 @@ class ThemeSiteConfigExtension extends DataExtension
 {
     use KnowsThemeDir;
     private static $db = [
-        "PrimaryColor" => "Varchar(9)",
-        "SecondaryColor" => "Varchar(9)",
-        "ThemeColor" => "Varchar(9)",
-        "MaskColor" => "Varchar(9)",
+        "PrimaryColor" => Color::class,
+        "SecondaryColor" => Color::class,
+        "ThemeColor" => Color::class,
+        "MaskColor" => Color::class,
         "HeaderFontFamily" => "Varchar(59)",
         "HeaderFontWeight" => "Int",
         "BodyFontFamily" => "Varchar(59)",

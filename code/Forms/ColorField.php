@@ -39,6 +39,7 @@ class ColorField extends TextField
         "preferredFormat" => "hex",
         "showInitial" => true,
         "showInput" => true,
+        "allowEmpty" => true,
     ];
 
     public function __construct($name, $title = null, $value = '', $maxLength = null, $form = null)

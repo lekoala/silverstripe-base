@@ -5,7 +5,9 @@ use SilverStripe\View\SSViewer;
 use SilverStripe\Core\Extension;
 use SilverStripe\Control\Director;
 use SilverStripe\View\Requirements;
+use SilverStripe\Control\Controller;
 use SilverStripe\Admin\AdminRootController;
+use SilverStripe\Admin\LeftAndMain;
 /**
  * Class \LeKoala\Base\Theme\ThemeControllerExtension
  *
@@ -16,8 +18,8 @@ class ThemeControllerExtension extends Extension
     use KnowsThemeDir;
     public function onAfterInit()
     {
-        // Not a real request but a pseudo controller
-        if(!$this->owner->getRequest()->getURL()) {
+        // Do nothing in admin
+        if(Controller::curr() instanceof LeftAndMain) {
             return;
         }
         $this->requireGoogleFonts();
