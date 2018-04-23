@@ -6,6 +6,7 @@ use SilverStripe\i18n\i18n;
 use SilverStripe\View\Requirements;
 use SilverStripe\SiteConfig\SiteConfig;
 use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Control\Cookie;
 
 /**
  *
@@ -19,7 +20,11 @@ class CookiesConsent
 {
     use Configurable;
 
-        /**
+    const STATUS_ALLOW = 'allow';
+    const STATUS_DENY = 'deny';
+    const STATUS_DISMISS = 'dismiss';
+
+    /**
      * @var string
      */
     private static $version = '3.0.3';
@@ -45,7 +50,7 @@ class CookiesConsent
             'palette' => [
                 'popup' => [
                     'background' => $SiteConfig->ThemeColor,
-                    'text' =>  $SiteConfig->dbObject('ThemeColor')->ContrastColor(),
+                    'text' => $SiteConfig->dbObject('ThemeColor')->ContrastColor(),
                 ],
                 'button' => [
                     'background' => $SiteConfig->PrimaryColor,
@@ -76,7 +81,60 @@ window.addEventListener("load", function(){
     window.cookieconsent.initialise($jsonOpts)
 });
 JS;
-        Requirements::customScript($js,'CookiesConsentInit');
+        Requirements::customScript($js, 'CookiesConsentInit');
+    }
+
+    /**
+     * Get the current status
+     *
+     * @return string deny, allow or dismiss
+     */
+    public static function Status()
+    {
+        return Cookie::get('cookieconsent_status');
+    }
+
+    /**
+     * Force the status to a specific value
+     *
+     * @param string $status see const STATUS_**** for possible values
+     * @return void
+     */
+    public static function forceStatus($status)
+    {
+        return Cookie::set('cookieconsent_status', $status, 90, null, null, false, false);
+    }
+
+    /**
+     * @return void
+     */
+    public static function clearStatus()
+    {
+        return Cookie::force_expiry('cookieconsent_status');
+    }
+
+    /**
+     * @return void
+     */
+    public static function forceAllow()
+    {
+        return self::forceStatus(self::STATUS_ALLOW);
+    }
+
+    /**
+     * @return void
+     */
+    public static function forceDismiss()
+    {
+        return self::forceStatus(self::STATUS_DISMISS);
+    }
+
+    /**
+     * @return void
+     */
+    public static function forceDeny()
+    {
+        return self::forceStatus(self::STATUS_ALLOW);
     }
 
 }
