@@ -18,8 +18,19 @@ class Bootstrap
 {
     use Configurable;
 
+    /**
+     * @var string
+     */
     private static $jquery_version = '3.3.1';
+
+    /**
+     * @var string
+     */
     private static $bootstrap_version = '4.1.0';
+
+    /**
+     * @var string
+     */
     private static $bootstrap_native_version = '2.0.15';
 
     /**
@@ -44,7 +55,8 @@ class Bootstrap
      * @link https://github.com/thednp/bootstrap.native
      * @return void
      */
-    public static function nativeRequirements() {
+    public static function nativeRequirements()
+    {
         $version = self::config()->bootstrap_native_version;
 
         Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/bootstrap.native/$version/bootstrap-native-v4.min.js", ['defer' => true]);

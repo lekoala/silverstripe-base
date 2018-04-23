@@ -28,6 +28,9 @@ class SubsiteExtension extends DataExtension
         if (Subsite::$disable_subsite_filter) {
             return;
         }
+        if ($dataQuery && $dataQuery->getQueryParam('Subsite.filter') === false) {
+            return;
+        }
 
         // If you're querying by ID, ignore the sub-site - this is a bit ugly...
         if ($query->filtersOnID()) {
