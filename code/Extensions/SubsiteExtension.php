@@ -5,6 +5,7 @@ use SilverStripe\ORM\DataQuery;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\ORM\DataExtension;
+use SilverStripe\Forms\DropdownField;
 use SilverStripe\ORM\Queries\SQLSelect;
 use SilverStripe\Subsites\Model\Subsite;
 use SilverStripe\Subsites\State\SubsiteState;
@@ -67,6 +68,20 @@ class SubsiteExtension extends DataExtension
 
     public function updateCMSFields(FieldList $fields)
     {
-        $fields->push(HiddenField::create('SubsiteID', 'SubsiteID', SubsiteState::singleton()->getSubsiteId()));
+        $SubsiteID = SubsiteState::singleton()->getSubsiteId();
+        if ($SubsiteID && !$this->owner->SubsiteID) {
+            $fields->push(HiddenField::create('SubsiteID', 'SubsiteID', $SubsiteID));
+        } else {
+            $fields->push($SubsiteID = DropdownField::create('SubsiteID', 'Subsite', Subsite::get()->map()));
+            $SubsiteID->setHasEmptyDefault(true);
+        }
+    }
+
+    public function updateSummaryFields(&$fields)
+    {
+        $SubsiteID = SubsiteState::singleton()->getSubsiteId();
+        if (!$SubsiteID) {
+            $fields['Subsite.Title'] = 'Subsite';
+        }
     }
 }
