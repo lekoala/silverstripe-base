@@ -47,7 +47,7 @@ trait Select2
 
     public function getConfig($key)
     {
-        if (isset($this->config)) {
+        if (isset($this->config[$key])) {
             return $this->config[$key];
         }
     }
@@ -166,14 +166,41 @@ trait Select2
         // Do not use select2 because it is reserved
         $this->setAttribute('data-config', json_encode($config));
 
-        Requirements::css('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/css/select2.min.css');
+        Requirements::css('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css');
         Requirements::css('base/css/Select2Field.css');
-        Requirements::javascript('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.js');
+        Requirements::javascript('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.js');
         if ($lang != 'en') {
-            Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/i18n/$lang.js");
+            Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/i18n/$lang.js");
         }
         Requirements::javascript('base/javascript/Select2Field.js');
         return parent::Field($properties);
+    }
+
+    /**
+     * Extract a string value into an array of values
+     *
+     * @param string|array $value
+     * @return array
+     */
+    protected function stringDecode($value)
+    {
+        // Handle empty case
+        if (empty($value)) {
+            return array();
+        }
+
+        // Value might be an array, return it
+        if(is_array($value)) {
+            return $value;
+        }
+
+        // If json deserialisation fails, then fallover to legacy format
+        $result = json_decode($value, true);
+        if ($result !== false) {
+            return $result;
+        }
+
+        throw new InvalidArgumentException("Invalid string encoded value for multi select field");
     }
 
     /**

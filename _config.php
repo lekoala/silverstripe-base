@@ -1,11 +1,12 @@
 <?php
 
+use LeKoala\Base\Dev\Benchmark;
 use SilverStripe\Control\Director;
 
 if (!function_exists('bm')) {
     function bm($cb = null)
     {
-        \LeKoala\Dev\Benchmark::run($cb);
+        Benchmark::run($cb);
     }
 }
 
@@ -45,6 +46,6 @@ if (!isset($_SERVER['PHP_AUTH_USER'])) {
 }
 
 // Enable IDEAnnotator
-if(in_array(substr($_SERVER['SERVER_NAME'], strrpos($_SERVER['SERVER_NAME'], '.') + 1), ['dev','local','localhost'])) {
+if (in_array(substr($_SERVER['SERVER_NAME'], strrpos($_SERVER['SERVER_NAME'], '.') + 1), ['dev', 'local', 'localhost'])) {
     \SilverStripe\Core\Config\Config::modify()->set('SilverLeague\IDEAnnotator\DataObjectAnnotator', 'enabled', true);
 }

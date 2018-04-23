@@ -49,7 +49,7 @@ class Benchmark
         $factor = floor((strlen($bytes) - 1) / 3);
         $memory = sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$sz[$factor];
 
-        printf("It took %s seconds and used %s", $time, $memory);
+        printf("It took %s seconds and used %s memory", $time, $memory);
         die();
     }
 }
