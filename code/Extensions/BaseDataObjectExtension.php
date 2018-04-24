@@ -20,7 +20,7 @@ class BaseDataObjectExtension extends DataExtension
         $fields = BuildableFieldList::fromFieldList($fields);
         $cascade_delete = $this->owner->config()->cascade_deletes;
         // Anything that is deleted in cascade should not be a relation (most of the time!)
-        $this->turnRelationIntoRecordEditor($cascade_delete);
+        $this->turnRelationIntoRecordEditor($cascade_delete, $fields);
 
     }
 
@@ -31,13 +31,16 @@ class BaseDataObjectExtension extends DataExtension
         }
     }
 
-    protected function turnRelationIntoRecordEditor($arr)
+    protected function turnRelationIntoRecordEditor($arr, BuildableFieldList $fields)
     {
         if (!$arr) {
             return;
         }
-        foreach ($arr as $class => $type) {
+        foreach ($arr as $class) {
             $gridfield = $fields->getGridField($class);
+            if(!$gridfield) {
+                continue;
+            }
             $config = $gridfield->getConfig();
             $config->removeComponentsByType(GridFieldAddExistingAutocompleter::class);
             $config->removeComponentsByType(GridFieldDeleteAction::class);

@@ -80,8 +80,13 @@ class BuildableFieldList extends FieldList
      * @param string $name
      * @return GridField
      */
-    public function getGridField($name) {
-        return $this->dataFieldByName($name);
+    public function getGridField($name)
+    {
+        $gridfield = $this->dataFieldByName($name);
+        if (!$gridfield || !$gridfield instanceof GridField) {
+            return null;
+        }
+        return $gridfield;
     }
 
     /**

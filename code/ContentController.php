@@ -58,7 +58,13 @@ class ContentController extends DefaultController
 
         $this->environmentChecker->check($this);
 
-        Alertify::checkFlashMessage($this->getSession());
+        try {
+            Alertify::checkFlashMessage($this->getSession());
+        }
+        catch (Exception $ex) {
+            // There might not be a session
+        }
+
 
         // Switch channel for clearer logs
         $this->logger = $this->logger->withName('app');
