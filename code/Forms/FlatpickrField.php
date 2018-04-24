@@ -174,7 +174,7 @@ class FlatpickrField extends TextField
         if ($lang != 'en') {
             Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/flatpickr/$version/l10n/$lang.js");
         }
-        Requirements::javascript('base/javascript/FlatpickrField.js');
+        Requirements::javascript('base/javascript/fields/FlatpickrField.js');
         return parent::Field($properties);
     }
 }

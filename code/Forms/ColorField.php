@@ -125,7 +125,7 @@ class ColorField extends TextField
         Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/spectrum/$version/spectrum.min.js");
         if ($lang != 'en') {
         }
-        Requirements::javascript('base/javascript/ColorField.js');
+        Requirements::javascript('base/javascript/fields/ColorField.js');
 
         return parent::Field($properties);
     }

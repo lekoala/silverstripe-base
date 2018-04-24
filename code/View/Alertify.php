@@ -3,6 +3,7 @@
 namespace LeKoala\Base\View;
 
 use SilverStripe\i18n\i18n;
+use SilverStripe\Control\Session;
 use SilverStripe\View\Requirements;
 use SilverStripe\Core\Config\Configurable;
 
@@ -26,7 +27,7 @@ class Alertify
     {
         $theme = self::config()->theme;
 
-        Requirements::javascript('https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.11.1/alertify.min.js');
+        Requirements::javascript('https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.11.1/alertify.min.js', ['defer' => true]);
         $dir = i18n::get_script_direction();
         if ($dir == 'rtl') {
             Requirements::css('https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.11.1/css/alertify.rtl.min.css');
@@ -58,6 +59,27 @@ JS;
         Requirements::customScript($settings, 'AlertifySettings');
         $js = "window.addEventListener('DOMContentLoaded', function() {alertify.notify('$msg', '$type', 0); });";
         Requirements::customScript($js);
+    }
+
+    /**
+     * Display the flash message if any using Alertifyjs
+     *
+     * @param Session $session
+     * @return void
+     */
+    public static function checkFlashMessage($session)
+    {
+        try {
+            $FlashMessage = $session->get('FlashMessage');
+        } catch (Exception $ex) {
+            $FlashMessage = null; // Session can be null (eg : Security)
+        }
+        if (!$FlashMessage) {
+            return;
+        }
+        $session->clear('FlashMessage');
+        self::requirements();
+        self::show($FlashMessage['Message'], $FlashMessage['Type']);
     }
 
 }

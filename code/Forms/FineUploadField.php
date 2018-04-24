@@ -33,7 +33,7 @@ class FineUploadField extends UploadField
         // Requirements::css('https://cdnjs.cloudflare.com/ajax/libs/file-uploader/5.15.5/fine-uploader-new.min.css');
 
         Requirements::javascript('https://cdnjs.cloudflare.com/ajax/libs/file-uploader/5.15.5/fine-uploader.min.js');
-        Requirements::javascript('base/javascript/FineUploadField.js');
+        Requirements::javascript('base/javascript/fields/FineUploadField.js');
 
         return parent::Field($properties);
     }

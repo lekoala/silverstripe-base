@@ -3,6 +3,9 @@ namespace LeKoala\Base;
 
 use \Exception;
 use SilverStripe\i18n\i18n;
+use LeKoala\Base\Dev\BasicAuth;
+use LeKoala\Base\View\Alertify;
+use SilverStripe\Control\Cookie;
 use SilverStripe\Security\Member;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Environment;
@@ -12,9 +15,8 @@ use LeKoala\Base\Helpers\ClassHelper;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Security\IdentityStore;
+use SilverStripe\ORM\ValidationException;
 use SilverStripe\CMS\Controllers\ContentController as DefaultController;
-use SilverStripe\Control\Cookie;
-use LeKoala\Base\View\Alertify;
 /**
  * A more opiniated base controller for your app
  *
@@ -28,7 +30,8 @@ class ContentController extends DefaultController
      */
     private static $dependencies = [
         'logger' => '%$Psr\Log\LoggerInterface',
-        'cache' => '%$Psr\SimpleCache\CacheInterface.app', // see _config/cache.yml
+        'cache' => '%$Psr\SimpleCache\CacheInterface.app', // see _config/cache.yml,
+        'environmentChecker' => '%$LeKoala\Base\Dev\EnvironmentChecker',
     ];
     /**
      * @var Psr\Log\LoggerInterface
@@ -38,6 +41,10 @@ class ContentController extends DefaultController
      * @var Psr\SimpleCache\CacheInterface
      */
     public $cache;
+    /**
+     * @var LeKoala\Base\Dev\EnvironmentChecker
+     */
+    public $environmentChecker;
 
     protected function init()
     {
@@ -45,21 +52,13 @@ class ContentController extends DefaultController
         // @link https://flaviocopes.com/javascript-async-defer/#tldr-tell-me-whats-the-best
         Requirements::backend()->setWriteJavascriptToBody(false);
 
-        if (Director::isTest()) {
-            $this->requireHttpBasicAuth();
-        }
         parent::init();
 
         $this->setLangFromRequest();
-        $this->warnIfWrongCacheIsUsed();
 
-        // A few helpful things in dev mode
-        if (Director::isDev()) {
-            $this->ensureTempFolderExists();
-            $this->allowAutologin();
-        }
+        $this->environmentChecker->check($this);
 
-        $this->displayFlashMessage();
+        Alertify::checkFlashMessage($this->getSession());
 
         // Switch channel for clearer logs
         $this->logger = $this->logger->withName('app');
@@ -76,11 +75,20 @@ class ContentController extends DefaultController
      */
     protected function handleAction($request, $action)
     {
-        // try {
+        try {
             $result = parent::handleAction($request, $action);
-        // } catch (ValidationEx $ex) {
-        //     d($ex);
-        // }
+        } catch (ValidationException $ex) {
+            $this->getLogger()->debug($ex);
+
+            if (Director::is_ajax()) {
+                return $this->applicationResponse($ex->getMessage(), [], [
+                    'code' => $ex->getCode(),
+                ], false);
+            } else {
+                Alertify::show($ex->getMessage(), 'bad');
+                return $this->redirectBack();
+            }
+        }
         return $result;
     }
 
@@ -137,94 +145,6 @@ class ContentController extends DefaultController
     }
 
     /**
-     * A simple way to http protected a website (for staging for instance)
-     * This is required because somehow the default mechanism shipped with SilverStripe is
-     * not working properly
-     *
-     * @return void
-     */
-    protected function requireHttpBasicAuth()
-    {
-        $user = Environment::getEnv('SS_DEFAULT_ADMIN_USERNAME');
-        $password = Environment::getEnv('SS_DEFAULT_ADMIN_PASSWORD');
-        header('Cache-Control: no-cache, must-revalidate, max-age=0');
-        $hasSuppliedCredentials = !(empty($_SERVER['PHP_AUTH_USER']) && empty($_SERVER['PHP_AUTH_PW']));
-        if ($hasSuppliedCredentials) {
-            $isNotAuthenticated = ($_SERVER['PHP_AUTH_USER'] != $user || $_SERVER['PHP_AUTH_PW'] != $password);
-        } else {
-            $isNotAuthenticated = true;
-        }
-        if ($isNotAuthenticated) {
-            header('HTTP/1.1 401 Authorization Required');
-            header('WWW-Authenticate: Basic realm="Access denied"');
-            exit;
-        }
-    }
-
-    /**
-     * Because you really should! Speed increase by a 2x magnitude
-     *
-     * @return void
-     */
-    protected function warnIfWrongCacheIsUsed()
-    {
-        if ($this->getCache() instanceof Symfony\Component\Cache\Simple\FilesystemCache) {
-            $this->getLogger()->info("OPCode cache is not enabled. To get maximum performance, enable it in php.ini");
-        }
-    }
-
-    /**
-     * Temp folder should always be there
-     *
-     * @return void
-     */
-    protected function ensureTempFolderExists()
-    {
-        $tempFolder = Director::baseFolder() . '/silverstripe-cache';
-        if (!is_dir($tempFolder)) {
-            mkdir($tempFolder, 0755);
-        }
-    }
-
-    /**
-     * Easily login on dev sites
-     * Do not run this on production
-     *
-     * @return void
-     */
-    protected function allowAutologin()
-    {
-        $request = $this->getRequest();
-        if ($request->getVar('autologin')) {
-            $admin = Security::findAnAdministrator();
-            // $admin->login() is deprecated
-            $identityStore = Injector::inst()->get(IdentityStore::class);
-            $identityStore->logIn($admin, true, $request);
-        }
-    }
-
-    /**
-     * Display the flash message if any using Alertifyjs
-     *
-     * @link http://alertifyjs.com/
-     * @return void
-     */
-    protected function displayFlashMessage()
-    {
-        try {
-            $FlashMessage = $this->getSession()->get('FlashMessage');
-        } catch (Exception $ex) {
-            $FlashMessage = null; // Session can be null (eg : Security)
-        }
-        if (!$FlashMessage) {
-            return;
-        }
-        $this->getSession()->clear('FlashMessage');
-        Alertify::requirements();
-        Alertify::show($FlashMessage['Message'], $FlashMessage['Type']);
-    }
-
-    /**
      * Set a message to the session, for display next time a page is shown.
      *
      * @param string $message the text of the message
@@ -232,7 +152,7 @@ class ContentController extends DefaultController
      * @param string|bool $cast Cast type; One of the CAST_ constant definitions.
      * Bool values will be treated as plain text flag.
      */
-    public function sessionMessage($message, $type = ValidationResult::TYPE_spERROR, $cast = ValidationResult::CAST_TEXT)
+    public function sessionMessage($message, $type = ValidationResult::TYPE_ERROR, $cast = ValidationResult::CAST_TEXT)
     {
         $this->getSession()->set('FlashMessage', [
             'Message' => $message,
@@ -242,22 +162,115 @@ class ContentController extends DefaultController
     }
 
     /**
-     * @param string $message
-     * @return void
+     * @param string|boolean $link Pass true to redirect back
+     * @return HTTPResponse
      */
-    public function success($message)
+    public function redirectTo($link)
     {
-        $this->sessionMessage($message, 'good');
+        if ($link === true) {
+            return $this->redirectBack();
+        }
+        return $this->redirect($this->Link($link));
     }
 
     /**
      * @param string $message
-     * @return void
+     * @param string|array $linkOrManipulations
+     * @return HTTPResponse
      */
-    public function error($message)
+    public function success($message, $linkOrManipulations = null)
     {
-        $this->sessionMessage($message, 'bad');
+        if (Director::is_ajax()) {
+            return $this->applicationResponse($message, $linkOrManipulations, [], true);
+        }
+        $this->sessionMessage($message, 'good');
+        if ($link) {
+            return $this->redirectTo($link);
+        }
     }
+
+    /**
+     * @param string $message
+     * @param string|array $linkOrManipulations
+     * @return HTTPResponse
+     */
+    public function error($message, $linkOrManipulations = null)
+    {
+        if (Director::is_ajax()) {
+            return $this->applicationResponse($message, $linkOrManipulations, [], false);
+        }
+        $this->sessionMessage($message, 'bad');
+        if ($link) {
+            return $this->redirectTo($link);
+        }
+    }
+
+    /**
+     * Returns a well formatted json response
+     *
+     * @param string|array $data
+     * @return HTTPResponse
+     */
+    protected function jsonResponse($data)
+    {
+        $response = $this->getResponse();
+        $response->addHeader('Content-type', 'application/json');
+        if (!is_string($data)) {
+            $data = json_encode($data, JSON_PRETTY_PRINT);
+        }
+        $response->setBody($data);
+        return $response;
+    }
+
+    /**
+     * Preformatted json response
+     * Best handled by scoped-requests plugin
+     *
+     * @param string $message
+     * @param array $manipulations see createManipulation
+     * @param array $extraData
+     * @param boolean $success you might rather throw ValidationException instead
+     * @return HTTPResponse
+     */
+    protected function applicationResponse($message, $manipulations = [], $extraData = [], $success = true)
+    {
+        $data = [
+            'message' => $message,
+            'success' => $success ? true : false,
+            'data' => $extraData,
+            'manipulations' => $manipulations,
+        ];
+        return $this->jsonResponse($data);
+    }
+
+    /**
+     * Helper function to create manipulations
+     *
+     * Manipulations are scoped inside the specified data-scope
+     *
+     * @param string $selector Empty selector applies to the entire scope
+     * @param string $html Html content to use for action
+     * @param string $action Action to apply
+     * @return array
+     */
+    protected function createManipulation($selector, $html = null, $action = null)
+    {
+        // we have no action or html, it's simply an action on the whole scope (eg : fadeOut)
+        if ($action === null && $html === null) {
+            $action = $selector;
+            $selector = '';
+        }
+        // we have no action and some html, set a defaultAction
+        if ($action === null && $html) {
+            $action = 'replaceWith';
+        }
+        return [
+            'selector' => $selector,
+            'html' => $html,
+            'action' => $action,
+        ];
+    }
+
 
     /**
      * Get the session for this app

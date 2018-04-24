@@ -172,7 +172,7 @@ trait Select2
         if ($lang != 'en') {
             Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/i18n/$lang.js");
         }
-        Requirements::javascript('base/javascript/Select2Field.js');
+        Requirements::javascript('base/javascript/fields/Select2Field.js');
         return parent::Field($properties);
     }
 
