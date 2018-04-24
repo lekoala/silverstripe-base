@@ -167,7 +167,7 @@ class ContentController extends DefaultController
      */
     public function redirectTo($link)
     {
-        if ($link === true) {
+        if ($link === true || is_array($link)) {
             return $this->redirectBack();
         }
         return $this->redirect($this->Link($link));
@@ -184,8 +184,8 @@ class ContentController extends DefaultController
             return $this->applicationResponse($message, $linkOrManipulations, [], true);
         }
         $this->sessionMessage($message, 'good');
-        if ($link) {
-            return $this->redirectTo($link);
+        if ($linkOrManipulations) {
+            return $this->redirectTo($linkOrManipulations);
         }
     }
 
@@ -200,8 +200,8 @@ class ContentController extends DefaultController
             return $this->applicationResponse($message, $linkOrManipulations, [], false);
         }
         $this->sessionMessage($message, 'bad');
-        if ($link) {
-            return $this->redirectTo($link);
+        if ($linkOrManipulations) {
+            return $this->redirectTo($linkOrManipulations);
         }
     }
 
