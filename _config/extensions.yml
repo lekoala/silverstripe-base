@@ -36,3 +36,6 @@ LeKoala\Base\Tags\Tag:
 SilverStripe\Forms\FormField:
   extensions:
     - LeKoala\Base\Forms\Extensions\TooltipExtension
+SilverStripe\Dev\DevBuildController:
+  extensions:
+    - LeKoala\Base\Dev\DevBuildExtension
