@@ -72,7 +72,7 @@ CODE;
      * @return $class
      */
     public static function $classWithoutNS(\$idOrWhere) {
-        return self::getOne(\$class, \$idOrWhere);
+        return self::getOne(\\$class::class, \$idOrWhere);
     }
 
     /**
@@ -80,7 +80,7 @@ CODE;
      * @return {$class}[]
      */
     public static function {$classWithoutNS}List(\$filters = null) {
-        return self::getList(\$class, \$filters);
+        return self::getList(\\$class::class, \$filters);
     }
 
 CODE;
