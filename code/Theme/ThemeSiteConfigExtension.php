@@ -15,8 +15,9 @@ use LeKoala\Base\Helpers\ZipHelper;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Forms\DropdownField;
 use LeKoala\Base\ORM\FieldType\Color;
+
 /**
- * Class \LeKoala\Base\Theme\ThemeSiteConfigExtension
+ * Extend SiteConfig to make your website Themable
  *
  * @property \SilverStripe\SiteConfig\SiteConfig|\LeKoala\Base\Theme\ThemeSiteConfigExtension $owner
  * @property string $PrimaryColor

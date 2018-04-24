@@ -44,9 +44,9 @@ Also refactor basic UI stuff that SilverStripe should already do (like having th
 
 ### Themable sites
 
-Easily allow your customer to set a custom Google Font or change the colors on their websites. Simply define the
-color in the SiteConfig and use CSS vars in your stylesheets. The system will take care of replacing them with
-the values defined by your customer.
+Make sites themable through the SiteConfig and offer support for variables in your css files.
+
+See [docs/Theming.md](docs/Theming.md) for documentation.
 
 ### Extensions
 
@@ -60,9 +60,9 @@ Define sessionMessage on your controller and display messages using Alertify lib
 
 ### Dev tools
 
-- Cleanup your database of unused fields or tables
-- Generate fake records
-- Use SQLite3 in your tests because it's otherwise too slow
+A few useful tools to make your DX more pleasant.
+
+See [docs/Dev.md](docs/Dev.md) for documentation.
 
 ## Maintainer
 
