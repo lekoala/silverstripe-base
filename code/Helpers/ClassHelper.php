@@ -10,7 +10,7 @@ class ClassHelper
     /**
      * Get methods on the current class (without its ancestry)
      *
-     * @param mixed $class
+     * @param string $class
      * @return array
      */
     public static function ownMethods($class)
@@ -22,7 +22,7 @@ class ClassHelper
         } else {
             $array3 = $array1;
         }
-        return ($array3);
+        return $array3;
     }
 
     /**

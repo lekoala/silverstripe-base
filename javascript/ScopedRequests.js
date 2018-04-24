@@ -9,8 +9,18 @@
 
         var $this = $(this);
         var $scope = $($this.data('scope'));
+        var href = $this.attr('href');
 
-        $.getJSON($this.attr('href'), function (result) {
+        // href can be stored as a data attribute
+        if (!href) {
+            href = $this.data('href');
+        }
+
+        if (!href) {
+            return;
+        }
+
+        $.getJSON(href, $this.data(), function (result) {
             var messageType = 'success';
             if (!result.success) {
                 messageType = 'error';

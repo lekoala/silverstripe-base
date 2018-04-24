@@ -60,14 +60,71 @@ class ContentController extends DefaultController
 
         try {
             Alertify::checkFlashMessage($this->getSession());
-        }
-        catch (Exception $ex) {
+        } catch (Exception $ex) {
             // There might not be a session
         }
 
-
         // Switch channel for clearer logs
         $this->logger = $this->logger->withName('app');
+    }
+
+    /**
+     * Override default mechanisms for ease of use
+     *
+     * @link https://docs.silverstripe.org/en/4/developer_guides/controllers/access_control/
+     * @param string $action
+     * @return boolean
+     */
+    public function checkAccessAction($action)
+    {
+        // Whitelist early on to avoid running unecessary code
+        if ($action == 'index') {
+            return true;
+        }
+        $isAllowed = $this->isActionWithRequest($action);
+        if (!$isAllowed) {
+            $isAllowed = parent::checkAccessAction($action);
+        }
+        if (!$isAllowed) {
+            $this->getLogger()->info("$action is not allowed");
+        }
+        return $isAllowed;
+    }
+
+    /**
+     * Checks if a given action use a request as first parameter
+     *
+     * For forms, declare HTTPRequest $request = null because $request is not set
+     * when called from the template
+     *
+     * @param string $action
+     * @return boolean
+     */
+    protected function isActionWithRequest($action)
+    {
+        if ($this->owner->hasMethod($action)) {
+            $refl = new \ReflectionMethod($this, $action);
+            $params = $refl->getParameters();
+            // Everything that gets a request as a parameter is a valid action
+            if ($params && $params[0]->getName() == 'request') {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @param string $action
+     *
+     * @return bool
+     */
+    public function hasAction($action)
+    {
+        $result = parent::hasAction($action);
+        if (!$result) {
+            $result = $this->isActionWithRequest($action);
+        }
+        return $result;
     }
 
     /**
