@@ -4,7 +4,7 @@
  * Use applicationResponse in php to properly respond to these requests
  */
 (function ($) {
-    $(document).on('click', 'a[data-scope]', function (e) {
+    $(document).on('click', '[data-scope]', function (e) {
         e.preventDefault();
 
         var $this = $(this);
@@ -20,7 +20,12 @@
             return;
         }
 
-        $.getJSON(href, $this.data(), function (result) {
+        $this.trigger('ScopedRequests.click', [$this]);
+
+        // Collect data. Any dynamic parameter should be stored as a data attribute on click event
+        var data = $this.data();
+
+        $.getJSON(href, data, function (result) {
             var messageType = 'success';
             if (!result.success) {
                 messageType = 'error';
@@ -47,6 +52,9 @@
                     }
                 }
             }
+            $this.trigger('ScopedRequests.complete', [$this, result]);
         });
+    }).error(function (err) {
+        $this.trigger('ScopedRequests.error', [$this, err]);
     });
 })(jQuery);

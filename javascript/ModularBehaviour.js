@@ -29,6 +29,7 @@
             }
             e.addClass(config.initClass);
         }
+
         // initialize every element
         this.each(function () {
             init($(this));
