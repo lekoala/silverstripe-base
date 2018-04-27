@@ -4,6 +4,7 @@ namespace LeKoala\Base\Forms;
 use SilverStripe\i18n\i18n;
 use SilverStripe\Forms\TextField;
 use SilverStripe\View\Requirements;
+use SilverStripe\Control\Controller;
 
 /**
  * @link https://chmln.github.io/flatpickr
@@ -28,7 +29,7 @@ class FlatpickrField extends TextField
      * @config
      * @var string
      */
-    private static $version = '4.4.3';
+    private static $version = '4.4.4';
 
     /**
      * @config
@@ -167,14 +168,27 @@ class FlatpickrField extends TextField
         }
 
         $this->setAttribute('data-flatpickr', json_encode($this->config));
+        self::requirements($lang);
 
-        $version = $this->config()->version;
-        Requirements::css("https://cdnjs.cloudflare.com/ajax/libs/flatpickr/$version/flatpickr.min.css");
-        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/flatpickr/$version/flatpickr.js");
-        if ($lang != 'en') {
-            Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/flatpickr/$version/l10n/$lang.js");
-        }
-        Requirements::javascript('base/javascript/fields/FlatpickrField.js');
         return parent::Field($properties);
+    }
+
+    public static function requirements($lang = null)
+    {
+        if ($lang === null) {
+            $lang = substr(i18n::get_locale(), 0, 2);
+        }
+        $version = self::config()->version;
+        Requirements::css("https://cdnjs.cloudflare.com/ajax/libs/flatpickr/$version/flatpickr.min.css");
+        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/flatpickr/$version/flatpickr.js", ['defer' => true]);
+        if ($lang != 'en') {
+            Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/flatpickr/$version/l10n/$lang.js", ['defer' => true]);
+        }
+        // in frontend, we need entwine
+        $ctrl = Controller::curr();
+        if ($ctrl instanceof Page) {
+            Requirements::javascript('base/javascript/entwine/jquery.entwine-dist.js');
+        }
+        Requirements::javascript('base/javascript/fields/FlatpickrField.js', ['defer' => true]);
     }
 }

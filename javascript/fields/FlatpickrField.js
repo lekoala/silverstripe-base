@@ -11,7 +11,7 @@
                 opts = {};
             }
 
-            flatpickr("#" + this.attr("id"), opts);
+            flatpickr(this[0], opts);
             this.addClass("flatpickr-init");
         }
     });
