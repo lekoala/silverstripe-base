@@ -208,8 +208,29 @@ class ThemeSiteConfigExtension extends DataExtension
     {
         $changedFields = $this->owner->getChangedFields(true, 2);
         if (isset($changedFields['FaviconID'])) {
-            $this->unpackFaviconArchive();
+            try {
+                $this->unpackFaviconArchive();
+                $dir = $this->getThemeAssetsFolder();
+                $webmanifest = is_file($dir . '/site.webmanifest');
+                if (is_file($webmanifest)) {
+                    $this->parseWebManifest($webmanifest);
+                }
+            } catch (Exception $ex) {
+
+            }
         }
+    }
+    /**
+     * Assign theme color from webmanifest
+     *
+     * @param string $file
+     * @return void
+     */
+    protected function parseWebManifest($file)
+    {
+        $data = file_get_contents($file);
+        $arr = json_decode($data);
+        $this->owner->ThemeColor = $arr['theme_color'];
     }
     /**
      * Unpack a favicon archive into theme asset folder
@@ -224,13 +245,7 @@ class ThemeSiteConfigExtension extends DataExtension
         $tmpName = tempnam(TEMP_PATH, 'ss');
         file_put_contents($tmpName, $FaviconData);
         $dir = $this->getThemeAssetsFolder();
-        $ZipArchive = new \ZipArchive;
-        $res = $ZipArchive->open($tmpName);
-        if ($res === true) {
-            $ZipArchive->extractTo($dir);
-            $ZipArchive->close();
-        } else {
-            die('failed : ' . ZipHelper::getErrorMessage($res));
-        }
+        ZipHelper::unzipTo($tmpName, $dir);
+
     }
 }
