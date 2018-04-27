@@ -4,7 +4,7 @@ namespace LeKoala\Base\Dev;
 
 use SilverStripe\Core\Environment;
 
-class BasichAuth
+class BasicAuth
 {
     /**
      * A simple way to http protected a website (for staging for instance)
