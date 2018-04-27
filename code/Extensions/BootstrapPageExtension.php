@@ -1,10 +1,11 @@
 <?php
 namespace LeKoala\Base\Extensions;
 
-use SilverStripe\ORM\DataExtension;
+use SilverStripe\ORM\SS_List;
 use SilverStripe\View\SSViewer;
-use SilverStripe\View\ArrayData;
 use SilverStripe\Control\Cookie;
+use SilverStripe\View\ArrayData;
+use SilverStripe\ORM\DataExtension;
 /**
  * Class \LeKoala\Base\Extensions\BootstrapPageExtension
  *
@@ -59,7 +60,7 @@ class BootstrapPageExtension extends DataExtension
         if ($ID === null && $Dismissible) {
             $ID = md5($Content);
         }
-        if($Dismissible && $this->BootstrapAlertDismissed($ID)) {
+        if ($Dismissible && $this->BootstrapAlertDismissed($ID)) {
             return '';
         }
         $tpl = new SSViewer('Bootstrap/Alert');
@@ -80,12 +81,35 @@ class BootstrapPageExtension extends DataExtension
     public function BootstrapAlertDismissed($ID)
     {
         $DismissedAlerts = Cookie::get('DismissedAlerts');
-        if($DismissedAlerts) {
+        if ($DismissedAlerts) {
             $Decoded = json_decode($DismissedAlerts);
-            if(in_array($ID, $Decoded)) {
+            if (in_array($ID, $Decoded)) {
                 return true;
             }
         }
         return false;
+    }
+    /**
+     * Give a bootstrap modal
+     *
+     * @param string $Content
+     * @param string $Title
+     * @param string $ID
+     * @param SS_List $Actions
+     * @return void
+     */
+    public function BootstrapModal($Content, $Title, $ID = null, $Actions = null)
+    {
+        if ($ID === null) {
+            $ID = md5($Content);
+        }
+        $tpl = new SSViewer('Bootstrap/Modal');
+        $data = new ArrayData([
+            'Content' => $Content,
+            'Title' => $Title,
+            'Actions' => $Actions,
+            'ID' => $ID
+        ]);
+        return $tpl->process($data);
     }
 }

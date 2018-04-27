@@ -28,11 +28,14 @@ class ClassHelper
     /**
      * Get a class name without namespace
      *
-     * @param string $class
+     * @param string|object $class
      * @return string
      */
     public static function getClassWithoutNamespace($class)
     {
+        if(is_object($class)) {
+            $class = get_class($class);
+        }
         if (\strpos($class, '\\') === false) {
             return $class;
         }

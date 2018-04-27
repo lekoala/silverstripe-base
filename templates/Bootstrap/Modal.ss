@@ -8,7 +8,7 @@
         </button>
       </div>
       <div class="modal-body">
-        $Content
+        $Content.RAW
       </div>
       <% if Actions %>
       <div class="modal-footer">

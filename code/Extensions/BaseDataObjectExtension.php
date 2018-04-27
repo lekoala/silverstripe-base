@@ -31,9 +31,10 @@ class BaseDataObjectExtension extends DataExtension
 
     public function onAfterDelete()
     {
-        if (!$this->owner->hasExtension(Versioned::class)) {
-            $this->cleanupManyManyTables();
+        if ($this->owner->hasExtension(Versioned::class)) {
+            return;
         }
+        $this->cleanupManyManyTables();
     }
 
     protected function expandGridFieldSummary($arr, BuildableFieldList $fields)

@@ -1,11 +1,17 @@
 <?php
 namespace LeKoala\Base\Extensions;
+
+use SilverStripe\Assets\File;
+use SilverStripe\Assets\Image;
+use SilverStripe\Assets\Folder;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\ORM\DataExtension;
-use SilverStripe\AssetAdmin\Forms\UploadField;
+use LeKoala\Base\Helpers\ClassHelper;
+use SilverStripe\Versioned\Versioned;
+use LeKoala\Base\Forms\SmartUploadField;
 use SilverStripe\Forms\GridField\GridField;
-use SilverStripe\Assets\Image;
-use SilverStripe\Assets\File;
+use SilverStripe\AssetAdmin\Forms\UploadField;
+use SilverStripe\Assets\Filesystem;
 /**
  * Automatically publish files and images related to this data object
  *
@@ -65,18 +71,39 @@ class SmartDataObjectExtension extends DataExtension
         $record = $this->owner;
         // If the owner is versioned, do no do this!
         $ownerIsVersioned = $record && $record->hasExtension(Versioned::class);
-        if($ownerIsVersioned) {
+        if ($ownerIsVersioned) {
             return;
         }
         $relations = $this->getAllFileRelations();
+        $changedFields = $this->owner->getChangedFields(true);
         foreach ($relations as $type => $names) {
             foreach ($names as $name) {
                 if ($type == 'has_one') {
                     $field = $name . 'ID';
+                    // Check state
                     if ($this->owner->$field) {
                         $file = $this->owner->$name();
                         if (!$file->isPublished()) {
                             $file->doPublish();
+                        }
+                    }
+                    // Check if we need to delete previous file
+                    if (isset($changedFields[$field])) {
+                        $before = $changedFields[$field]['before'];
+                        $after = $changedFields[$field]['after'];
+
+                        // Clean old file
+                        if ($before != $after) {
+                            $oldFile = File::get()->byID($before);
+                            if ($oldFile && $oldFile->ID) {
+                                if ($oldFile->hasExtension(Versioned::class)) {
+                                    $oldFile->deleteFromStage(Versioned::LIVE);
+                                    $oldFile->deleteFromStage(Versioned::DRAFT);
+                                } else {
+                                    // Delete does not clean all stages :-(
+                                    $oldFile->delete();
+                                }
+                            }
                         }
                     }
                 } else {
@@ -89,6 +116,36 @@ class SmartDataObjectExtension extends DataExtension
             }
         }
     }
+    public function onBeforeDelete()
+    {
+        $folder = Folder::find_or_make($this->getFolderName());
+        $filename = $folder->getFilename();
+        if ($folder->hasExtension(Versioned::class)) {
+            $folder->deleteFromStage(Versioned::LIVE);
+            $folder->deleteFromStage(Versioned::DRAFT);
+        } else {
+            // Delete does not clean all stages :-(
+            $folder->delete();
+        }
+        // Delete leaves ugly empty folders...
+        if (defined('ASSETS_PATH')) {
+            $assetsPath = ASSETS_PATH;
+
+            $protected = $assetsPath . '/.protected/' . $filename;
+            $public = $assetsPath . '/' . $filename;
+
+            if (is_dir($protected)) {
+                Filesystem::remove_folder_if_empty($protected);
+                Filesystem::remove_folder_if_empty($public);
+            }
+        }
+
+    }
+    public function getFolderName()
+    {
+        $class = ClassHelper::getClassWithoutNamespace($this->owner);
+        return $class . '/' . $this->owner->ID;
+    }
     public function updateCMSFields(FieldList $fields)
     {
         $dataFields = $fields->dataFields();
@@ -97,14 +154,14 @@ class SmartDataObjectExtension extends DataExtension
             $class = get_class($dataField);
             // Let's replace all base UploadFields with SmartUploadFields
             if ($class === UploadField::class) {
-                $newField = new \LeKoala\Base\Forms\SmartUploadField($dataField->getName(), $dataField->Title(), $dataField->getItems());
+                $newField = new SmartUploadField($dataField->getName(), $dataField->Title(), $dataField->getItems());
                 $fields->replaceField($dataField->getName(), $newField);
             }
             // Adjust GridFields
             if ($class === GridField::class) {
                 // Let's replace many_many files grids with proper UploadFields
                 if (\in_array($dataField->getName(), $manyManyFiles)) {
-                    $newField = new \LeKoala\Base\Forms\SmartUploadField($dataField->getName(), $dataField->Title(), $dataField->getList());
+                    $newField = new SmartUploadField($dataField->getName(), $dataField->Title(), $dataField->getList());
                     $fields->replaceField($dataField->getName(), $newField);
                 }
             }
