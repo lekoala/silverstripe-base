@@ -160,7 +160,7 @@ class SmartDataObjectExtension extends DataExtension
             // Adjust GridFields
             if ($class === GridField::class) {
                 // Let's replace many_many files grids with proper UploadFields
-                if (\in_array($dataField->getName(), $manyManyFiles)) {
+                if (in_array($dataField->getName(), $manyManyFiles)) {
                     $newField = new SmartUploadField($dataField->getName(), $dataField->Title(), $dataField->getList());
                     $fields->replaceField($dataField->getName(), $newField);
                 }
