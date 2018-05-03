@@ -1,5 +1,5 @@
 <?php
-namespace LeKoala\Base\Dev;
+namespace LeKoala\Base\Dev\Tasks;
 
 use Predis\Client;
 use Predis\Command\ServerInfo;

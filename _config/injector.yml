@@ -1,6 +1,12 @@
 SilverStripe\Core\Injector\Injector:
   SilverStripe\Forms\DateField:
     class: LeKoala\Base\Forms\FlatpickrField
+  SilverStripe\Dev\Tasks\i18nTextCollectorTask:
+    class: LeKoala\Base\Dev\Tasks\ConfigurableI18nTextCollectorTask
+  SilverStripe\Dev\MigrationTask:
+    class: LeKoala\Base\Dev\Tasks\DisabledMigrationTasks
 # This does not work because DBForeignKey injects based on FileHandled::class
 #  SilverStripe\AssetAdmin\Forms\UploadField:
 #    class: LeKoala\Base\FormFields\UploadField
+  SilverStripe\i18n\TextCollection\i18nTextCollector:
+    class: LeKoala\Base\Dev\TextCollector

@@ -4,6 +4,7 @@ namespace LeKoala\Base\Dev;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Control\Director;
+use SilverStripe\Core\Environment;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Dev\BuildTask as DefaultBuildTask;
@@ -40,16 +41,17 @@ abstract class BuildTask extends DefaultBuildTask
         $this->outputFooter();
     }
 
-    protected function init(HTTPRequest $request) {
+    protected function init(HTTPRequest $request)
+    {
         // Call you own code here in your subclasses
     }
 
-    protected function outputHeader() {
-        $taskTitle=  $this->getTitle();
-        if(Director::is_cli()) {
+    protected function outputHeader()
+    {
+        $taskTitle = $this->getTitle();
+        if (Director::is_cli()) {
 
-        }
-        else {
+        } else {
             $html = "<!DOCTYPE html><html><head><title>$taskTitle</title>";
             $html .= '<link rel="stylesheet" type="text/css" href="/resources/base/css/buildtask.css" />';
             $html .= '</head><body><div class="info header"><h1>Running Task ' . $taskTitle . '</h1></div><div class="build">';
@@ -59,13 +61,17 @@ abstract class BuildTask extends DefaultBuildTask
 
     protected function outputFooter()
     {
-        if(Director::is_cli()) {
+        if (Director::is_cli()) {
 
-        }
-        else {
+        } else {
             $html = "</div></body>";
             echo $html;
         }
+    }
+
+    protected function increaseTimeLimitTo($timeLimit = null)
+    {
+        Environment::increaseTimeLimitTo($timeLimit);
     }
 
     protected function regenerateClassManifest()
@@ -74,6 +80,9 @@ abstract class BuildTask extends DefaultBuildTask
         $this->message("The class manifest has been rebuilt", "created");
     }
 
+    /**
+     * @return HTTPRequest
+     */
     protected function getRequest()
     {
         if (!$this->request) {
@@ -106,10 +115,10 @@ abstract class BuildTask extends DefaultBuildTask
     {
         $values = [];
         $request = $this->getRequest();
-        echo '<form>';
+        echo '<form action="" method="post">';
         foreach ($this->options as $opt) {
-            $val = $request->getVar($opt['key']);
-            if (!$val) {
+            $val = $request->requestVar($opt['key']);
+            if ($val === null) {
                 $val = $opt['default'];
             }
 
@@ -127,7 +136,23 @@ abstract class BuildTask extends DefaultBuildTask
                 }
                 $input .= '</select>';
             } else {
-                $input = '<input name="' . $opt['key'] . '" value="' . $val . '" />';
+                $type = 'text';
+                $input = null;
+                if (isset($opt['default'])) {
+                    if (is_bool($opt['default'])) {
+                        $type = 'checkbox';
+                        $checked = $val ? ' checked="checked"' : '';
+                        $input = '<input type="hidden" name="' . $opt['key'] . '" value="0" />';
+                        $input .= '<input type="' . $type . '" name="' . $opt['key'] . '" value="1"' . $checked . ' />';
+                    } else {
+                        if (is_int($opt['default'])) {
+                            $type = 'numeric';
+                        }
+                    }
+                }
+                if (!$input) {
+                    $input = '<input type="' . $type . '" name="' . $opt['key'] . '" value="' . $val . '" />';
+                }
             }
             echo '<div class="field">';
             echo '<label> ' . $opt['title'] . ' ' . $input . '</label>';
@@ -157,7 +182,7 @@ abstract class BuildTask extends DefaultBuildTask
             if (isset($cli_map[$type])) {
                 $message = $cli_map[$type] . ' ' . $message;
             }
-            if(!is_string($message)) {
+            if (!is_string($message)) {
                 $message = json_encode($message);
             }
             echo "  $message\n";
@@ -175,11 +200,10 @@ abstract class BuildTask extends DefaultBuildTask
             if (isset($web_map[$type])) {
                 $color = $web_map[$type];
             }
-            if(!is_string($message)) {
+            if (!is_string($message)) {
                 $message = print_r($message, true);
                 echo "<pre style=\"color:$color\">$message</pre>";
-            }
-            else {
+            } else {
                 echo "<div style=\"color:$color\">$message</div>";
             }
 

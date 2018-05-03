@@ -26,7 +26,7 @@ class Bootstrap
     /**
      * @var string
      */
-    private static $bootstrap_version = '4.1.0';
+    private static $bootstrap_version = '4.1.1';
 
     /**
      * @var string

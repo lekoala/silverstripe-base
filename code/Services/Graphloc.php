@@ -6,7 +6,10 @@ use LeKoala\Base\Geo\Models\Country;
 use LeKoala\Base\Geo\Models\Coordinates;
 use LeKoala\Base\Geo\Models\Address;
 
-
+/**
+ * TODO: implement caching
+ * @link https://graphloc.com/
+ */
 class Graphloc
 {
     const API_URL = 'https://api.graphloc.com/graphql';

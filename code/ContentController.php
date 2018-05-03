@@ -2,6 +2,7 @@
 namespace LeKoala\Base;
 
 use \Exception;
+use ReflectionMethod;
 use SilverStripe\i18n\i18n;
 use LeKoala\Base\Dev\BasicAuth;
 use LeKoala\Base\View\Alertify;
@@ -9,6 +10,7 @@ use SilverStripe\Control\Cookie;
 use SilverStripe\Security\Member;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Environment;
+use SilverStripe\ORM\DatabaseAdmin;
 use SilverStripe\Security\Security;
 use SilverStripe\View\Requirements;
 use LeKoala\Base\Helpers\ClassHelper;
@@ -16,6 +18,7 @@ use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Security\IdentityStore;
 use SilverStripe\ORM\ValidationException;
+use SilverStripe\ORM\Connect\DatabaseException;
 use SilverStripe\CMS\Controllers\ContentController as DefaultController;
 /**
  * A more opiniated base controller for your app
@@ -52,7 +55,17 @@ class ContentController extends DefaultController
         // @link https://flaviocopes.com/javascript-async-defer/#tldr-tell-me-whats-the-best
         Requirements::backend()->setWriteJavascriptToBody(false);
 
-        parent::init();
+        try {
+            parent::init();
+        } catch (DatabaseException $ex) {
+            $dbMessage = $ex->getMessage();
+            // If we have a missing column, we can try to rebuild
+            if (strpos($dbMessage, 'Unknown column') !== false) {
+                $dbAdmin = new DatabaseAdmin();
+                $dbAdmin->doBuild(true);
+            }
+            throw $ex;
+        }
 
         $this->setLangFromRequest();
 
@@ -103,7 +116,7 @@ class ContentController extends DefaultController
     protected function isActionWithRequest($action)
     {
         if ($this->owner->hasMethod($action)) {
-            $refl = new \ReflectionMethod($this, $action);
+            $refl = new ReflectionMethod($this, $action);
             $params = $refl->getParameters();
             // Everything that gets a request as a parameter is a valid action
             if ($params && $params[0]->getName() == 'request') {

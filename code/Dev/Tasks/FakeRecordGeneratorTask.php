@@ -1,16 +1,17 @@
 <?php
-namespace LeKoala\Base\Dev;
+namespace LeKoala\Base\Dev\Tasks;
 
 use \Exception;
+use LeKoala\Base\Dev\BuildTask;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Member;
 use SilverStripe\ORM\FieldType\DBInt;
-use SilverStripe\ORM\FieldType\DBText;
 use SilverStripe\ORM\FieldType\DBDate;
 use SilverStripe\ORM\FieldType\DBEnum;
-use SilverStripe\ORM\FieldType\DBVarchar;
+use SilverStripe\ORM\FieldType\DBText;
 use SilverStripe\ORM\FieldType\DBBoolean;
+use SilverStripe\ORM\FieldType\DBVarchar;
 use SilverStripe\ORM\FieldType\DBCurrency;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 

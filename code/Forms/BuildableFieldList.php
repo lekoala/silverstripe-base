@@ -19,7 +19,7 @@ class BuildableFieldList extends FieldList
     /**
      * @var string
      */
-    protected $i18nEntity = 'GLOBAL';
+    protected $i18nEntity = 'Global';
 
     /**
      * Returns an instance of BuildableFieldList from a FieldList

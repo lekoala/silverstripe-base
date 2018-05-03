@@ -9,7 +9,6 @@ use SilverStripe\Security\Security;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Security\IdentityStore;
 
-
 class EnvironmentChecker
 {
     /**

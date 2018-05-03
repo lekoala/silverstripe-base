@@ -1,5 +1,5 @@
 <?php
-namespace LeKoala\Base\Dev;
+namespace LeKoala\Base\Dev\Tasks;
 
 use SilverStripe\ORM\DB;
 use LeKoala\Base\Dev\BuildTask;
@@ -24,7 +24,7 @@ class DropUnusedDatabaseObjectsTask extends BuildTask
     {
         $this->addOption("tables", "Clean unused tables", true);
         $this->addOption("fields", "Clean unused fields", true);
-        $this->addOption("go", "Set this to 1 to proceed", 0);
+        $this->addOption("go", "Tick this to proceed to proceed", false);
 
         $options = $this->askOptions();
 
@@ -101,7 +101,7 @@ class DropUnusedDatabaseObjectsTask extends BuildTask
                 $localeList = $schema->fieldList($localeTable);
                 foreach ($localeList as $fieldName => $type) {
                     /// Never drop locale fields
-                    if (in_array($fieldName, ['ID','RecordID','Locale'])) {
+                    if (in_array($fieldName, ['ID', 'RecordID', 'Locale'])) {
                         continue;
                     }
                     if (!isset($localeFields[$fieldName])) {
