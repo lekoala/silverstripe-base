@@ -33,8 +33,8 @@ SilverStripe\Core\Injector\Injector:
       Formatter: %$CustomLineFormatter
 ---
 Name: dev-errors
-Only:
-  environment: dev
+Except:
+  environment: live
 ---
 SilverStripe\Core\Injector\Injector:
   Psr\Log\LoggerInterface:
@@ -56,8 +56,8 @@ SilverStripe\Core\Injector\Injector:
       - "notice"
 ---
 Name: live-errors
-Except:
-  environment: dev
+Only:
+  environment: live
 ---
 SilverStripe\Core\Injector\Injector:
   Psr\Log\LoggerInterface:
