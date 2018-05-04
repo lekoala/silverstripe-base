@@ -82,6 +82,14 @@ class ContentController extends DefaultController
     }
 
     /**
+     * @return int
+     */
+    public function getSubsiteId()
+    {
+        return \SilverStripe\Subsites\State\SubsiteState::singleton()->getSubsiteId();
+    }
+
+    /**
      * Override default mechanisms for ease of use
      *
      * @link https://docs.silverstripe.org/en/4/developer_guides/controllers/access_control/
