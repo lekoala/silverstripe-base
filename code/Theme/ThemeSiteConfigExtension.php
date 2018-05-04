@@ -147,6 +147,7 @@ class ThemeSiteConfigExtension extends DataExtension
             $FontsGroup->push($BodyFontWeight);
             $GoogleFonts = new TextField("GoogleFonts");
             $GoogleFonts->setAttribute('placeholder', "Open+Sans|Roboto");
+            $themeTab->push($GoogleFonts);
             // Theme
             $CssTheme = new DropdownField("CssTheme", $this->owner->fieldLabel('CssTheme'), $cssThemes);
             $CssTheme->setHasEmptyDefault(true);
