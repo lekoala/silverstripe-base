@@ -10,3 +10,5 @@ SilverStripe\Core\Injector\Injector:
 #    class: LeKoala\Base\FormFields\UploadField
   SilverStripe\i18n\TextCollection\i18nTextCollector:
     class: LeKoala\Base\Dev\TextCollector
+  SilverStripe\Dev\DebugView:
+    class: LeKoala\Base\Dev\BetterDebugView
