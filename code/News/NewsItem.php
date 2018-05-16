@@ -1,5 +1,6 @@
 <?php
 namespace LeKoala\Base\News;
+
 use SilverStripe\ORM\DB;
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\Image;
@@ -14,6 +15,7 @@ use SilverStripe\ORM\FieldType\DBDate;
 use LeKoala\Base\Forms\SmartUploadField;
 use LeKoala\Base\Forms\InputMaskDateField;
 use LeKoala\Base\VideoEmbed\VideoEmbed;
+
 /**
  * Class \LeKoala\Base\News\NewsItem
  *

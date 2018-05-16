@@ -20,6 +20,7 @@ use SilverStripe\Security\IdentityStore;
 use SilverStripe\ORM\ValidationException;
 use SilverStripe\ORM\Connect\DatabaseException;
 use SilverStripe\CMS\Controllers\ContentController as DefaultController;
+
 /**
  * A more opiniated base controller for your app
  *

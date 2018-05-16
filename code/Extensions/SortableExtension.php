@@ -1,7 +1,9 @@
 <?php
 namespace LeKoala\Base\Extensions;
+
 use SilverStripe\Forms\FieldList;
 use SilverStripe\ORM\DataExtension;
+
 /**
  * Make a DataObject sortable with GridFieldOrderableRows
  *

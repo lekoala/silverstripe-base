@@ -1,8 +1,10 @@
 <?php
 namespace LeKoala\Base\Faq;
+
 use SilverStripe\ORM\DataObject;
 use LeKoala\Base\Faq\FaqPage;
 use LeKoala\Base\Faq\FaqCategory;
+
 /**
  * Class \LeKoala\Base\Faq\FaqItem
  *

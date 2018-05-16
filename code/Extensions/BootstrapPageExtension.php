@@ -6,6 +6,7 @@ use SilverStripe\View\SSViewer;
 use SilverStripe\Control\Cookie;
 use SilverStripe\View\ArrayData;
 use SilverStripe\ORM\DataExtension;
+
 /**
  * Class \LeKoala\Base\Extensions\BootstrapPageExtension
  *

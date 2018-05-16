@@ -55,5 +55,4 @@ class BetterCheckboxSetField extends CheckboxSetField
 
         return $this;
     }
-
 }

@@ -4,7 +4,6 @@ namespace LeKoala\Base\Dev\Tasks;
 use LeKoala\Base\Dev\BuildTask;
 use SilverStripe\Control\HTTPRequest;
 
-
 /**
  */
 class PhpInfoTask extends BuildTask

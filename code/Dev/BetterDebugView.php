@@ -56,5 +56,4 @@ class BetterDebugView extends DebugView
 
         return $output;
     }
-
 }

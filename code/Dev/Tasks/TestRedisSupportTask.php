@@ -8,7 +8,6 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Injector\Injector;
 use LeKoala\Base\Cache\RedisCacheFactory;
 
-
 /**
  */
 class TestRedisSupportTask extends BuildTask
@@ -26,6 +25,5 @@ class TestRedisSupportTask extends BuildTask
         $args = [];
         $redisCache = Injector::inst()->createWithArgs(RedisCacheFactory::class, $args);
         $this->message($redisCache);
-
     }
 }

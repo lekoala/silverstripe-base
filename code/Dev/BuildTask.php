@@ -50,7 +50,6 @@ abstract class BuildTask extends DefaultBuildTask
     {
         $taskTitle = $this->getTitle();
         if (Director::is_cli()) {
-
         } else {
             $html = "<!DOCTYPE html><html><head><title>$taskTitle</title>";
             $html .= '<link rel="stylesheet" type="text/css" href="/resources/base/css/buildtask.css" />';
@@ -62,7 +61,6 @@ abstract class BuildTask extends DefaultBuildTask
     protected function outputFooter()
     {
         if (Director::is_cli()) {
-
         } else {
             $html = "</div></body>";
             echo $html;
@@ -206,7 +204,6 @@ abstract class BuildTask extends DefaultBuildTask
             } else {
                 echo "<div style=\"color:$color\">$message</div>";
             }
-
         }
     }
 }

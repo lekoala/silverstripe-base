@@ -97,10 +97,10 @@ class FakeRecordGeneratorTask extends BuildTask
                 }
                 if ($name == 'CountryCode' || $name == 'Nationality') {
                     return FakeRecordGenerator::countryCode();
-                } else if ($name == 'PostalCode' || $name == 'Postcode') {
+                } elseif ($name == 'PostalCode' || $name == 'Postcode') {
                     $addr = FakeRecordGenerator::address();
                     return $addr['Postcode'];
-                } else if ($name == 'Locality' || $name == 'City') {
+                } elseif ($name == 'Locality' || $name == 'City') {
                     $addr = FakeRecordGenerator::address();
                     return $addr['City'];
                 }

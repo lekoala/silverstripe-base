@@ -8,6 +8,7 @@ use SilverStripe\View\Requirements;
 use SilverStripe\Control\Controller;
 use SilverStripe\Admin\AdminRootController;
 use SilverStripe\Admin\LeftAndMain;
+
 /**
  * Class \LeKoala\Base\Theme\ThemeControllerExtension
  *
@@ -19,12 +20,11 @@ class ThemeControllerExtension extends Extension
     public function onAfterInit()
     {
         // Do nothing in admin
-        if(Controller::curr() instanceof LeftAndMain) {
+        if (Controller::curr() instanceof LeftAndMain) {
             return;
         }
         $this->requireGoogleFonts();
         $this->requireThemeStyles();
-
     }
     protected function requireGoogleFonts()
     {

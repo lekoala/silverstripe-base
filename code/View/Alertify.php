@@ -81,5 +81,4 @@ JS;
         self::requirements();
         self::show($FlashMessage['Message'], $FlashMessage['Type']);
     }
-
 }

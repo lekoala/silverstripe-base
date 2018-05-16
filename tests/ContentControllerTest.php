@@ -26,7 +26,8 @@ class ContentControllerTest extends SapphireTest
         $this->assertTrue($inst->getCache() instanceof CacheInterface);
     }
 
-    public function testRequirements() {
+    public function testRequirements()
+    {
         $inst = ContentController::create();
 
         $SiteConfig = $this->objFromFixture(SiteConfig::class, 'default');

@@ -34,7 +34,6 @@ class EnvironmentChecker
                 $this->allowAutologin();
             }
         }
-
     }
 
     /**
@@ -86,5 +85,4 @@ class EnvironmentChecker
             mkdir($tempFolder, 0755);
         }
     }
-
 }

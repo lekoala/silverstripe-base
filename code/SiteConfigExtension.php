@@ -1,5 +1,6 @@
 <?php
 namespace LeKoala\Base;
+
 use SilverStripe\Forms\Tab;
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\Image;
@@ -13,6 +14,7 @@ use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
 use SilverStripe\Forms\HeaderField;
 use LeKoala\Base\Forms\Builder;
+
 /**
  * Class \LeKoala\Base\SiteConfigExtension
  *

@@ -76,7 +76,6 @@ class FineUploadField extends UploadField
 
         $result = [];
         foreach ($this->getItems() as $file) {
-
             $thumbnail = $file->PreviewLink();
 
             $result[] = [

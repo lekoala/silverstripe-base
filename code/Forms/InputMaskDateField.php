@@ -16,7 +16,8 @@ class InputMaskDateField extends InputMaskField
         $this->setDataFormat('yyyy-mm-dd'); // use ISO date format when unmasking
     }
 
-    public function setValue($value, $data = null) {
+    public function setValue($value, $data = null)
+    {
         return parent::setValue($value, $data);
     }
 }

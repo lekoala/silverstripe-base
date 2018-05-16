@@ -14,7 +14,7 @@ trait KnowsThemeDir
     {
         // $themes = SSViewer::config()->uninherited('themes');
         $themes = SSViewer::config()->themes;
-        if(!$themes) {
+        if (!$themes) {
             $themes = SSViewer::get_themes();
         }
         if ($themes) {
@@ -26,5 +26,4 @@ trait KnowsThemeDir
         }
         return project();
     }
-
 }

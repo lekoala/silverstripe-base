@@ -1,5 +1,6 @@
 <?php
 namespace LeKoala\Base\Blocks;
+
 use Page;
 use LeKoala\Base\Blocks\Block;
 use SilverStripe\ORM\ArrayList;
@@ -19,6 +20,7 @@ use Symbiote\GridFieldExtensions\GridFieldOrderableRows;
 use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
 use SilverStripe\GraphQL\Controller;
 use SilverStripe\Dev\TaskRunner;
+
 /**
  * A page mode of blocks
  *

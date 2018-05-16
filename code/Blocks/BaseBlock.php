@@ -12,7 +12,6 @@ use SilverStripe\View\ViewableData;
 use LeKoala\Base\Helpers\ClassHelper;
 use LeKoala\Base\Blocks\BlockFieldList;
 
-
 /**
  * This is the class you need to extend to create your own block
  *
@@ -63,6 +62,4 @@ class BaseBlock extends ViewableData
     public function SharedCollection()
     {
     }
-
-
 }

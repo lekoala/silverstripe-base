@@ -136,5 +136,4 @@ JS;
     {
         return self::forceStatus(self::STATUS_ALLOW);
     }
-
 }

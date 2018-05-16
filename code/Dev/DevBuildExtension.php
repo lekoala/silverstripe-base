@@ -26,7 +26,7 @@ class DevBuildExtension extends Extension
 
             $code = <<<CODE
 <?php
-
+// phpcs:ignoreFile -- this is not a core file
 class Repository {
 
     const FIRST = 'first';
@@ -103,5 +103,4 @@ CODE;
     {
         echo Director::is_cli() ? "\n" . $message . "\n\n" : "<p><b>$message</b></p>";
     }
-
 }

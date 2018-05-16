@@ -30,6 +30,7 @@ use SilverStripe\Forms\TabSet;
 use SilverStripe\Forms\Tab;
 use SilverStripe\Forms\TextField;
 use SilverStripe\View\Parsers\URLSegmentFilter;
+
 /**
  * The block dataobject is used to actually store the data
  *
@@ -213,7 +214,7 @@ final class Block extends DataObject
             $FirstLast = '';
             if ($i === 1) {
                 $FirstLast = 'first';
-            } else if ($i === $c) {
+            } elseif ($i === $c) {
                 $FirstLast = 'last';
             }
             $item['Pos'] = $index;

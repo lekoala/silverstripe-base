@@ -1,5 +1,6 @@
 <?php
 namespace LeKoala\Base\Actions;
+
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Admin\LeftAndMain;
@@ -8,6 +9,7 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest;
+
 /**
  * Decorates {@link GridDetailForm_ItemRequest} to use new form actions and buttons.
  *
@@ -76,7 +78,7 @@ class ActionsGridFieldItemRequest extends DataExtension
             $result = $record->$action($data, $form, $controller);
             if ($result === false) {
                 $error = true;
-            } else if (is_string($result)) {
+            } elseif (is_string($result)) {
                 $message = $result;
             }
         } catch (\Exception $ex) {

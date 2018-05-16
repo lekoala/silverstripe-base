@@ -1,8 +1,10 @@
 <?php
 namespace LeKoala\Base\Contact;
+
 use SilverStripe\ORM\DataObject;
 use LeKoala\Base\Contact\ContactPage;
 use SilverStripe\Control\Email\Email;
+
 /**
  * Class \LeKoala\Base\Contact\ContactSubmission
  *

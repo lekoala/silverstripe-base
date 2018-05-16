@@ -33,7 +33,7 @@ class ClassHelper
      */
     public static function getClassWithoutNamespace($class)
     {
-        if(is_object($class)) {
+        if (is_object($class)) {
             $class = get_class($class);
         }
         if (\strpos($class, '\\') === false) {
@@ -41,5 +41,4 @@ class ClassHelper
         }
         return substr(strrchr($class, '\\'), 1);
     }
-
 }

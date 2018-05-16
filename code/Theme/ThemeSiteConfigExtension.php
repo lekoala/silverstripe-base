@@ -217,7 +217,6 @@ class ThemeSiteConfigExtension extends DataExtension
                     $this->parseWebManifest($webmanifest);
                 }
             } catch (Exception $ex) {
-
             }
         }
     }
@@ -247,6 +246,5 @@ class ThemeSiteConfigExtension extends DataExtension
         file_put_contents($tmpName, $FaviconData);
         $dir = $this->getThemeAssetsFolder();
         ZipHelper::unzipTo($tmpName, $dir);
-
     }
 }

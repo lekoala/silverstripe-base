@@ -45,5 +45,4 @@ class Select2MultiField extends ListboxField
             $record->$fieldName = $this->stringEncode($items);
         }
     }
-
 }

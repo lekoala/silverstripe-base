@@ -1,8 +1,10 @@
 <?php
 namespace LeKoala\Base\Extensions;
+
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Control\Director;
 use SilverStripe\ORM\DataExtension;
+
 /**
  * Class \LeKoala\Base\Extensions\SocialShareExtension
  *

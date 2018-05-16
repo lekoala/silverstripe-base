@@ -61,5 +61,4 @@ class Bootstrap
 
         Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/bootstrap.native/$version/bootstrap-native-v4.min.js", ['defer' => true]);
     }
-
 }

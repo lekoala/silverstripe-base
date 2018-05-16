@@ -1,5 +1,6 @@
 <?php
 namespace LeKoala\Base;
+
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\TextField;
@@ -8,6 +9,7 @@ use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\ErrorPage\ErrorPage;
 use SilverStripe\ORM\FieldType\DBField;
 use LeKoala\DebugBar\Extension\ControllerExtension;
+
 /**
  * A simple alternative to full text search
  *

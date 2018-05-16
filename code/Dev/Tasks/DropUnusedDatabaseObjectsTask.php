@@ -242,5 +242,4 @@ class DropUnusedDatabaseObjectsTask extends BuildTask
             DB::query($query . ';');
         }
     }
-
 }

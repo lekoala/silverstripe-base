@@ -1,6 +1,8 @@
 <?php
 namespace LeKoala\Base\Tags;
+
 use SilverStripe\ORM\DataObject;
+
 /**
  * Class \LeKoala\Base\Tags\Tag
  *

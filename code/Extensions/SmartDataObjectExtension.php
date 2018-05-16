@@ -12,6 +12,7 @@ use LeKoala\Base\Forms\SmartUploadField;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Assets\Filesystem;
+
 /**
  * Automatically publish files and images related to this data object
  *
@@ -139,7 +140,6 @@ class SmartDataObjectExtension extends DataExtension
                 Filesystem::remove_folder_if_empty($public);
             }
         }
-
     }
     public function getFolderName()
     {

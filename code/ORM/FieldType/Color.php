@@ -163,7 +163,8 @@ class Color extends DBVarchar
      *
      * @return string
      */
-    public function ContrastColor() {
+    public function ContrastColor()
+    {
         list($R, $G, $B) = self::HEX_TO_RGB($this->value);
         $yiq = (($R * 299) + ($G * 587) + ($B * 114)) / 1000;
         return ($yiq >= 128) ? 'black' : 'white';

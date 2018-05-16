@@ -2,6 +2,7 @@
 namespace LeKoala\Base\Faq;
 
 use SilverStripe\Control\HTTPRequest;
+
 /**
  * Class \LeKoala\Base\Faq\FaqPageController
  *

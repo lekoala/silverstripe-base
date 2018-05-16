@@ -203,5 +203,4 @@ class Address
 
         return $this;
     }
-
 }

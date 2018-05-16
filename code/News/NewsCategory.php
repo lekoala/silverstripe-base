@@ -1,10 +1,12 @@
 <?php
 namespace LeKoala\Base\News;
+
 use SilverStripe\Assets\Image;
 use LeKoala\Base\News\NewsItem;
 use LeKoala\Base\News\NewsPage;
 use SilverStripe\ORM\DataObject;
 use LeKoala\Base\Forms\SmartUploadField;
+
 /**
  * Class \LeKoala\Base\News\NewsCategory
  *
@@ -42,7 +44,8 @@ class NewsCategory extends DataObject
         $fields->addFieldToTab('Root.Main', $Image);
         return $fields;
     }
-    public function Link() {
+    public function Link()
+    {
         return $this->Page()->Link('category/' . $this->URLSegment);
     }
 }

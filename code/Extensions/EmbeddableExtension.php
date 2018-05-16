@@ -4,6 +4,7 @@ namespace LeKoala\Base\Extensions;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\ORM\ValidationResult;
 use Embed\Embed;
+
 /**
  * Class \LeKoala\Base\Extensions\EmbeddableExtension
  *
@@ -27,11 +28,10 @@ class EmbeddableExtension extends DataExtension
         }
     }
 
-    public function EmbeddedContent() {
+    public function EmbeddedContent()
+    {
         $embed = Embed::create($this->owner->EmbedURL);
         $html = $embed->code;
         return $html;
     }
-
-
 }

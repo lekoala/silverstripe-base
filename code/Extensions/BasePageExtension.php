@@ -5,6 +5,7 @@ use SilverStripe\ORM\DB;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Versioned\Versioned;
+
 /**
  * Useful utilities for pages
  */

@@ -1,8 +1,10 @@
 <?php
 namespace LeKoala\Base\Contact;
+
 use SilverStripe\Control\Email\Email;
 use LeKoala\Base\Contact\ContactSubmission;
 use SilverStripe\Control\HTTPRequest;
+
 /**
  * Class \LeKoala\Base\Contact\ContactPageController
  *
@@ -46,13 +48,13 @@ class ContactPageController extends \PageController
         if (trim($name) == '') {
             $this->sessionMessage(_t("ContactPageController.ERR_ENTER_NAME", "Entrez votre nom"), "bad");
             return $this->redirectBack();
-        } else if (trim($email) == '') {
+        } elseif (trim($email) == '') {
             $this->sessionMessage(_t("ContactPageController.ERR_ENTER_EMAIL", "Entrez votre emali"), "bad");
             return $this->redirectBack();
-        } else if (!filter_var($email, \FILTER_VALIDATE_EMAIL)) {
+        } elseif (!filter_var($email, \FILTER_VALIDATE_EMAIL)) {
             $this->sessionMessage(_t("ContactPageController.ERR_ENTER_VALIDEMAIL", "Entrez un email valide"), "bad");
             return $this->redirectBack();
-        } else if (trim($message) == '') {
+        } elseif (trim($message) == '') {
             $this->sessionMessage(_t("ContactPageController.ERR_ENTER_MESSAGE", "Entrez votre message"), "bad");
             return $this->redirectBack();
         }

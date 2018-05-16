@@ -46,7 +46,7 @@ class RedisManifestCacheFactory implements CacheFactory
      */
     public function __construct(Client $redisClient = null)
     {
-        if(!$redisClient) {
+        if (!$redisClient) {
             $redisClient = new Client(Environment::getEnv('SS_MANIFESTCACHE_HOST'));
         }
         $this->redisClient = $redisClient;

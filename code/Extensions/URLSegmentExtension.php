@@ -1,9 +1,11 @@
 <?php
 namespace LeKoala\Base\Extensions;
+
 use SilverStripe\Forms\FieldList;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\View\Parsers\URLSegmentFilter;
+
 /**
  * Class \LeKoala\Base\Extensions\URLSegmentExtension
  *
@@ -36,7 +38,7 @@ class URLSegmentExtension extends DataExtension
         if ($segment === null) {
             $segment = $this->owner->URLSegment;
         }
-        if(!$segment) {
+        if (!$segment) {
             return false;
         }
         $class = get_class($this->owner);
@@ -45,7 +47,7 @@ class URLSegmentExtension extends DataExtension
     public function getBaseURLSegment()
     {
         $segment = $this->owner->getTitle();
-        if($this->owner->hasMethod('updateURLSegment')) {
+        if ($this->owner->hasMethod('updateURLSegment')) {
             $this->owner->updateURLSegment($segment);
         }
         $filter = new URLSegmentFilter();

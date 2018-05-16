@@ -38,7 +38,7 @@ class BlockButtonField extends CompositeField
             "{$name}[ExtraClasses]",
             ''
         );
-        $ExtraClassesField->setAttribute('placeholder','Extra Classes');
+        $ExtraClassesField->setAttribute('placeholder', 'Extra Classes');
         $group->push($ExtraClassesField);
 
         parent::__construct($children);
@@ -98,5 +98,4 @@ class BlockButtonField extends CompositeField
         $name = $this->name;
         return $this->fieldByName("{$name}[ExtraClasses]");
     }
-
 }

@@ -3,6 +3,7 @@ namespace LeKoala\Base\Blocks;
 
 use SilverStripe\Admin\LeftAndMainExtension;
 use SilverStripe\ORM\DB;
+
 /**
  * Class \LeKoala\Base\LeftAndMainExtension
  *

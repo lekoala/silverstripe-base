@@ -1,11 +1,13 @@
 <?php
 namespace LeKoala\Base\Contact;
+
 use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\SiteConfig\SiteConfig;
 use LeKoala\Base\Contact\ContactSubmission;
 use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
 use SilverStripe\Forms\GridField\GridField;
+
 /**
  * Class \LeKoala\Base\Contact\ContactPage
  *
@@ -40,7 +42,7 @@ class ContactPage extends \Page
         $fields->addFieldsToTab('Root.Map', new TextField('Longitude'));
         $fields->addFieldsToTab('Root.Map', new LiteralField('LatLonHelper', 'You can use a website like <a href="https://www.latlong.net/" target="_blank">LatLong.net</a> to find your coordinates'));
         $SubmissionsConfig = GridFieldConfig_RecordEditor::create();
-        $Submissions = new GridField('Submissions',$this->fieldLabel('Submission'), $this->Submissions(), $SubmissionsConfig);
+        $Submissions = new GridField('Submissions', $this->fieldLabel('Submission'), $this->Submissions(), $SubmissionsConfig);
         $fields->addFieldsToTab('Root.Submissions', $Submissions);
         return $fields;
     }

@@ -191,5 +191,4 @@ trait Select2
 
         return parent::validate($validator);
     }
-
 }

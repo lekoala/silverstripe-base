@@ -109,5 +109,4 @@ class JSONText extends DBString
         }
         return parent::prepValueForDB($value);
     }
-
 }

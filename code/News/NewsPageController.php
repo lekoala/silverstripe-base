@@ -12,6 +12,7 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\ORM\FieldType\DBDate;
 use SilverStripe\ORM\Queries\SQLSelect;
 use SilverStripe\ORM\FieldType\DBDatetime;
+
 /**
  * Class \LeKoala\Base\News\NewsPageController
  *

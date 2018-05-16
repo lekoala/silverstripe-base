@@ -1,6 +1,8 @@
 <?php
 namespace LeKoala\Base;
+
 use SilverStripe\Admin\LeftAndMainExtension;
+
 /**
  * Class \LeKoala\Base\LeftAndMainExtension
  *

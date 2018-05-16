@@ -65,9 +65,9 @@ class BuildableFieldList extends FieldList
         foreach ($attributes as $k => $v) {
             if ($k == 'class') {
                 $object->addExtraClass($v);
-            } else if ($k == 'description') {
+            } elseif ($k == 'description') {
                 $object->setDescription($v);
-            } else if ($k == 'options') {
+            } elseif ($k == 'options') {
                 $object->setSource($v);
             } else {
                 $object->setAttribute($k, $v);

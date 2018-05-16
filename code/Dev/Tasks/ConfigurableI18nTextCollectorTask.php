@@ -40,7 +40,7 @@ class ConfigurableI18nTextCollectorTask extends BuildTask
     {
         $this->increaseTimeLimitTo();
 
-        $this->addOption("locale", "Locale to use", substr(i18n::get_locale(),0,2));
+        $this->addOption("locale", "Locale to use", substr(i18n::get_locale(), 0, 2));
         $this->addOption("merge", "Merge with previous translations", true);
         $this->addOption("clear_unused", "Remove keys that are not used anymore", false);
         $this->addOption("debug", "Show debug messages and prevent write", false);

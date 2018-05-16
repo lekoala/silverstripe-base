@@ -1,11 +1,13 @@
 <?php
 namespace LeKoala\Base\Tags;
+
 use LeKoala\Base\Tags\Tag;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\ORM\DataExtension;
 use LeKoala\Base\Forms\MultiSelect2Field;
 use LeKoala\Base\Forms\Select2MultiField;
 use SilverStripe\ORM\DB;
+
 /**
  * Provides cross objects tag functionnality
  *

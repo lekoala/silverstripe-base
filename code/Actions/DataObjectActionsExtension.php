@@ -1,5 +1,6 @@
 <?php
 namespace LeKoala\Base\Actions;
+
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\ORM\DataExtension;
@@ -7,6 +8,7 @@ use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Controller;
 use SilverStripe\Admin\CMSProfileController;
 use SilverStripe\SiteConfig\SiteConfig;
+
 /**
  * Class \LeKoala\Base\Actions\DataObjectActionsExtension
  *
@@ -24,22 +26,21 @@ class DataObjectActionsExtension extends DataExtension
     public function updateCMSActions(FieldList $actions)
     {
         // Pages don't need to be improved
-        if($this->owner instanceof SiteTree) {
+        if ($this->owner instanceof SiteTree) {
             return;
         }
         // SiteConfig doesn't need to be improved
-        if($this->owner instanceof SiteConfig) {
+        if ($this->owner instanceof SiteConfig) {
             return;
         }
         // Not implemented in CMSProfileController
         $ctrl = Controller::curr();
-        if($ctrl instanceof CMSProfileController) {
+        if ($ctrl instanceof CMSProfileController) {
             return;
         }
-        if($this->owner->ID) {
+        if ($this->owner->ID) {
             $label = 'Save and Close';
-        }
-        else {
+        } else {
             $label = 'Create and Close';
         }
         $saveAndClose = new FormAction('doSaveAndClose', $label);

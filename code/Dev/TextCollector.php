@@ -166,7 +166,6 @@ class TextCollector extends i18nTextCollector
                         unset($entitiesByModule[$unusedEntity]);
                     }
                 }
-
             }
         }
         return $entitiesByModule;

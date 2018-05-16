@@ -18,5 +18,4 @@ class Select2SingleField extends DropdownField
     {
         return parent::saveInto($record);
     }
-
 }
