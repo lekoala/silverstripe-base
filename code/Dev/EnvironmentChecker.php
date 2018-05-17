@@ -3,9 +3,9 @@
 namespace LeKoala\Base\Dev;
 
 use LeKoala\Base\Dev\BasicAuth;
-use LeKoala\DebugBar\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Security\Security;
+use SilverStripe\Control\Controller;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Security\IdentityStore;
 

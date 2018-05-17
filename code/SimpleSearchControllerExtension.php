@@ -2,20 +2,20 @@
 namespace LeKoala\Base;
 
 use SilverStripe\Forms\Form;
+use SilverStripe\Core\Extension;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\ErrorPage\ErrorPage;
 use SilverStripe\ORM\FieldType\DBField;
-use LeKoala\DebugBar\Extension\ControllerExtension;
 
 /**
  * A simple alternative to full text search
  *
  * @property \SilverStripe\CMS\Controllers\ContentController|\LeKoala\Base\SimpleSearchControllerExtension $owner
  */
-class SimpleSearchControllerExtension extends ControllerExtension
+class SimpleSearchControllerExtension extends Extension
 {
     private static $allowed_actions = [
         'SimpleSearchForm',
