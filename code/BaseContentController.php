@@ -19,13 +19,13 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Security\IdentityStore;
 use SilverStripe\ORM\ValidationException;
 use SilverStripe\ORM\Connect\DatabaseException;
-use SilverStripe\CMS\Controllers\ContentController as DefaultController;
+use SilverStripe\CMS\Controllers\ContentController;
 
 /**
  * A more opiniated base controller for your app
  *
  */
-class ContentController extends DefaultController
+class BaseContentController extends ContentController
 {
     /**
      * Inject public dependencies into the controller

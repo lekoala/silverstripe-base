@@ -1,12 +1,11 @@
 <?php
 
-use LeKoala\Base\Dev\Benchmark;
 use SilverStripe\Control\Director;
 
 if (!function_exists('bm')) {
     function bm($cb = null)
     {
-        Benchmark::run($cb);
+        \LeKoala\Base\Dev\Benchmark::run($cb);
     }
 }
 
@@ -49,3 +48,9 @@ if (!isset($_SERVER['PHP_AUTH_USER'])) {
 if (in_array(substr($_SERVER['SERVER_NAME'], strrpos($_SERVER['SERVER_NAME'], '.') + 1), ['dev', 'local', 'localhost'])) {
     \SilverStripe\Core\Config\Config::modify()->set('SilverLeague\IDEAnnotator\DataObjectAnnotator', 'enabled', true);
 }
+
+// Add styles selector, if you have an editor.css, styles will be use
+// @link https://docs.silverstripe.org/en/4/developer_guides/customising_the_admin_interface/typography/
+\SilverStripe\Forms\HTMLEditor\TinyMCEConfig::get('cms')
+    ->addButtonsToLine(1, 'styleselect')
+    ->setOption('importcss_append', true);

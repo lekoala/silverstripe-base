@@ -3,7 +3,7 @@ SilverStripe\ORM\DataObject:
     - LeKoala\Base\Extensions\BaseDataObjectExtension
 SilverStripe\Admin\LeftAndMain:
   extensions:
-    - LeKoala\Base\BaseLeftAndMainExtension
+    - LeKoala\Base\Admin\BaseLeftAndMainExtension
     - LeKoala\Base\Blocks\BlocksLeftAndMainExtension
 SilverStripe\CMS\Model\SiteTree:
   extensions:
@@ -15,7 +15,7 @@ SilverStripe\SiteConfig\SiteConfig:
     - LeKoala\Base\Extensions\SocialExtension
 SilverStripe\CMS\Controllers\ContentController:
   extensions:
-    - LeKoala\Base\SimpleSearchControllerExtension
+    - LeKoala\Base\Extensions\SimpleSearchControllerExtension
 LeKoala\Base\Blocks\Block:
   extensions:
     - LeKoala\Base\Extensions\SortableExtension

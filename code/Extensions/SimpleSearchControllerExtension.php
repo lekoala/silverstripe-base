@@ -1,5 +1,5 @@
 <?php
-namespace LeKoala\Base;
+namespace LeKoala\Base\Extensions;
 
 use SilverStripe\Forms\Form;
 use SilverStripe\Core\Extension;

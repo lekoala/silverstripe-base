@@ -8,12 +8,10 @@
         "cms"
     ],
     "license": "MIT",
-    "authors": [
-        {
-            "name": "LeKoala",
-            "email": "thomas@lekoala.be"
-        }
-    ],
+    "authors": [{
+        "name": "LeKoala",
+        "email": "thomas@lekoala.be"
+    }],
     "require": {
         "php": ">=5.6",
         "silverstripe/framework": "^4.1",
@@ -22,8 +20,7 @@
         "symbiote/silverstripe-gridfieldextensions": "^3.1",
         "bummzack/sortablefile": "^2.0",
         "wilr/silverstripe-googlesitemaps": "^2.0",
-        "jonom/focuspoint": "^3.0",
-        "unclecheese/display-logic": "^2.0"
+        "jonom/focuspoint": "^3.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^5.7",
@@ -33,7 +30,9 @@
         "silverleague/ideannotator": "3.x-dev"
     },
     "suggest": {
-        "predis/predis": "Use Redis as a cache"
+        "predis/predis": "Use Redis as a cache",
+        "colymba/gridfield-bulk-editing-tools": "Bulk editing",
+        "unclecheese/display-logic": "Display and hide fields"
     },
     "extra": {
         "installer-name": "base",
