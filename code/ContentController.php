@@ -209,6 +209,14 @@ class ContentController extends DefaultController
     }
 
     /**
+     * @return string
+     */
+    public function CurrentYear()
+    {
+        return date('Y');
+    }
+
+    /**
      *  Allow lang to be set by the request. This must happen after parent::init()
      *
      * @return void

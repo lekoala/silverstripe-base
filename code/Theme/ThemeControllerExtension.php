@@ -8,6 +8,7 @@ use SilverStripe\View\Requirements;
 use SilverStripe\Control\Controller;
 use SilverStripe\Admin\AdminRootController;
 use SilverStripe\Admin\LeftAndMain;
+use LeKoala\Base\ORM\FieldType\Color;
 
 /**
  * Class \LeKoala\Base\Theme\ThemeControllerExtension
@@ -84,7 +85,7 @@ class ThemeControllerExtension extends Extension
             $lastEdited = strtotime($SiteConfig->LastEdited);
             // Nothing has changed, return the output file url
             if ($buildFileTime >= $sourceFileTime && $buildFileTime >= $lastEdited) {
-                return $cssURL;
+                // return $cssURL;
             }
         }
         $cssFileContent = file_get_contents($cssFile);
@@ -95,14 +96,21 @@ class ThemeControllerExtension extends Extension
         $declarations = array_combine($declarationsMatches['name'], $declarationsMatches['value']);
         foreach ($declarations as $declarationName => $declarationValue) {
             $dbName = str_replace(' ', '', ucwords(str_replace('-', ' ', $declarationName)));
-            $value = $SiteConfig->$dbName;
+            $dbObject = $SiteConfig->dbObject($dbName);
+            $value = $dbObject->getValue();
             // There is no value, use default
             if (!$value) {
                 $value = $declarationValue;
             }
-            $replaceRegex = "/var\s?\(--" . $declarationName . ",?\s?([a-z-#0-9]*)\)/";
+            $replaceRegex = "/var\s?\(--{$declarationName},?\s?([a-z-#0-9]*)\)/";
             $replaceCount = 0;
             $cssFileContent = preg_replace($replaceRegex, $value, $cssFileContent, -1, $replaceCount);
+            // For colors, also replace contrast value
+            if ($dbObject instanceof Color) {
+                $contrastValue = $dbObject->ContrastColor();
+                $contrastReplaceRegex = "/var\s?\(--{$declarationName}-contrast,?\s?([a-z-#0-9]*)\)/";
+                $cssFileContent = preg_replace($contrastReplaceRegex, $contrastValue, $cssFileContent, -1, $replaceCount);
+            }
         }
         // Minify
         $minifier = Requirements::backend()->getMinifier();

@@ -100,8 +100,7 @@ class ThemeSiteConfigExtension extends DataExtension
      */
     public function listCssThemes()
     {
-        $themeDir = $this->getThemeDir();
-        $cssPath = Director::baseFolder() . '/' . $themeDir . '/css';
+        $cssPath = $this->getThemeCssPath();
         $files = glob($cssPath . '/*-theme.css');
         $arr = [];
         foreach ($files as $file) {
@@ -110,48 +109,93 @@ class ThemeSiteConfigExtension extends DataExtension
         }
         return $arr;
     }
+    /**
+     * Get where your css files are stored
+     *
+     * @return string
+     */
+    public function getThemeCssPath()
+    {
+        $themeDir = $this->getThemeDir();
+        return Director::baseFolder() . '/' . $themeDir . '/css';
+    }
+    /**
+     * List options defined in current css theme if any
+     *
+     * Supports options declared in comments
+     * @disallowFonts
+     * @disallowColors
+     *
+     * @return array
+     */
+    public function currentThemeOptions()
+    {
+        $values = [
+            'allowFonts' => true,
+            'allowColors' => true,
+        ];
+        if (!$this->owner->CssTheme) {
+            return $values;
+        }
+        $themeFile = $this->getThemeCssPath() . '/' . $this->owner->CssTheme;
+        $contents = file_get_contents($themeFile);
+        if (strpos($contents, '@disallowFonts') !== false) {
+            $values['allowFonts'] = false;
+        }
+        if (strpos($contents, '@disallowColors') !== false) {
+            $values['allowColors'] = false;
+        }
+        return $values;
+    }
     public function updateCMSFields(FieldList $fields)
     {
         $themeTab = new Tab("Theme");
         $fields->addFieldToTab('Root', $themeTab);
-           // If we have themes, allow to configure some css variables in them
+        // If we have themes, allow to configure some css variables in them
         $cssThemes = $this->listCssThemes();
+        $themeOptions = $this->currentThemeOptions();
         if (!empty($cssThemes)) {
             // Colors
-            $ColorsHeader = new HeaderField("ColorsHeader", "Colors");
-            $themeTab->push($ColorsHeader);
-            $ColorsGroup = new FieldGroup();
-            $themeTab->push($ColorsGroup);
-            $PrimaryColor = new ColorField('PrimaryColor');
-            $ColorsGroup->push($PrimaryColor);
-            $SecondaryColor = new ColorField('SecondaryColor');
-            $ColorsGroup->push($SecondaryColor);
-            $ThemeColor = new ColorField('ThemeColor');
-            $ColorsGroup->push($ThemeColor);
-            $MaskColor = new ColorField('MaskColor');
-            $ColorsGroup->push($MaskColor);
+            if ($themeOptions["allowColors"]) {
+                $ColorsHeader = new HeaderField("ColorsHeader", "Colors");
+                $themeTab->push($ColorsHeader);
+                $ColorsGroup = new FieldGroup();
+                $themeTab->push($ColorsGroup);
+                $PrimaryColor = new ColorField('PrimaryColor');
+                $ColorsGroup->push($PrimaryColor);
+                $SecondaryColor = new ColorField('SecondaryColor');
+                $ColorsGroup->push($SecondaryColor);
+                $ThemeColor = new ColorField('ThemeColor');
+                $ColorsGroup->push($ThemeColor);
+                $MaskColor = new ColorField('MaskColor');
+                $ColorsGroup->push($MaskColor);
+            }
             // Fonts
-            $FontsHeader = new HeaderField("FontsHeader", "Fonts");
-            $themeTab->push($FontsHeader);
-            $FontsGroup = new FieldGroup();
-            $themeTab->push($FontsGroup);
-            $HeaderFont = new TextField("HeaderFontFamily");
-            $FontsGroup->push($HeaderFont);
-            $HeaderFontWeight = new DropdownField("HeaderFontWeight", $this->owner->fieldLabel('HeaderFontWeight'), self::listFontWeights());
-            $HeaderFontWeight->setHasEmptyDefault(true);
-            $FontsGroup->push($HeaderFontWeight);
-            $BodyFont = new TextField("BodyFontFamily");
-            $FontsGroup->push($BodyFont);
-            $BodyFontWeight = new DropdownField("BodyFontWeight", $this->owner->fieldLabel('BodyFontWeight'), self::listFontWeights());
-            $BodyFontWeight->setHasEmptyDefault(true);
-            $FontsGroup->push($BodyFontWeight);
-            $GoogleFonts = new TextField("GoogleFonts");
-            $GoogleFonts->setAttribute('placeholder', "Open+Sans|Roboto");
-            $themeTab->push($GoogleFonts);
-            // Theme
-            $CssTheme = new DropdownField("CssTheme", $this->owner->fieldLabel('CssTheme'), $cssThemes);
-            $CssTheme->setHasEmptyDefault(true);
-            $themeTab->push($CssTheme);
+            if ($themeOptions["allowFonts"]) {
+                $FontsHeader = new HeaderField("FontsHeader", "Fonts");
+                $themeTab->push($FontsHeader);
+                $FontsGroup = new FieldGroup();
+                $themeTab->push($FontsGroup);
+                $HeaderFont = new TextField("HeaderFontFamily");
+                $FontsGroup->push($HeaderFont);
+                $HeaderFontWeight = new DropdownField("HeaderFontWeight", $this->owner->fieldLabel('HeaderFontWeight'), self::listFontWeights());
+                $HeaderFontWeight->setHasEmptyDefault(true);
+                $FontsGroup->push($HeaderFontWeight);
+                $BodyFont = new TextField("BodyFontFamily");
+                $FontsGroup->push($BodyFont);
+                $BodyFontWeight = new DropdownField("BodyFontWeight", $this->owner->fieldLabel('BodyFontWeight'), self::listFontWeights());
+                $BodyFontWeight->setHasEmptyDefault(true);
+                $FontsGroup->push($BodyFontWeight);
+                $GoogleFonts = new TextField("GoogleFonts");
+                $GoogleFonts->setAttribute('placeholder', "Open+Sans|Roboto");
+                $themeTab->push($GoogleFonts);
+            }
+            // Theme - only if any is available
+            if (!empty($cssThemes)) {
+                $CssTheme = new DropdownField("CssTheme", $this->owner->fieldLabel('CssTheme'), $cssThemes);
+                $CssTheme->setHasEmptyDefault(true);
+                $themeTab->push($CssTheme);
+            }
         }
         //
         $ImagesHeader = new HeaderField("ImagesHeader", "Images");

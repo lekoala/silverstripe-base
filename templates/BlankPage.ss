@@ -10,15 +10,7 @@
     $SiteConfig.Favicons
 </head>
 
-<body class="$BodyClass">
-
-<div class="wrapper typography">
-	<% include Header %>
-    <div class="page">
+<body class="$BodyClass typography">
     $Layout
-    </div>
-	<% include Footer %>
-</div>
-
 </body>
 </html>
