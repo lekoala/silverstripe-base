@@ -14,32 +14,55 @@ use SilverStripe\AssetAdmin\Forms\UploadField;
  */
 class SmartUploadField extends UploadField
 {
+    /**
+     * @config
+     * @var array
+     */
+    private static $default_image_ext = ['jpg', 'jpeg', 'png'];
+
     public function __construct($name, $title = null, SS_List $items = null)
     {
         parent::__construct($name, $title, $items);
     }
-    public function getDescription()
+
+    public function Field($properties = array())
     {
-        if (!$this->description) {
-            $record = $this->getRecord();
-            if ($record) {
-                $desc = '';
-                $relation = $record->getRelationClass($this->name);
-                $size = File::format_size($this->getValidator()->getAllowedMaxFileSize());
-                switch ($relation) {
-                    case Image::class:
-                        $desc = _t('SmartUploadField.MAXSIZE', 'Max file size: {size}', ['size' => $size]);
-                        $desc .= '; ';
-                        $desc .= _t('SmartUploadField.MAXRESOLUTION', 'Max resolution: 2048x2048px; Allowed extensions: {ext}', array('ext' => implode(',', $this->getAllowedExtensions())));
-                        break;
-                    default:
-                        $desc = _t('SmartUploadField.MAXSIZE', 'Max file size: {size}', ['size' => $size]);
-                        break;
+        $record = $this->getRecord();
+        if ($record) {
+            $relation = $record->getRelationClass($this->name);
+
+            // Sadly, it's not always the case
+            if ($relation == Image::class) {
+                // Because who wants bmp and gif files?
+                $allowedExtensions = $this->getAllowedExtensions();
+                if (in_array('zip', $allowedExtensions)) {
+                    $this->setAllowedExtensions(self::config()->default_image_ext);
                 }
-                return $desc;
+            }
+
+            // Set a default description
+            if (!$this->description) {
+                $this->setDefaultDescription($relation);
             }
         }
-        return $this->description;
+        return parent::Field($properties);
+    }
+
+    protected function setDefaultDescription($relation)
+    {
+        $desc = '';
+        $size = File::format_size($this->getValidator()->getAllowedMaxFileSize());
+        switch ($relation) {
+            case Image::class:
+                $desc = _t('SmartUploadField.MAXSIZE', 'Max file size: {size}', ['size' => $size]);
+                $desc .= '; ';
+                $desc .= _t('SmartUploadField.MAXRESOLUTION', 'Max resolution: 2048x2048px; Allowed extensions: {ext}', array('ext' => implode(',', $this->getAllowedExtensions())));
+                break;
+            default:
+                $desc = _t('SmartUploadField.MAXSIZE', 'Max file size: {size}', ['size' => $size]);
+                break;
+        }
+        $this->description = $desc;
     }
 
     public function getFolderName()

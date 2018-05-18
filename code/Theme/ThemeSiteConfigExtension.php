@@ -15,6 +15,7 @@ use LeKoala\Base\Helpers\ZipHelper;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Forms\DropdownField;
 use LeKoala\Base\ORM\FieldType\Color;
+use LeKoala\Base\Forms\SmartUploadField;
 
 /**
  * Extend SiteConfig to make your website Themable
@@ -197,20 +198,16 @@ class ThemeSiteConfigExtension extends DataExtension
                 $themeTab->push($CssTheme);
             }
         }
-        //
+        // Images
         $ImagesHeader = new HeaderField("ImagesHeader", "Images");
         $themeTab->push($ImagesHeader);
-        /* @var $Logo UploadField */
-        $Logo = UploadField::create("Logo");
+        $Logo = new SmartUploadField('Logo');
         $Logo->setFolderName("Theme");
-        $Logo->setAllowedFileCategories("image/supported");
         $themeTab->push($Logo);
-        $Icon = UploadField::create("Icon");
+        $Icon = new SmartUploadField('Icon');
         $Icon->setFolderName("Theme");
-        $Icon->setAllowedFileCategories("image/supported");
         $themeTab->push($Icon);
-        /* @var $Favicon UploadField */
-        $Favicon = UploadField::create("Favicon");
+        $Favicon =new SmartUploadField('Favicon');
         $Favicon->setFolderName("Theme");
         $Favicon->setAllowedExtensions('zip');
         $Favicon->setDescription("Upload the zip file generated with <a href=\"https://realfavicongenerator.net/\" target=\"_blank\">Real Favicon Generator</a>. Theme Color will be used as background for your icon.");
@@ -290,5 +287,12 @@ class ThemeSiteConfigExtension extends DataExtension
         file_put_contents($tmpName, $FaviconData);
         $dir = $this->getThemeAssetsFolder();
         ZipHelper::unzipTo($tmpName, $dir);
+    }
+    /**
+     * @return string
+     */
+    public function CopyrightYear()
+    {
+        return date('Y');
     }
 }
