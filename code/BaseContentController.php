@@ -20,6 +20,7 @@ use SilverStripe\Security\IdentityStore;
 use SilverStripe\ORM\ValidationException;
 use SilverStripe\ORM\Connect\DatabaseException;
 use SilverStripe\CMS\Controllers\ContentController;
+use LeKoala\Base\View\DeferBackend;
 
 /**
  * A more opiniated base controller for your app
@@ -54,7 +55,7 @@ class BaseContentController extends ContentController
     {
         // Ensure you load with "defer" your libs!
         // @link https://flaviocopes.com/javascript-async-defer/#tldr-tell-me-whats-the-best
-        Requirements::backend()->setWriteJavascriptToBody(false);
+        Requirements::set_backend(new DeferBackend);
 
         try {
             parent::init();
