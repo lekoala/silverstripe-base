@@ -63,6 +63,10 @@ class ThemeControllerExtension extends Extension
      *
      * Will look for the HeaderFont property and be replaced accordingly
      *
+     * Colors have additionnal functionnalities:
+     *
+     * - Replace --my-color-contrast with ContrastColor
+     *
      * @param string $cssFile The path to the file with CSS3 variables
      * @return string The path to the file with variable replaced
      */
@@ -97,6 +101,9 @@ class ThemeControllerExtension extends Extension
         foreach ($declarations as $declarationName => $declarationValue) {
             $dbName = str_replace(' ', '', ucwords(str_replace('-', ' ', $declarationName)));
             $dbObject = $SiteConfig->dbObject($dbName);
+            if (!$dbObject) {
+                continue;
+            }
             $value = $dbObject->getValue();
             // There is no value, use default
             if (!$value) {
