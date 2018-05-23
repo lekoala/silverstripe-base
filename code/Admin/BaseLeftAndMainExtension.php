@@ -17,7 +17,12 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
 
     public function init()
     {
-        // Hide items if necessary
+        // Hide items if necessary, example yml:
+        //
+        // LeKoala\Base\Admin\BaseLeftAndMainExtension:
+        //   removed_items:
+        //      - SilverStripe-CampaignAdmin-CampaignAdmin
+        //
         $removedItems = self::config()->removed_items;
         if ($removedItems) {
             foreach ($removedItems as $item) {
