@@ -10,6 +10,14 @@ use SilverStripe\Forms\GridField\GridField;
 abstract class BaseModelAdmin extends ModelAdmin
 {
 
+    /**
+     * @return int
+     */
+    public function getSubsiteId()
+    {
+        return \SilverStripe\Subsites\State\SubsiteState::singleton()->getSubsiteId();
+    }
+
     public function getList()
     {
         $list = parent::getList();
