@@ -5,6 +5,7 @@ use SilverStripe\Admin\LeftAndMainExtension;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Admin\CMSMenu;
 use SilverStripe\View\Requirements;
+use LeKoala\Base\Subsite\SubsiteHelper;
 
 /**
  * Class \LeKoala\Base\LeftAndMainExtension
@@ -28,6 +29,11 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
             foreach ($removedItems as $item) {
                 CMSMenu::remove_menu_item($item);
             }
+        }
+
+        // Remove subsite access if not on main site
+        if (SubsiteHelper::CurrentSubsiteID()) {
+            CMSMenu::remove_menu_item('SilverStripe-Subsites-Admin-SubsiteAdmin');
         }
 
         // Check if we need font awesome (if any item use IconClass fa fa-something)

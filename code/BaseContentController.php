@@ -21,6 +21,7 @@ use SilverStripe\ORM\ValidationException;
 use SilverStripe\ORM\Connect\DatabaseException;
 use SilverStripe\CMS\Controllers\ContentController;
 use LeKoala\Base\View\DeferBackend;
+use LeKoala\Base\Subsite\SubsiteHelper;
 
 /**
  * A more opiniated base controller for your app
@@ -88,7 +89,7 @@ class BaseContentController extends ContentController
      */
     public function getSubsiteId()
     {
-        return \SilverStripe\Subsites\State\SubsiteState::singleton()->getSubsiteId();
+        return SubsiteHelper::CurrentSubsiteID();
     }
 
     /**

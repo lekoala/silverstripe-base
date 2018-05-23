@@ -1,0 +1,7 @@
+---
+After:
+  - 'silverstripe/subsites'
+Only:
+  moduleexists:
+    - 'silverstripe/subsites'
+---

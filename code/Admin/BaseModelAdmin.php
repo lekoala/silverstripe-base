@@ -5,6 +5,7 @@ namespace LeKoala\Base\Admin;
 use SilverStripe\Forms\Form;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Admin\ModelAdmin;
+use LeKoala\Base\Subsite\SubsiteHelper;
 use SilverStripe\Forms\GridField\GridField;
 
 abstract class BaseModelAdmin extends ModelAdmin
@@ -15,7 +16,15 @@ abstract class BaseModelAdmin extends ModelAdmin
      */
     public function getSubsiteId()
     {
-        return \SilverStripe\Subsites\State\SubsiteState::singleton()->getSubsiteId();
+        return SubsiteHelper::CurrentSubsiteID();
+    }
+
+    public static function getRequiredPermissions() {
+        // This is needed to avoid BaseModelAdmin to be displayed as a valid permission
+        if(get_called_class() == self::class) {
+            return false;
+        }
+        return parent::getRequiredPermissions();
     }
 
     public function getList()
@@ -61,6 +70,6 @@ abstract class BaseModelAdmin extends ModelAdmin
         $URLSegment = static::config()->url_segment;
         $recordClass = get_class($record);
         $ID = $record->ID;
-        return "/admin/URLSegment/$recordClass/EditForm/field/recordClass/item/$ID/edit";
+        return "/admin/$URLSegment/$recordClass/EditForm/field/recordClass/item/$ID/edit";
     }
 }
