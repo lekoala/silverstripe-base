@@ -6,10 +6,13 @@ use SilverStripe\Forms\Form;
 use SilverStripe\Core\Extension;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
+use SilverStripe\Forms\LiteralField;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Security\LoginAttempt;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\Forms\GridField\GridFieldConfig_RecordViewer;
+use LeKoala\Base\Forms\AlertField;
 
 /**
  */
@@ -20,10 +23,24 @@ class BaseSecurityAdminExtension extends Extension
         // Roles are confusing
         $form->Fields()->removeByName('Roles');
 
-        // In security, we only show group members
-        $membersOfGroups = BaseMemberExtension::getMembersFromSecurityGroups();
+        // In security, we only show group members + current item (to avoid issue when creating stuff)
+        $request = $this->getRequest();
+        $dirParts = explode('/', $request->remaining());
+        $currentID = isset($dirParts[3]) ? [$dirParts[3]] : [];
+        $membersOfGroups = BaseMemberExtension::getMembersFromSecurityGroups($currentID);
         $members = $this->getMembersGridField($form);
         $members->setList($membersOfGroups);
+
+        // Add message
+        $MembersOnlyGroups = AlertField::create(
+            'MembersOnlyGroups',
+            _t(
+                'BaseSecurityAdminExtension.MembersOnlyGroups',
+                'Only group members are shown. To add a user to a group, link it from an existing group.'
+            ),
+            'info'
+        );
+        $form->Fields()->insertAfter('Members', $MembersOnlyGroups);
 
         // Show groups
         $cols = $members->getConfig()->getComponentByType(GridFieldDataColumns::class);
@@ -37,6 +54,14 @@ class BaseSecurityAdminExtension extends Extension
         if (Security::config()->login_recording) {
             $this->addAuditTab($form);
         }
+    }
+
+    /**
+     * @return HTTPRequest
+     */
+    protected function getRequest()
+    {
+        return $this->owner->getRequest();
     }
 
     protected function addAuditTab(Form $form)
