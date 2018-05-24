@@ -1,0 +1,8 @@
+SilverStripe\Security\Security:
+  login_recording: true
+SilverStripe\Admin\SecurityAdmin:
+  extensions:
+    - LeKoala\Base\Security\BaseSecurityAdminExtension
+SilverStripe\Security\Member:
+  extensions:
+    - LeKoala\Base\Security\BaseMemberExtension

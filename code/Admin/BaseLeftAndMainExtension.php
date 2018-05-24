@@ -24,14 +24,19 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
         //   removed_items:
         //      - SilverStripe-CampaignAdmin-CampaignAdmin
         //
+        // This is just hiding stuff, a more robust solution would be to not install these things
         $removedItems = self::config()->removed_items;
         if ($removedItems) {
+            $css = '';
             foreach ($removedItems as $item) {
                 CMSMenu::remove_menu_item($item);
+                $itemParts = explode('-', $item);
+                $css .= 'li.valCMS_ACCESS_' . end($itemParts) . '{display:none}' . "\n";
             }
+            Requirements::customCSS($css, 'HidePermissions');
         }
 
-        // Remove subsite access if not on main site
+        // Remove subsite and security access if not on main site
         if (SubsiteHelper::CurrentSubsiteID()) {
             CMSMenu::remove_menu_item('SilverStripe-Subsites-Admin-SubsiteAdmin');
         }

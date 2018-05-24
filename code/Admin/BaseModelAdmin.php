@@ -19,9 +19,10 @@ abstract class BaseModelAdmin extends ModelAdmin
         return SubsiteHelper::CurrentSubsiteID();
     }
 
-    public static function getRequiredPermissions() {
+    public static function getRequiredPermissions()
+    {
         // This is needed to avoid BaseModelAdmin to be displayed as a valid permission
-        if(get_called_class() == self::class) {
+        if (get_called_class() == self::class) {
             return false;
         }
         return parent::getRequiredPermissions();

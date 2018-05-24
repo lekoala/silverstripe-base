@@ -1,6 +1,6 @@
 <?php
 
-namespace LeKoala\Base\Dev;
+namespace LeKoala\Base\Dev\Extensions;
 
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Extension;
@@ -10,15 +10,20 @@ use LeKoala\Base\Helpers\ClassHelper;
 
 class DevBuildExtension extends Extension
 {
-
     public function afterCallActionHandler()
     {
         $envIsAllowed = Director::isDev();
         $skipGeneration = $this->owner->getRequest()->getVar('skipgeneration');
 
-        if ($skipGeneration === null && $envIsAllowed) {
-            $this->generateRepository();
+        if ($skipGeneration || !$envIsAllowed) {
+            return;
         }
+
+        $this->displayMessage("<div class='build'><p><b>Generating ide helpers</b></p><ul>\n\n");
+
+        $this->generateRepository();
+
+        $this->displayMessage("</ul>\n<p><b>Generating ide helpers finished!</b></p></div>");
     }
 
     /**
@@ -28,8 +33,6 @@ class DevBuildExtension extends Extension
      */
     protected function generateRepository()
     {
-        $this->displayMessage("<div class='build'><p><b>Generating ide helpers</b></p><ul>\n\n");
-
         $classes = ClassInfo::subclassesFor(DataObject::class);
         array_shift($classes); // remove dataobject
 
@@ -101,7 +104,7 @@ CODE;
         $dest = Director::baseFolder() . '/mysite/code/Repository.php';
         file_put_contents($dest, $code);
 
-        $this->displayMessage("</ul>\n<p><b>Generating ide helpers finished!</b></p></div>");
+        $this->displayMessage("<li>Repository class generated</li>");
     }
 
     /**
@@ -109,6 +112,6 @@ CODE;
      */
     protected function displayMessage($message)
     {
-        echo Director::is_cli() ? "\n" . $message . "\n\n" : "<p><b>$message</b></p>";
+        echo Director::is_cli() ? "\n" . $message . "\n\n" : "$message";
     }
 }

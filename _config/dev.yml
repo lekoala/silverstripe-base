@@ -1,0 +1,14 @@
+---
+Name: dev
+Only:
+  environment: dev
+---
+SilverStripe\Dev\DevBuildController:
+  extensions:
+    - LeKoala\Base\Dev\Extensions\DevBuildExtension
+SilverStripe\Security\Group:
+  extensions:
+    - LeKoala\Base\Dev\Extensions\DevGroupExtension
+SilverStripe\Core\Injector\Injector:
+  SilverStripe\Dev\DebugView:
+    class: LeKoala\Base\Dev\BetterDebugView
