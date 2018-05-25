@@ -12,11 +12,15 @@ class CountriesList
     /**
      * Get the country list, using IntlLocales
      *
+     * Keys are set to uppercase to match ISO standards
+     *
      * @return array
      */
     public static function get()
     {
         $intl = new IntlLocales;
-        return $intl->getCountries();
+        $countries = $intl->getCountries();
+        $countries = array_change_key_case($countries, CASE_UPPER);
+        return $countries;
     }
 }

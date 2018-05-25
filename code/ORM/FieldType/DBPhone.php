@@ -7,6 +7,8 @@ use LeKoala\Base\Forms\CountryPhoneField;
 use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\ORM\FieldType\DBVarchar;
 use Prophecy\Exception\InvalidArgumentException;
+use libphonenumber\PhoneNumberFormat;
+use libphonenumber\PhoneNumber;
 
 /**
  * Phone field type
@@ -15,10 +17,6 @@ use Prophecy\Exception\InvalidArgumentException;
  */
 class DBPhone extends DBVarchar
 {
-    const FORMAT_E164 = "E164";
-    const FORMAT_INTERNATIONAL = "INTERNATIONAL";
-    const FORMAT_NATIONAL = "NATIONAL";
-    const FORMAT_RFC3966 = "RFC3966";
 
     /**
      * @var array
@@ -43,8 +41,7 @@ class DBPhone extends DBVarchar
         if ($dataObject->CountryCode) {
             $country = $dataObject->CountryCode;
         }
-        $dataObject->$fieldName = $this->parseNumber($this->value);
-        l([$this->value, $dataObject->$fieldName, $dataObject->CountryCode, $country]);
+        $dataObject->$fieldName = $this->parseNumber($this->value, $country);
     }
 
     public function setValue($value, $record = null, $markChanged = true)
@@ -82,17 +79,16 @@ class DBPhone extends DBVarchar
             }
             $country = strtoupper($country);
         }
-
         $phoneUtil = $this->getPhoneNumberUtil();
         $number = $phoneUtil->parse($value, $country);
-        $formattedValue = $phoneUtil->format($number, self::FORMAT_INTERNATIONAL);
+        $formattedValue = $phoneUtil->format($number, PhoneNumberFormat::E164);
         return $formattedValue;
     }
 
 
     public function scaffoldFormField($title = null, $params = null)
     {
-        $field = PhoneField::create($this->name, $title);
+        $field = CountryPhoneField::create($this->name, $title);
         return $field;
     }
 
@@ -105,11 +101,8 @@ class DBPhone extends DBVarchar
     }
 
     /**
-    * Return the date using a particular formatting string. Use {o} to include an ordinal representation
-    * for the day of the month ("1st", "2nd", "3rd" etc)
     *
-    * @param string $format Format code string. See http://userguide.icu-project.org/formatparse/datetime
-    * @return string The date in the requested format
+    * @return string The number in request format
     */
     public function Format($format = null)
     {
@@ -117,11 +110,15 @@ class DBPhone extends DBVarchar
             return null;
         }
 
+
         if (!$format) {
-            $format = self::FORMAT_INTERNATIONAL;
+            $format = PhoneNumberFormat::INTERNATIONAL;
         }
-        if (!in_array($format, self::$valid_formats)) {
-            throw new InvalidArgumentException("Format $format is invalid");
+        if (!is_int($format)) {
+            if (!in_array($format, self::$valid_formats)) {
+                throw new InvalidArgumentException("Format $format is invalid");
+            }
+            $format = PhoneNumberFormat::$format;
         }
 
         $phoneUtil = $this->getPhoneNumberUtil();
@@ -129,24 +126,48 @@ class DBPhone extends DBVarchar
         return $phoneUtil->format($number, $format);
     }
 
+    /**
+     * Includes the country region code and start with a +
+     * Eg: +441174960123
+     *
+     * @return string
+     */
     public function E164()
     {
-        return $this->Format(self::FORMAT_E164);
+        return $this->Format(PhoneNumberFormat::E164);
     }
 
+    /**
+     * Same as E164 with spacing
+     * Eg: +44 117 496 0123
+     *
+     * @return void
+     */
     public function International()
     {
-        return $this->Format(self::FORMAT_INTERNATIONAL);
+        return $this->Format(PhoneNumberFormat::INTERNATIONAL);
     }
 
+    /**
+     * With space and without country
+     * Eg: 0117 496 0123
+     *
+     * @return void
+     */
     public function National()
     {
-        return $this->Format(self::FORMAT_NATIONAL);
+        return $this->Format(PhoneNumberFormat::NATIONAL);
     }
 
+    /**
+     * Usable as URI
+     * Eg: tel:+44-117-496-012
+     *
+     * @return string
+     */
     public function Rfc3966()
     {
-        return $this->Format(self::FORMAT_RFC3966);
+        return $this->Format(PhoneNumberFormat::RFC3966);
     }
 
     /**
