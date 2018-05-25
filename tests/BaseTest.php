@@ -10,13 +10,13 @@ use SilverStripe\View\Requirements;
 use SilverStripe\Control\Controller;
 use SilverStripe\SiteConfig\SiteConfig;
 
-class ContentControllerTest extends SapphireTest
+class BaseTest extends SapphireTest
 {
     /**
      * Defines the fixture file to use for this test class
      * @var string
      */
-    protected static $fixture_file = 'ContentControllerTest.yml';
+    protected static $fixture_file = 'BaseTest.yml';
 
     public function testDependencies()
     {

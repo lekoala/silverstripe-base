@@ -38,3 +38,6 @@ LeKoala\Base\Tags\Tag:
 SilverStripe\Forms\FormField:
   extensions:
     - LeKoala\Base\Forms\Extensions\TooltipExtension
+SilverStripe\Forms\GridField\GridField:
+  extensions:
+    - LeKoala\Base\Forms\GridField\GridFieldExtension

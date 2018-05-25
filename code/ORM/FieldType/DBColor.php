@@ -7,7 +7,7 @@ use SilverStripe\ORM\FieldType\DBVarchar;
 /**
  * Color field-type stored as hex value
  */
-class Color extends DBVarchar
+class DBColor extends DBVarchar
 {
     private static $casting = [
         'Luminance' => 'Float',

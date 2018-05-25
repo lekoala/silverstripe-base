@@ -6,16 +6,16 @@ use SilverStripe\Assets\File;
 use SilverStripe\Assets\Image;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\TextField;
-use SilverStripe\Control\Director;
 use LeKoala\Base\Forms\ColorField;
+use SilverStripe\Control\Director;
 use SilverStripe\Forms\FieldGroup;
+use LeKoala\Base\Helpers\ZipHelper;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\ORM\DataExtension;
-use LeKoala\Base\Helpers\ZipHelper;
-use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Forms\DropdownField;
-use LeKoala\Base\ORM\FieldType\Color;
+use LeKoala\Base\ORM\FieldType\DBColor;
 use LeKoala\Base\Forms\SmartUploadField;
+use SilverStripe\AssetAdmin\Forms\UploadField;
 
 /**
  * Extend SiteConfig to make your website Themable
@@ -40,10 +40,10 @@ class ThemeSiteConfigExtension extends DataExtension
 {
     use KnowsThemeDir;
     private static $db = [
-        "PrimaryColor" => Color::class,
-        "SecondaryColor" => Color::class,
-        "ThemeColor" => Color::class,
-        "MaskColor" => Color::class,
+        "PrimaryColor" => DBColor::class,
+        "SecondaryColor" => DBColor::class,
+        "ThemeColor" => DBColor::class,
+        "MaskColor" => DBColor::class,
         "HeaderFontFamily" => "Varchar(59)",
         "HeaderFontWeight" => "Int",
         "BodyFontFamily" => "Varchar(59)",

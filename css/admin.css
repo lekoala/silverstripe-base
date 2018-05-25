@@ -1,5 +1,47 @@
+/* Cosmetic changes */
+
 .cms-sitename a {
-    color:#fff;
-    display:block;
-    margin:10px;
+    color: #fff;
+    display: block;
+    margin: 10px;
+}
+
+/* Font awesome icons in menu */
+
+.menu__icon.fa {
+    font-size: 17px !important
+}
+
+/* Row classes */
+
+.cms table.ss-gridfield-table tr.green.odd {
+    background-color: #daf2da;
+}
+
+.cms table.ss-gridfield-table tr.green.even {
+    background-color: #c2f2c1;
+}
+
+.cms table.ss-gridfield-table tr.blue.odd {
+    background-color: #d9edf7;
+}
+
+.cms table.ss-gridfield-table tr.blue.even {
+    background-color: #bce8f1;
+}
+
+.cms table.ss-gridfield-table tr.amber.odd {
+    background-color: #faebcc;
+}
+
+.cms table.ss-gridfield-table tr.amber.even {
+    background-color: #fcf8e3;
+}
+
+.cms table.ss-gridfield-table tr.red.odd {
+    background-color: #f2dede;
+}
+
+.cms table.ss-gridfield-table tr.red.even {
+    background-color: #ebccd1;
 }

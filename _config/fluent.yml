@@ -6,13 +6,17 @@ Only:
   moduleexists:
     - 'tractorcow/silverstripe-fluent'
 ---
-# Always ignore fields ending with 9 for convenience
+# Always ignore fields ending with 9 for convenience and some other things
 TractorCow\Fluent\Extension\FluentExtension:
   data_exclude:
+    # Code fields
+    - Varchar(2)
+    # Color and Phone field
+    - Varchar(16)
+    # Fields ending by 9
     - Varchar(9)
     - Varchar(59)
     - Varchar(99)
-    - Varchar(199)
 # Add extensions to SilverStripe
 SilverStripe\SiteConfig\SiteConfig:
   extensions:

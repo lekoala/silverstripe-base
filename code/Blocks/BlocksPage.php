@@ -10,7 +10,7 @@ use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Security\Permission;
 use SilverStripe\SiteConfig\SiteConfig;
-use LeKoala\Base\ORM\FieldType\JSONText;
+use LeKoala\Base\ORM\FieldType\DBJson;
 use LeKoala\Base\Contact\ContactSubmission;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldPageCount;

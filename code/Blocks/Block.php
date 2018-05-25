@@ -17,7 +17,7 @@ use SilverStripe\Forms\LiteralField;
 use LeKoala\Base\Blocks\BlockButton;
 use SilverStripe\Forms\DropdownField;
 use LeKoala\Base\Helpers\ClassHelper;
-use LeKoala\Base\ORM\FieldType\JSONText;
+use LeKoala\Base\ORM\FieldType\DBJson;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\Forms\GridField\GridField;
 use LeKoala\Base\Blocks\Types\ContentBlock;
@@ -61,9 +61,9 @@ final class Block extends DataObject
         'HTMLID' => 'Varchar(59)',
         'Content' => 'HTMLText',
         // Localized data
-        'Data' => JSONText::class,
+        'Data' => DBJson::class,
         // Unlocalized data
-        'Settings' => JSONText::class,
+        'Settings' => DBJson::class,
     ];
     private static $has_one = [
         "Image" => Image::class,

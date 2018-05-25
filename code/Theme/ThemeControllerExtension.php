@@ -8,7 +8,8 @@ use SilverStripe\View\Requirements;
 use SilverStripe\Control\Controller;
 use SilverStripe\Admin\AdminRootController;
 use SilverStripe\Admin\LeftAndMain;
-use LeKoala\Base\ORM\FieldType\Color;
+use LeKoala\Base\ORM\FieldType\DBColor;
+use SilverStripe\ORM\FieldType\DBClassName;
 
 /**
  * Class \LeKoala\Base\Theme\ThemeControllerExtension
@@ -113,7 +114,7 @@ class ThemeControllerExtension extends Extension
             $replaceCount = 0;
             $cssFileContent = preg_replace($replaceRegex, $value, $cssFileContent, -1, $replaceCount);
             // For colors, also replace contrast value
-            if ($dbObject instanceof Color) {
+            if ($dbObject instanceof DBColor) {
                 $contrastValue = $dbObject->ContrastColor();
                 $contrastReplaceRegex = "/var\s?\(--{$declarationName}-contrast,?\s?([a-z-#0-9]*)\)/";
                 $cssFileContent = preg_replace($contrastReplaceRegex, $contrastValue, $cssFileContent, -1, $replaceCount);

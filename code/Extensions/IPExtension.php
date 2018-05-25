@@ -15,7 +15,7 @@ use LeKoala\Base\ORM\FieldType\IPAddress;
 class IPExtension extends DataExtension
 {
     private static $db = [
-        "Ip" => "Varchar(45)"
+        "IP" => "Varchar(45)"
     ];
     public function onBeforeWrite()
     {
@@ -24,7 +24,7 @@ class IPExtension extends DataExtension
             return;
         }
         $ip = $controller->getRequest()->getIP();
-        $this->owner->Ip = $ip;
+        $this->owner->IP = $ip;
     }
     /**
      * @return Address
@@ -32,9 +32,9 @@ class IPExtension extends DataExtension
     public function getIpLocationDetails()
     {
         $graphloc = new Graphloc;
-        if (!$this->owner->Ip) {
+        if (!$this->owner->IP) {
             return false;
         }
-        return $graphloc->get($this->owner->Ip);
+        return $graphloc->get($this->owner->IP);
     }
 }

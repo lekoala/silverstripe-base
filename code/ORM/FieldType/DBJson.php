@@ -8,11 +8,11 @@ use SilverStripe\ORM\FieldType\DBString;
 use SilverStripe\ORM\Connect\MySQLDatabase;
 
 /**
- * JSONText storage
+ * Json storage
  *
  * @link https://github.com/phptek/silverstripe-jsontext/blob/master/code/models/fieldtypes/JSONText.php
  */
-class JSONText extends DBString
+class DBJson extends DBString
 {
     /**
      * (non-PHPdoc)

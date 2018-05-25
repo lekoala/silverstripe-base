@@ -10,19 +10,19 @@ use SilverStripe\Forms\GridField\GridFieldDeleteAction;
 use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use Symbiote\GridFieldExtensions\GridFieldEditableColumns;
+use SilverStripe\Core\ClassInfo;
 
 /**
  * Improve DataObjects
  */
 class BaseDataObjectExtension extends DataExtension
 {
-
     public function updateCMSFields(FieldList $fields)
     {
         $fields = BuildableFieldList::fromFieldList($fields);
         $cascade_delete = $this->owner->config()->cascade_deletes;
         // Anything that is deleted in cascade should not be a relation (most of the time!)
-        $this->turnRelationIntoRecordEditor($cascade_delete, $fields);
+        $this->turnRelationsIntoRecordEditor($cascade_delete, $fields);
 
         // extraFields are wanted!
         $extraFields = $this->owner->config()->many_many_extraFields;
@@ -58,20 +58,49 @@ class BaseDataObjectExtension extends DataExtension
         }
     }
 
-    protected function turnRelationIntoRecordEditor($arr, BuildableFieldList $fields)
+    /**
+     * @param array $arr List of relations
+     * @param BuildableFieldList $fields
+     * @return void
+     */
+    protected function turnRelationsIntoRecordEditor($arr, BuildableFieldList $fields)
     {
         if (!$arr) {
             return;
         }
+        $ownerClass = get_class($this->owner);
+        $allSubclasses = ClassInfo::ancestry($ownerClass, true);
+
         foreach ($arr as $class) {
-            $gridfield = $fields->getGridField($class);
+            $sanitisedClass = str_replace('\\', '-', $class);
+            $gridfield = $fields->getGridField($sanitisedClass);
             if (!$gridfield) {
                 continue;
             }
             $config = $gridfield->getConfig();
             $config->removeComponentsByType(GridFieldAddExistingAutocompleter::class);
-            $config->removeComponentsByType(GridFieldDeleteAction::class);
-            $config->addComponent(new GridFieldDeleteAction());
+
+            $deleteAction = $config->getComponentByType(GridFieldDeleteAction::class);
+            if ($deleteAction) {
+                $config->removeComponentsByType(GridFieldDeleteAction::class);
+                $config->addComponent(new GridFieldDeleteAction());
+            }
+
+            $dataColumns = $config->getComponentByType(GridFieldDataColumns::class);
+            if ($dataColumns) {
+                $displayFields = $dataColumns->getDisplayFields($gridfield);
+                $newDisplayFields = [];
+                // Strip any columns referencing current or parent class
+                foreach ($displayFields as $k => $v) {
+                    foreach ($allSubclasses as $lcClass => $class) {
+                        if (strpos($k, $class . '.') === 0) {
+                            continue 2;
+                        }
+                    }
+                    $newDisplayFields[$k] = $v;
+                }
+                $dataColumns->setDisplayFields($newDisplayFields);
+            }
         }
     }
 

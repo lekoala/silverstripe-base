@@ -45,7 +45,12 @@ if (!isset($_SERVER['PHP_AUTH_USER'])) {
 }
 
 // Enable IDEAnnotator
-if (in_array(substr($_SERVER['SERVER_NAME'], strrpos($_SERVER['SERVER_NAME'], '.') + 1), ['dev', 'local', 'localhost'])) {
+if (!empty($_SERVER['SERVER_NAME']) &&
+    in_array(
+        substr($_SERVER['SERVER_NAME'], strrpos($_SERVER['SERVER_NAME'], '.') + 1),
+        ['dev', 'local', 'localhost']
+    )
+    ) {
     \SilverStripe\Core\Config\Config::modify()->set('SilverLeague\IDEAnnotator\DataObjectAnnotator', 'enabled', true);
 }
 
