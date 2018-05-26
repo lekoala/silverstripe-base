@@ -7,6 +7,7 @@ use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\EmailField;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\HeaderField;
+use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\PasswordField;
@@ -19,6 +20,16 @@ class BuildableFieldList extends FieldList
     /**
      * @var string
      */
+    protected $defaultTab = null;
+
+    /**
+     * @var string
+     */
+    protected $currentTab = null;
+
+    /**
+     * @var string
+     */
     protected $i18nEntity = 'Global';
 
     /**
@@ -27,8 +38,11 @@ class BuildableFieldList extends FieldList
      * @param FieldList $fields
      * @return self
      */
-    public static function fromFieldList(FieldList $fields)
+    public static function fromFieldList(FieldList $fields = null)
     {
+        if ($fields === null) {
+            return new self();
+        }
         $arr = $fields->toArray();
         return new self($arr);
     }
@@ -37,7 +51,7 @@ class BuildableFieldList extends FieldList
      *
      * @param string $name
      * @param string $title
-     * @return strin
+     * @return string
      */
     protected function normalizeTitle($name, $title = "")
     {
@@ -74,6 +88,18 @@ class BuildableFieldList extends FieldList
             }
         }
         return $object;
+    }
+
+    protected function pushOrAddToTab($field)
+    {
+        if (!$this->currentTab && $this->defaultTab) {
+            $this->currentTab = $this->defaultTab;
+        }
+        if ($this->currentTab) {
+            $this->addFieldToTab('Root.' . $this->currentTab, $field);
+        } else {
+            $this->push($field);
+        }
     }
 
     /**
@@ -116,7 +142,7 @@ class BuildableFieldList extends FieldList
         $title = $this->normalizeTitle($name, $title);
         $field = $class::create($name, $title);
         $field = $this->applyAttributes($field, $attributes);
-        $this->push($field);
+        $this->pushOrAddToTab($field);
         return $field;
     }
 
@@ -129,8 +155,25 @@ class BuildableFieldList extends FieldList
     {
         static $i = 0;
         $i++;
-        $field = HeaderField::create("H[$i]", $title, $level);
-        $this->addFieldsToTab('Root.' . $this->defaultTab, $field);
+        $field = HeaderField::create("H_$i", $title, $level);
+        $this->pushOrAddToTab($field);
+        return $field;
+    }
+
+    /**
+     * @param string $content
+     * @param string $name
+     * @return LiteralField
+     */
+    public function addLiteral($content, $name = null)
+    {
+        static $i = 0;
+        if ($name === null) {
+            $i++;
+            $name = "L_$i";
+        }
+        $field = LiteralField::create($name, $content);
+        $this->pushOrAddToTab($field);
         return $field;
     }
 

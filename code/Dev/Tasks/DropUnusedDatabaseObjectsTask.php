@@ -15,7 +15,6 @@ use SilverStripe\Control\HTTPRequest;
  */
 class DropUnusedDatabaseObjectsTask extends BuildTask
 {
-
     protected $title = "Drop Unused Database Objects";
     protected $description = 'Drop unused tables and fields from your db by comparing current database tables with your dataobjects.';
     private static $segment = 'DropUnusedDatabaseObjectsTask';
@@ -33,24 +32,22 @@ class DropUnusedDatabaseObjectsTask extends BuildTask
         $go = $options['go'];
 
         if (!$go) {
-            echo ('Previewing what this task is about to do.');
+            echo('Previewing what this task is about to do.');
         } else {
-            echo ("Let's clean this up!");
+            echo("Let's clean this up!");
         }
-        echo ('<hr/>');
-        $this->removeTables($request);
-        $this->removeFields($request);
+        echo('<hr/>');
+        $this->removeTables($request, $go);
+        $this->removeFields($request, $go);
     }
 
-    protected function removeFields($request)
+    protected function removeFields($request, $go = false)
     {
         $conn = DB::get_conn();
         $schema = DB::get_schema();
         $dataObjectSchema = DataObject::getSchema();
         $classes = $this->getClassesWithTables();
         $tableList = $schema->tableList();
-
-        $go = $request->getVar('go');
 
         $this->message('<h2>Fields</h2>');
 
@@ -125,7 +122,7 @@ class DropUnusedDatabaseObjectsTask extends BuildTask
         }
     }
 
-    protected function removeTables($request)
+    protected function removeTables($request, $go = false)
     {
         $conn = DB::get_conn();
         $schema = DB::get_schema();
@@ -133,8 +130,6 @@ class DropUnusedDatabaseObjectsTask extends BuildTask
         $classes = $this->getClassesWithTables();
         $tableList = $schema->tableList();
         $tablesToRemove = $tableList;
-
-        $go = $request->getVar('go');
 
         $this->message('<h2>Tables</h2>');
 

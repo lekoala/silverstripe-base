@@ -2,16 +2,6 @@
 Name: base-injector
 ---
 SilverStripe\Core\Injector\Injector:
-  SilverStripe\Forms\DateField:
-    class: LeKoala\Base\Forms\FlatpickrField
-  SilverStripe\Forms\DatetimeField:
-    class: LeKoala\Base\Forms\FlatpickrField
-    calls:
-      - [setEnableTime, [true]]
-  SilverStripe\Forms\TimeField:
-    class: LeKoala\Base\Forms\FlatpickrField
-    calls:
-      - [setNoCalendar, [true]]
   SilverStripe\Dev\Tasks\i18nTextCollectorTask:
     class: LeKoala\Base\Dev\Tasks\ConfigurableI18nTextCollectorTask
   SilverStripe\Dev\MigrationTask:

@@ -38,9 +38,6 @@ LeKoala\Base\News\NewsCategory:
 LeKoala\Base\Tags\Tag:
   extensions:
     - LeKoala\Base\Extensions\URLSegmentExtension
-SilverStripe\Forms\FormField:
+SilverStripe\Security\Member:
   extensions:
-    - LeKoala\Base\Forms\Extensions\TooltipExtension
-SilverStripe\Forms\GridField\GridField:
-  extensions:
-    - LeKoala\Base\Forms\GridField\GridFieldExtension
+    - LeKoala\Base\Privacy\PrivacyMemberExtension

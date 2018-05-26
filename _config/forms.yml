@@ -1,0 +1,22 @@
+---
+Name: base-forms
+---
+SilverStripe\Core\Injector\Injector:
+  SilverStripe\Forms\DateField:
+    class: LeKoala\Base\Forms\FlatpickrField
+  SilverStripe\Forms\DatetimeField:
+    class: LeKoala\Base\Forms\FlatpickrField
+    calls:
+      - [setEnableTime, [true]]
+  SilverStripe\Forms\TimeField:
+    class: LeKoala\Base\Forms\FlatpickrField
+    calls:
+      - [setNoCalendar, [true]]
+SilverStripe\Forms\FormField:
+  casting:
+    Title: 'HTMLFragment' # allow using html in field titles
+  extensions:
+    - LeKoala\Base\Forms\Extensions\TooltipExtension
+SilverStripe\Forms\GridField\GridField:
+  extensions:
+    - LeKoala\Base\Forms\GridField\GridFieldExtension
