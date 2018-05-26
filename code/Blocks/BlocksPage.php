@@ -152,4 +152,14 @@ class BlocksPage extends Page
         Block::$auto_update_page = true;
         return $Content;
     }
+    public function addBlock($content, $type = null)
+    {
+        $block = new Block();
+        $block->Content = $content;
+        if ($type) {
+            $block->Type = $type;
+        }
+        $block->PageID = $this->ID;
+        $block->write();
+    }
 }

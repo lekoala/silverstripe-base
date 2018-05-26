@@ -35,9 +35,10 @@ class SiteConfigExtension extends DataExtension
     private static $db = [
         // Contact Details
         "ContactInfos" => "Text",
-        "ContactAddress" => "Varchar(191)",
+        "ContactAddress" => "Varchar(199)",
         "ContactEmail" => "Varchar(199)",
         "ContactPhone" => "Varchar",
+        "LegalName" => "Varchar(199)",
         // Emails
         "DefaultFromEmail" => "Varchar(199)",
         "EmailFooter" => "Text",
@@ -61,6 +62,8 @@ class SiteConfigExtension extends DataExtension
         $fields->addFieldToTab('Root.Main', $ContactPhone);
         $ContactAddress = new TextField('ContactAddress');
         $fields->addFieldToTab('Root.Main', $ContactAddress);
+        $LegalName = new TextField('LegalName');
+        $fields->addFieldToTab('Root.Main', $LegalName);
         // Emails
         $EmailsHeader = new HeaderField('EmailsHeader', 'Email');
         $fields->addFieldToTab('Root.Main', $EmailsHeader);

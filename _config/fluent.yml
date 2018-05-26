@@ -17,6 +17,7 @@ TractorCow\Fluent\Extension\FluentExtension:
     - Varchar(9)
     - Varchar(59)
     - Varchar(99)
+    - Varchar(199)
 # Add extensions to SilverStripe
 SilverStripe\SiteConfig\SiteConfig:
   extensions:

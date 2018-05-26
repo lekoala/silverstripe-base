@@ -7,14 +7,54 @@ use SilverStripe\Core\Extension;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Control\Director;
 use LeKoala\Base\Helpers\ClassHelper;
+use SilverStripe\ORM\DB;
 
 class DevBuildExtension extends Extension
 {
+    public function beforeCallActionHandler()
+    {
+        $renameColumns = $this->owner->getRequest()->getVar('renameColumns');
+        if ($renameColumns) {
+            $this->displayMessage("<div class='build'><p><b>Renaming columns</b></p><ul>\n\n");
+
+            $this->renameColumns();
+
+            $this->displayMessage("</ul>\n<p><b>Renaming columns finished!</b></p></div>");
+        }
+    }
+
+    protected function renameColumns()
+    {
+        $classes = $this->getDataObjects();
+
+        foreach ($classes as $class) {
+            if (!property_exists($class, 'rename_fields')) {
+                continue;
+            }
+
+            $fields = $class::$rename_fields;
+
+            $schema = DataObject::getSchema();
+            $tableName = $schema->baseDataTable($class);
+
+            $dbSchema = DB::get_schema();
+            foreach ($fields as $oldName => $newName) {
+                if ($dbSchema->hasField($tableName, $oldName)) {
+                    $this->displayMessage("<li>Renaming $oldName to $newName in $tableName</li>");
+                    $dbSchema->renameField($tableName, $oldName, $newName);
+                } else {
+                    $this->displayMessage("<li>$oldName is already renamed to $newName in $tableName</li>");
+                }
+            }
+        }
+    }
+
     public function afterCallActionHandler()
     {
         $envIsAllowed = Director::isDev();
         $skipGeneration = $this->owner->getRequest()->getVar('skipgeneration');
 
+        return;
         if ($skipGeneration || !$envIsAllowed) {
             return;
         }
@@ -27,14 +67,23 @@ class DevBuildExtension extends Extension
     }
 
     /**
+     * @return array
+     */
+    protected function getDataObjects()
+    {
+        $classes = ClassInfo::subclassesFor(DataObject::class);
+        array_shift($classes); // remove dataobject
+        return $classes;
+    }
+
+    /**
      * Generate the repository class
      *
      * @return void
      */
     protected function generateRepository()
     {
-        $classes = ClassInfo::subclassesFor(DataObject::class);
-        array_shift($classes); // remove dataobject
+        $classes = $this->getDataObjects();
 
         $code = <<<CODE
 <?php

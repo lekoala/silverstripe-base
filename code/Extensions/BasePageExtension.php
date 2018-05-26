@@ -12,16 +12,27 @@ use SilverStripe\Versioned\Versioned;
 class BasePageExtension extends DataExtension
 {
 
+    /**
+     * Easily require the page in requireDefaultRecords using this method
+     *
+     * @param string $segment Default url segment for the page
+     * @param string $class The page class
+     * @param array $data Data to inject in the page
+     * @return Page
+     */
     public function requirePageForSegment($segment, $class, $data = [])
     {
         $page = SiteTree::get_by_link($segment);
         if ($page) {
+            // We have a page but the class does not match
             if ($page->ClassName != $class) {
                 $page->ClassName = $class;
                 $page->Write();
                 $page->copyVersionToStage(Versioned::DRAFT, Versioned::LIVE);
                 $page->flushCache();
                 DB::alteration_message($class . ' repaired', 'repaired');
+            } else {
+                // Do nothing, a page already exists
             }
         } else {
             $page = new $class();
@@ -34,5 +45,6 @@ class BasePageExtension extends DataExtension
             $page->flushCache();
             DB::alteration_message($class . ' created', 'created');
         }
+        return $page;
     }
 }
