@@ -1,5 +1,5 @@
 ---
-Name: basefluentconfig
+Name: base-fluent
 After:
   - '#versionedfiles'
 Only:

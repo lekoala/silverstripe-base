@@ -1,3 +1,6 @@
+---
+Name: base-injector
+---
 SilverStripe\Core\Injector\Injector:
   SilverStripe\Forms\DateField:
     class: LeKoala\Base\Forms\FlatpickrField

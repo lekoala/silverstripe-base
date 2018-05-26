@@ -1,5 +1,6 @@
 # https://docs.silverstripe.org/en/4/developer_guides/performance/caching/
 ---
+Name: base-cache-before
 Before:
   - '#corecache'
 ---
@@ -9,6 +10,7 @@ SilverStripe\Core\Injector\Injector:
     constructor:
       0: 'tcp://127.0.0.1:6379'
 ---
+Name: base-cache
 After:
   - '#corecache'
 ---

@@ -1,5 +1,5 @@
 ---
-Name: dev
+Name: base-dev
 Only:
   environment: dev
 ---

@@ -1,3 +1,6 @@
+---
+Name: base-extensions
+---
 SilverStripe\ORM\DataObject:
   extensions:
     - LeKoala\Base\Extensions\BaseDataObjectExtension

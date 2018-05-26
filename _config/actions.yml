@@ -1,3 +1,6 @@
+---
+Name: base-actions
+---
 SilverStripe\ORM\DataObject:
   extensions:
     - LeKoala\Base\Actions\DataObjectActionsExtension
