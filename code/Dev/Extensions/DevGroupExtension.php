@@ -6,12 +6,19 @@ use SilverStripe\Security\Member;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\Security\Security;
 use SilverStripe\View\Parsers\URLSegmentFilter;
+use SilverStripe\Control\Controller;
+use SilverStripe\Admin\LeftAndMain;
 
 class DevGroupExtension extends DataExtension
 {
     public function onAfterWrite()
     {
+        $ctrl = Controller::curr();
+        if (!$ctrl instanceof LeftAndMain) {
+            return;
+        }
         // Always populate a group with a user
+        // ! this should not run during test or it causes infinite loops
         if ($this->owner->Members()->count() == 0) {
             $groupTitle = $this->owner->Title;
             $filter = new URLSegmentFilter;
