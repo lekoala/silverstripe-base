@@ -1,15 +1,28 @@
 <?php
-namespace LeKoala\Base\Dev;
+namespace LeKoala\Base\i18n;
 
+use Exception;
+use SilverStripe\Dev\Debug;
+use SilverStripe\Core\Manifest\Module;
 use SilverStripe\i18n\Messages\Reader;
 use SilverStripe\i18n\Messages\Writer;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Manifest\ModuleLoader;
+use SilverStripe\i18n\TextCollection\Parser;
 use SilverStripe\i18n\TextCollection\i18nTextCollector;
-use SilverStripe\Dev\Debug;
+use LeKoala\Base\Theme\KnowsThemeDir;
+use SilverStripe\View\ThemeManifest;
+use SilverStripe\Control\Director;
 
+/**
+ * Improved text collector
+ *
+ * See https://github.com/silverstripe/silverstripe-framework/issues/7647
+ */
 class TextCollector extends i18nTextCollector
 {
+    use KnowsThemeDir;
+
     /**
      * @var boolean
      */
@@ -57,11 +70,13 @@ class TextCollector extends i18nTextCollector
      * This can be useful for long-term maintenance of translations across
      * releases, because it allows "translation backports" to older releases
      * without removing strings these older releases still rely on.
+     * @return array $result
      */
     public function run($restrictToModules = null, $mergeWithExisting = false)
     {
         $entitiesByModule = $this->collect($restrictToModules, $mergeWithExisting);
         if (empty($entitiesByModule)) {
+            Debug::message("No entities have been collected");
             return;
         }
         if ($this->debug) {
@@ -82,6 +97,8 @@ class TextCollector extends i18nTextCollector
             $module = ModuleLoader::inst()->getManifest()->getModule($moduleName);
             $this->write($module, $entities);
         }
+
+        return $entitiesByModule;
     }
 
     /**
@@ -98,21 +115,6 @@ class TextCollector extends i18nTextCollector
         } else {
             $this->setRestrictToModules($restrictToModules);
         }
-        if ($mergeWithExisting === null) {
-            $mergeWithExisting = $this->getMergeWithExisting();
-        } else {
-            $this->setMergeWithExisting($mergeWithExisting);
-        }
-
-        $entitiesByModule = $this->getEntitiesByModule();
-
-        // Resolve conflicts between duplicate keys across modules
-        $entitiesByModule = $this->resolveDuplicateConflicts($entitiesByModule);
-
-        // Optionally merge with existing master strings
-        if ($mergeWithExisting) {
-            $entitiesByModule = $this->mergeWithExisting($entitiesByModule);
-        }
 
         // Restrict modules we update to just the specified ones (if any passed)
         if (!empty($restrictToModules)) {
@@ -121,11 +123,26 @@ class TextCollector extends i18nTextCollector
                 $module = ModuleLoader::inst()->getManifest()->getModule($name);
                 return $module ? $module->getName() : null;
             }, $restrictToModules));
-            // Remove modules
-            foreach (array_diff(array_keys($entitiesByModule), $modules) as $module) {
-                unset($entitiesByModule[$module]);
+            // No module, throw an exception
+            if (empty($modules)) {
+                $availableModules = array_keys(ModuleLoader::inst()->getManifest()->getModules());
+                throw new Exception("Could not find any of these modules : " . implode(', ', $restrictToModules) . ". Available modules are : " . implode(', ', $availableModules));
             }
         }
+
+        if ($mergeWithExisting === null) {
+            $mergeWithExisting = $this->getMergeWithExisting();
+        } else {
+            $this->setMergeWithExisting($mergeWithExisting);
+        }
+
+        $entitiesByModule = $this->getEntitiesByModule();
+
+        // Optionally merge with existing master strings
+        if ($mergeWithExisting) {
+            $entitiesByModule = $this->mergeWithExisting($entitiesByModule);
+        }
+
         return $entitiesByModule;
     }
 
@@ -157,7 +174,8 @@ class TextCollector extends i18nTextCollector
                         array_keys($messages)
                     );
                     foreach ($unusedEntities as $unusedEntity) {
-                        if (strpos($unusedEntity, 'Global.') !== false) {
+                        // Skip globals
+                        if (strpos($unusedEntity, BaseI18n::GLOBAL_ENTITY . '.') !== false) {
                             continue;
                         }
                         if ($this->debug) {
@@ -179,6 +197,9 @@ class TextCollector extends i18nTextCollector
     protected function getEntitiesByModule()
     {
         $restrictToModules = $this->getRestrictToModules();
+        if (empty($restrictToModules)) {
+            throw new Exception("TextCollector does not support collecting from all modules");
+        }
 
         // A master string tables array (one mst per module)
         $entitiesByModule = array();
@@ -191,18 +212,22 @@ class TextCollector extends i18nTextCollector
 
             // we store the master string tables
             $processedEntities = $this->processModule($module);
-            if (isset($entitiesByModule[$moduleName])) {
-                $entitiesByModule[$moduleName] = array_merge_recursive(
-                    $entitiesByModule[$moduleName],
-                    $processedEntities
-                );
-            } else {
-                $entitiesByModule[$moduleName] = $processedEntities;
+
+            // in mysite, collect theme as well
+            if ($moduleName == 'mysite') {
+                $themeEntities = $this->collectFromTheme();
+                $processedEntities = array_merge($processedEntities, $themeEntities);
+                ksort($processedEntities);
             }
 
+            $entitiesByModule[$moduleName] = $processedEntities;
+
             // Extract all entities for "foreign" modules ('module' key in array form)
-            // @see CMSMenu::provideI18nEntities for an example usage
             foreach ($entitiesByModule[$moduleName] as $fullName => $spec) {
+                if (!is_array($spec)) {
+                    continue;
+                }
+
                 $specModuleName = $moduleName;
 
                 // Rewrite spec if module is specified
@@ -214,7 +239,7 @@ class TextCollector extends i18nTextCollector
                     }
                     unset($spec['module']);
 
-                    // If only element is defalt, simplify
+                    // If only element is default, simplify
                     if (count($spec) === 1 && !empty($spec['default'])) {
                         $spec = $spec['default'];
                     }
@@ -232,7 +257,58 @@ class TextCollector extends i18nTextCollector
                 $entitiesByModule[$specModuleName][$fullName] = $spec;
             }
         }
+
         return $entitiesByModule;
+    }
+
+    /**
+     * @return array
+     */
+    public function collectFromTheme()
+    {
+        $themeDir = $this->getThemeDir();
+        $themeFolder = Director::baseFolder() . '/' . $themeDir . '/Templates';
+
+        $files = $this->getFilesRecursive($themeFolder, null, 'ss');
+
+        $entities = [];
+        foreach ($files as $file) {
+            $fileContent = file_get_contents($file);
+            $entities = array_merge($entities, $this->collectFromTemplate($fileContent, $file));
+        }
+
+        return $entities;
+    }
+
+    /**
+     * Extracts translatables from .ss templates (Self referencing)
+     *
+     * @param string $content The text content of a parsed template-file
+     * @param string $fileName The name of a template file when method is used in self-referencing mode
+     * @param Module $module Module being collected
+     * @param array $parsedFiles
+     * @return array $entities An array of entities representing the extracted template function calls
+     */
+    public function collectFromTemplate($content, $fileName, Module $module = null, &$parsedFiles = array())
+    {
+        // Get namespace either from $fileName or $module fallback
+        $namespace = $fileName ? basename($fileName) : $module->getName();
+
+        // use parser to extract <%t style translatable entities
+        $entities = Parser::getTranslatables($content, $this->getWarnOnEmptyDefault());
+
+        // use the old method of getting _t() style translatable entities is forbidden
+        if (preg_match_all('/(_t\([^\)]*?\))/ms', $content, $matches)) {
+            throw new Exception("Old _t calls in $fileName are not allowed in templates. Please use <%t instead.");
+        }
+
+        foreach ($entities as $entity => $spec) {
+            unset($entities[$entity]);
+            $entities[$this->normalizeEntity($entity, $namespace)] = $spec;
+        }
+        ksort($entities);
+
+        return $entities;
     }
 
     /**

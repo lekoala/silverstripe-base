@@ -8,11 +8,12 @@ use SilverStripe\ORM\DataObject;
 class PrivacyMemberExtension extends DataExtension
 {
     private static $db = [
-        "HasCheckedPrivacy" => "DBDatetime",
-        "HasCheckedTerms" => "DBDatetime"
+        "PrivacyChecked" => "DBDatetime",
+        "TermsChecked" => "DBDatetime"
     ];
 
-    public function needToCheckPrivacyOrTerms() {
+    public function needToCheckPrivacyOrTerms()
+    {
         return $this->needsToCheckPrivacy() || $this->needsToCheckTerms();
     }
 
@@ -22,7 +23,7 @@ class PrivacyMemberExtension extends DataExtension
         if (!$p) {
             return false;
         }
-        return $this->owner->HasCheckedPrivacy ? false: true;
+        return $this->owner->PrivacyChecked ? false: true;
     }
 
     public function needsToCheckTerms()
@@ -31,6 +32,6 @@ class PrivacyMemberExtension extends DataExtension
         if (!$p) {
             return false;
         }
-        return $this->owner->HasCheckedTerms ? false: true;
+        return $this->owner->TermsChecked ? false: true;
     }
 }

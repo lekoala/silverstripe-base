@@ -1,6 +1,7 @@
 <?php
 
 use SilverStripe\Control\Director;
+use LeKoala\Base\i18n\BaseI18n;
 
 if (!function_exists('bm')) {
     function bm($cb = null)
@@ -59,3 +60,11 @@ if (!empty($_SERVER['SERVER_NAME']) &&
 \SilverStripe\Forms\HTMLEditor\TinyMCEConfig::get('cms')
     ->addButtonsToLine(1, 'styleselect')
     ->setOption('importcss_append', true);
+
+// Add global translation helper
+if (!function_exists('_g')) {
+    function _g($entity)
+    {
+       return BaseI18n::globalTranslation($entity);
+    }
+}

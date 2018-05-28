@@ -1,13 +1,15 @@
 <?php
 
-namespace LeKoala\Base\Dev\Tasks;
+namespace LeKoala\Base\i18n;
 
 use SilverStripe\i18n\i18n;
+use SilverStripe\ORM\ArrayLib;
 use LeKoala\Base\Dev\BuildTask;
+use LeKoala\Base\i18n\TextCollector;
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\Dev\Tasks\i18nTextCollectorTask;
 use SilverStripe\i18n\TextCollection\i18nTextCollector;
-use LeKoala\Base\Dev\TextCollector;
 
 /**
  * A better task for collecting text
@@ -40,29 +42,34 @@ class ConfigurableI18nTextCollectorTask extends BuildTask
     {
         $this->increaseTimeLimitTo();
 
+        $modules = ArrayLib::valuekey(array_keys(ModuleLoader::inst()->getManifest()->getModules()));
+
         $this->addOption("locale", "Locale to use", substr(i18n::get_locale(), 0, 2));
         $this->addOption("merge", "Merge with previous translations", true);
         $this->addOption("clear_unused", "Remove keys that are not used anymore", false);
         $this->addOption("debug", "Show debug messages and prevent write", false);
-        $this->addOption("modules", "Comma separated list of modules", project());
+        $this->addOption("module", "Module", null, $modules);
 
         $options = $this->askOptions();
 
         $locale = $options['locale'];
         $merge = $options['merge'];
-        $modules = $options['modules'];
+        $module = $options['module'];
         $clearUnused = $options['clear_unused'];
         $debug = $options['debug'];
 
-        if ($locale) {
-            $this->message("Proceeding with locale $locale for modules $modules");
+        if ($locale && $module) {
+            $this->message("Proceeding with locale $locale for module $module");
             $collector = TextCollector::create($locale);
-            $restrictModules = explode(',', $modules);
-            $collector->setRestrictToModules($restrictModules);
             $collector->setMergeWithExisting($merge);
             $collector->setClearUnused($clearUnused);
             $collector->setDebug($debug);
-            $collector->run($restrictModules, $merge);
+            $result = $collector->run([$module], $merge);
+            if ($result) {
+                foreach ($result as $module => $entities) {
+                    $this->message("Collected " . count($entities) . " messages for module $module");
+                }
+            }
         }
     }
 

@@ -48,10 +48,10 @@ class PrivacyForm extends BaseForm
     public function doSubmit($data)
     {
         if (isset($data['CheckPrivacy'])) {
-            $this->record->HasCheckedPrivacy = date('Y-m-d H:i:s');
+            $this->record->PrivacyChecked = date('Y-m-d H:i:s');
         }
         if (isset($data['CheckTerms'])) {
-            $this->record->HasCheckedTerms = date('Y-m-d H:i:s');
+            $this->record->TermsChecked = date('Y-m-d H:i:s');
         }
         $this->record->write();
 

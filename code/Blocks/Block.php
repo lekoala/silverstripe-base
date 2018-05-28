@@ -61,6 +61,7 @@ final class Block extends DataObject
         'HTMLID' => 'Varchar(59)',
         'Content' => 'HTMLText',
         // Localized data
+        // TODO: rename this see https://github.com/silverstripe/silverstripe-framework/issues/8088
         'Data' => DBJson::class,
         // Unlocalized data
         'Settings' => DBJson::class,
