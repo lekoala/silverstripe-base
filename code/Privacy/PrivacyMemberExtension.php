@@ -12,6 +12,10 @@ class PrivacyMemberExtension extends DataExtension
         "HasCheckedTerms" => "DBDatetime"
     ];
 
+    public function needToCheckPrivacyOrTerms() {
+        return $this->needsToCheckPrivacy() || $this->needsToCheckTerms();
+    }
+
     public function needsToCheckPrivacy()
     {
         $p = DataObject::get_one(PrivacyNoticePage::class);

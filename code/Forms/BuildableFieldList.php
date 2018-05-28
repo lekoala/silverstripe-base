@@ -14,6 +14,7 @@ use SilverStripe\Forms\PasswordField;
 use SilverStripe\Forms\TextareaField;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\AssetAdmin\Forms\UploadField;
+use SilverStripe\Forms\HiddenField;
 
 class BuildableFieldList extends FieldList
 {
@@ -197,6 +198,17 @@ class BuildableFieldList extends FieldList
     public function addCheckbox($name = "IsEnabled", $title = null, $attributes = [])
     {
         return $this->addField(CheckboxField::class, $name, $title, $attributes);
+    }
+
+    /**
+     * @param string $name
+     * @param string $title
+     * @param array $attributes
+     * @return HiddenField
+     */
+    public function addHidden($name = "ID", $title = null, $attributes = [])
+    {
+        return $this->addField(HiddenField::class, $name, $title, $attributes);
     }
 
     /**

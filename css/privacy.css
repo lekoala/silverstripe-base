@@ -1,0 +1,17 @@
+
+.PrivacyForm {
+    background: #fff;
+    padding:1em;
+    margin:1em 0;
+}
+
+.PrivacyForm h2 {
+    margin:1em 0;
+}
+.PrivacyForm-Box {
+    background: #eee;
+    padding: 1em;
+    margin: 1em 0;
+    max-height: 300px;
+    overflow-y: scroll;
+}
