@@ -43,11 +43,11 @@ class Bootstrap
         $jquery_version = self::config()->jquery_version;
         $bootstrap_version = self::config()->bootstrap_version;
 
-        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/jquery/$jquery_version/jquery.min.js", ['defer' => true]);
+        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/jquery/$jquery_version/jquery.min.js");
         // with Popper JS but no jQuery
-        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/$bootstrap_version/js/bootstrap.bundle.js", ['defer' => true]);
-        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.0/js.cookie.min.js", ['defer' => true]);
-        Requirements::javascript("base/javascript/BootstrapHelpers.js", ['defer' => true]);
+        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/$bootstrap_version/js/bootstrap.bundle.js");
+        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.0/js.cookie.min.js");
+        Requirements::javascript("base/javascript/BootstrapHelpers.js");
     }
 
     /**
@@ -59,6 +59,6 @@ class Bootstrap
     {
         $version = self::config()->bootstrap_native_version;
 
-        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/bootstrap.native/$version/bootstrap-native-v4.min.js", ['defer' => true]);
+        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/bootstrap.native/$version/bootstrap-native-v4.min.js");
     }
 }

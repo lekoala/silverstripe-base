@@ -73,7 +73,7 @@ class CookiesConsent
         // Include script
         $version = self::config()->version;
         Requirements::css("//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/$version/cookieconsent.min.css");
-        Requirements::javascript("//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/$version/cookieconsent.min.js", ['defer' => true]);
+        Requirements::javascript("//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/$version/cookieconsent.min.js");
 
         // Include custom init
         $js = <<<JS

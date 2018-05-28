@@ -65,6 +65,6 @@ if (!empty($_SERVER['SERVER_NAME']) &&
 if (!function_exists('_g')) {
     function _g($entity)
     {
-       return BaseI18n::globalTranslation($entity);
+        return BaseI18n::globalTranslation($entity);
     }
 }

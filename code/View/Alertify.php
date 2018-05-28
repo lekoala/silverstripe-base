@@ -27,7 +27,7 @@ class Alertify
     {
         $theme = self::config()->theme;
 
-        Requirements::javascript('https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.11.1/alertify.min.js', ['defer' => true]);
+        Requirements::javascript('https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.11.1/alertify.min.js');
         $dir = i18n::get_script_direction();
         if ($dir == 'rtl') {
             Requirements::css('https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.11.1/css/alertify.rtl.min.css');

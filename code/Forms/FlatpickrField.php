@@ -383,11 +383,11 @@ class FlatpickrField extends TextField
             $lang = substr(i18n::get_locale(), 0, 2);
         }
         $version = self::config()->version;
-        Requirements::javascript('base/javascript/ModularBehaviour.js', ['defer' => true]);
+        Requirements::javascript('base/javascript/ModularBehaviour.js');
         Requirements::css("https://cdnjs.cloudflare.com/ajax/libs/flatpickr/$version/flatpickr.min.css");
-        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/flatpickr/$version/flatpickr.js", ['defer' => true]);
+        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/flatpickr/$version/flatpickr.js");
         if ($lang != 'en') {
-            Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/flatpickr/$version/l10n/$lang.js", ['defer' => true]);
+            Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/flatpickr/$version/l10n/$lang.js");
         }
     }
 }

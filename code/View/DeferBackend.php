@@ -7,9 +7,20 @@ use SilverStripe\View\SSViewer;
 use SilverStripe\View\ThemeResourceLoader;
 use SilverStripe\View\Requirements_Backend;
 
+/**
+ * A backend that defers everything by default
+ */
 class DeferBackend extends Requirements_Backend
 {
     public $writeJavascriptToBody = false;
+
+    public function javascript($file, $options = array())
+    {
+        if (!isset($options['defer'])) {
+            $options['defer'] = true;
+        }
+        return parent::javascript($file, $options);
+    }
 
     public function themedJavascript($name, $type = null)
     {
