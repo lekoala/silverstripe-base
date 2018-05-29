@@ -15,7 +15,7 @@ use SilverStripe\Forms\FileUploadReceiver;
 abstract class BaseFileUploadField extends FormField implements FileHandleField
 {
     use FileUploadReceiver;
-
+    use BaseFileUploadReceiver;
     /**
      * Create a new file field.
      *
@@ -35,6 +35,43 @@ abstract class BaseFileUploadField extends FormField implements FileHandleField
             $this->setItems($items);
         }
     }
+
+
+    /**
+     * Gets the upload folder name
+     *
+     * @return string
+     */
+    public function getFolderName()
+    {
+        return ($this->folderName !== false)
+            ? $this->folderName
+            : $this->getDefaultFolderName();
+    }
+
+    public function Field($properties = array())
+    {
+        $record = $this->getRecord();
+        if ($record) {
+            $relation = $record->getRelationClass($this->name);
+
+            // Sadly, it's not always the case
+            if ($relation == Image::class) {
+                // Because who wants bmp and gif files?
+                $allowedExtensions = $this->getAllowedExtensions();
+                if (in_array('zip', $allowedExtensions)) {
+                    $this->setAllowedExtensions(self::config()->default_image_ext);
+                }
+            }
+
+            // Set a default description
+            if (!$this->description) {
+                $this->setDefaultDescription($relation);
+            }
+        }
+        return parent::Field($properties);
+    }
+
 
     public function getSchemaDataDefaults()
     {

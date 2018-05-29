@@ -14,6 +14,8 @@ use SilverStripe\AssetAdmin\Forms\UploadField;
  */
 class SmartUploadField extends UploadField
 {
+    use BaseFileUploadReceiver;
+
     /**
      * Because who really use gifs and bmp?
      * @config
@@ -49,36 +51,13 @@ class SmartUploadField extends UploadField
         return parent::Field($properties);
     }
 
-    protected function setDefaultDescription($relation)
-    {
-        $desc = '';
-        $size = File::format_size($this->getValidator()->getAllowedMaxFileSize());
-        switch ($relation) {
-            case Image::class:
-                $desc = _t('SmartUploadField.MAXSIZE', 'Max file size: {size}', ['size' => $size]);
-                $desc .= '; ';
-                $desc .= _t('SmartUploadField.MAXRESOLUTION', 'Max resolution: 2048x2048px; Allowed extensions: {ext}', array('ext' => implode(',', $this->getAllowedExtensions())));
-                break;
-            default:
-                $desc = _t('SmartUploadField.MAXSIZE', 'Max file size: {size}', ['size' => $size]);
-                break;
-        }
-        $this->description = $desc;
-    }
-
     public function getFolderName()
     {
         $record = $this->getRecord();
         if ($record) {
             // If no folder name is set, set a default one based on class name and relation name
             if ($this->folderName === false) {
-                if ($this->record->hasMethod('getFolderName')) {
-                    $this->folderName = $this->record->getFolderName();
-                } else {
-                    $class = ClassHelper::getClassWithoutNamespace($record);
-                    $name = $this->getName();
-                    $this->folderName = $class . '/' . $name;
-                }
+                $this->folderName = $this->getDefaultFolderName();
             }
         }
         return parent::getFolderName();
