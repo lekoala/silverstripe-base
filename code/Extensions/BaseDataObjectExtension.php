@@ -2,18 +2,25 @@
 namespace LeKoala\Base\Extensions;
 
 use SilverStripe\ORM\DB;
+use SilverStripe\Assets\File;
+use SilverStripe\Assets\Image;
+use SilverStripe\Core\ClassInfo;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\Versioned\Versioned;
 use LeKoala\Base\Forms\BuildableFieldList;
-use SilverStripe\Forms\GridField\GridFieldDeleteAction;
-use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
+use SilverStripe\Forms\GridField\GridFieldDeleteAction;
 use Symbiote\GridFieldExtensions\GridFieldEditableColumns;
-use SilverStripe\Core\ClassInfo;
+use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
 
 /**
  * Improve DataObjects
+ *
+ * - cascade_delete relations should not be a relation, but a record editor
+ * - summary fields should include subsite extra fields
+ * - after delete, cleanup tables
+ *
  */
 class BaseDataObjectExtension extends DataExtension
 {
@@ -29,12 +36,49 @@ class BaseDataObjectExtension extends DataExtension
         $this->expandGridFieldSummary($extraFields, $fields);
     }
 
+    /**
+     * @return bool
+     */
+    protected function isVersioned()
+    {
+        return $this->owner->hasExtension(Versioned::class);
+    }
+
+    /**
+     * @param string $class
+     * @return bool
+     */
+    protected function isAssetClass($class)
+    {
+        return $class === Image::class || $class === File::class;
+    }
+
+
     public function onAfterDelete()
     {
-        if ($this->owner->hasExtension(Versioned::class)) {
+        $this->cleanupManyManyTables();
+    }
+
+    public function onAfterWrite()
+    {
+        $this->publishOwnAssets();
+    }
+
+    protected function publishOwnAssets()
+    {
+        if ($this->isVersioned()) {
             return;
         }
-        $this->cleanupManyManyTables();
+
+        $owns = $this->owner->config()->owns;
+        foreach ($owns as $componentName => $componentClass) {
+            if ($this->isAssetClass($componentClass)) {
+                $component = $this->owner->getComponent($componentName);
+                if ($component->isInDB() && !$component->isPublished()) {
+                    $component->publishSingle();
+                }
+            }
+        }
     }
 
     protected function expandGridFieldSummary($arr, BuildableFieldList $fields)
@@ -114,6 +158,10 @@ class BaseDataObjectExtension extends DataExtension
      */
     protected function cleanupManyManyTables()
     {
+        // We should not cleanup tables on versioned items because they can be restored
+        if ($this->isVersioned()) {
+            return;
+        }
         $many_many = $this->owner->manyMany();
         foreach ($many_many as $relation => $type) {
             $manyManyComponents = $this->owner->getManyManyComponents($relation);

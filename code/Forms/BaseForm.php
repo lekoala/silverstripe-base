@@ -44,7 +44,7 @@ class BaseForm extends Form
      */
     public function __construct(
         RequestHandler $controller = null,
-        $name = self::DEFAULT_NAME,
+        $name = null,
         FieldList $fields = null,
         FieldList $actions = null,
         Validator $validator = null
@@ -53,7 +53,7 @@ class BaseForm extends Form
         // We hack the name argument to pass parameters
         // Either an array or a DataObject
         // This allows us to inject parameters and not call the controller from the form
-        if (!is_string($name)) {
+        if ($name && !is_string($name)) {
             if (is_array($name)) {
                 $this->params = $name;
             } elseif (is_object($name)) {
@@ -71,6 +71,8 @@ class BaseForm extends Form
             $name = null;
         }
         // name should be the same as the class by default
+        // the name is used to determine which function is called on your controller
+        // therefore, it's easier to declare a function that matches the class name
         if (!$name) {
             $name = $this->Type();
         }

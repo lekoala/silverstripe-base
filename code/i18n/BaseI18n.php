@@ -15,4 +15,12 @@ class BaseI18n
         }
         return i18n::_t(implode('.', $parts), $entity);
     }
+
+    public static function get_lang($lang = null)
+    {
+        if (!$lang) {
+            $lang = i18n::get_locale();
+        }
+        return substr($lang, 0, 2);
+    }
 }

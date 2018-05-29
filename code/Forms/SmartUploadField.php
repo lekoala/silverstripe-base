@@ -15,6 +15,7 @@ use SilverStripe\AssetAdmin\Forms\UploadField;
 class SmartUploadField extends UploadField
 {
     /**
+     * Because who really use gifs and bmp?
      * @config
      * @var array
      */

@@ -10,10 +10,27 @@ use SilverStripe\Control\HTTPResponse;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 
 /**
+ * A fine upload field
+ *
+ * @link https://fineuploader.com/
  * @link https://github.com/FineUploader/php-traditional-server/blob/master/handler.php
  */
 class FineUploadField extends UploadField
 {
+
+    /**
+     * @config
+     * @var string
+     */
+    private static $version = '5.16.2';
+
+    /**
+     * Undocumented variable
+     *
+     * @var string
+     */
+    private static $default_layout = 'gallery';
+
     /**
      * @config
      * @var array
@@ -24,16 +41,22 @@ class FineUploadField extends UploadField
 
     public function Field($properties = array())
     {
-        Requirements::css('https://cdnjs.cloudflare.com/ajax/libs/file-uploader/5.15.5/fine-uploader.min.css');
+        $version = $this->config()->version;
+        Requirements::css("https://cdnjs.cloudflare.com/ajax/libs/file-uploader/$version/fine-uploader.min.css");
 
-        // For gallery layout
-        Requirements::css('https://cdnjs.cloudflare.com/ajax/libs/file-uploader/5.15.5/fine-uploader-gallery.min.css');
-
-        // For rows layout
-        // Requirements::css('https://cdnjs.cloudflare.com/ajax/libs/file-uploader/5.15.5/fine-uploader-new.min.css');
-
-        Requirements::javascript('https://cdnjs.cloudflare.com/ajax/libs/file-uploader/5.15.5/fine-uploader.min.js');
-        Requirements::javascript('base/javascript/fields/FineUploadField.js');
+        $layout = $this->config()->layout;
+        switch ($layout) {
+            case 'gallery':
+                Requirements::css("https://cdnjs.cloudflare.com/ajax/libs/file-uploader/$version/fine-uploader-gallery.min.css");
+                break;
+            case 'rows':
+                Requirements::css("https://cdnjs.cloudflare.com/ajax/libs/file-uploader/$version/fine-uploader-new.min.css");
+                break;
+            default:
+                throw new Exception("Layout $layout is not supported");
+        }
+        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/file-uploader/$version/fine-uploader.min.js");
+        Requirements::javascript("base/javascript/fields/FineUploadField.js");
 
         return parent::Field($properties);
     }

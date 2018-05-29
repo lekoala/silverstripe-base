@@ -16,6 +16,7 @@ use SilverStripe\Assets\Filesystem;
 /**
  * Automatically publish files and images related to this data object
  *
+ * @link https://github.com/bratiask/own-assets
  * @property \LeKoala\Base\Blocks\Block|\LeKoala\Base\News\NewsItem|\PortfolioItem|\LeKoala\Base\Extensions\SmartDataObjectExtension $owner
  */
 class SmartDataObjectExtension extends DataExtension

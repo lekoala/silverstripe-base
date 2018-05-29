@@ -113,11 +113,12 @@ class ColorField extends TextField
 
     public function Field($properties = array())
     {
-         // Set lang based on locale
+        // Set lang based on locale
         $lang = substr($this->getLocale(), 0, 2);
 
         $config = $this->config;
 
+        $this->setAttribute('data-module', 'spectrum');
         $this->setAttribute('data-config', json_encode($config));
 
         $version = $this->config()->version;
@@ -125,7 +126,7 @@ class ColorField extends TextField
         Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/spectrum/$version/spectrum.min.js");
         if ($lang != 'en') {
         }
-        Requirements::javascript('base/javascript/fields/ColorField.js');
+        Requirements::javascript('base/javascript/ModularBehaviour.js');
 
         return parent::Field($properties);
     }
