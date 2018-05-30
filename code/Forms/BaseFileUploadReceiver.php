@@ -3,6 +3,7 @@ namespace LeKoala\Base\Forms;
 
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\Image;
+use SilverStripe\Assets\Folder;
 use SilverStripe\Assets\Upload;
 use LeKoala\Base\Helpers\ClassHelper;
 

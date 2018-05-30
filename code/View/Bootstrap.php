@@ -19,16 +19,25 @@ class Bootstrap
     use Configurable;
 
     /**
+     * @config
+     * @var boolean
+     */
+    private static $enabled = true;
+
+    /**
+     * @config
      * @var string
      */
     private static $jquery_version = '3.3.1';
 
     /**
+     * @config
      * @var string
      */
     private static $bootstrap_version = '4.1.1';
 
     /**
+     * @config
      * @var string
      */
     private static $bootstrap_native_version = '2.0.15';
@@ -48,6 +57,14 @@ class Bootstrap
         Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/$bootstrap_version/js/bootstrap.bundle.js");
         Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.0/js.cookie.min.js");
         Requirements::javascript("base/javascript/BootstrapHelpers.js");
+    }
+
+    /**
+     * @return boolean
+     */
+    public static function enabled()
+    {
+        return self::config()->enabled;
     }
 
     /**

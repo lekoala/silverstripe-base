@@ -9,3 +9,8 @@ Only:
 SilverStripe\CMS\Model\SiteTree:
   extensions:
     - LeKoala\Base\Subsite\SubsitePageExtension
+SilverStripe\Subsites\Extensions\FileSubsites:
+  # We don't want to assign subsite by default
+  # because folders can be created from various locations
+  # Assigning subsite is opt in and should be carefully considered
+  default_root_folders_global: true

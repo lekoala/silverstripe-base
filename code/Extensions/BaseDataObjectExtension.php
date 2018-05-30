@@ -20,7 +20,7 @@ use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
  * - cascade_delete relations should not be a relation, but a record editor
  * - summary fields should include subsite extra fields
  * - after delete, cleanup tables
- *
+ * - non versioned class should publish their own assets
  */
 class BaseDataObjectExtension extends DataExtension
 {
@@ -145,6 +145,21 @@ class BaseDataObjectExtension extends DataExtension
                 }
                 $dataColumns->setDisplayFields($newDisplayFields);
             }
+        }
+    }
+
+    /**
+     * Call delete according to Versioned
+     *
+     * @return void
+     */
+    public function deleteAll()
+    {
+        if ($this->isVersioned()) {
+            $this->owner->deleteFromStage(Versioned::LIVE);
+            $this->owner->deleteFromStage(Versioned::DRAFT);
+        } else {
+            $this->owner->delete();
         }
     }
 

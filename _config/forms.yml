@@ -2,6 +2,8 @@
 Name: base-forms
 ---
 SilverStripe\Core\Injector\Injector:
+  SilverStripe\Assets\Upload:
+    class: LeKoala\Base\Forms\BaseUpload
   SilverStripe\Forms\DateField:
     class: LeKoala\Base\Forms\FlatpickrField
   SilverStripe\Forms\DatetimeField:

@@ -4,6 +4,9 @@ Name: base-extensions
 SilverStripe\ORM\DataObject:
   extensions:
     - LeKoala\Base\Extensions\BaseDataObjectExtension
+SilverStripe\Assets\File:
+  extensions:
+    - LeKoala\Base\Extensions\BaseFileExtension
 SilverStripe\Admin\LeftAndMain:
   extra_requirements_css:
     - 'base/css/admin.css'

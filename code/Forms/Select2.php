@@ -3,6 +3,9 @@ namespace LeKoala\Base\Forms;
 
 use SilverStripe\i18n\i18n;
 use SilverStripe\View\Requirements;
+use LeKoala\Base\View\Bootstrap;
+use SilverStripe\Control\Controller;
+use SilverStripe\Admin\LeftAndMain;
 
 trait Select2
 {
@@ -161,13 +164,20 @@ trait Select2
             $this->setConfig('dir', $dir);
         }
 
+        if (Bootstrap::enabled()) {
+            $this->setConfig('theme', 'bootstrap4');
+        }
+
         $config = $this->config;
 
         // Do not use select2 because it is reserved
         $this->setAttribute('data-config', json_encode($config));
 
+        $ctrl = Controller::curr();
         Requirements::css('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css');
-        Requirements::css('base/css/Select2Field.css');
+        if ($ctrl instanceof LeftAndMain) {
+            Requirements::css('base/css/Select2Field.css');
+        }
         Requirements::javascript('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.js');
         if ($lang != 'en') {
             Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/i18n/$lang.js");

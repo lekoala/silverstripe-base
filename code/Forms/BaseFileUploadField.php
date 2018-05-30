@@ -37,7 +37,6 @@ abstract class BaseFileUploadField extends FormField implements FileHandleField
         }
     }
 
-
     /**
      * Gets the upload folder name
      *

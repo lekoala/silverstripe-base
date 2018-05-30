@@ -29,7 +29,10 @@ class DeferBackend extends Requirements_Backend
     public function customScript($script, $uniquenessID = null)
     {
         // Wrap script in a DOMContentLoaded
-        $script = "window.addEventListener('DOMContentLoaded', function() { $script });";
+        // @link https://stackoverflow.com/questions/41394983/how-to-defer-inline-javascript
+        if (strpos($script, 'window.addEventListener') === false) {
+            $script = "window.addEventListener('DOMContentLoaded', function() { $script });";
+        }
         return parent::customScript($script, $uniquenessID);
     }
 }

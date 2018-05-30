@@ -234,10 +234,16 @@ class ThemeSiteConfigExtension extends DataExtension
             )
         )->renderWith('Favicons');
     }
+    /**
+     * @return string
+     */
     public function getThemeAssetURL()
     {
         return '/assets/_theme/' . $this->owner->ID;
     }
+    /**
+     * @return string
+     */
     public function getThemeAssetsFolder()
     {
         $dir = Director::publicFolder() . $this->getThemeAssetURL();

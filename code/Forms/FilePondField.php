@@ -12,6 +12,9 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\ORM\DataObjectInterface;
+use SilverStripe\Control\Director;
+use SilverStripe\Versioned\Versioned;
+use LeKoala\Base\Extensions\BaseFileExtension;
 
 /**
  * A file pond field
@@ -40,12 +43,6 @@ class FilePondField extends BaseFileUploadField
      * @var int
      */
     private static $thumbnail_height = 60;
-
-    /**
-     * @config
-     * @var string
-     */
-    private static $temporary_folder = 'TemporaryUploads';
 
     /**
      * @config
@@ -212,11 +209,19 @@ class FilePondField extends BaseFileUploadField
         $this->setAttribute('data-module', 'filepond');
         $this->setAttribute('data-config', json_encode($config));
 
-        Requirements::css('https://unpkg.com/filepond/dist/filepond.css');
-        Requirements::javascript('https://unpkg.com/filepond-plugin-file-validate-size/dist/filepond-plugin-file-validate-size.js');
-        Requirements::javascript('https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js');
-        Requirements::javascript('https://unpkg.com/filepond/dist/filepond.min.js');
-        Requirements::javascript('https://unpkg.com/jquery-filepond/filepond.jquery.js');
+        if (Director::isDev()) {
+            Requirements::css('https://rawgit.com/pqina/filepond/master/dist/filepond.css');
+            Requirements::javascript('https://rawgit.com/pqina/filepond/master/dist/filepond.min.js');
+            Requirements::javascript('https://rawgit.com/pqina/filepond-plugin-file-validate-type/master/dist/filepond-plugin-file-validate-type.min.js');
+            Requirements::javascript('https://rawgit.com/pqina/filepond-plugin-image-validate-size/master/dist/filepond-plugin-image-validate-size.min.js');
+            Requirements::javascript('https://rawgit.com/pqina/jquery-filepond/master/filepond.jquery.js');
+        } else {
+            Requirements::css('https://cdn.rawgit.com/pqina/filepond/52be702f/dist/filepond.css');
+            Requirements::javascript('https://cdn.rawgit.com/pqina/filepond/52be702f/dist/filepond.min.js');
+            Requirements::javascript('https://cdn.rawgit.com/pqina/filepond-plugin-file-validate-type/8e05c20f/dist/filepond-plugin-file-validate-type.min.js');
+            Requirements::javascript('https://cdn.rawgit.com/pqina/filepond-plugin-image-validate-size/ab2f4e80/dist/filepond-plugin-image-validate-size.min.js');
+            Requirements::javascript('https://cdn.rawgit.com/pqina/jquery-filepond/59286607/filepond.jquery.js');
+        }
         Requirements::javascript('base/javascript/fields/FilePondField.js');
         Requirements::javascript('base/javascript/ModularBehaviour.js');
 
@@ -255,18 +260,20 @@ class FilePondField extends BaseFileUploadField
         }
         $tmpFile = $this->normalizeTempFile($tmpFile);
 
-        // Override folder name to ensure the file goes to a temp folder
-        $folderName = $this->getFolderName();
-        $this->setFolderName($this->getTemporaryFolderName());
         /** @var File $file */
         $file = $this->saveTemporaryFile($tmpFile, $error);
-        $this->setFolderName($folderName);
 
         // Prepare result
         if ($error) {
             $this->getUpload()->clearErrors();
             return $this->httpError(400, json_encode($error));
         }
+
+        // Because the file is not linked to anything, it's public by default
+        // This also kills the tracking of the physical file so don't do it
+        // if ($file->getVisibility() == 'public') {
+        //     $file->protectFile();
+        // }
 
         $this->getUpload()->clearErrors();
         $fileId = $file->ID;
@@ -275,38 +282,40 @@ class FilePondField extends BaseFileUploadField
         $response->addHeader('Content-Type', 'text/plain');
 
         if (self::config()->auto_clear_temp_folder) {
-            $this->clearTemporaryUploads();
+            BaseFileExtension::clearTemporaryUploads(true);
         }
 
         return $response;
     }
 
-    /**
-     * Clear temp folder that should not contain any file other than temporary
-     *
-     * @return void
-     */
-    public function clearTemporaryUploads()
-    {
-        $folder = $this->getTemporaryFolder();
-        $children = $folder->myChildren();
-        $threshold = strtotime('-1 hour');
-        foreach ($children as $child) {
-            $createdTime = strtotime($child->Created);
-            if ($createdTime < $threshold) {
-                // do archive ensure we kill versions
-                $child->doArchive();
-                // let's delete for good the file
-                $child->delete();
-            }
-        }
-    }
-
     public function saveInto(DataObjectInterface $record)
     {
         // Move files out of temporary folder
-
+        $IDs = $this->getItemIDs();
+        foreach ($IDs as $ID) {
+            $file = $this->getFileByID($ID);
+            if ($file) {
+                // The record does not have an ID which is a bad idea to attach the file to it
+                if (!$record->ID) {
+                    $record->write();
+                }
+                $file->IsTemporary = false;
+                $file->RecordID = $record->ID;
+                $file->RecordClass = get_class($record);
+                $file->write();
+            }
+        }
+        // Proceed
         return parent::saveInto($record);
+    }
+
+    /**
+     * @param int $ID
+     * @return File
+     */
+    protected function getFileByID($ID)
+    {
+        return File::get()->byID($ID);
     }
 
     /**
@@ -325,22 +334,6 @@ class FilePondField extends BaseFileUploadField
             $newTmpFile[$k] = $v;
         }
         return $newTmpFile;
-    }
-
-    /**
-     * @return Folder
-     */
-    protected function getTemporaryFolder()
-    {
-        return Folder::find_or_make($this->getTemporaryFolderName());
-    }
-
-    /**
-     * @return string
-     */
-    protected function getTemporaryFolderName()
-    {
-        return self::config()->temporary_folder;
     }
 
     public function Type()
