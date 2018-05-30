@@ -12,3 +12,9 @@ SilverStripe\Security\Group:
 SilverStripe\Core\Injector\Injector:
   SilverStripe\Dev\DebugView:
     class: LeKoala\Base\Dev\BetterDebugView
+---
+Name: base-dev-all
+---
+SilverStripe\Core\Injector\Injector:
+  SilverStripe\Dev\MigrationTask:
+    class: LeKoala\Base\Dev\Tasks\DisabledMigrationTasks

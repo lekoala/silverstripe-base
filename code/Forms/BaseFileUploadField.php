@@ -16,6 +16,7 @@ abstract class BaseFileUploadField extends FormField implements FileHandleField
 {
     use FileUploadReceiver;
     use BaseFileUploadReceiver;
+
     /**
      * Create a new file field.
      *

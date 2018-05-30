@@ -16,9 +16,22 @@ class Alertify
     use Configurable;
 
     /**
+     * @config
      * @var string
      */
     private static $theme = 'bootstrap';
+
+    /**
+     * @config
+     * @var array
+     */
+    private static $defaults = [
+        'notifier.position' => "top-center",
+        'transition' => "zoom",
+        'theme.ok' => "btn btn-primary",
+        'theme.cancel' => "btn btn-danger",
+        'theme.input' => "form-control",
+    ];
 
     /**
      * Add AlertifyJS requirements
@@ -50,14 +63,12 @@ class Alertify
                 $type = 'error';
                 break;
         }
-        $settings = <<<JS
-alertify.defaults.transition = "zoom";
-alertify.defaults.theme.ok = "btn btn-primary";
-alertify.defaults.theme.cancel = "btn btn-danger";
-alertify.defaults.theme.input = "form-control";
-JS;
+        $settings = '';
+        foreach (self::config()->defaults as $k => $v) {
+            $settings .= "alertify.defaults.$k = '$v';\n";
+        }
         Requirements::customScript($settings, 'AlertifySettings');
-        $js = "window.addEventListener('DOMContentLoaded', function() {alertify.notify('$msg', '$type', 0); });";
+        $js = "alertify.notify('$msg', '$type', 0);";
         Requirements::customScript($js);
     }
 

@@ -1,6 +1,0 @@
----
-Name: base-injector
----
-SilverStripe\Core\Injector\Injector:
-  SilverStripe\Dev\MigrationTask:
-    class: LeKoala\Base\Dev\Tasks\DisabledMigrationTasks

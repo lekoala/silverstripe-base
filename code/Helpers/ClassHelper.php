@@ -2,7 +2,11 @@
 namespace LeKoala\Base\Helpers;
 
 use SilverStripe\Core\ClassInfo;
+use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Manifest\ClassLoader;
+use SilverStripe\Core\Manifest\ClassManifest;
+use SilverStripe\Core\Injector\InjectorLoader;
+use SilverStripe\ORM\DataObject;
 
 /**
  *
@@ -29,6 +33,61 @@ class ClassHelper
     }
 
     /**
+     * Get all classes using the given extension
+     *
+     * @param string $extension
+     * @param boolean $onlyDataObjects
+     * @param boolean $strict
+     * @return array
+     */
+    public static function extendedBy($extension, $onlyDataObjects = true, $strict = false)
+    {
+        $classes = array();
+        if ($onlyDataObjects) {
+            $classes = ClassInfo::subclassesFor(DataObject::class);
+            array_shift($classes);
+        } else {
+            $manifest = ClassLoader::inst()->getManifest();
+            $classes = $manifest->getClassNames();
+        }
+        $classes = array_values($classes);
+
+        $extendedClasses = [];
+        foreach ($classes as $class) {
+            if (Extensible::has_extension($class, $extension, $strict)) {
+                $extendedClasses[] = $class;
+            }
+        }
+        return $extendedClasses;
+    }
+
+    /**
+     * Find class with many_many relations to this class
+     *
+     * @param string $manyClass
+     * @return array
+     */
+    public static function relatedManyClasses($manyClass)
+    {
+        $classes = ClassInfo::subclassesFor(DataObject::class);
+        array_shift($classes);
+
+        $related = [];
+        foreach ($classes as $class) {
+            $manyMany = $class::config()->many_many;
+            foreach ($manyMany as $manyRelation => $manyType) {
+                if ($manyType == $manyClass) {
+                    if (!isset($related[$class])) {
+                        $related[$class] = [];
+                    }
+                    $related[$class][] = $manyRelation;
+                }
+            }
+        }
+        return $related;
+    }
+
+    /**
      * Get a class name without namespace
      *
      * @param string|object $class
@@ -39,7 +98,7 @@ class ClassHelper
         if (is_object($class)) {
             $class = get_class($class);
         }
-        if (\strpos($class, '\\') === false) {
+        if (strpos($class, '\\') === false) {
             return $class;
         }
         return substr(strrchr($class, '\\'), 1);
@@ -53,37 +112,7 @@ class ClassHelper
      */
     public static function findModuleForClass($class)
     {
-        if (ClassInfo::exists($class)) {
-            $module = ClassLoader::inst()
-                ->getManifest()
-                ->getOwnerModule($class);
-            if ($module) {
-                return $module->getName();
-            }
-        }
-
-        // If we can't find a class, see if it needs to be fully qualified
-        if (strpos($class, '\\') !== false) {
-            return null;
-        }
-
-        // Find FQN that ends with $class
-        $classes = preg_grep(
-            '/' . preg_quote("\\{$class}", '\/') . '$/i',
-            ClassLoader::inst()->getManifest()->getClassNames()
-        );
-
-        // Find all modules for candidate classes
-        $modules = array_unique(array_map(function ($class) {
-            $module = ClassLoader::inst()->getManifest()->getOwnerModule($class);
-            return $module ? $module->getName() : null;
-        }, $classes));
-
-        if (count($modules) === 1) {
-            return reset($modules);
-        }
-
-        // Couldn't find it! Exists in none, or multiple modules.
-        return null;
+        $classManifest = ClassLoader::inst()->getManifest();
+        return $classManifest->getOwnerModule($class);
     }
 }

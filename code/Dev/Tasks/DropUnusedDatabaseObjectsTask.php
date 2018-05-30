@@ -23,7 +23,7 @@ class DropUnusedDatabaseObjectsTask extends BuildTask
     {
         $this->addOption("tables", "Clean unused tables", true);
         $this->addOption("fields", "Clean unused fields", true);
-        $this->addOption("go", "Tick this to proceed to proceed", false);
+        $this->addOption("go", "Tick this to proceed", false);
 
         $options = $this->askOptions();
 

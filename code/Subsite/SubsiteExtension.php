@@ -1,5 +1,5 @@
 <?php
-namespace LeKoala\Base\Extensions;
+namespace LeKoala\Base\Subsite;
 
 use SilverStripe\ORM\DataQuery;
 use SilverStripe\Forms\FieldList;

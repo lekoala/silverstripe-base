@@ -6,3 +6,6 @@ Only:
   moduleexists:
     - 'silverstripe/subsites'
 ---
+SilverStripe\CMS\Model\SiteTree:
+  extensions:
+    - LeKoala\Base\Subsite\SubsitePageExtension

@@ -8,6 +8,7 @@ use SilverStripe\Assets\Folder;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Forms\FormField;
 use SilverStripe\View\Requirements;
+use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\ORM\DataObjectInterface;
@@ -47,6 +48,12 @@ class FilePondField extends BaseFileUploadField
     private static $temporary_folder = 'TemporaryUploads';
 
     /**
+     * @config
+     * @var boolean
+     */
+    private static $auto_clear_temp_folder = true;
+
+    /**
      * Set if uploading new files is enabled.
      * If false, only existing files can be selected
      *
@@ -82,20 +89,13 @@ class FilePondField extends BaseFileUploadField
 
     public function setValue($value, $record = null)
     {
+        // Normalize values to something similar to UploadField usage
         if (is_numeric($value)) {
-            $value = $this->getTemporaryFile($value);
+            $value = ['Files' => [$value]];
+        } elseif (is_array($value) && empty($value['Files'])) {
+            $value = ['Files' => $value];
         }
         return parent::setValue($value, $record);
-    }
-
-    /**
-     * @param int $ID
-     * @return File
-     */
-    protected function getTemporaryFile($ID)
-    {
-        $file = File::get()->byID($ID);
-        return $file;
     }
 
     /**
@@ -164,22 +164,44 @@ class FilePondField extends BaseFileUploadField
     {
         $token = $this->getForm()->getSecurityToken()->getValue();
         return [
-            'url' => $this->Link($action),
+            'url' => $this->SafeLink($action),
             'headers' => [
                 'X-SecurityID' => $token
             ],
         ];
     }
 
+    /**
+     * @return string
+     */
+    public function getSafeName()
+    {
+        return str_replace('[]', '', $this->getName());
+    }
+
+    /**
+     * Return a link to this field.
+     *
+     * @param string $action
+     *
+     * @return string
+     */
+    public function SafeLink($action = null)
+    {
+        return Controller::join_links($this->form->FormAction(), 'field/' . $this->getSafeName(), $action);
+    }
+
     public function Field($properties = array())
     {
         $name = $this->getName();
-        $multiple =$this->getIsMultiUpload();
+        $multiple = $this->getIsMultiUpload();
+        if ($multiple && strpos($name, '[]') === false) {
+            $name .= '[]';
+            $this->setName($name);
+        }
 
-        //TODO: multiple is not working correctly atm
-        //https://github.com/pqina/filepond/issues/50
         $config = [
-            'name' => $name,
+            'name' => $name, // This will also apply to the hidden fields
             'allowMultiple' => $multiple,
             'allowFileTypeValidation' => true,
             'acceptedFileTypes' => $this->getAcceptedFileTypes(),
@@ -231,6 +253,7 @@ class FilePondField extends BaseFileUploadField
         if (!$tmpFile) {
             return $this->httpError(400, "No file");
         }
+        $tmpFile = $this->normalizeTempFile($tmpFile);
 
         // Override folder name to ensure the file goes to a temp folder
         $folderName = $this->getFolderName();
@@ -251,7 +274,65 @@ class FilePondField extends BaseFileUploadField
         $response = new HTTPResponse($fileId);
         $response->addHeader('Content-Type', 'text/plain');
 
+        if (self::config()->auto_clear_temp_folder) {
+            $this->clearTemporaryUploads();
+        }
+
         return $response;
+    }
+
+    /**
+     * Clear temp folder that should not contain any file other than temporary
+     *
+     * @return void
+     */
+    public function clearTemporaryUploads()
+    {
+        $folder = $this->getTemporaryFolder();
+        $children = $folder->myChildren();
+        $threshold = strtotime('-1 hour');
+        foreach ($children as $child) {
+            $createdTime = strtotime($child->Created);
+            if ($createdTime < $threshold) {
+                // do archive ensure we kill versions
+                $child->doArchive();
+                // let's delete for good the file
+                $child->delete();
+            }
+        }
+    }
+
+    public function saveInto(DataObjectInterface $record)
+    {
+        // Move files out of temporary folder
+
+        return parent::saveInto($record);
+    }
+
+    /**
+     * Convert an array of file to a single file
+     *
+     * @param array $tmpFile
+     * @return array
+     */
+    protected function normalizeTempFile($tmpFile)
+    {
+        $newTmpFile = [];
+        foreach ($tmpFile as $k => $v) {
+            if (is_array($v)) {
+                $v = $v[0];
+            }
+            $newTmpFile[$k] = $v;
+        }
+        return $newTmpFile;
+    }
+
+    /**
+     * @return Folder
+     */
+    protected function getTemporaryFolder()
+    {
+        return Folder::find_or_make($this->getTemporaryFolderName());
     }
 
     /**
