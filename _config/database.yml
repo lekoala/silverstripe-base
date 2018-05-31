@@ -13,3 +13,24 @@ SilverStripe\ORM\Connect\MySQLDatabase:
 # resulting in 191. This is because the maximum length of a utf8mb4 character is four bytes.
 # For a utf8 character it would be three bytes resulting in max index prefix length of 254.
 # https://github.com/silverstripe/silverstripe-framework/issues/8062
+---
+Name: base-fieldtypes
+After: '#corefieldtypes'
+---
+SilverStripe\Core\Injector\Injector:
+  Color:
+    class: LeKoala\Base\ORM\FieldType\DBColor
+  Country:
+    class: LeKoala\Base\ORM\FieldType\DBCountry
+  Json:
+    class: LeKoala\Base\ORM\FieldType\DBJson
+  Phone:
+    class: LeKoala\Base\ORM\FieldType\DBPhone
+  DBNullableClassName:
+    class: LeKoala\Base\ORM\FieldType\DBNullableClassName
+  # See DataObjectSchema:492
+  ForeignKey:
+    class: LeKoala\Base\ORM\FieldType\DBBetterForeignKey
+  PolymorphicForeignKey:
+    class: LeKoala\Base\ORM\FieldType\DBNullablePolymorphicForeignKey
+

@@ -67,8 +67,8 @@ class DropUnusedDatabaseObjectsTask extends BuildTask
             $toDrop = [];
 
             $fields = $dataObjectSchema->databaseFields($class);
-            $list = $schema->fieldList($lcTable);
-
+            // We must pass the regular table name
+            $list = $schema->fieldList($table);
             // We can compare DataObject schema with actual schema
             foreach ($list as $fieldName => $type) {
                 /// Never drop ID
@@ -142,8 +142,8 @@ class DropUnusedDatabaseObjectsTask extends BuildTask
                 continue;
             }
 
-            // Remove from the list
             self::removeFromArray($lcTable, $tablesToRemove);
+            // Remove from the list versioned tables
             self::removeFromArray($lcTable . '_live', $tablesToRemove);
             self::removeFromArray($lcTable . '_versions', $tablesToRemove);
             // Remove from the list fluent tables

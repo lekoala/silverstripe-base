@@ -25,6 +25,13 @@ class BaseFileExtension extends DataExtension
         "Record" => DataObject::class,
     ];
 
+    public function onBeforeWrite()
+    {
+        if(!$this->RecordID) {
+            $this->RecordClass = null;
+        }
+    }
+
     /**
      * Clear temp folder that should not contain any file other than temporary
      *
