@@ -2,11 +2,12 @@
 
 namespace LeKoala\Base\Extensions;
 
+use SilverStripe\ORM\DB;
 use SilverStripe\Assets\File;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\Control\Director;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\Core\Config\Configurable;
-use SilverStripe\ORM\DataObject;
 
 class BaseFileExtension extends DataExtension
 {
@@ -27,9 +28,16 @@ class BaseFileExtension extends DataExtension
 
     public function onBeforeWrite()
     {
-        if(!$this->RecordID) {
+        if (!$this->RecordID) {
             $this->RecordClass = null;
         }
+    }
+
+    public static function ensureNullForEmptyRecordRelation()
+    {
+        DB::query("UPDATE File SET RecordClass = null WHERE RecordID = 0 AND RecordClass IS NOT NULL");
+        DB::query("UPDATE File_Live SET RecordClass = null WHERE RecordID = 0 AND RecordClass IS NOT NULL");
+        DB::query("UPDATE File_versions SET RecordClass = null WHERE RecordID = 0 AND RecordClass IS NOT NULL");
     }
 
     /**

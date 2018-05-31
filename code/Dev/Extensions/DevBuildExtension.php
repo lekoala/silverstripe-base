@@ -8,6 +8,7 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\Control\Director;
 use LeKoala\Base\Helpers\ClassHelper;
 use SilverStripe\ORM\DB;
+use LeKoala\Base\Extensions\BaseFileExtension;
 
 class DevBuildExtension extends Extension
 {
@@ -21,6 +22,8 @@ class DevBuildExtension extends Extension
 
             $this->displayMessage("</ul>\n<p><b>Renaming columns finished!</b></p></div>");
         }
+
+        BaseFileExtension::ensureNullForEmptyRecordRelation();
     }
 
     protected function renameColumns()
