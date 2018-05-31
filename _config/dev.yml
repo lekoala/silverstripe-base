@@ -3,9 +3,13 @@ Name: base-dev
 Only:
   environment: dev
 ---
+SilverStripe\Control\Director:
+  rules:
+    'typo':   'LeKoala\Base\Dev\TypographyController'
 SilverStripe\Dev\DevBuildController:
   extensions:
     - LeKoala\Base\Dev\Extensions\DevBuildExtension
+# TODO : move this to fake record generator
 SilverStripe\Security\Group:
   extensions:
     - LeKoala\Base\Dev\Extensions\DevGroupExtension
