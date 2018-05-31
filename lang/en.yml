@@ -1,6 +1,17 @@
 en:
   ActionsGridFieldItemRequest:
-    php.ActionsGridFieldItemRequest: 'Action {action} was done on {name}'
+    DONE: 'Action {action} was done on {name}'
+  BaseFileUploadReceiver:
+    ALLOWEXTENSION: 'Allowed extensions: {ext}'
+    MAXRESOLUTION: 'Max resolution: 2048x2048px'
+    MAXSIZE: 'Max file size: {size}'
+  BaseForm:
+    DOSUBMIT: Submit
+  BaseSecurityAdminExtension:
+    LockedMembers: 'Locked Members'
+    MembersOnlyGroups: 'Only group members are shown. To add a user to a group, link it from an existing group.'
+    RecentPasswordFailures: 'Recent Password Failures'
+    SecurityAudit: 'Security Audit'
   BootstrapModal:
     Close: Close
   ContactPageController:
@@ -15,6 +26,10 @@ en:
     DECLINE: Decline
     LINK: 'Learn more'
     MESSAGE: 'This website uses cookies to ensure you get the best experience on your website'
+  CountryDropdownField:
+    TITLE: Country
+  FlatpickrField:
+    SELECT_A_DATE: 'Select a date...'
   NewsItem:
     READ_MORE: 'Read more'
   NewsPage:
@@ -24,9 +39,13 @@ en:
     POPULAR_POSTS: 'Popular posts'
     SEARCH: Search
     TAGS: Tags
-  SmartUploadField:
-    MAXRESOLUTION: 'Max resolution: 2048x2048px; Allowed extensions: {ext}'
-    MAXSIZE: 'Max file size: {size}'
+  PrivacyForm:
+    IAGREE: 'I read and I agree with the'
+    PLEASEREVIEW: 'Please review our privacy notice and terms and conditions to continue'
+  SilverStripe\CMS\Search\SearchForm:
+    GO: Go
+    SEARCH: Search
+    SearchResults: 'Search Results'
   SocialExtension:
     DISCOVER: 'I discovered '
     SEE: 'You can see it here :'

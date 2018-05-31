@@ -9,8 +9,6 @@ use LeKoala\Base\Helpers\ClassHelper;
 
 trait BaseFileUploadReceiver
 {
-    const MAX_EXTENSIONS_DISPLAY = 7;
-
     protected function setDefaultDescription($relation)
     {
         $desc = '';
@@ -21,7 +19,7 @@ trait BaseFileUploadReceiver
             $desc .= _t('BaseFileUploadReceiver.MAXRESOLUTION', 'Max resolution: 2048x2048px');
         }
         $extensions = $this->getAllowedExtensions();
-        if (count($extensions) < self::MAX_EXTENSIONS_DISPLAY) {
+        if (count($extensions) < 7) {
             $desc .= '; ';
             $desc .= _t('BaseFileUploadReceiver.ALLOWEXTENSION', 'Allowed extensions: {ext}', array('ext' => implode(',', $extensions)));
         }

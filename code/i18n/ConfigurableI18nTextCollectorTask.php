@@ -5,6 +5,7 @@ namespace LeKoala\Base\i18n;
 use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\ArrayLib;
 use LeKoala\Base\Dev\BuildTask;
+use SilverStripe\Control\Director;
 use LeKoala\Base\i18n\TextCollector;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Manifest\ModuleLoader;
@@ -80,6 +81,6 @@ class ConfigurableI18nTextCollectorTask extends BuildTask
         }
         // Basically hide the previous task
         self::$ignored_once = true;
-        return false;
+        return Director::isDev();
     }
 }

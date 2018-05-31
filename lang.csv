@@ -1,0 +1,36 @@
+﻿key,en
+ActionsGridFieldItemRequest.DONE,"Action {action} was done on {name}"
+BaseFileUploadReceiver.ALLOWEXTENSION,"Allowed extensions: {ext}"
+BaseFileUploadReceiver.MAXRESOLUTION,"Max resolution: 2048x2048px"
+BaseFileUploadReceiver.MAXSIZE,"Max file size: {size}"
+BaseForm.DOSUBMIT,Submit
+BaseSecurityAdminExtension.LockedMembers,"Locked Members"
+BaseSecurityAdminExtension.MembersOnlyGroups,"Only group members are shown. To add a user to a group, link it from an existing group."
+BaseSecurityAdminExtension.RecentPasswordFailures,"Recent Password Failures"
+BaseSecurityAdminExtension.SecurityAudit,"Security Audit"
+BootstrapModal.Close,Close
+ContactPageController.ERR_ENTER_EMAIL,"Entrez votre emali"
+ContactPageController.ERR_ENTER_MESSAGE,"Entrez votre message"
+ContactPageController.ERR_ENTER_NAME,"Entrez votre nom"
+ContactPageController.ERR_ENTER_VALIDEMAIL,"Entrez un email valide"
+ContactPageController.MESSAGE_ERROR,"Votre message n'a pas été envoyé"
+ContactPageController.MESSAGE_SENT,"Votre message a bien été envoyé"
+CookieConsent.ALLOWCOOKIES,"Allow cookies"
+CookieConsent.DECLINE,Decline
+CookieConsent.LINK,"Learn more"
+CookieConsent.MESSAGE,"This website uses cookies to ensure you get the best experience on your website"
+CountryDropdownField.TITLE,Country
+FlatpickrField.SELECT_A_DATE,"Select a date..."
+NewsItem.READ_MORE,"Read more"
+NewsPage.NO_ARTICLES,"No articles"
+NewsSidebar.ARCHIVES,Archives
+NewsSidebar.POPULAR_POSTS,"Popular posts"
+NewsSidebar.SEARCH,Search
+NewsSidebar.TAGS,Tags
+PrivacyForm.IAGREE,"I read and I agree with the"
+PrivacyForm.PLEASEREVIEW,"Please review our privacy notice and terms and conditions to continue"
+"SilverStripe\CMS\Search\SearchForm.GO",Go
+"SilverStripe\CMS\Search\SearchForm.SEARCH",Search
+"SilverStripe\CMS\Search\SearchForm.SearchResults","Search Results"
+SocialExtension.DISCOVER,"I discovered "
+SocialExtension.SEE,"You can see it here :"

@@ -89,7 +89,7 @@ class ActionsGridFieldItemRequest extends DataExtension
         // Build default message
         if (!$message) {
             $message = _t(
-                'ActionsGridFieldItemRequest',
+                'ActionsGridFieldItemRequest.DONE',
                 'Action {action} was done on {name}',
                 array(
                     'action' => $action,
