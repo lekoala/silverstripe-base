@@ -3,6 +3,7 @@
 namespace LeKoala\Base\Privacy;
 
 use Page;
+use LeKoala\Base\Extensions\BasePageExtension;
 
 class PrivacyNoticePage extends Page
 {
@@ -13,6 +14,9 @@ class PrivacyNoticePage extends Page
         parent::requireDefaultRecords();
         // default pages
         if (static::class == self::class && $this->config()->create_default_pages) {
+            if(!$this->hasExtension(BasePageExtension::class)) {
+                return;
+            }
             $page = $this->requirePageForSegment('privacy-notice', static::class, [
                 'Title' => 'Privacy Notice',
                 'Content' => 'Please go to  https://termsandconditionstemplate.com/privacy-policy-generator/ to generate your privacy policy or copy your own',
