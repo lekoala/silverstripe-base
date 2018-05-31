@@ -23,7 +23,7 @@ class DevBuildExtension extends Extension
             $this->displayMessage("</ul>\n<p><b>Renaming columns finished!</b></p></div>");
         }
 
-        BaseFileExtension::ensureNullForEmptyRecordRelation();
+        // BaseFileExtension::ensureNullForEmptyRecordRelation();
     }
 
     protected function renameColumns()

@@ -9,19 +9,21 @@ use LeKoala\Base\Helpers\ClassHelper;
 
 trait BaseFileUploadReceiver
 {
+    const MAX_EXTENSIONS_DISPLAY = 7;
+
     protected function setDefaultDescription($relation)
     {
         $desc = '';
         $size = File::format_size($this->getValidator()->getAllowedMaxFileSize());
-        switch ($relation) {
-            case Image::class:
-                $desc = _t('SmartUploadField.MAXSIZE', 'Max file size: {size}', ['size' => $size]);
-                $desc .= '; ';
-                $desc .= _t('SmartUploadField.MAXRESOLUTION', 'Max resolution: 2048x2048px; Allowed extensions: {ext}', array('ext' => implode(',', $this->getAllowedExtensions())));
-                break;
-            default:
-                $desc = _t('SmartUploadField.MAXSIZE', 'Max file size: {size}', ['size' => $size]);
-                break;
+        $desc = _t('BaseFileUploadReceiver.MAXSIZE', 'Max file size: {size}', ['size' => $size]);
+        if ($relation == Image::class) {
+            $desc .= '; ';
+            $desc .= _t('BaseFileUploadReceiver.MAXRESOLUTION', 'Max resolution: 2048x2048px');
+        }
+        $extensions = $this->getAllowedExtensions();
+        if (count($extensions) < self::MAX_EXTENSIONS_DISPLAY) {
+            $desc .= '; ';
+            $desc .= _t('BaseFileUploadReceiver.ALLOWEXTENSION', 'Allowed extensions: {ext}', array('ext' => implode(',', $extensions)));
         }
         $this->description = $desc;
     }

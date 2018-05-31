@@ -300,8 +300,8 @@ class FilePondField extends BaseFileUploadField
                     $record->write();
                 }
                 $file->IsTemporary = false;
-                $file->RecordID = $record->ID;
-                $file->RecordClass = get_class($record);
+                $file->ObjectID = $record->ID;
+                $file->ObjectClass = get_class($record);
                 $file->write();
             }
         }

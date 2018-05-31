@@ -7,7 +7,11 @@ use SilverStripe\Assets\File;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Control\Director;
 use SilverStripe\ORM\DataExtension;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Assets\ImageBackendFactory;
+use SilverStripe\Core\Injector\InjectionCreator;
+use SilverStripe\AssetAdmin\Controller\AssetAdmin;
 
 class BaseFileExtension extends DataExtension
 {
@@ -23,21 +27,42 @@ class BaseFileExtension extends DataExtension
         "IsTemporary" => "Boolean",
     ];
     private static $has_one = [
-        "Record" => DataObject::class,
+        // Record is already used by versioned extensions
+        // ChangeSetItem already uses Object convention so use it
+        "Object" => DataObject::class,
     ];
 
     public function onBeforeWrite()
     {
-        if (!$this->RecordID) {
-            $this->RecordClass = null;
+        if (!$this->owner->ObjectID) {
+            $this->owner->ObjectClass = null;
         }
+    }
+
+    public function onAfterWrite()
+    {
+        $this->generateDefaultThumbnails();
+    }
+
+    public function generateDefaultThumbnails()
+    {
+        if (!$this->owner->getIsImage()) {
+            return;
+        }
+        $assetAdmin = AssetAdmin::singleton();
+        $creator = new InjectionCreator();
+        Injector::inst()->registerService(
+            $creator,
+            ImageBackendFactory::class
+        );
+        $assetAdmin->generateThumbnails($this->owner, true);
     }
 
     public static function ensureNullForEmptyRecordRelation()
     {
-        DB::query("UPDATE File SET RecordClass = null WHERE RecordID = 0 AND RecordClass IS NOT NULL");
-        DB::query("UPDATE File_Live SET RecordClass = null WHERE RecordID = 0 AND RecordClass IS NOT NULL");
-        DB::query("UPDATE File_versions SET RecordClass = null WHERE RecordID = 0 AND RecordClass IS NOT NULL");
+        DB::query("UPDATE File SET ObjectClass = null WHERE ObjectID = 0 AND ObjectClass IS NOT NULL");
+        DB::query("UPDATE File_Live SET ObjectClass = null WHERE ObjectID = 0 AND ObjectClass IS NOT NULL");
+        DB::query("UPDATE File_Versions SET ObjectClass = null WHERE ObjectID = 0 AND ObjectClass IS NOT NULL");
     }
 
     /**
