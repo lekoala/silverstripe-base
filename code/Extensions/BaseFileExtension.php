@@ -6,8 +6,9 @@ use SilverStripe\Assets\File;
 use SilverStripe\Control\Director;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\Core\Config\Configurable;
+use SilverStripe\ORM\DataObject;
 
-class BaseFileExtension extends HasRecordExtension
+class BaseFileExtension extends DataExtension
 {
     use Configurable;
 
@@ -18,9 +19,10 @@ class BaseFileExtension extends HasRecordExtension
     private static $auto_clear_threshold = null;
 
     private static $db = [
-        "RecordID" => "Int",
-        "RecordClass" => "Varchar(191)",
         "IsTemporary" => "Boolean",
+    ];
+    private static $has_one = [
+        "Record" => DataObject::class,
     ];
 
     /**
