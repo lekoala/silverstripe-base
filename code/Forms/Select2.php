@@ -164,8 +164,11 @@ trait Select2
             $this->setConfig('dir', $dir);
         }
 
-        if (Bootstrap::enabled()) {
-            $this->setConfig('theme', 'bootstrap4');
+        $ctrl = Controller::curr();
+        if (!$ctrl instanceof LeftAndMain) {
+            if (Bootstrap::enabled()) {
+                $this->setConfig('theme', 'bootstrap4');
+            }
         }
 
         $config = $this->config;
@@ -173,7 +176,6 @@ trait Select2
         // Do not use select2 because it is reserved
         $this->setAttribute('data-config', json_encode($config));
 
-        $ctrl = Controller::curr();
         Requirements::css('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css');
         if ($ctrl instanceof LeftAndMain) {
             Requirements::css('base/css/Select2Field.css');
