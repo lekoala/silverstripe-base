@@ -1,3 +1,5 @@
 'LeKoala\Base\Test\TestModel':
   default:
     Ip: '127.0.0.1'
+    Phone: '+32473123456'
+    CountryCode: 'BE'

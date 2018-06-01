@@ -8,6 +8,7 @@ use SilverStripe\ORM\DataExtension;
 use LeKoala\Base\Geo\Models\Address;
 use SilverStripe\Control\Controller;
 use LeKoala\Base\ORM\FieldType\IPAddress;
+use LeKoala\DebugBar\Controller;
 
 /**
  *
@@ -20,11 +21,11 @@ class IPExtension extends DataExtension
     public function onBeforeWrite()
     {
         $controller = Controller::curr();
-        if ($controller instanceof LeftAndMain) {
-            return;
+        // This is best used when IP is set on creation
+        if (!$this->owner->IP) {
+            $ip = $controller->getRequest()->getIP();
+            $this->owner->IP = $ip;
         }
-        $ip = $controller->getRequest()->getIP();
-        $this->owner->IP = $ip;
     }
     /**
      * @return Address

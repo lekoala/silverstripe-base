@@ -19,7 +19,9 @@ class ORMTest extends SapphireTest
 
     public function testPhoneField()
     {
-        $field = new DBPhone('Test');
+        $model = new TestModel();
+
+        $field = new DBPhone('Phone');
 
         $nationalNumber = '0473 123 456';
         $nationalNumberNoSpace = str_replace(' ', '', $nationalNumber);
@@ -28,7 +30,7 @@ class ORMTest extends SapphireTest
         $region = 'be';
         $otherRegion = 'fr';
 
-        $field->setValue($nationalNumber);
+        $field->setValue($nationalNumber, $model);
         $this->assertEquals($internationalNumberNoSpace, $field->International());
         $this->assertEquals($nationalNumberNoSpace, $field->National());
         $field->setValue($internationalNumber);

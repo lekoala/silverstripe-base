@@ -12,7 +12,7 @@ class TestModel extends DataObject implements TestOnly
 {
     private static $db = [
         "Phone" => DBPhone::class,
-        "Country" => DBCountry::class,
+        "CountryCode" => DBCountry::class,
     ];
     private static $table_name = 'TestModel';
     private static $extensions = [
