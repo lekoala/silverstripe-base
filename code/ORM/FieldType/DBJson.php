@@ -10,7 +10,7 @@ use SilverStripe\ORM\Connect\MySQLDatabase;
 /**
  * Json storage
  *
- * @link https://github.com/phptek/silverstripe-jsontext/blob/master/code/models/fieldtypes/JSONText.php
+ * @link https://github.com/phptek/silverstripe-jsontext/blob/master/code/ORM/FieldType/JSONText.php
  */
 class DBJson extends DBString
 {
@@ -108,5 +108,24 @@ class DBJson extends DBString
             $value = json_encode($value);
         }
         return parent::prepValueForDB($value);
+    }
+
+    /**
+     * Search multiple values in an array like store
+     *
+     * TODO: support proper json function if they are supported
+     *
+     * @param string $field
+     * @param array $values
+     * @return string
+     */
+    public static function sqlInArray($field, $values)
+    {
+        $gen = '';
+        foreach ($values as $val) {
+            $gen .= "(?=.*$val)";
+        }
+        $sql = "$field RLIKE '$gen'";
+        return $sql;
     }
 }

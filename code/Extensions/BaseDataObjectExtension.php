@@ -2,12 +2,14 @@
 namespace LeKoala\Base\Extensions;
 
 use SilverStripe\ORM\DB;
+use Psr\Log\LoggerInterface;
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\Image;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\Versioned\Versioned;
+use SilverStripe\Core\Injector\Injector;
 use LeKoala\Base\Forms\BuildableFieldList;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\Forms\GridField\GridFieldDeleteAction;
@@ -34,6 +36,19 @@ class BaseDataObjectExtension extends DataExtension
         // extraFields are wanted!
         $extraFields = $this->owner->config()->many_many_extraFields;
         $this->expandGridFieldSummary($extraFields, $fields);
+    }
+
+    public function augmentDatabase()
+    {
+        $db = $this->owner->uninherited('db');
+        $class = get_class($this->owner);
+        if (isset($db['Data'])) {
+            Injector::inst()->get(LoggerInterface::class)->debug("Class $class should not have a Data field");
+        }
+        $has_one = $this->owner->uninherited('has_one');
+        if (isset($has_one['Record'])) {
+            Injector::inst()->get(LoggerInterface::class)->debug("Class $class should not have a Record relation");
+        }
     }
 
     /**

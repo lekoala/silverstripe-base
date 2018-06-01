@@ -33,4 +33,11 @@ SilverStripe\Core\Injector\Injector:
     class: LeKoala\Base\ORM\FieldType\DBBetterForeignKey
   PolymorphicForeignKey:
     class: LeKoala\Base\ORM\FieldType\DBNullablePolymorphicForeignKey
-
+---
+Name: base-searchfilters
+After: '#coresearchfilters'
+---
+SilverStripe\Core\Injector\Injector:
+  DataListFilter.Regexp:
+    class: LeKoala\Base\ORM\Filters\RegexpFilter
+  RegexpFilter: '%$DataListFilter.Regexp'
