@@ -46,8 +46,8 @@ class DBPhone extends DBVarchar
 
     public function setValue($value, $record = null, $markChanged = true)
     {
-        if($record && strpos($value, '+') !== 0) {
-            if($record->CountryCode) {
+        if ($record && strpos($value, '+') !== 0) {
+            if ($record->CountryCode) {
                 $value = $this->parseNumber($value, $record->CountryCode);
             }
         }

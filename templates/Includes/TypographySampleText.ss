@@ -309,5 +309,14 @@
 	<h4>heading 4: The quick brown fox jumps over the lazy dog</h4>
 	<h5>heading 5: The quick brown fox jumps over the lazy dog</h5>
 	<h6>heading 6: The quick brown fox jumps over the lazy dog</h6>
+
+    <hr /> <% with RandomImage %>
+    Image ID : $ID<br/>
+    Image URL : $URL<br/>
+    <br/><br/>
+    $Me.SmallAssetThumbnail
+    $Me.LargeAssetThumbnail
+    <% end_with %>
+
 	<hr /> $TypoForm
 </div>

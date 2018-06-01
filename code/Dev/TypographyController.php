@@ -2,26 +2,27 @@
 namespace LeKoala\Base\Dev;
 
 use PageController;
-use SilverStripe\Forms\CheckboxField;
-use SilverStripe\Forms\CheckboxSetField;
-use SilverStripe\Forms\CurrencyField;
+use SilverStripe\Forms\Form;
+use SilverStripe\Assets\Image;
 use SilverStripe\Forms\DateField;
-use SilverStripe\Forms\DateTimeField;
-use SilverStripe\Forms\DropdownField;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\EmailField;
 use SilverStripe\Forms\FieldGroup;
-use SilverStripe\Forms\FieldList;
-use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\HeaderField;
+use SilverStripe\View\Requirements;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\NumericField;
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Forms\CheckboxField;
+use SilverStripe\Forms\CurrencyField;
+use SilverStripe\Forms\DateTimeField;
+use SilverStripe\Forms\DropdownField;
+use SilverStripe\Forms\TextareaField;
 use SilverStripe\Forms\OptionsetField;
 use SilverStripe\Forms\RequiredFields;
-use SilverStripe\Forms\TextareaField;
-use SilverStripe\Forms\TextField;
-use SilverStripe\View\Requirements;
-use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Forms\CheckboxSetField;
 
 /**
  * A typography test page
@@ -37,6 +38,10 @@ class TypographyController extends PageController
         $this->ExtraMeta .= '<meta name="robots" content="noindex, nofollow" />';
 
         return $this->renderWith(array('Typography', 'Page'));
+    }
+    public function RandomImage()
+    {
+        return Image::get()->sort('RAND()')->first();
     }
     public function TypoForm()
     {
