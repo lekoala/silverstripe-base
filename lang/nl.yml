@@ -1,0 +1,47 @@
+nl:
+  ActionsGridFieldItemRequest:
+    DONE: 'Action {action} was done on {name}'
+  BaseFileUploadReceiver:
+    ALLOWEXTENSION: 'Allowed extensions: {ext}'
+    MAXRESOLUTION: 'Max resolutie: 2048x2048px'
+    MAXSIZE: 'Max documentgrootte: {size}'
+  BaseForm:
+    DOSUBMIT: Submit
+  BaseSecurityAdminExtension:
+    LockedMembers: 'Locked Members'
+    MembersOnlyGroups: 'Only group members are shown. To add a user to a group, link it from an existing group.'
+    RecentPasswordFailures: 'Recent Password Failures'
+    SecurityAudit: 'Security Audit'
+  BootstrapModal:
+    Close: Close
+  ContactPageController:
+    ERR_ENTER_EMAIL: 'Vul uw e-mail in'
+    ERR_ENTER_MESSAGE: 'Schrijf uw bericht'
+    ERR_ENTER_NAME: 'Vul uw naam in'
+    ERR_ENTER_VALIDEMAIL: 'Vul een geldig e-mailadres in'
+    MESSAGE_ERROR: 'Uw bericht werd niet verstuurd. '
+    MESSAGE_SENT: 'Uw bericht werd verstuurd.'
+  CookieConsent:
+    ALLOWCOOKIES: 'Cookies accepteren'
+    DECLINE: Decline
+    LINK: 'Meer weten'
+    MESSAGE: 'Deze website gebruikt cookies om uw surfervaring aangenamer te maken.'
+  CountryDropdownField:
+    TITLE: Country
+  FlatpickrField:
+    SELECT_A_DATE: 'Kies een datum...'
+  NewsItem:
+    READ_MORE: 'Meer weten'
+  NewsPage:
+    NO_ARTICLES: 'Geen artikels'
+  NewsSidebar:
+    ARCHIVES: Archives
+    POPULAR_POSTS: 'Populaire posts'
+    SEARCH: Search
+    TAGS: Tags
+  PrivacyForm:
+    IAGREE: 'Ik heb gelezen en goedgekeurd...'
+    PLEASEREVIEW: 'Gelieve onze privacy notice en voorwaarden te accepteren alvorens verder te gaan'
+  SocialExtension:
+    DISCOVER: 'Ik vond  '
+    SEE: 'Je kan het hier zien :'

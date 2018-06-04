@@ -1,0 +1,47 @@
+fr:
+  ActionsGridFieldItemRequest:
+    DONE: 'Action {action} was done on {name}'
+  BaseFileUploadReceiver:
+    ALLOWEXTENSION: 'Allowed extensions: {ext}'
+    MAXRESOLUTION: 'Résolution max.: 2048x2048px'
+    MAXSIZE: 'Format max fichier: {size}'
+  BaseForm:
+    DOSUBMIT: Submit
+  BaseSecurityAdminExtension:
+    LockedMembers: 'Locked Members'
+    MembersOnlyGroups: 'Only group members are shown. To add a user to a group, link it from an existing group.'
+    RecentPasswordFailures: 'Recent Password Failures'
+    SecurityAudit: 'Security Audit'
+  BootstrapModal:
+    Close: Close
+  ContactPageController:
+    ERR_ENTER_EMAIL: 'Entrez votre email'
+    ERR_ENTER_MESSAGE: 'Entrez votre message'
+    ERR_ENTER_NAME: 'Entrez votre nom'
+    ERR_ENTER_VALIDEMAIL: 'Entrez un email valide'
+    MESSAGE_ERROR: 'Votre message n''a pas été envoyé.'
+    MESSAGE_SENT: 'Votre message a bien été envoyé.'
+  CookieConsent:
+    ALLOWCOOKIES: 'Accepter cookies'
+    DECLINE: Decline
+    LINK: 'Savoir plus'
+    MESSAGE: 'Ce site utilise des cookies afin de vous donner la meilleure expérience.'
+  CountryDropdownField:
+    TITLE: Country
+  FlatpickrField:
+    SELECT_A_DATE: 'Sélectionnez une date...'
+  NewsItem:
+    READ_MORE: 'Savoir plus'
+  NewsPage:
+    NO_ARTICLES: 'Pas d''articles'
+  NewsSidebar:
+    ARCHIVES: Archives
+    POPULAR_POSTS: 'Posts populaires'
+    SEARCH: Search
+    TAGS: Tags
+  PrivacyForm:
+    IAGREE: 'Je confirme avoir lu et accepté… '
+    PLEASEREVIEW: ' Veuillez lire notre Privacy Notice et nos termes et conditions afin de continuer'
+  SocialExtension:
+    DISCOVER: 'J''ai découvert '
+    SEE: 'Un aperçu :'

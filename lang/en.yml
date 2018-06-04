@@ -15,17 +15,17 @@ en:
   BootstrapModal:
     Close: Close
   ContactPageController:
-    ERR_ENTER_EMAIL: 'Entrez votre emali'
-    ERR_ENTER_MESSAGE: 'Entrez votre message'
-    ERR_ENTER_NAME: 'Entrez votre nom'
-    ERR_ENTER_VALIDEMAIL: 'Entrez un email valide'
-    MESSAGE_ERROR: 'Votre message n''a pas été envoyé'
-    MESSAGE_SENT: 'Votre message a bien été envoyé'
+    ERR_ENTER_EMAIL: 'Enter your e-mail'
+    ERR_ENTER_MESSAGE: 'Enter your message'
+    ERR_ENTER_NAME: 'Enter your name'
+    ERR_ENTER_VALIDEMAIL: 'Enter a valid e-mail'
+    MESSAGE_ERROR: 'Your message hasn''t been sent.'
+    MESSAGE_SENT: 'Your message has been sent.'
   CookieConsent:
     ALLOWCOOKIES: 'Allow cookies'
     DECLINE: Decline
     LINK: 'Learn more'
-    MESSAGE: 'This website uses cookies to ensure you get the best experience on your website'
+    MESSAGE: 'This website uses cookies to ensure you get the best experience on your website.'
   CountryDropdownField:
     TITLE: Country
   FlatpickrField:
@@ -42,10 +42,6 @@ en:
   PrivacyForm:
     IAGREE: 'I read and I agree with the'
     PLEASEREVIEW: 'Please review our privacy notice and terms and conditions to continue'
-  SilverStripe\CMS\Search\SearchForm:
-    GO: Go
-    SEARCH: Search
-    SearchResults: 'Search Results'
   SocialExtension:
     DISCOVER: 'I discovered '
     SEE: 'You can see it here :'
