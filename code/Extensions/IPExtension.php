@@ -8,7 +8,6 @@ use SilverStripe\ORM\DataExtension;
 use LeKoala\Base\Geo\Models\Address;
 use SilverStripe\Control\Controller;
 use LeKoala\Base\ORM\FieldType\IPAddress;
-use LeKoala\DebugBar\Controller;
 
 /**
  *
