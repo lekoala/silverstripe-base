@@ -7,9 +7,11 @@ use SilverStripe\Assets\File;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Control\Director;
 use SilverStripe\ORM\DataExtension;
+use SilverStripe\Assets\Image_Backend;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Assets\ImageBackendFactory;
+use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Core\Injector\InjectionCreator;
 use SilverStripe\AssetAdmin\Controller\AssetAdmin;
 
@@ -56,6 +58,50 @@ class BaseFileExtension extends DataExtension
             ImageBackendFactory::class
         );
         $assetAdmin->generateThumbnails($this->owner, true);
+    }
+
+    /**
+     * Resize and crop image to fill specified dimensions.
+     * Use in templates with $SmartFill
+     *
+     * @param int $width Width to crop to
+     * @param int $height Height to crop to
+     * @return AssetContainer
+     */
+    // public function SmartFill($width, $height)
+    // {
+    //     $width = (int) $width;
+    //     $height = (int) $height;
+    //     $variant = $this->owner->variantName(__FUNCTION__, $width, $height);
+    //     return $this->owner->manipulateImage($variant, function (Image_Backend $backend) use ($width, $height) {
+    //         $clone = clone $backend;
+
+    //         /* @var $resource Intervention\Image */
+    //         $resource = clone $backend->getImageResource();
+
+    //         // We default to center
+    //         $x = ($resource->width() - $width) / 2;
+    //         $y = ($resource->height() - $height) / 2;
+
+    //         $resource->resize($width, $height);
+    //         // $resource->crop($width, $height, $x, $y);
+    //         $clone->setImageResource($resource);
+    //         return $clone;
+    //     });
+    // }
+
+    public function SmallAssetThumbnail()
+    {
+        $smallWidth = UploadField::config()->uninherited('thumbnail_width');
+        $smallHeight = UploadField::config()->uninherited('thumbnail_height');
+        return $this->owner->ThumbnailIcon($smallWidth, $smallHeight);
+    }
+
+    public function LargeAssetThumbnail()
+    {
+        $smallWidth = AssetAdmin::config()->uninherited('thumbnail_width');
+        $smallHeight = AssetAdmin::config()->uninherited('thumbnail_height');
+        return $this->owner->ThumbnailIcon($smallWidth, $smallHeight);
     }
 
     public static function ensureNullForEmptyRecordRelation()
