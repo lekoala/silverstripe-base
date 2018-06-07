@@ -76,7 +76,8 @@ class SubsiteExtension extends DataExtension
         if ($SubsiteID && !$this->owner->SubsiteID) {
             $fields->push(HiddenField::create('SubsiteID', 'SubsiteID', $SubsiteID));
         } else {
-            $fields->push($SubsiteID = DropdownField::create('SubsiteID', 'Subsite', Subsite::get()->map()));
+            $SubsiteID = DropdownField::create('SubsiteID', 'Subsite', Subsite::get()->map());
+            $fields->addFieldsToTab('Root.Main', $SubsiteID);
             $SubsiteID->setHasEmptyDefault(true);
         }
     }
