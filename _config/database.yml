@@ -26,6 +26,8 @@ SilverStripe\Core\Injector\Injector:
     class: LeKoala\Base\ORM\FieldType\DBJson
   Phone:
     class: LeKoala\Base\ORM\FieldType\DBPhone
+  NiceEnum:
+    class: LeKoala\Base\ORM\FieldType\DBNiceEnum
   DBNullableClassName:
     class: LeKoala\Base\ORM\FieldType\DBNullableClassName
   # See DataObjectSchema:492
