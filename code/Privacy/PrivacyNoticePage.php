@@ -14,7 +14,7 @@ class PrivacyNoticePage extends Page
         parent::requireDefaultRecords();
         // default pages
         if (static::class == self::class && $this->config()->create_default_pages) {
-            if(!$this->hasExtension(BasePageExtension::class)) {
+            if (!$this->hasExtension(BasePageExtension::class)) {
                 return;
             }
             $page = $this->requirePageForSegment('privacy-notice', static::class, [

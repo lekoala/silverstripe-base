@@ -26,6 +26,9 @@ en:
     DECLINE: Decline
     LINK: 'Learn more'
     MESSAGE: 'This website uses cookies to ensure you get the best experience on your website.'
+    MESSAGE_REQUIRED: 'This website require the usage of cookies. Please accept them to continue'
+  CookiesRequiredPage:
+    ACCEPT_COOKIES: 'I accept the usage of cookies'
   CountryDropdownField:
     TITLE: Country
   FlatpickrField:
@@ -42,6 +45,10 @@ en:
   PrivacyForm:
     IAGREE: 'I read and I agree with the'
     PLEASEREVIEW: 'Please review our privacy notice and terms and conditions to continue'
+  SimpleSearchControllerExtension:
+    GO: Go
+    SEARCH: Search
+    SearchResults: 'Search Results'
   SocialExtension:
     DISCOVER: 'I discovered '
     SEE: 'You can see it here :'

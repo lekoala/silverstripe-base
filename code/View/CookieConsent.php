@@ -7,6 +7,8 @@ use SilverStripe\View\Requirements;
 use SilverStripe\SiteConfig\SiteConfig;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Control\Cookie;
+use SilverStripe\ORM\DataObject;
+use LeKoala\Base\Privacy\PrivacyNoticePage;
 
 /**
  *
@@ -16,7 +18,7 @@ use SilverStripe\Control\Cookie;
  * @link https://www.cookiebot.com/en/gdpr-cookies/
  *
  */
-class CookiesConsent
+class CookieConsent
 {
     use Configurable;
 
@@ -25,11 +27,19 @@ class CookiesConsent
     const STATUS_DISMISS = 'dismiss';
 
     /**
+     * @config
      * @var string
      */
-    private static $version = '3.0.3';
+    private static $version = '3.0.6';
 
     /**
+     * @config
+     * @var boolean
+     */
+    private static $cookies_required = false;
+
+    /**
+     * @config
      * @var string
      */
     private static $opts = [
@@ -40,12 +50,24 @@ class CookiesConsent
 
 
     /**
-     * Add AlertifyJS requirements
+     * Add requirements
      */
     public static function requirements()
     {
         $SiteConfig = SiteConfig::current_site_config();
         $opts = self::config()->opts;
+
+        $privacyLink = 'https://cookiesandyou.com/';
+        // If we have a privacy notice, use it!
+        $privacyNotice = DataObject::get_one(PrivacyNoticePage::class);
+        if ($privacyNotice) {
+            $privacyLink = $privacyNotice->Link();
+        }
+
+        $message = _t('CookieConsent.MESSAGE', "This website uses cookies to ensure you get the best experience on your website");
+        if (self::config()->cookies_required) {
+            $message = _t('CookieConsent.MESSAGE_REQUIRED', "This website require the usage of cookies. Please accept them to continue");
+        }
         $baseOpts = [
             'palette' => [
                 'popup' => [
@@ -58,30 +80,57 @@ class CookiesConsent
                 ]
             ],
             'content' => [
-                'message' => _t('CookieConsent.MESSAGE', "This website uses cookies to ensure you get the best experience on your website"),
+                'message' => $message,
                 'dismiss' => _t('CookieConsent.DECLINE', 'Decline'),
                 'allow' => _t('CookieConsent.ALLOWCOOKIES', 'Allow cookies'),
                 'link' => _t('CookieConsent.LINK', 'Learn more'),
-                'href' => 'https://cookiesandyou.com/'
+                'href' => $privacyLink,
             ]
         ];
         $finalOpts = array_merge($baseOpts, $opts);
         $jsonOpts = json_encode($finalOpts, JSON_PRETTY_PRINT);
-        //TODO: append hooks for disabling/enabling cookies
-        //@link https://cookieconsent.insites.com/documentation/disabling-cookies/
 
         // Include script
         $version = self::config()->version;
         Requirements::css("//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/$version/cookieconsent.min.css");
         Requirements::javascript("//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/$version/cookieconsent.min.js");
 
+        // Create url to redirect to if cookies are dismissed
+        $cookiesRequired = self::config()->cookies_required ? 'true' : 'false';
+        $cookiesLink = '/';
+        if (self::config()->cookies_required) {
+            //TODO: make url configurable
+            $cookiesLink ='/cookies-required';
+        }
+
         // Include custom init
         $js = <<<JS
 window.addEventListener("load", function(){
-    window.cookieconsent.initialise($jsonOpts)
+    var opts = $jsonOpts;
+    var onChange = function(status) {
+        // If we required cookies, redirect to the page
+        if(status == 'dismiss' && $cookiesRequired) {
+            window.location.href = '$cookiesLink';
+        }
+    };
+    opts.onInitialise = opts.onStatusChange = opts.onRevokeChoice = onChange;
+    window.cookieconsent.initialise(opts);
 });
 JS;
         Requirements::customScript($js, 'CookiesConsentInit');
+    }
+
+    /**
+     * Clear requirements, useful if you don't want any popup on a specific page after init
+     *
+     * @return void
+     */
+    public static function clearRequirements()
+    {
+        $version = self::config()->version;
+        Requirements::clear("//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/$version/cookieconsent.min.css");
+        Requirements::clear("//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/$version/cookieconsent.min.js");
+        Requirements::clear('CookiesConsentInit');
     }
 
     /**

@@ -156,33 +156,46 @@ class TextCollector extends i18nTextCollector
     {
         // For each module do a simple merge of the default yml with these strings
         foreach ($entitiesByModule as $module => $messages) {
+            $moduleInst = ModuleLoader::inst()->getManifest()->getModule($module);
+            $modulePath = $moduleInst->getRelativePath();
+
             // Load existing localisations
-            $masterFile = "{$this->basePath}/{$module}/lang/{$this->defaultLocale}.yml";
+            $masterFile = "{$this->basePath}/{$modulePath}/lang/{$this->defaultLocale}.yml";
+
+            // YamlReader fails silently if path is not correct
+            if (!is_file($masterFile)) {
+                throw new Exception("File $masterFile does not exist. Please collect without merge first.");
+            }
             $existingMessages = $this->getReader()->read($this->defaultLocale, $masterFile);
 
             // Merge
-            if ($existingMessages) {
-                $entitiesByModule[$module] = array_merge(
-                    $existingMessages,
-                    $messages
-                );
+            if (!$existingMessages) {
+                throw new Exception("No existing messages were found in $masterFile. Please collect without merge first.");
+            }
 
-                // Clear unused
-                if ($this->getClearUnused()) {
-                    $unusedEntities = array_diff(
-                        array_keys($existingMessages),
-                        array_keys($messages)
-                    );
-                    foreach ($unusedEntities as $unusedEntity) {
-                        // Skip globals
-                        if (strpos($unusedEntity, BaseI18n::GLOBAL_ENTITY . '.') !== false) {
-                            continue;
-                        }
-                        if ($this->debug) {
-                            Debug::message("Removed $unusedEntity");
-                        }
-                        unset($entitiesByModule[$unusedEntity]);
+            if ($this->debug) {
+                Debug::dump($existingMessages);
+            }
+            $entitiesByModule[$module] = array_merge(
+                $messages,
+                $existingMessages
+            );
+
+            // Clear unused
+            if ($this->getClearUnused()) {
+                $unusedEntities = array_diff(
+                    array_keys($existingMessages),
+                    array_keys($messages)
+                );
+                foreach ($unusedEntities as $unusedEntity) {
+                    // Skip globals
+                    if (strpos($unusedEntity, BaseI18n::GLOBAL_ENTITY . '.') !== false) {
+                        continue;
                     }
+                    if ($this->debug) {
+                        Debug::message("Removed $unusedEntity");
+                    }
+                    unset($entitiesByModule[$unusedEntity]);
                 }
             }
         }

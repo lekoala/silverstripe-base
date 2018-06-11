@@ -28,7 +28,7 @@ class SimpleSearchControllerExtension extends Extension
      */
     public function SimpleSearchForm()
     {
-        $placeholder = _t('SilverStripe\\CMS\\Search\\SearchForm.SEARCH', 'Search');
+        $placeholder = _t('SimpleSearchControllerExtension.SEARCH', 'Search');
         $searchText = '';
         if ($this->owner->getRequest() && $this->owner->getRequest()->getVar('Search')) {
             $searchText = $this->owner->getRequest()->getVar('Search');
@@ -38,7 +38,7 @@ class SimpleSearchControllerExtension extends Extension
         );
         $Search->setAttribute('placeholder', $placeholder);
         $actions = new FieldList(
-            $Go = new FormAction('doSearch', _t('SilverStripe\\CMS\\Search\\SearchForm.GO', 'Go'))
+            $Go = new FormAction('doSearch', _t('SimpleSearchControllerExtension.GO', 'Go'))
         );
         $Go->setName('');
         $Go->setUseButtonTag(true);
@@ -69,7 +69,7 @@ class SimpleSearchControllerExtension extends Extension
         $data = array(
             'Results' => $Results,
             'Query' => DBField::create_field('Text', $Query),
-            'Title' => _t('SilverStripe\\CMS\\Search\\SearchForm.SearchResults', 'Search Results')
+            'Title' => _t('SimpleSearchControllerExtension.SearchResults', 'Search Results')
         );
         return $this->owner->customise($data)->renderWith(array('Page_results', 'Page'));
     }

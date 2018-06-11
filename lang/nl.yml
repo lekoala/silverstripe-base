@@ -26,6 +26,9 @@ nl:
     DECLINE: Decline
     LINK: 'Meer weten'
     MESSAGE: 'Deze website gebruikt cookies om uw surfervaring aangenamer te maken.'
+    MESSAGE_REQUIRED: 'This website require the usage of cookies. Please accept them to continue'
+  CookiesRequiredPage:
+    ACCEPT_COOKIES: 'I accept the usage of cookies'
   CountryDropdownField:
     TITLE: Country
   FlatpickrField:
@@ -42,6 +45,10 @@ nl:
   PrivacyForm:
     IAGREE: 'Ik heb gelezen en goedgekeurd...'
     PLEASEREVIEW: 'Gelieve onze privacy notice en voorwaarden te accepteren alvorens verder te gaan'
+  SimpleSearchControllerExtension:
+    GO: Go
+    SEARCH: Search
+    SearchResults: 'Search Results'
   SocialExtension:
     DISCOVER: 'Ik vond  '
     SEE: 'Je kan het hier zien :'
