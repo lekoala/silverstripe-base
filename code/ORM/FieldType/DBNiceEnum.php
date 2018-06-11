@@ -35,7 +35,6 @@ class DBNiceEnum extends DBEnum
      */
     public function formField($title = null, $name = null, $hasEmpty = false, $value = "", $emptyString = null)
     {
-
         if (!$title) {
             $title = $this->getName();
         }
@@ -51,13 +50,24 @@ class DBNiceEnum extends DBEnum
         return $field;
     }
 
+    /**
+     * @return array
+     */
     public function toArray()
     {
         $method = 'list' . ucfirst($this->name);
         $class = $this->class;
+        if (!method_exists($class, $method)) {
+            return [];
+        }
         return $class::$method();
     }
 
+    /**
+     * Display the label of the enum value
+     *
+     * @return string
+     */
     public function Nice()
     {
         $arr = $this->toArray();

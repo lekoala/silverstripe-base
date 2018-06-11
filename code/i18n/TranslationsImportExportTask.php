@@ -2,6 +2,8 @@
 
 namespace LeKoala\Base\i18n;
 
+use Exception;
+use SilverStripe\Dev\Debug;
 use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\ArrayLib;
 use LeKoala\Base\Dev\BuildTask;
@@ -12,6 +14,7 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\i18n\Messages\Writer;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\i18n\Messages\YamlReader;
 use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\Dev\Tasks\i18nTextCollectorTask;
 use SilverStripe\Core\Manifest\ModuleResourceLoader;
@@ -27,6 +30,8 @@ class TranslationsImportExportTask extends BuildTask
 
     protected $description = "Easily import and export translations";
 
+    protected $debug;
+
     /**
      * @param HTTPRequest $request
      */
@@ -35,12 +40,15 @@ class TranslationsImportExportTask extends BuildTask
         $modules = ArrayLib::valuekey(array_keys(ModuleLoader::inst()->getManifest()->getModules()));
         $this->addOption("import", "Import translations", false);
         $this->addOption("export", "Export translations", false);
+        $this->addOption("debug", "Show debug output and do not write files", false);
         $this->addOption("module", "Module", null, $modules);
         $options = $this->askOptions();
 
         $module = $options['module'];
         $import = $options['import'];
         $export = $options['export'];
+
+        $this->debug = $options['debug'];
 
         if ($module) {
             if ($import) {
@@ -82,6 +90,10 @@ class TranslationsImportExportTask extends BuildTask
             return;
         }
 
+        if ($this->debug) {
+            Debug::dump($data);
+        }
+
         $header = array_keys($data[0]);
         $count = count($header);
         $writer = Injector::inst()->create(Writer::class);
@@ -91,13 +103,20 @@ class TranslationsImportExportTask extends BuildTask
             foreach ($data as $row) {
                 $entities[$row['key']] = $row[$lang];
             }
-            $writer->write(
-                $entities,
-                $lang,
-                dirname($fullLangPath)
-            );
+            if (!$this->debug) {
+                $writer->write(
+                    $entities,
+                    $lang,
+                    dirname($fullLangPath)
+                );
+                $this->message("Imported " . count($entities) . " messages in $lang");
+            } else {
+                Debug::show($lang);
+                Debug::dump($entities);
+            }
         }
     }
+
     protected function importFromExcel($file, $fullLangPath)
     {
         $spreadsheet = IOFactory::load($file);
@@ -122,10 +141,16 @@ class TranslationsImportExportTask extends BuildTask
         }
         //TODO: normalize rows
     }
+
     protected function importFromCsv($file, $fullLangPath)
     {
         $rows = array_map('str_getcsv', file($file));
+
         $header = array_shift($rows);
+        $firstKey = $header[0];
+        if ($firstKey == 'key') {
+            $header[0] = 'key'; // Fix some weird stuff
+        }
         $count = count($header);
         $data = array();
         foreach ($rows as $row) {
@@ -133,10 +158,29 @@ class TranslationsImportExportTask extends BuildTask
                 $row[] = '';
             }
             $row = array_slice($row, 0, $count);
+            $row = $this->normalizeRow($row);
             $data[] = array_combine($header, $row);
         }
         return $data;
     }
+
+    /**
+     * @param array $row
+     * @return array
+     */
+    protected function normalizeRow($row)
+    {
+        foreach ($row as $idx => $value) {
+            if ($idx == 0) {
+                continue;
+            }
+            if (strpos($value, '{"') === 0) {
+                $row[$idx] = json_decode($value, JSON_OBJECT_AS_ARRAY);
+            }
+        }
+        return $row;
+    }
+
     protected function exportTranslations($module)
     {
         $fullLangPath = $this->getLangPath($module);
@@ -155,27 +199,34 @@ class TranslationsImportExportTask extends BuildTask
 
         $i = 0;
         foreach ($translationFiles as $translationFile) {
-            $parser = new Parser();
-            $data = $parser->parse(file_get_contents($translationFile));
+            $lang = pathinfo($translationFile, PATHINFO_FILENAME);
+            $reader = new YamlReader;
+            $messages = $reader->read($lang, $translationFile);
 
-            $declaredLang = key($data);
-            $messages = $data[$declaredLang];
-            foreach ($messages as $entity => $entityData) {
-                foreach ($entityData as $k => $v) {
-                    $entityKey = $entity. '.' .  $k;
-                    if (!isset($allMessages[ $entityKey])) {
-                        $allMessages[$entityKey] = $default;
-                    }
-                    $allMessages[$entityKey][$i] = $v;
+            foreach ($messages as $entityKey => $v) {
+                if (!isset($allMessages[$entityKey])) {
+                    $allMessages[$entityKey] = $default;
                 }
+                // Plurals can be arrays and need to be converted
+                if (is_array($v)) {
+                    $v = json_encode($v);
+                }
+                $allMessages[$entityKey][$i] = $v;
             }
             $i++;
         }
         ksort($allMessages);
+        if ($this->debug) {
+            Debug::show($allMessages);
+        }
 
         // Write them to a csv file
 
         $destinationFilename =  str_replace('/lang', '/lang.csv', $fullLangPath);
+        if ($this->debug) {
+            Debug::show("Debug mode enabled : no output will be sent to $destinationFilename");
+            die();
+        }
         if (is_file($destinationFilename)) {
             unlink($destinationFilename);
         }

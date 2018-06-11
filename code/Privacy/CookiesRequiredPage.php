@@ -20,7 +20,7 @@ class CookiesRequiredPage extends Page
             }
             $page = $this->requirePageForSegment('cookies-required', static::class, [
                 'Title' => 'Cookies required',
-                'Content' => 'You need to accept cookies to use this website.',
+                'Content' => _t('CookiesRequiredPage.COOKIES_ARE_REQUIRED','Cookies are required to use this website'),
                 'Sort' => 49,
                 'ShowInMenus' => 0
             ]);

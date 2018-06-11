@@ -29,6 +29,7 @@ nl:
     MESSAGE_REQUIRED: 'This website require the usage of cookies. Please accept them to continue'
   CookiesRequiredPage:
     ACCEPT_COOKIES: 'I accept the usage of cookies'
+    COOKIES_ARE_REQUIRED: 'Cookies are required to use this website'
   CountryDropdownField:
     TITLE: Country
   FlatpickrField:
