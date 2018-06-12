@@ -75,7 +75,6 @@ class BaseContentController extends ContentController
         $SiteConfig = $this->SiteConfig();
         if ($SiteConfig->ForceSSL) {
             Director::forceSSL();
-            d('SS');
         }
 
         $this->setLangFromRequest();
