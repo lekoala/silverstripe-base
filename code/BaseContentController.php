@@ -63,11 +63,19 @@ class BaseContentController extends ContentController
         } catch (DatabaseException $ex) {
             $dbMessage = $ex->getMessage();
             // If we have a missing column, we can try to rebuild
+            // TODO: add some kind of checks to prevent hammering
             if (strpos($dbMessage, 'Unknown column') !== false) {
                 $dbAdmin = new DatabaseAdmin();
                 $dbAdmin->doBuild(true);
             }
+            // Rethrow the exception
             throw $ex;
+        }
+
+        $SiteConfig = $this->SiteConfig();
+        if ($SiteConfig->ForceSSL) {
+            Director::forceSSL();
+            d('SS');
         }
 
         $this->setLangFromRequest();

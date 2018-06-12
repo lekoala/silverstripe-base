@@ -2,6 +2,7 @@
 
 use SilverStripe\Control\Director;
 use LeKoala\Base\i18n\BaseI18n;
+use SilverStripe\Core\Environment;
 
 if (!function_exists('bm')) {
     function bm($cb = null)
@@ -13,6 +14,16 @@ if (!function_exists('bm')) {
 if (Director::isDev()) {
     error_reporting(-1);
     ini_set('display_errors', true);
+
+    // Enable IDEAnnotator
+    if (!empty($_SERVER['SERVER_NAME']) &&
+        in_array(
+            substr($_SERVER['SERVER_NAME'], strrpos($_SERVER['SERVER_NAME'], '.') + 1),
+            ['dev', 'local', 'localhost']
+        )
+        ) {
+        \SilverStripe\Core\Config\Config::modify()->set('SilverLeague\IDEAnnotator\DataObjectAnnotator', 'enabled', true);
+    }
 }
 
 // When running tests, use SQLite3
@@ -43,16 +54,6 @@ if (!isset($_SERVER['PHP_AUTH_USER'])) {
             unset($_SERVER['PHP_AUTH_PW']);
         }
     }
-}
-
-// Enable IDEAnnotator
-if (!empty($_SERVER['SERVER_NAME']) &&
-    in_array(
-        substr($_SERVER['SERVER_NAME'], strrpos($_SERVER['SERVER_NAME'], '.') + 1),
-        ['dev', 'local', 'localhost']
-    )
-    ) {
-    \SilverStripe\Core\Config\Config::modify()->set('SilverLeague\IDEAnnotator\DataObjectAnnotator', 'enabled', true);
 }
 
 // Add styles selector, if you have an editor.css, styles will be use

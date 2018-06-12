@@ -14,6 +14,7 @@ use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
 use SilverStripe\Forms\HeaderField;
 use LeKoala\Base\Forms\Builder;
+use SilverStripe\Forms\CheckboxField;
 
 /**
  * Class \LeKoala\Base\SiteConfigExtension
@@ -48,6 +49,8 @@ class SiteConfigExtension extends DataExtension
         // External Services
         "GoogleAnalyticsCode" => "Varchar(59)",
         "GoogleMapsApiKey" => "Varchar(59)",
+        // Site config
+        "ForceSSL" => "Boolean",
     ];
     public function updateCMSFields(FieldList $fields)
     {
@@ -85,6 +88,8 @@ class SiteConfigExtension extends DataExtension
         $externalServicesTab->push($GoogleAnalyticsCode);
         $GoogleMapsApiKey = new TextField('GoogleMapsApiKey');
         $externalServicesTab->push($GoogleMapsApiKey);
+        // Config
+        $fields->addFieldsToTab('Root.Access', new CheckboxField('ForceSSL'));
     }
     public function ContactAddressMapLink()
     {
