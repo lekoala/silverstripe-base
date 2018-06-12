@@ -1,11 +1,13 @@
 <?php
 namespace LeKoala\Base\Admin;
 
-use SilverStripe\Admin\LeftAndMainExtension;
-use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Admin\CMSMenu;
+use SilverStripe\Control\Director;
 use SilverStripe\View\Requirements;
 use LeKoala\Base\Subsite\SubsiteHelper;
+use SilverStripe\SiteConfig\SiteConfig;
+use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Admin\LeftAndMainExtension;
 
 /**
  * Class \LeKoala\Base\LeftAndMainExtension
@@ -18,6 +20,11 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
 
     public function init()
     {
+        $SiteConfig = SiteConfig::current_site_config();
+        if ($SiteConfig->ForceSSL) {
+            Director::forceSSL();
+        }
+
         // Hide items if necessary, example yml:
         //
         // LeKoala\Base\Admin\BaseLeftAndMainExtension:
