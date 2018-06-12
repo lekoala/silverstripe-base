@@ -122,14 +122,9 @@ class TranslationsImportExportTask extends BuildTask
         $spreadsheet = IOFactory::load($file);
         $worksheet = $spreadsheet->getActiveSheet();
         $rows = [];
-        $i = 0;
         foreach ($worksheet->getRowIterator() as $row) {
-            $i++;
-            if ($i > 9999) {
-                break;
-            }
             $cellIterator = $row->getCellIterator();
-            $cellIterator->setIterateOnlyExistingCells(false); // This loops through all cells,
+            $cellIterator->setIterateOnlyExistingCells(true);
             $cells = [];
             foreach ($cellIterator as $cell) {
                 $cells[] = $cell->getValue();
@@ -139,13 +134,15 @@ class TranslationsImportExportTask extends BuildTask
             }
             $rows[] = $cells;
         }
-        //TODO: normalize rows
+        return $this->getDataFromRows($rows);
     }
 
-    protected function importFromCsv($file, $fullLangPath)
+    /**
+     * @param array $rows
+     * @return array
+     */
+    protected function getDataFromRows($rows)
     {
-        $rows = array_map('str_getcsv', file($file));
-
         $header = array_shift($rows);
         $firstKey = $header[0];
         if ($firstKey == 'key') {
@@ -162,6 +159,12 @@ class TranslationsImportExportTask extends BuildTask
             $data[] = array_combine($header, $row);
         }
         return $data;
+    }
+
+    protected function importFromCsv($file, $fullLangPath)
+    {
+        $rows = array_map('str_getcsv', file($file));
+        return $this->getDataFromRows($rows);
     }
 
     /**
