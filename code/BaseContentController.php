@@ -321,13 +321,22 @@ class BaseContentController extends ContentController
      * Best handled by scoped-requests plugin
      *
      * @param string $message
-     * @param array $manipulations see createManipulation
-     * @param array $extraData
+     * @param array|boolean $manipulations see createManipulation
+     * @param array|boolean $extraData
      * @param boolean $success you might rather throw ValidationException instead
      * @return HTTPResponse
      */
     protected function applicationResponse($message, $manipulations = [], $extraData = [], $success = true)
     {
+        if (is_bool($manipulations)) {
+            $success = $manipulations;
+            $manipulations = [];
+            $extraData = [];
+        }
+        if (is_bool($extraData)) {
+            $success = $extraData;
+            $extraData = [];
+        }
         $data = [
             'message' => $message,
             'success' => $success ? true : false,
@@ -344,7 +353,7 @@ class BaseContentController extends ContentController
      *
      * @param string $selector Empty selector applies to the entire scope
      * @param string $html Html content to use for action
-     * @param string $action Action to apply
+     * @param string $action Action to apply (replaceWith by default)
      * @return array
      */
     protected function createManipulation($selector, $html = null, $action = null)
