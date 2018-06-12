@@ -45,7 +45,7 @@ fr:
     TAGS: Tags
   PrivacyForm:
     IAGREE: 'Je confirme avoir lu et accepté… '
-    PLEASEREVIEW: ' Veuillez lire notre Privacy Notice et nos termes et conditions afin de continuer'
+    PLEASEREVIEW: 'Veuillez lire les documents suivants afin de continuer'
   SimpleSearchControllerExtension:
     GO: Go
     SEARCH: Search

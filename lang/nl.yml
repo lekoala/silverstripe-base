@@ -45,7 +45,7 @@ nl:
     TAGS: Tags
   PrivacyForm:
     IAGREE: 'Ik heb gelezen en goedgekeurd...'
-    PLEASEREVIEW: 'Gelieve onze privacy notice en voorwaarden te accepteren alvorens verder te gaan'
+    PLEASEREVIEW: 'Gelieve onze voorwaarden te accepteren alvorens verder te gaan'
   SimpleSearchControllerExtension:
     GO: Go
     SEARCH: Search

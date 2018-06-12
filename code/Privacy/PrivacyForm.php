@@ -28,20 +28,26 @@ class PrivacyForm extends BaseForm
         $record = $this->record;
 
         $startLabel = _t('PrivacyForm.IAGREE', "I read and I agree with the");
+
         $PrivacyNoticePage = DataObject::get_one(PrivacyNoticePage::class);
         $TermsAndConditionsPage = DataObject::get_one(TermsAndConditionsPage::class);
-        $CheckPrivacyTitle = $startLabel . ' <a href="'.$PrivacyNoticePage->Link().'" target="_blank">'.$PrivacyNoticePage->Title.'</a>';
-        $CheckTermsTitle = $startLabel . ' <a href="'.$TermsAndConditionsPage->Link().'" target="_blank">'.$TermsAndConditionsPage->Title.'</a>';
 
-        $PrivacyContent = '<div class="PrivacyForm-Box">' . $PrivacyNoticePage->Content . '</div>';
-        $TermsContent = '<div class="PrivacyForm-Box">' . $TermsAndConditionsPage->Content . '</div>';
-
-        $header = _t('PrivacyForm.PLEASEREVIEW', "Please review our privacy notice and terms and conditions to continue");
+        $header = _t('PrivacyForm.PLEASEREVIEW', "Please review the following agreements to continue");
         $fields->addHeader($header);
-        $fields->addLiteral($PrivacyContent);
-        $fields->addCheckbox("CheckPrivacy", $CheckPrivacyTitle, ["required" => "required"]);
-        $fields->addLiteral($TermsContent);
-        $fields->addCheckbox("CheckTerms", $CheckTermsTitle, ["required" => "required"]);
+
+        if ($PrivacyNoticePage && $PrivacyNoticePage->Content) {
+            $CheckPrivacyTitle = $startLabel . ' <a href="'.$PrivacyNoticePage->Link().'" target="_blank">'.$PrivacyNoticePage->Title.'</a>';
+            $PrivacyContent = '<div class="PrivacyForm-Box">' . $PrivacyNoticePage->Content . '</div>';
+            $fields->addLiteral($PrivacyContent);
+            $fields->addCheckbox("CheckPrivacy", $CheckPrivacyTitle, ["required" => "required"]);
+        }
+        if ($TermsAndConditionsPage->Content) {
+            $CheckTermsTitle = $startLabel . ' <a href="'.$TermsAndConditionsPage->Link().'" target="_blank">'.$TermsAndConditionsPage->Title.'</a>';
+            $TermsContent = '<div class="PrivacyForm-Box">' . $TermsAndConditionsPage->Content . '</div>';
+
+            $fields->addLiteral($TermsContent);
+            $fields->addCheckbox("CheckTerms", $CheckTermsTitle, ["required" => "required"]);
+        }
         return $fields;
     }
 

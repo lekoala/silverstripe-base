@@ -20,7 +20,7 @@ class PrivacyMemberExtension extends DataExtension
     public function needsToCheckPrivacy()
     {
         $p = DataObject::get_one(PrivacyNoticePage::class);
-        if (!$p) {
+        if (!$p || !$p->Content) {
             return false;
         }
         return $this->owner->PrivacyChecked ? false: true;
@@ -29,7 +29,7 @@ class PrivacyMemberExtension extends DataExtension
     public function needsToCheckTerms()
     {
         $p = DataObject::get_one(TermsAndConditionsPage::class);
-        if (!$p) {
+        if (!$p || !$p->Content) {
             return false;
         }
         return $this->owner->TermsChecked ? false: true;
