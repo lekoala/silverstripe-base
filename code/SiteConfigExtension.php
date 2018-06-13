@@ -64,7 +64,8 @@ class SiteConfigExtension extends DataExtension
         $ContactAddress = new TextField('ContactAddress', _t('Global.Address', 'Address'));
         $fields->addFieldToTab('Root.Main', $ContactAddress);
         $ContactInfos = new HTMLEditorField('ContactInfos', _t('Global.ContactInfos', 'Contact details'));
-        $ContactInfos->setRows(5);
+        // See https://docs.silverstripe.org/en/4/developer_guides/forms/field_types/htmleditorfield/
+        $ContactInfos->setRows(7);
         $fields->addFieldToTab('Root.Main', $ContactInfos);
         $LegalName = new TextField('LegalName', _t('Global.LegalName', 'Legal Name'));
         $fields->addFieldToTab('Root.Main', $LegalName);

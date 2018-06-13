@@ -77,7 +77,7 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
             return false;
         }
 
-        $list = Subsite::get();
+        $list = Subsite::all_accessible_sites();
         if ($list == null || $list->count() == 1 && $list->first()->DefaultSite == true) {
             return false;
         }

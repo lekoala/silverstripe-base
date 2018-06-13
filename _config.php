@@ -60,6 +60,7 @@ if (!isset($_SERVER['PHP_AUTH_USER'])) {
 // @link https://docs.silverstripe.org/en/4/developer_guides/customising_the_admin_interface/typography/
 \SilverStripe\Forms\HTMLEditor\TinyMCEConfig::get('cms')
     ->addButtonsToLine(1, 'styleselect')
+    ->setOption('statusbar', false)
     ->setOption('importcss_append', true);
 
 // Add global translation helper
