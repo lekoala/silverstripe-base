@@ -61,10 +61,10 @@ class SiteConfigExtension extends DataExtension
         $fields->addFieldToTab('Root.Main', $ContactEmail);
         $ContactPhone = new TextField('ContactPhone', _t('Global.Phone', 'Phone'));
         $fields->addFieldToTab('Root.Main', $ContactPhone);
-        $ContactAddress = new HTMLEditorField('ContactAddress', _t('Global.Address', 'Address'));
-        $ContactAddress->setRows(5);
+        $ContactAddress = new TextField('ContactAddress', _t('Global.Address', 'Address'));
         $fields->addFieldToTab('Root.Main', $ContactAddress);
-        $ContactInfos = new TextareaField('ContactInfos', _t('Global.ContactInfos', 'Contact details'));
+        $ContactInfos = new HTMLEditorField('ContactInfos', _t('Global.ContactInfos', 'Contact details'));
+        $ContactInfos->setRows(5);
         $fields->addFieldToTab('Root.Main', $ContactInfos);
         $LegalName = new TextField('LegalName', _t('Global.LegalName', 'Legal Name'));
         $fields->addFieldToTab('Root.Main', $LegalName);
