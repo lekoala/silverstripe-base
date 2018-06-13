@@ -23,6 +23,7 @@ use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
  * - summary fields should include subsite extra fields
  * - after delete, cleanup tables
  * - non versioned class should publish their own assets
+ * - declarative cms fields : removed_fields, ...
  */
 class BaseDataObjectExtension extends DataExtension
 {
@@ -31,11 +32,15 @@ class BaseDataObjectExtension extends DataExtension
         $fields = BuildableFieldList::fromFieldList($fields);
         $cascade_delete = $this->owner->config()->cascade_deletes;
         // Anything that is deleted in cascade should not be a relation (most of the time!)
-        $this->turnRelationsIntoRecordEditor($cascade_delete, $fields);
+        $this->turnRelationsIntoRecordEditor($fields, $cascade_delete);
 
         // extraFields are wanted!
         $extraFields = $this->owner->config()->many_many_extraFields;
-        $this->expandGridFieldSummary($extraFields, $fields);
+        $this->expandGridFieldSummary($fields, $extraFields);
+
+        // removed fields
+        $removedFields = $this->owner->config()->removed_fields;
+        $this->removeFields($fields, $removedFields);
     }
 
     public function augmentDatabase()
@@ -96,7 +101,22 @@ class BaseDataObjectExtension extends DataExtension
         }
     }
 
-    protected function expandGridFieldSummary($arr, BuildableFieldList $fields)
+    public function removeFields(FieldList $fields, $arr)
+    {
+        if (!$arr) {
+            return;
+        }
+        foreach ($arr as $name) {
+            $fields->removeByName($name);
+        }
+    }
+
+    /**
+     * @param BuildableFieldList $fields
+     * @param array $arr
+     * @return void
+     */
+    protected function expandGridFieldSummary(BuildableFieldList $fields, $arr)
     {
         if (!$arr) {
             return;
@@ -118,11 +138,11 @@ class BaseDataObjectExtension extends DataExtension
     }
 
     /**
-     * @param array $arr List of relations
      * @param BuildableFieldList $fields
+     * @param array $arr List of relations
      * @return void
      */
-    protected function turnRelationsIntoRecordEditor($arr, BuildableFieldList $fields)
+    protected function turnRelationsIntoRecordEditor(BuildableFieldList $fields, $arr)
     {
         if (!$arr) {
             return;

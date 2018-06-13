@@ -2,14 +2,17 @@
 
 namespace LeKoala\Base\Privacy;
 
-use SilverStripe\ORM\DataExtension;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DataExtension;
 
 class PrivacyMemberExtension extends DataExtension
 {
     private static $db = [
         "PrivacyChecked" => "DBDatetime",
         "TermsChecked" => "DBDatetime"
+    ];
+    private static $removed_fields = [
+        "PrivacyChecked", "TermsChecked"
     ];
 
     public function needToCheckPrivacyOrTerms()
