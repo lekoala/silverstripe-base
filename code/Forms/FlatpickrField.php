@@ -40,6 +40,13 @@ class FlatpickrField extends TextField
     protected $datetimeFormat = null;
 
     /**
+     * Disable description
+     *
+     * @var boolean
+     */
+    protected $disableDescription = false;
+
+    /**
      * Custom timezone
      *
      * @var string
@@ -359,6 +366,14 @@ class FlatpickrField extends TextField
         return $formatter;
     }
 
+    public function setDescription($description)
+    {
+        // Allows blocking scaffolded UI desc that has no uses
+        if ($this->disableDescription) {
+            return $this;
+        }
+        return parent::setDescription($description);
+    }
 
     public function Field($properties = array())
     {
@@ -389,5 +404,29 @@ class FlatpickrField extends TextField
         if ($lang != 'en') {
             Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/flatpickr/$version/l10n/$lang.js");
         }
+    }
+
+    /**
+     * Get disable description
+     *
+     * @return  boolean
+     */
+    public function getDisableDescription()
+    {
+        return $this->disableDescription;
+    }
+
+    /**
+     * Set disable description
+     *
+     * @param  boolean  $disableDescription  Disable description
+     *
+     * @return  self
+     */
+    public function setDisableDescription($disableDescription)
+    {
+        $this->disableDescription = $disableDescription;
+
+        return $this;
     }
 }

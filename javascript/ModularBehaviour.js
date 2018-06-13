@@ -22,21 +22,46 @@
             if (e.hasClass(config.initClass)) {
                 return;
             }
-            e.trigger(module + '.moduleBeforeInit');
+            var isJqueryModule = false;
             var module = e.data(config.moduleKey);
             var moduleConfig = e.data(config.configKey);
+
+            if (typeof $.fn[module] !== 'undefined') {
+                isJqueryModule = true;
+            }
+
+            if (isJqueryModule) {
+                e.trigger('moduleBeforeInit');
+            } else {
+                e[0].dispatchEvent('moduleBeforeInit');
+            }
+
             // Prevent undefined config
             if (!moduleConfig) {
                 moduleConfig = {};
             }
-            if (!$.fn[module]) {
+
+            // apply = array of args
+            // call = comma separated list of args
+            // here, we pass as the first argument a config object
+            if ($.fn[module]) {
+                // It's a jquery module
+                $.fn[module].call(e, moduleConfig);
+            } else if (typeof window[module] !== "undefined") {
+                // It's a global var
+                window[module].call('#' + e.attr('id'), moduleConfig);
+            } else {
                 console.log(module + " is not defined");
                 e.addClass(config.failedClass);
-            } else {
-                $.fn[module].call(e, moduleConfig);
             }
+
             e.addClass(config.initClass);
-            e.trigger(module + '.moduleAfterInit');
+
+            if (isJqueryModule) {
+                e.trigger('moduleAfterInit');
+            } else {
+                e[0].dispatchEvent('moduleAfterInit');
+            }
         }
 
         // initialize every element

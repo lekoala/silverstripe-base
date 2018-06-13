@@ -10,6 +10,7 @@ SilverStripe\Core\Injector\Injector:
     class: LeKoala\Base\Forms\FlatpickrField
     calls:
       - [setEnableTime, [true]]
+      - [setDisableDescription, [true]]
   SilverStripe\Forms\TimeField:
     class: LeKoala\Base\Forms\FlatpickrField
     calls:
