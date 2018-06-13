@@ -27,6 +27,7 @@ class SubsiteHelper
 
     /**
      * Do we have the subsite module installed
+     * TODO: check if it might be better to use module manifest instead?
      *
      * @return bool
      */
@@ -77,7 +78,7 @@ class SubsiteHelper
     /**
      * Execute the callback in given subsite
      *
-     * @param int $ID
+     * @param int $ID Subsite ID or 0 for main site
      * @param callable $cb
      * @return void
      */
@@ -93,13 +94,19 @@ class SubsiteHelper
      * Execute the callback in all subsites
      *
      * @param callable $cb
+     * @param bool $încludeMainSite
      * @return void
      */
-    public static function withSubsites($cb)
+    public static function withSubsites($cb, $includeMainSite = true)
     {
         if (!self::UsesSubsite()) {
             $cb();
             return;
+        }
+
+        if ($includeMainSite) {
+            SubsiteState::singleton()->setSubsiteId(0);
+            $cb();
         }
 
         $currentID = self::CurrentSubsiteID();
