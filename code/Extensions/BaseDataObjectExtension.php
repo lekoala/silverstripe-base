@@ -179,6 +179,21 @@ class BaseDataObjectExtension extends DataExtension
     }
 
     /**
+     * Write to all stages
+     *
+     * @return void
+     */
+    public function writeAll()
+    {
+        if ($this->isVersioned()) {
+            $this->owner->write();
+            $this->owner->copyVersionToStage(Versioned::DRAFT, Versioned::LIVE);
+        } else {
+            $this->owner->write();
+        }
+    }
+
+    /**
      * SilverStripe does not delete by default records in many_many table
      * leaving many orphans rows
      *

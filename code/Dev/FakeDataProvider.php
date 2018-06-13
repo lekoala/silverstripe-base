@@ -1,14 +1,13 @@
 <?php
 namespace LeKoala\Base\Dev;
 
-/**
- * FakeRecordGenerator
- *
- * @author lekoala
- */
-class FakeRecordGenerator
-{
+use LeKoala\Base\Geo\CountriesList;
 
+/**
+ * Provide fake data for random record generation
+ */
+class FakeDataProvider
+{
     protected static $folder = 'Faker';
     protected static $latitude = 50.7802;
     protected static $longitude = 4.4269;
@@ -443,30 +442,13 @@ class FakeRecordGenerator
     }
 
     /**
-     * Get a list of countries
-     *
-     * @param string $locale
-     * @return array
-     */
-    public static function getCountryList($locale = null)
-    {
-        if (!$locale) {
-            $locale = i18n::get_locale();
-        }
-        $countries = Zend_Locale::getTranslationList('territory', $locale, 2);
-        asort($countries, SORT_LOCALE_STRING);
-        unset($countries['SU'], $countries['ZZ'], $countries['VD'], $countries['DD']);
-        return $countries;
-    }
-
-    /**
      * Get a random country
      *
      * @return string
      */
     public static function country()
     {
-        $countries = array_values(self::getCountryList());
+        $countries = array_values(CountriesList::get());
         return $countries[array_rand($countries)];
     }
 
@@ -477,7 +459,7 @@ class FakeRecordGenerator
      */
     public static function countryCode()
     {
-        $countries = array_keys(self::getCountryList());
+        $countries = array_keys(CountriesList::get());
         return $countries[array_rand($countries)];
     }
 }

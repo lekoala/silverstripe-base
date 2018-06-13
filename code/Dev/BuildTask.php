@@ -8,6 +8,7 @@ use SilverStripe\Core\Environment;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Dev\BuildTask as DefaultBuildTask;
+use LeKoala\Base\Helpers\ClassHelper;
 
 /**
  * This is an improved BuildTask
@@ -63,7 +64,7 @@ abstract class BuildTask extends DefaultBuildTask
         if ($this->title) {
             return $this->title;
         }
-        $class = static::class;
+        $class = ClassHelper::getClassWithoutNamespace(static::class);
         $re = '/(?#! splitCamelCase Rev:20140412)
     # Split camelCase "words". Two global alternatives. Either g1of2:
       (?<=[a-z])      # Position is after a lowercase,

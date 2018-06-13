@@ -8,6 +8,7 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Member;
 use SilverStripe\Control\Director;
 use SilverStripe\ORM\FieldType\DBInt;
+use LeKoala\Base\Dev\FakeDataProvider;
 use SilverStripe\ORM\FieldType\DBDate;
 use SilverStripe\ORM\FieldType\DBEnum;
 use SilverStripe\ORM\FieldType\DBText;
@@ -23,7 +24,6 @@ class FakeRecordGeneratorTask extends BuildTask
 
     public function init()
     {
-        $request = $this->getRequest();
         $list = $this->getValidDataObjects();
         $this->addOption("model", "Which model to generate", null, $list);
         $this->addOption("how_many", "How many records to generate", 20);
@@ -52,15 +52,15 @@ class FakeRecordGeneratorTask extends BuildTask
                         $has_one = $model::config()->has_one;
 
                         foreach ($db as $name => $type) {
-                            $rec->$name = $this->getRandomValueFromType($type, $name);
+                            $rec->$name = $this->getRandomValueFromType($type, $name, $rec);
                         }
 
                         foreach ($has_one as $name => $class) {
                             $nameID = $name . 'ID';
                             if ($class == 'Image') {
-                                $rel = FakeRecordGenerator::image();
+                                $rel = FakeDataProvider::image();
                             } else {
-                                $rel = FakeRecordGenerator::record($class);
+                                $rel = FakeDataProvider::record($class);
                             }
                             if ($rel) {
                                 $rec->$nameID = $rel->ID;
@@ -72,6 +72,7 @@ class FakeRecordGeneratorTask extends BuildTask
                         if ($rec->hasMethod('fillFake')) {
                             $rec->fillFake();
                         }
+
                         $id = $rec->write();
 
                         $this->message("New record with id $id", "created");
@@ -83,7 +84,7 @@ class FakeRecordGeneratorTask extends BuildTask
         }
     }
 
-    protected function getRandomValueFromType($type, $name)
+    protected function getRandomValueFromType($type, $name, $record)
     {
         $type = explode('(', $type);
         switch ($type[0]) {
@@ -94,47 +95,52 @@ class FakeRecordGeneratorTask extends BuildTask
                     $length = (int)$type[1];
                 }
                 if ($name == 'CountryCode' || $name == 'Nationality') {
-                    return FakeRecordGenerator::countryCode();
+                    return FakeDataProvider::countryCode();
                 } elseif ($name == 'PostalCode' || $name == 'Postcode') {
-                    $addr = FakeRecordGenerator::address();
+                    $addr = FakeDataProvider::address();
                     return $addr['Postcode'];
                 } elseif ($name == 'Locality' || $name == 'City') {
-                    $addr = FakeRecordGenerator::address();
+                    $addr = FakeDataProvider::address();
                     return $addr['City'];
                 }
-                return FakeRecordGenerator::words(3, 7);
+                return FakeDataProvider::words(3, 7);
             case 'Date':
             case 'DateTime':
             case DBDate::class:
-                return FakeRecordGenerator::date(strtotime('-1 year'), strtotime('+1 year'));
+                return FakeDataProvider::date(strtotime('-1 year'), strtotime('+1 year'));
             case 'Boolean':
             case DBBoolean::class:
-                return FakeRecordGenerator::boolean();
+                return FakeDataProvider::boolean();
             case 'Enum':
+            case 'NiceEnum':
             case DBEnum::class:
                 /* @var $enum Enum */
-                $enum = $rec->dbObject($name);
-                return FakeRecordGenerator::pick(array_values($enum->enumValues()));
+                $enum = $record->dbObject($name);
+                return FakeDataProvider::pick(array_values($enum->enumValues()));
             case 'Int':
             case DBInt::class:
                 return rand(1, 10);
             case 'Currency':
             case DBCurrency::class:
-                return FakeRecordGenerator::fprand(20, 100, 2);
+                return FakeDataProvider::fprand(20, 100, 2);
             case 'HTMLText':
             case DBHTMLText::class:
-                return FakeRecordGenerator::paragraphs(3, 7);
+                return FakeDataProvider::paragraphs(3, 7);
             case 'Text':
             case DBText::class:
-                return FakeRecordGenerator::sentences(3, 7);
+                return FakeDataProvider::sentences(3, 7);
             default:
+                $dbObject = $record->dbObject($name);
+                if ($dbObject && $dbObject->hasMethod('fillFake')) {
+                    return $dbObject->fillFake();
+                }
                 return null;
         }
     }
 
     protected function createMembersFromApi($how_many)
     {
-        $data = FakeRecordGenerator::randomUser(['result' => $how_many]);
+        $data = FakeDataProvider::randomUser(['result' => $how_many]);
         foreach ($data as $res) {
             try {
                 $rec = Member::create();
@@ -153,7 +159,7 @@ class FakeRecordGeneratorTask extends BuildTask
                 $rec->Email = $res['email'];
 
                 $image_data = file_get_contents($res['picture']['large']);
-                $image = FakeRecordGenerator::storeFakeImage($image_data, basename($res['picture']['large']), 'Avatars');
+                $image = FakeDataProvider::storeFakeImage($image_data, basename($res['picture']['large']), 'Avatars');
                 $rec->AvatarID = $image->ID;
 
                 $id = $rec->write();
