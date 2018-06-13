@@ -161,13 +161,29 @@ class DBColor extends DBVarchar
     /**
      * Get a contrast color
      *
+     * @param string $dark
+     * @param string $light
      * @return string
      */
-    public function ContrastColor()
+    public function ContrastColor($dark = '#000000', $light = '#ffffff')
     {
-        list($R, $G, $B) = self::HEX_TO_RGB($this->value);
+        list($R, $G, $B) = self::HEX_TO_RGB($this->Color());
         $yiq = (($R * 299) + ($G * 587) + ($B * 114)) / 1000;
-        return ($yiq >= 128) ? 'black' : 'white';
+        return ($yiq >= 128) ? $dark : $light;
+    }
+
+    /**
+    * Get the color
+    *
+    * @param string $default
+    * @return string
+    */
+    public function Color($default = '#ffffff')
+    {
+        if (!$this->value) {
+            return $default;
+        }
+        return $this->value;
     }
 
     /**

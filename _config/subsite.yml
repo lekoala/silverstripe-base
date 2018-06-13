@@ -6,9 +6,9 @@ Only:
   moduleexists:
     - 'silverstripe/subsites'
 ---
-SilverStripe\CMS\Model\SiteTree:
+SilverStripe\Subsites\Model\Subsite:
   extensions:
-    - LeKoala\Base\Subsite\SubsitePageExtension
+    - LeKoala\Base\Subsite\SubsiteExtension
 SilverStripe\Subsites\Extensions\FileSubsites:
   # We don't want to assign subsite by default
   # because folders can be created from various locations

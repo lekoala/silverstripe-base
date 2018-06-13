@@ -1,11 +1,15 @@
 <?php
 namespace LeKoala\Base\Admin;
 
+use SilverStripe\Core\Convert;
 use SilverStripe\Admin\CMSMenu;
+use SilverStripe\ORM\ArrayList;
+use SilverStripe\View\ArrayData;
 use SilverStripe\Control\Director;
 use SilverStripe\View\Requirements;
 use LeKoala\Base\Subsite\SubsiteHelper;
 use SilverStripe\SiteConfig\SiteConfig;
+use SilverStripe\Subsites\Model\Subsite;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Admin\LeftAndMainExtension;
 
@@ -65,5 +69,39 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
         // Fix icon size
         // Moved to admin.css
         // Requirements::customCSS(".menu__icon.fa { font-size: 17px !important}", "FontAwesomeMenuIcons");
+    }
+
+    public function ListSubsitesExpanded()
+    {
+        if (!SubsiteHelper::UsesSubsite()) {
+            return false;
+        }
+
+        $list = Subsite::get();
+        if ($list == null || $list->count() == 1 && $list->first()->DefaultSite == true) {
+            return false;
+        }
+
+        $currentSubsiteID = SubsiteHelper::CurrentSubsiteID();
+
+        Requirements::javascript('silverstripe/subsites:javascript/LeftAndMain_Subsites.js');
+
+        $output = ArrayList::create();
+
+        foreach ($list as $subsite) {
+            $currentState = $subsite->ID == $currentSubsiteID ? 'selected' : '';
+
+            $color = $subsite->SiteConfig()->dbObject('PrimaryColor');
+
+            $output->push(ArrayData::create([
+                'CurrentState' => $currentState,
+                'ID' => $subsite->ID,
+                'Title' => Convert::raw2xml($subsite->Title),
+                'BackgroundColor' => $color->Color(),
+                'Color' => $color->ContrastColor(),
+            ]));
+        }
+
+        return $output;
     }
 }

@@ -15,6 +15,15 @@ use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Core\Injector\InjectionCreator;
 use SilverStripe\AssetAdmin\Controller\AssetAdmin;
 
+/**
+ * Improved File usage
+ *
+ * - Track temporary files (and auto clean them)
+ * - Allow polymorphic association to a dedicated record (allows easy cleanup if record is removed)
+ * - Ensure thumbnails are generated
+ * - Shorthands methods for standard sizes thumbnails (SmallAssetThumbnail, LargeAssetThumbnail)
+ * - Smart cropping
+ */
 class BaseFileExtension extends DataExtension
 {
     use Configurable;
@@ -64,31 +73,33 @@ class BaseFileExtension extends DataExtension
      * Resize and crop image to fill specified dimensions.
      * Use in templates with $SmartFill
      *
+     * @link https://github.com/xymak/smartcrop.php
      * @param int $width Width to crop to
      * @param int $height Height to crop to
      * @return AssetContainer
      */
-    // public function SmartFill($width, $height)
-    // {
-    //     $width = (int) $width;
-    //     $height = (int) $height;
-    //     $variant = $this->owner->variantName(__FUNCTION__, $width, $height);
-    //     return $this->owner->manipulateImage($variant, function (Image_Backend $backend) use ($width, $height) {
-    //         $clone = clone $backend;
+    public function SmartFill($width, $height)
+    {
+        $width = (int) $width;
+        $height = (int) $height;
+        $variant = $this->owner->variantName(__FUNCTION__, $width, $height);
+        return $this->owner->manipulateImage($variant, function (Image_Backend $backend) use ($width, $height) {
+            $clone = clone $backend;
 
-    //         /* @var $resource Intervention\Image */
-    //         $resource = clone $backend->getImageResource();
+            /* @var $resource Intervention\Image */
+            $resource = clone $backend->getImageResource();
 
-    //         // We default to center
-    //         $x = ($resource->width() - $width) / 2;
-    //         $y = ($resource->height() - $height) / 2;
+            // We default to center
+            $x = ($resource->width() - $width) / 2;
+            $y = ($resource->height() - $height) / 2;
 
-    //         $resource->resize($width, $height);
-    //         // $resource->crop($width, $height, $x, $y);
-    //         $clone->setImageResource($resource);
-    //         return $clone;
-    //     });
-    // }
+            //TODO: use smartcrop analyze method and crop accordingly
+            $resource->resize($width, $height);
+            // $resource->crop($width, $height, $x, $y);
+            $clone->setImageResource($resource);
+            return $clone;
+        });
+    }
 
     public function SmallAssetThumbnail()
     {
