@@ -28,8 +28,10 @@ class BlocksCreateTask extends BuildTask
     protected $description = 'Create block classes and styles based on your templates.';
     private static $segment = 'BlocksCreateTask';
 
-    public function init(HTTPRequest $request)
+    public function init()
     {
+        $request = $this->getRequest();
+
         $themeBlocksPath = Director::baseFolder() . DIRECTORY_SEPARATOR . $this->getThemeDir() . '/templates/Blocks';
         $mysiteBlocksPath = Director::baseFolder() . DIRECTORY_SEPARATOR . project() . '/templates/Blocks';
 

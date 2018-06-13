@@ -8,13 +8,14 @@ use SilverStripe\Control\HTTPRequest;
  */
 class SitePublisherTask extends BuildTask
 {
-
     protected $title = "Site Publisher";
     protected $description = 'Publish the whole site in one click.';
     private static $segment = 'SitePublisherTask';
 
-    public function init(HTTPRequest $request)
+    public function init()
     {
+        $request = $this->getRequest();
+
         $this->addOption("other_classes", "Write other classes (comma separated)");
         $this->addOption("go", "Set this to 1 to proceed", 0);
 

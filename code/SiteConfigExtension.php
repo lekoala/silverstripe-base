@@ -35,17 +35,17 @@ class SiteConfigExtension extends DataExtension
 {
     private static $db = [
         // Contact Details
-        "ContactInfos" => "Text",
-        "ContactAddress" => "Varchar(199)",
         "ContactEmail" => "Varchar(199)",
         "ContactPhone" => "Varchar",
-        "LegalName" => "Varchar(199)",
+        "ContactAddress" => "Varchar(199)", // A geocodable address
+        "ContactInfos" => "HTMLText", // Additionnal infos with map, links etc
+        "LegalName" => "Varchar(199)", // The legal name of the company, for copyright use
         // Emails
         "DefaultFromEmail" => "Varchar(199)",
         "EmailFooter" => "Text",
         // Footer
         "FooterText" => "HTMLText",
-        "Copyright" => "HTMLText",
+        "Copyright" => "HTMLText", // A custom copyright text, otherwise defaults to (year) - Legal Name
         // External Services
         "GoogleAnalyticsCode" => "Varchar(59)",
         "GoogleMapsApiKey" => "Varchar(59)",
@@ -55,24 +55,25 @@ class SiteConfigExtension extends DataExtension
     public function updateCMSFields(FieldList $fields)
     {
         // Contact fields
-        $ContactsHeader = new HeaderField('ContactsHeader', 'Contacts');
+        $ContactsHeader = new HeaderField('ContactsHeader', _t('Global.ContactsSettings', 'Contacts settings'));
         $fields->addFieldToTab('Root.Main', $ContactsHeader);
-        $ContactInfos = new TextareaField('ContactInfos');
-        $fields->addFieldToTab('Root.Main', $ContactInfos);
-        $ContactEmail = new TextField('ContactEmail');
+        $ContactEmail = new TextField('ContactEmail', _t('Global.Email', 'Email'));
         $fields->addFieldToTab('Root.Main', $ContactEmail);
-        $ContactPhone = new TextField('ContactPhone');
+        $ContactPhone = new TextField('ContactPhone', _t('Global.Phone', 'Phone'));
         $fields->addFieldToTab('Root.Main', $ContactPhone);
-        $ContactAddress = new TextField('ContactAddress');
+        $ContactAddress = new HTMLEditorField('ContactAddress', _t('Global.Address', 'Address'));
+        $ContactAddress->setRows(5);
         $fields->addFieldToTab('Root.Main', $ContactAddress);
-        $LegalName = new TextField('LegalName');
+        $ContactInfos = new TextareaField('ContactInfos', _t('Global.ContactInfos', 'Contact details'));
+        $fields->addFieldToTab('Root.Main', $ContactInfos);
+        $LegalName = new TextField('LegalName', _t('Global.LegalName', 'Legal Name'));
         $fields->addFieldToTab('Root.Main', $LegalName);
         // Emails
-        $EmailsHeader = new HeaderField('EmailsHeader', 'Email');
+        $EmailsHeader = new HeaderField('EmailsHeader', _t('Global.EmailSettings', 'Email settings'));
         $fields->addFieldToTab('Root.Main', $EmailsHeader);
-        $DefaultFromEmail = new TextField('DefaultFromEmail');
+        $DefaultFromEmail = new TextField('DefaultFromEmail', _t('Global.DefaultFromEmail', 'Default From Email'));
         $fields->addFieldToTab('Root.Main', $DefaultFromEmail);
-        $EmailFooter = new TextareaField('EmailFooter');
+        $EmailFooter = new TextareaField('EmailFooter', _t('Global.EmailFooter', 'Email Footer'));
         $fields->addFieldToTab('Root.Main', $EmailFooter);
         // Footer
         $FooterText = new HTMLEditorField('FooterText');

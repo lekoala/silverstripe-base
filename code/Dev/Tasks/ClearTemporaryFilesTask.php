@@ -9,12 +9,12 @@ use LeKoala\Base\Extensions\BaseFileExtension;
  */
 class ClearTemporaryFilesTask extends BuildTask
 {
-    protected $title = "Clear temporary files";
     protected $description = 'Clear all temporary files from ajax uploads that didn\'t get attached to a record.';
     private static $segment = 'ClearTemporaryFilesTask';
 
-    public function init(HTTPRequest $request)
+    public function init()
     {
+        $request = $this->getRequest();
         $this->addOption("go", "Tick this to remove the files", false);
         $options = $this->askOptions();
 

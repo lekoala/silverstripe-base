@@ -15,12 +15,13 @@ use SilverStripe\Control\HTTPRequest;
  */
 class DropUnusedDatabaseObjectsTask extends BuildTask
 {
-    protected $title = "Drop Unused Database Objects";
     protected $description = 'Drop unused tables and fields from your db by comparing current database tables with your dataobjects.';
     private static $segment = 'DropUnusedDatabaseObjectsTask';
 
-    public function init(HTTPRequest $request)
+    public function init()
     {
+        $request = $this->getRequest();
+
         $this->addOption("tables", "Clean unused tables", true);
         $this->addOption("fields", "Clean unused fields", true);
         $this->addOption("go", "Tick this to proceed", false);

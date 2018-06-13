@@ -11,10 +11,19 @@ use SilverStripe\Dev\BuildTask as DefaultBuildTask;
 
 /**
  * This is an improved BuildTask
+ *
+ * - Cleaner looks
+ * - Web UI for options
+ * - Messaging
+ * - Common imports (Env, Request)
+ * - Utils
  */
 abstract class BuildTask extends DefaultBuildTask
 {
     // Message constants
+    const INFO = 'info';
+    const BAD = 'bad';
+    const SUCCESS = 'success';
     const CREATED = 'created';
     const CHANGED = 'changed';
     const REPAIRED = 'repaired';
@@ -41,9 +50,30 @@ abstract class BuildTask extends DefaultBuildTask
         $this->outputFooter();
     }
 
-    protected function init(HTTPRequest $request)
+    protected function init()
     {
         // Call you own code here in your subclasses
+    }
+
+    /**
+     * @return string
+     */
+    public function getTitle()
+    {
+        if ($this->title) {
+            return $this->title;
+        }
+        $class = static::class;
+        $re = '/(?#! splitCamelCase Rev:20140412)
+    # Split camelCase "words". Two global alternatives. Either g1of2:
+      (?<=[a-z])      # Position is after a lowercase,
+      (?=[A-Z])       # and before an uppercase letter.
+    | (?<=[A-Z])      # Or g2of2; Position is after uppercase,
+      (?=[A-Z][a-z])  # and before upper-then-lower case.
+    /x';
+        $parts = preg_split($re, $class);
+        array_pop($parts);
+        return implode(" ", $parts);
     }
 
     protected function outputHeader()
@@ -67,11 +97,22 @@ abstract class BuildTask extends DefaultBuildTask
         }
     }
 
+    /**
+     * Increase time limit
+     *
+     * @return void
+     */
     protected function increaseTimeLimitTo($timeLimit = null)
     {
         Environment::increaseTimeLimitTo($timeLimit);
+        $this->message("Time limit has been set to $timeLimit", "info");
     }
 
+    /**
+     * Rebuild the class manifest
+     *
+     * @return void
+     */
     protected function regenerateClassManifest()
     {
         ClassLoader::inst()->getManifest()->regenerate(false);
@@ -79,6 +120,8 @@ abstract class BuildTask extends DefaultBuildTask
     }
 
     /**
+     * Get the request (and keep your imports clean :-) )
+     *
      * @return HTTPRequest
      */
     protected function getRequest()
@@ -89,13 +132,27 @@ abstract class BuildTask extends DefaultBuildTask
         return $this->request;
     }
 
+    /**
+     * All dataobjects
+     *
+     * @return array
+     */
     protected function getValidDataObjects()
     {
         $list = ClassInfo::getValidSubClasses(DataObject::class);
-        \array_shift($list);
+        array_shift($list);
         return $list;
     }
 
+    /**
+     * Add options (to be called later with askOptions)
+     *
+     * @param string $key
+     * @param string $title
+     * @param mixed $default Default value. Input type will be based on this (bool => checkbox, etc)
+     * @param array $list An array of value for a dropdown
+     * @return void
+     */
     protected function addOption($key, $title, $default = '', $list = null)
     {
         $opt = [
@@ -109,6 +166,13 @@ abstract class BuildTask extends DefaultBuildTask
         return $opt;
     }
 
+    /**
+     * Display a form with options
+     *
+     * Options are added through addOption method
+     *
+     * @return array Array with key => value corresponding to options asked
+     */
     protected function askOptions()
     {
         $values = [];
@@ -163,16 +227,18 @@ abstract class BuildTask extends DefaultBuildTask
         return $values;
     }
 
-    protected function message($message, $type = 'info')
+    protected function message($message, $type = 'default')
     {
         if (Director::is_cli()) {
             $cli_map = [
+                'repaired' => '>',
+                'success' => '✓',
                 'created' => '+',
                 'changed' => '+',
-                'repaired' => '+',
+                'bad' => '-',
                 'obsolete' => '-',
                 'deleted' => '-',
-                'notice' => '-',
+                'notice' => '!',
                 'error' => '-',
             ];
 
@@ -186,12 +252,15 @@ abstract class BuildTask extends DefaultBuildTask
             echo "  $message\n";
         } else {
             $web_map = [
+                'info' => 'blue',
+                'repaired' => 'blue',
+                'success' => 'green',
                 'created' => 'green',
                 'changed' => 'green',
-                'repaired' => 'green',
                 'obsolete' => 'red',
-                'deleted' => 'red',
                 'notice' => 'orange',
+                'deleted' => 'red',
+                'bad' => 'red',
                 'error' => 'red',
             ];
             $color = '#000000';
@@ -205,5 +274,15 @@ abstract class BuildTask extends DefaultBuildTask
                 echo "<div style=\"color:$color\">$message</div>";
             }
         }
+    }
+
+    protected function isDev()
+    {
+        return Director::isDev();
+    }
+
+    protected function isLive()
+    {
+        return Director::isLive();
     }
 }

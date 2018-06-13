@@ -1,8 +1,10 @@
 <?php
 namespace LeKoala\Base\Extensions;
 
-use SilverStripe\ORM\DataExtension;
+use SilverStripe\Forms\Tab;
 use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\TextField;
+use SilverStripe\ORM\DataExtension;
 
 /**
  * Class \LeKoala\Base\Extensions\SocialExtension
@@ -32,14 +34,11 @@ class SocialExtension extends DataExtension
     ];
     public function updateCMSFields(FieldList $fields)
     {
-        // $tab = new \SilverStripe\Forms\Tab('Social');
-        // $fields->addFieldToTab('Root',$tab);
-        $headerField = new \SilverStripe\Forms\HeaderField('SocialAccountsHeader', "Social Accounts");
-        $fields->addFieldToTab('Root.Main', $headerField);
+        $tab = new Tab('Social');
+        $fields->addFieldToTab('Root', $tab);
         foreach (self::$db as $name => $type) {
-            $field = new \SilverStripe\Forms\TextField($name, $this->owner->fieldLabel($name));
-            // $tab->push($field);
-            $fields->addFieldToTab('Root.Main', $field);
+            $field = new TextField($name, $this->owner->fieldLabel($name));
+            $tab->push($field);
         }
     }
     public function FacebookLink()

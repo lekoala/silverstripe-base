@@ -13,11 +13,10 @@ use SilverStripe\Versioned\Versioned;
  */
 class VersionsCleanerTask extends BuildTask
 {
-    protected $title = "Versions cleaner";
     protected $description = 'Clean old versions.';
     private static $segment = 'VersionsCleanerTask';
 
-    public function init(HTTPRequest $request)
+    public function init()
     {
         $this->addOption("check_relations", "Inspect relations as well", true);
         $this->addOption("go", "Tick this to remove the records", false);

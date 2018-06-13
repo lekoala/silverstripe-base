@@ -8,12 +8,10 @@ use SilverStripe\Control\HTTPRequest;
  */
 class PhpInfoTask extends BuildTask
 {
-
-    protected $title = "Php Info";
     protected $description = 'Simply read your php info values.';
     private static $segment = 'PhpInfoTask';
 
-    public function init(HTTPRequest $request)
+    public function init()
     {
         echo phpinfo();
     }

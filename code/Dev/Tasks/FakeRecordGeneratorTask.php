@@ -6,6 +6,7 @@ use LeKoala\Base\Dev\BuildTask;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Member;
+use SilverStripe\Control\Director;
 use SilverStripe\ORM\FieldType\DBInt;
 use SilverStripe\ORM\FieldType\DBDate;
 use SilverStripe\ORM\FieldType\DBEnum;
@@ -17,15 +18,12 @@ use SilverStripe\ORM\FieldType\DBHTMLText;
 
 class FakeRecordGeneratorTask extends BuildTask
 {
-
-    protected $title = 'Generate Fake Records';
     protected $description = 'Generate fake records for a given class';
     private static $segment = 'FakeRecordGeneratorTask';
 
-    public function run($request)
+    public function init()
     {
-        parent::run($request);
-
+        $request = $this->getRequest();
         $list = $this->getValidDataObjects();
         $this->addOption("model", "Which model to generate", null, $list);
         $this->addOption("how_many", "How many records to generate", 20);
@@ -172,5 +170,10 @@ class FakeRecordGeneratorTask extends BuildTask
                 $this->message($ex->getMessage(), "error");
             }
         }
+    }
+
+    public function isEnabled()
+    {
+        return Director::isDev();
     }
 }

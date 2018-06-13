@@ -33,10 +33,10 @@ class TranslationsImportExportTask extends BuildTask
     protected $debug;
 
     /**
-     * @param HTTPRequest $request
      */
-    public function init(HTTPRequest $request)
+    public function init()
     {
+        $request = $this->getRequest();
         $modules = ArrayLib::valuekey(array_keys(ModuleLoader::inst()->getManifest()->getModules()));
         $this->addOption("import", "Import translations", false);
         $this->addOption("export", "Export translations", false);

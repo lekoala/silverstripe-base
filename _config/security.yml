@@ -9,3 +9,6 @@ SilverStripe\Admin\SecurityAdmin:
 SilverStripe\Security\Member:
   extensions:
     - LeKoala\Base\Security\BaseMemberExtension
+# Prevent any destructive operation and safely migrate
+SilverStripe\Assets\FileMigrationHelper:
+  delete_invalid_files: false

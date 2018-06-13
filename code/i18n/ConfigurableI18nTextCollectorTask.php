@@ -36,11 +36,11 @@ class ConfigurableI18nTextCollectorTask extends BuildTask
      * and write the resultant files in the lang folder of each module.
      *
      * @uses DataObject->collectI18nStatics()
-     *
-     * @param HTTPRequest $request
      */
-    public function init(HTTPRequest $request)
+    public function init()
     {
+        $request = $this->getRequest();
+
         $this->increaseTimeLimitTo();
 
         $modules = ArrayLib::valuekey(array_keys(ModuleLoader::inst()->getManifest()->getModules()));
