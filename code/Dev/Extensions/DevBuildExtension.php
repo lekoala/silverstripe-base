@@ -26,16 +26,23 @@ class DevBuildExtension extends Extension
         // BaseFileExtension::ensureNullForEmptyRecordRelation();
     }
 
+    /**
+     * Loop on all DataObjects and look for rename_columns property
+     *
+     * It will rename old columns from old_value => new_value
+     *
+     * @return void
+     */
     protected function renameColumns()
     {
         $classes = $this->getDataObjects();
 
         foreach ($classes as $class) {
-            if (!property_exists($class, 'rename_fields')) {
+            if (!property_exists($class, 'rename_columns')) {
                 continue;
             }
 
-            $fields = $class::$rename_fields;
+            $fields = $class::$rename_columns;
 
             $schema = DataObject::getSchema();
             $tableName = $schema->baseDataTable($class);

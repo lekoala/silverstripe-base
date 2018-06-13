@@ -106,7 +106,7 @@ class SubsiteHelper
 
         if ($includeMainSite) {
             SubsiteState::singleton()->setSubsiteId(0);
-            $cb();
+            $cb(0);
         }
 
         $currentID = self::CurrentSubsiteID();
@@ -114,7 +114,7 @@ class SubsiteHelper
         foreach ($subsites as $subsite) {
             // TODO: maybe use changeSubsite instead?
             SubsiteState::singleton()->setSubsiteId($subsite->ID);
-            $cb();
+            $cb($subsite->ID);
         }
         SubsiteState::singleton()->setSubsiteId($currentID);
     }

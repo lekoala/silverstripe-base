@@ -35,12 +35,12 @@ class BaseDataObjectExtension extends DataExtension
         $this->turnRelationsIntoRecordEditor($fields, $cascade_delete);
 
         // extraFields are wanted!
-        $extraFields = $this->owner->config()->many_many_extraFields;
-        $this->expandGridFieldSummary($fields, $extraFields);
+        $many_many_extraFields = $this->owner->config()->many_many_extraFields;
+        $this->expandGridFieldSummary($fields, $many_many_extraFields);
 
         // removed fields
-        $removedFields = $this->owner->config()->removed_fields;
-        $this->removeFields($fields, $removedFields);
+        $removed_fields = $this->owner->config()->removed_fields;
+        $this->removeFields($fields, $removed_fields);
     }
 
     public function augmentDatabase()
