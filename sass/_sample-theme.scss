@@ -1,0 +1,13 @@
+/* @disallowFonts */
+
+//
+// This is a sample file to get your started for your -theme file
+//
+// Global variables can be defined outside of an element in a :root pseudo-class:
+:root {
+    --primary-color: #007bff;
+    --secondary-color: #6610f2;
+}
+
+@import "variables";
+@import "bootstrap-extras/theme";

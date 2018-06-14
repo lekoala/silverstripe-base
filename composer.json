@@ -38,7 +38,8 @@
         "installer-name": "base",
         "expose": [
             "css",
-            "javascript"
+            "javascript",
+            "fonts"
         ]
     },
     "autoload": {

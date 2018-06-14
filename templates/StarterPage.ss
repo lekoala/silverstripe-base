@@ -14,7 +14,7 @@
 
 <div class="wrapper typography">
 	<% include Header %>
-    <div class="page">
+    <div class="Layout">
     $Layout
     </div>
 	<% include Footer %>

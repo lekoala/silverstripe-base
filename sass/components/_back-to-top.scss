@@ -1,0 +1,27 @@
+.back-to-top {
+    position:fixed;
+    bottom:$spacer;
+    right:$spacer;
+    z-index: 10001;
+
+    a  {
+        background: rgba(255,255,255,0.5);
+        width:$spacer*2;
+        height:$spacer*2;
+        font-size:24px;
+        border-radius:$spacer*2;
+        text-align:center;
+        display:block;
+        transition: background 0.4s;
+
+        @include elegant-icon('arrow_up');
+
+        &:before {
+            line-height:$spacer*2;
+        }
+    }
+    a:hover {
+        text-decoration:none;
+        background: rgba(255,255,255,1);
+    }
+}

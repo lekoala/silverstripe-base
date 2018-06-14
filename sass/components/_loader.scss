@@ -1,0 +1,21 @@
+// @link https://projects.lukehaas.me/css-loaders/
+.loader {
+    border-radius: 50%;
+    width: 5em;
+    height: 5em;
+    border-top: 0.2em solid rgba(0, 0, 0, 0.1);
+    border-right: 0.2em solid rgba(0, 0, 0, 0.1);
+    border-bottom: 0.2em solid rgba(0, 0, 0, 0.1);
+    border-left: 0.2em solid #666;
+    transform: translateZ(0);
+    animation: loader-anim 1s infinite linear;
+}
+
+@keyframes loader-anim {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}

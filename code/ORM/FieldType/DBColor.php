@@ -9,6 +9,8 @@ use SilverStripe\ORM\FieldType\DBVarchar;
  */
 class DBColor extends DBVarchar
 {
+    const CONTRAST_THRESHOLD = 128;
+
     private static $casting = [
         'Luminance' => 'Float',
         'AlteredColorHSV' => Color::class
@@ -32,7 +34,7 @@ class DBColor extends DBVarchar
      * @param int $B blue channel, 0-255
      * @return array containing 3 values, H,S,V 0-1
      */
-    public static function RGB_TO_HSV($R, $G, $B)  // RGB Values:Number 0-255
+    protected static function RGB_TO_HSV($R, $G, $B)  // RGB Values:Number 0-255
     {
         $HSV = [];
         $var_R = self::clamp($R / 255);
@@ -78,7 +80,7 @@ class DBColor extends DBVarchar
      * @param float $V brightness 0-1
      * @return array containing 3 values in the range from 0-255, R,G,B
      */
-    public static function HSV_TO_RGB($H, $S, $V)
+    protected static function HSV_TO_RGB($H, $S, $V)
     {
         $H = self::clamp($H * 6, 0, 6);
         $S = self::clamp($S);
@@ -118,7 +120,7 @@ class DBColor extends DBVarchar
      * @param string $hex
      * @return array containing 3 integers (0-255) R,G,B
      */
-    public static function HEX_TO_RGB($hex)
+    protected static function HEX_TO_RGB($hex)
     {
         $RGB = [];
         $color = intval(ltrim($hex, '#'), 16);
@@ -138,12 +140,12 @@ class DBColor extends DBVarchar
      * @param int $B
      * @return string
      */
-    public static function RGB_TO_HEX($R, $G, $B)
+    protected static function RGB_TO_HEX($R, $G, $B)
     {
         $R = self::clamp($R, 0, 255);
         $G = self::clamp($G, 0, 255);
         $B = self::clamp($B, 0, 255);
-        return sprintf("%06X", ($R << 16) | ($G << 8) | $B);
+        return '#' . sprintf("%06X", ($R << 16) | ($G << 8) | $B);
     }
 
     /**
@@ -153,7 +155,7 @@ class DBColor extends DBVarchar
      * @param int $B
      * @return number 0-1
      */
-    public static function RGB_TO_LUMINANCE($R, $G, $B)
+    protected static function RGB_TO_LUMINANCE($R, $G, $B)
     {
         return self::clamp(0.2126 * ($R / 255) + 0.7152 * ($G / 255) + 0.0722 * ($B / 255));
     }
@@ -169,7 +171,21 @@ class DBColor extends DBVarchar
     {
         list($R, $G, $B) = self::HEX_TO_RGB($this->Color());
         $yiq = (($R * 299) + ($G * 587) + ($B * 114)) / 1000;
-        return ($yiq >= 128) ? $dark : $light;
+        return ($yiq >= self::CONTRAST_THRESHOLD) ? $dark : $light;
+    }
+
+    /**
+     * Get a higlight color
+     *
+     * @param float $opacity
+     * @return string
+     */
+    public function HighlightColor($opacity = 0.8)
+    {
+        list($R, $G, $B) = self::HEX_TO_RGB($this->Color());
+        $yiq = (($R * 299) + ($G * 587) + ($B * 114)) / 1000;
+        $background = ($yiq >= self::CONTRAST_THRESHOLD) ? '#000000' : '#ffffff';
+        return $this->Blend($opacity, $background);
     }
 
     /**
@@ -244,7 +260,7 @@ class DBColor extends DBVarchar
      * @param float $hChange hue change
      * @param float $sChange saturation change
      * @param float $vChange brightness change
-     * @return Color the new color
+     * @return string the new color in hex format
      */
     public function AlteredColorHSV($hChange, $sChange, $vChange)
     {
@@ -255,18 +271,16 @@ class DBColor extends DBVarchar
             self::clamp($S + $sChange),
             self::clamp($V + $vChange)
         );
-        $color = new Color();
-        $color->setValue(self::RGB_TO_HEX($R, $G, $B));
-        return $color;
+        return self::RGB_TO_HEX($R, $G, $B);
     }
 
     /**
      * Blend the color with a background color, with the given opacity level
      * @param float $opacity Opacity level of the current color (between 0 - 1)
      * @param string $background The background color
-     * @return Color the new color
+     * @return string the new color in hex format
      */
-    public function Blend($opacity, $background = 'FFFFFF')
+    public function Blend($opacity, $background = '#FFFFFF')
     {
         list($R, $G, $B) = self::HEX_TO_RGB($this->value);
         list($bgR, $bgG, $bgB) = self::HEX_TO_RGB($background);
@@ -274,9 +288,7 @@ class DBColor extends DBVarchar
         $R += intval(($bgR - $R) * $transparency);
         $G += intval(($bgG - $G) * $transparency);
         $B += intval(($bgB - $B) * $transparency);
-        $color = new Color();
-        $color->setValue(self::RGB_TO_HEX($R, $G, $B));
-        return $color;
+        return self::RGB_TO_HEX($R, $G, $B);
     }
 
     /**

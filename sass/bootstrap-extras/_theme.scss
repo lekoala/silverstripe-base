@@ -1,0 +1,297 @@
+// Make bootstrap 4 themable with css3 vars
+@import "../vendor/bootstrap/functions";
+@import "../vendor/bootstrap/variables";
+@import "../vendor/bootstrap/mixins";
+// Vars
+$btn-focus-blur: $btn-focus-width*2;
+$btn-focus-width: $btn-focus-width/2;
+// Mixins
+@mixin css3-gradient-bg($color) {
+    @if $enable-gradients {
+        background: var(--#{$color}) linear-gradient(180deg, var(--#{$color}-highlight), var(--#{$color})) repeat-x;
+    }
+    @else {
+        background-color: var(--#{$color});
+    }
+}
+
+@mixin css3-button-variant($color) {
+    color: var(--#{$color}-contrast);
+    background-color: var(--#{$color});
+    border-color: var(--#{$color});
+    @include box-shadow($btn-box-shadow);
+    &:hover {
+        color: var(--#{$color}-contrast);
+        background-color: var(--#{$color}-highlight);
+        border-color: var(--#{$color}-highlight);
+    }
+    &:focus,
+    &.focus {
+        @if $enable-shadows {
+            box-shadow: $btn-box-shadow,
+            0 0 $btn-focus-blur $btn-focus-width var(--#{$color}-muted);
+        }
+        @else {
+            box-shadow: 0 0 $btn-focus-blur $btn-focus-width var(--#{$color}-muted);
+        }
+    }
+    &.disabled,
+    &:disabled {
+        color: var(--#{$color}-contrast);
+        background-color: var(--#{$color});
+        border-color: var(--#{$color});
+    }
+    &:not(:disabled):not(.disabled):active,
+    &:not(:disabled):not(.disabled).active,
+    .show>&.dropdown-toggle {
+        color: var(--#{$color}-contrast);
+        background-color: var(--#{$color}-highlight);
+        @if $enable-gradients {
+            background-image: none;
+        }
+        border-color: var(--#{$color}-highlight);
+        &:focus {
+            // Avoid using mixin so we can pass custom focus shadow properly
+            @if $enable-shadows {
+                box-shadow: $btn-active-box-shadow,
+                0 0 $btn-focus-blur $btn-focus-width var(--#{$color}-muted);
+            }
+            @else {
+                box-shadow: 0 0 $btn-focus-blur $btn-focus-width var(--#{$color}-muted);
+            }
+        }
+    }
+}
+
+@mixin css3-button-outline-variant($color) {
+    color: var(--#{$color});
+    background-color: transparent;
+    background-image: none;
+    border-color: var(--#{$color});
+    &:hover {
+        color: var(--#{$color}-contrast);
+        background-color: var(--#{$color});
+        border-color: var(--#{$color});
+    }
+    &:focus,
+    &.focus {
+        box-shadow: 0 0 $btn-focus-blur $btn-focus-width var(--#{$color}-muted);
+    }
+    &.disabled,
+    &:disabled {
+        color: var(--#{$color});
+        background-color: transparent;
+    }
+    &:not(:disabled):not(.disabled):active,
+    &:not(:disabled):not(.disabled).active,
+    .show>&.dropdown-toggle {
+        color: var(--#{$color});
+        background-color: var(--#{$color}-highlight);
+        border-color: var(--#{$color}-highlight);
+        &:focus {
+            // Avoid using mixin so we can pass custom focus shadow properly
+            @if $enable-shadows and $btn-active-box-shadow !=none {
+                box-shadow: $btn-active-box-shadow,
+                0 0 $btn-focus-blur $btn-focus-width var(--#{$color}-muted);
+            }
+            @else {
+                box-shadow: 0 0 $btn-focus-blur $btn-focus-width var(--#{$color}-muted);
+            }
+        }
+    }
+}
+
+@mixin css3-form-control-focus($color) {
+    &:focus {
+        border-color: var(--#{$color});
+        @if $enable-shadows {
+            box-shadow: 0 0 $btn-focus-blur $btn-focus-width var(--#{$color}-muted);
+        }
+        @else {
+            box-shadow: none;
+        }
+    }
+}
+
+// Background
+.bg-primary {
+    background: var(--primary-color) !important;
+    color: var(--primary-color-contrast);
+    a {
+        color: var(--primary-color-contrast);
+    }
+}
+
+.bg-secondary {
+    background: var(--secondary-color) !important;
+    color: var(--secondary-color-contrast);
+    a {
+        color: var(--secondary-color-contrast);
+    }
+}
+
+// Text
+.text-primary {
+    color: var(--primary-color) !important;
+}
+
+.text-secondary {
+    color: var(--secondary-color) !important;
+}
+
+// Links
+a {
+    color: var(--primary-color);
+    @include hover {
+        color: var(--primary-color-highlight);
+    }
+    &.active,
+    &:active {
+        color: $dropdown-link-active-color;
+    }
+}
+
+// Dropdowns
+.dropdown-item {
+    @include hover-focus {
+        color: var(--primary-color-highlight);
+    }
+    &.active,
+    &:active {
+        color: var(--primary-color-contrast);
+        @include css3-gradient-bg(primary-color);
+    }
+}
+
+// Toggle
+.checkbox,
+ul.optionset,
+.radio,
+.switch {
+    label {
+        &:hover {
+            &::before {
+                border-color: var(--primary-color-highlight);
+            }
+        }
+    }
+}
+
+.checkbox,
+ul.checkboxset {
+    label {
+        &::after {
+            border-color: var(--primary-color);
+        }
+    }
+    input[type="checkbox"]:focus+label::before {
+        border-color: var(--primary-color);
+    }
+    input[type="checkbox"]:disabled+label::before {
+        border-color: var(--primary-color-muted);
+    }
+    input[type="checkbox"]:disabled+label::after {
+        border-color: var(--primary-color-muted);
+    }
+}
+
+.radio {
+    label {
+        &::after {
+            background: var(--primary-color);
+        }
+    }
+    input[type="radio"]:focus+label::before {
+        border-color: var(--primary-color);
+    }
+    input[type="radio"]:disabled+label::before {
+        border-color: var(--primary-color-muted);
+    }
+    input[type="radio"]:disabled+label::after {
+        border-color: var(--primary-color-muted);
+    }
+}
+
+.switch {
+    label {
+        &::after {
+            background: var(--primary-color);
+        }
+    }
+    input[type="checkbox"]:checked+label::before {
+        background: var(--primary-color);
+    }
+    input[type="checkbox"]:focus+label::before {
+        border-color: var(--primary-color);
+    }
+    input[type="checkbox"]:disabled+label::before {
+        border-color: var(--primary-color-muted);
+    }
+    input[type="checkbox"]:disabled+label::after {
+        border-color: var(--primary-color-muted);
+    }
+}
+
+// Forms
+form {
+    .btn-toolbar {
+        .action {
+            @include css3-button-variant(primary-color);
+        }
+        a {
+            color: var(--primary-color);
+        }
+    }
+    .field {
+        input,
+        select,
+        textarea {
+            @include css3-form-control-focus(primary-color);
+        }
+    }
+}
+
+// Select2
+.select2-container.select2-container--bootstrap4 {
+    .select2-results__option {
+        &[aria-selected=true] {
+            background-color: var(--primary-color-highlight);
+            color: var(--primary-color-contrast);
+        }
+        &--highlighted[aria-selected] {
+            background-color: var(--primary-color);
+            color: var(--primary-color-contrast);
+        }
+    }
+    &.select2-container--focus,
+    &.select2-container--open {
+        .select2-selection {
+            border-color: var(--primary-color);
+        }
+    }
+    .select2-selection--multiple .select2-selection__choice {
+        background-color: var(--primary-color);
+        color: var(--primary-color-contrast);
+        border: 0;
+        .select2-selection__choice__remove {
+            color: var(--primary-color-contrast);
+        }
+    }
+}
+
+// Buttons
+.btn-primary {
+    @include css3-button-variant(primary-color);
+}
+
+.btn-outline-primary {
+    @include css3-button-outline-variant(primary-color);
+}
+
+.btn-secondary {
+    @include css3-button-variant(secondary-color);
+}
+
+.btn-outline-secondary {
+    @include css3-button-outline-variant(secondary-color);
+}

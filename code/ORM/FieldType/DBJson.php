@@ -11,6 +11,7 @@ use SilverStripe\ORM\Connect\MySQLDatabase;
  * Json storage
  *
  * @link https://github.com/phptek/silverstripe-jsontext/blob/master/code/ORM/FieldType/JSONText.php
+ * @link https://mariadb.com/resources/blog/json-mariadb-102
  */
 class DBJson extends DBString
 {

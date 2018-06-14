@@ -74,23 +74,28 @@ class ThemeControllerExtension extends Extension
     protected function replaceVarsInCssFile($cssFile)
     {
         $SiteConfig = $this->owner->SiteConfig();
+        $lastEdited = strtotime($SiteConfig->LastEdited);
         $themeDir = $this->getThemeDir();
         // Build the name of the file
         $newName = basename($themeDir) . '/' . basename($cssFile);
         $cssURL = $SiteConfig->getThemeAssetURL() . '/' . $newName;
+        $cssURL .= "?m=" . $lastEdited;
         $outputFile = $SiteConfig->getThemeAssetsFolder() . '/' . $newName;
         $outputDir = dirname($outputFile);
         if (!is_dir($outputDir)) {
             mkdir($outputDir, 0755, true);
         }
+        $forceCompile = false;
+        if (isset($_GET['compile']) && Director::isDev()) {
+            $forceCompile = true;
+        }
         // Compare filemtime and SiteConfig last edited
-        if (is_file($outputFile)) {
-            $buildFileTime = filemtime($outputFile);
-            $sourceFileTime = filemtime($cssFile);
-            $lastEdited = strtotime($SiteConfig->LastEdited);
+        if (is_file($outputFile) && !$forceCompile) {
+            $buildFileTime = filectime($outputFile);
+            $sourceFileTime = filectime($cssFile);
             // Nothing has changed, return the output file url
             if ($buildFileTime >= $sourceFileTime && $buildFileTime >= $lastEdited) {
-                // return $cssURL;
+                return $cssURL;
             }
         }
         $cssFileContent = file_get_contents($cssFile);
@@ -110,14 +115,23 @@ class ThemeControllerExtension extends Extension
             if (!$value) {
                 $value = $declarationValue;
             }
-            $replaceRegex = "/var\s?\(--{$declarationName},?\s?([a-z-#0-9]*)\)/";
+            $replaceRegex = "/var\s?\(--{$declarationName}\)/";
             $replaceCount = 0;
             $cssFileContent = preg_replace($replaceRegex, $value, $cssFileContent, -1, $replaceCount);
-            // For colors, also replace contrast value
+            // For colors, also add variants
             if ($dbObject instanceof DBColor) {
-                $contrastValue = $dbObject->ContrastColor();
-                $contrastReplaceRegex = "/var\s?\(--{$declarationName}-contrast,?\s?([a-z-#0-9]*)\)/";
-                $cssFileContent = preg_replace($contrastReplaceRegex, $contrastValue, $cssFileContent, -1, $replaceCount);
+                // Add contrast
+                $val = $dbObject->ContrastColor();
+                $regex = "/var\s?\(--{$declarationName}-contrast\)/";
+                $cssFileContent = preg_replace($regex, $val, $cssFileContent, -1, $replaceCount);
+                // Add highlight
+                $val = $dbObject->HighlightColor();
+                $regex = "/var\s?\(--{$declarationName}-highlight\)/";
+                $cssFileContent = preg_replace($regex, $val, $cssFileContent, -1, $replaceCount);
+                // Add muted
+                $val = $dbObject->HighlightColor(0.5);
+                $regex = "/var\s?\(--{$declarationName}-muted\)/";
+                $cssFileContent = preg_replace($regex, $val, $cssFileContent, -1, $replaceCount);
             }
         }
         // Minify
@@ -125,6 +139,8 @@ class ThemeControllerExtension extends Extension
         if ($minifier) {
             $cssFileContent = $minifier->minify($cssFileContent, 'css', $outputFile);
         }
+        $date = date('Y-m-d H:i:s');
+        $cssFileContent = "/* Compiled on $date*/\n" . $cssFileContent;
         file_put_contents($outputFile, $cssFileContent);
         return $cssURL;
     }

@@ -1,0 +1,30 @@
+.Security {
+    background: #eee url('https://source.unsplash.com/random');
+    background-size: cover;
+    .container {
+        max-width: 400px;
+        background: #fff;
+        padding: $spacer $spacer*2;
+    }
+    .message {
+        text-align: center;
+    }
+}
+
+.Security form {
+    .btn-toolbar {
+        input {
+            width: 100%;
+        }
+        a,
+        p {
+            display: block;
+            width: 100%;
+        }
+        a {
+            font-size: 1em;
+            text-align: center;
+            padding: $spacer;
+        }
+    }
+}

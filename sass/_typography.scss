@@ -1,0 +1,26 @@
+@import "variables";
+@import "fonts";
+
+// @link https://docs.silverstripe.org/en/4/developer_guides/customising_the_admin_interface/typography/
+// In SS4, typography is not needed anymore for the website
+// But it is used in the admin on the tinymce areas
+body {
+    font-family: $body-font;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: $header-font;
+}
+
+.text-primary {
+    color: $primary;
+}
+
+.text-secondary {
+    color: $secondary;
+}

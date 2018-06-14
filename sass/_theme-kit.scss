@@ -1,0 +1,24 @@
+//
+// This is the base file you should include in your theme
+// For a base file for your css theme, please look at sample-theme
+//
+@import "variables";
+// @link https://github.com/tgdev/animate-sass
+@import "vendor/animate/animate";
+// bootstrap 4
+@import "vendor/bootstrap/bootstrap";
+// extra components for bootstrap 4
+@import "bootstrap-extras/toggle";
+@import "bootstrap-extras/sticky-footer";
+@import "bootstrap-extras/select2";
+// @link https://github.com/heimrichhannot/elegant-icons
+@import "vendor/elegant-icons/elegant-icons-sass";
+// components
+@import "components/SocialShareList";
+@import "components/back-to-top";
+@import "components/loader";
+// silverstripe
+@import "silverstripe/message";
+@import "silverstripe/parsley";
+@import "silverstripe/Security";
+@import "silverstripe/forms";

@@ -116,6 +116,7 @@ box-shadow ease-in-out .15s !default;
     }
     .select2-search__field {
         outline: 0;
+        box-shadow: none;
         &::-webkit-input-placeholder {
             color: $s2bs-input-color-placeholder;
         }
@@ -311,8 +312,8 @@ box-shadow ease-in-out .15s !default;
             @include border-radius($s2bs-selection-choice-border-radius);
             cursor: default;
             float: left;
-            margin: ($s2bs-padding-base-vertical - 1) 0 0 $s2bs-padding-base-horizontal/2;
-            padding: 0 $s2bs-padding-base-vertical;
+            margin: ($s2bs-padding-base-vertical - 1) 0 $s2bs-padding-base-vertical/2 $s2bs-padding-base-horizontal/2;
+            padding: $s2bs-padding-base-vertical/4 $s2bs-padding-base-horizontal;
         }
         .select2-search--inline {
             .select2-search__field {
