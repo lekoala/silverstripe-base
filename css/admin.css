@@ -45,3 +45,24 @@
 .cms table.ss-gridfield-table tr.red.even {
     background-color: #ebccd1;
 }
+
+/* Image gallery */
+/* TODO: the gridfield should have a dedicated class */
+
+tr[data-class="SilverStripe\\Assets\\Image"] {
+    display: inline-block;
+    width: 380px;
+}
+
+tr[data-class="SilverStripe\\Assets\\Image"] td {
+    display: block;
+}
+
+tr[data-class="SilverStripe\\Assets\\Image"] td.col-Name,
+tr[data-class="SilverStripe\\Assets\\Image"] td.grid-field__col-compact {
+    border: 0;
+}
+
+.table tbody tr[data-class="SilverStripe\\Assets\\Image"]:first-child td {
+    border-top: 0;
+}

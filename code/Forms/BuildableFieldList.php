@@ -213,13 +213,12 @@ class BuildableFieldList extends FieldList
 
     /**
      * @param string $name
-     * @param string $title
      * @param array $attributes
      * @return HiddenField
      */
-    public function addHidden($name = "ID", $title = null, $attributes = [])
+    public function addHidden($name = "ID", $attributes = [])
     {
-        return $this->addField(HiddenField::class, $name, $title, $attributes);
+        return $this->addField(HiddenField::class, $name, null, $attributes);
     }
 
     /**

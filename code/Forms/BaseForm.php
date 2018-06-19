@@ -84,8 +84,8 @@ class BaseForm extends Form
         // Attach record as hidden fields, these can be used by the controller
         // To properly restore the record on POST if it was depending on url params or query string
         if ($this->record) {
-            $fields->addHidden('_RecordID', $this->record->ID);
-            $fields->addHidden('_RecordClassName', $this->record->ClassName);
+            $fields->addHidden('_RecordID', ['value' => $this->record->ID]);
+            $fields->addHidden('_RecordClassName', ['value' => $this->record->ClassName]);
         }
         $actions = $this->buildActions(BuildableFieldList::fromFieldList($actions));
         if (!$actions) {

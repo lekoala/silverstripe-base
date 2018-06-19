@@ -38,7 +38,7 @@ trait BaseFileUploadReceiver
         }
         // Have a sane default for others
         $class = ClassHelper::getClassWithoutNamespace($this->record);
-        $name = $this->getName();
+        $name = str_replace('[]', '', $this->getName());
         return $class . '/' . $name;
     }
 }

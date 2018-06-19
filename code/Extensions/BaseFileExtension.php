@@ -29,9 +29,9 @@ class BaseFileExtension extends DataExtension
     use Configurable;
 
     /**
-    * @config
-    * @var string
-    */
+     * @config
+     * @var string
+     */
     private static $auto_clear_threshold = null;
 
     private static $db = [
@@ -43,6 +43,15 @@ class BaseFileExtension extends DataExtension
         "Object" => DataObject::class,
     ];
 
+    public function updateSummaryFields(&$fields)
+    {
+        if ($this->owner->getIsImage()) {
+            $fields = [
+                'Name' => 'Name',
+                'LargeAssetThumbnail' => 'Thumbnail'
+            ];
+        }
+    }
     public function onBeforeWrite()
     {
         if (!$this->owner->ObjectID) {
@@ -80,8 +89,8 @@ class BaseFileExtension extends DataExtension
      */
     public function SmartFill($width, $height)
     {
-        $width = (int) $width;
-        $height = (int) $height;
+        $width = (int)$width;
+        $height = (int)$height;
         $variant = $this->owner->variantName(__FUNCTION__, $width, $height);
         return $this->owner->manipulateImage($variant, function (Image_Backend $backend) use ($width, $height) {
             $clone = clone $backend;

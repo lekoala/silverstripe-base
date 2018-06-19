@@ -121,7 +121,7 @@ class BaseDataObjectExtension extends DataExtension
         if (!$arr) {
             return;
         }
-        foreach ($arr as $class => $data) {
+        foreach ($arr as $relation => $data) {
             $gridfield = $fields->getGridField($class);
             if (!$gridfield) {
                 continue;
@@ -150,9 +150,9 @@ class BaseDataObjectExtension extends DataExtension
         $ownerClass = get_class($this->owner);
         $allSubclasses = ClassInfo::ancestry($ownerClass, true);
 
-        foreach ($arr as $class) {
-            $sanitisedClass = str_replace('\\', '-', $class);
-            $gridfield = $fields->getGridField($sanitisedClass);
+        foreach ($arr as $relation) {
+            $relationClass = $this->owner->getRelationClass($relation);
+            $gridfield = $fields->getGridField($relation);
             if (!$gridfield) {
                 continue;
             }
