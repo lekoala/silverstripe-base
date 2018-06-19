@@ -1,4 +1,4 @@
-'LeKoala\Base\Test\TestModel':
+'LeKoala\Base\Test\Test_BaseModel':
   default:
     Ip: '127.0.0.1'
     Phone: '+32473123456'

@@ -8,13 +8,13 @@ use LeKoala\Base\Extensions\IPExtension;
 use LeKoala\Base\ORM\FieldType\DBPhone;
 use LeKoala\Base\ORM\FieldType\DBCountry;
 
-class TestModel extends DataObject implements TestOnly
+class Test_BaseModel extends DataObject implements TestOnly
 {
     private static $db = [
         "Phone" => DBPhone::class,
         "CountryCode" => DBCountry::class,
     ];
-    private static $table_name = 'TestModel';
+    private static $table_name = 'BaseModel';
     private static $extensions = [
         IPExtension::class,
     ];

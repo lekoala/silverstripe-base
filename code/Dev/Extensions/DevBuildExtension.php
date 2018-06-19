@@ -9,6 +9,7 @@ use SilverStripe\Control\Director;
 use LeKoala\Base\Helpers\ClassHelper;
 use SilverStripe\ORM\DB;
 use LeKoala\Base\Extensions\BaseFileExtension;
+use LeKoala\ExcelImportExport\ExcelBulkLoader;
 
 class DevBuildExtension extends Extension
 {
@@ -17,13 +18,39 @@ class DevBuildExtension extends Extension
         $renameColumns = $this->owner->getRequest()->getVar('renameColumns');
         if ($renameColumns) {
             $this->displayMessage("<div class='build'><p><b>Renaming columns</b></p><ul>\n\n");
-
             $this->renameColumns();
-
-            $this->displayMessage("</ul>\n<p><b>Renaming columns finished!</b></p></div>");
+            $this->displayMessage("</ul>\n<p><b>Columns renamed!</b></p></div>");
         }
 
-        // BaseFileExtension::ensureNullForEmptyRecordRelation();
+        $truncateSiteTree = $this->owner->getRequest()->getVar('truncateSiteTree');
+        if ($truncateSiteTree) {
+            $this->displayMessage("<div class='build'><p><b>Truncating SiteTree</b></p><ul>\n\n");
+            $this->truncateSiteTree();
+            $this->displayMessage("</ul>\n<p><b>SiteTree truncated!</b></p></div>");
+        }
+    }
+
+    protected function truncateSiteTree()
+    {
+        if (!Director::isDev()) {
+            throw new Exception("Only available in dev mode");
+        }
+
+        $sql = <<<SQL
+        TRUNCATE TABLE ErrorPage;
+        TRUNCATE TABLE ErrorPage_Live;
+        TRUNCATE TABLE ErrorPage_Versions;
+        TRUNCATE TABLE SiteTree;
+        TRUNCATE TABLE SiteTree_CrossSubsiteLinkTracking;
+        TRUNCATE TABLE SiteTree_EditorGroups;
+        TRUNCATE TABLE SiteTree_ImageTracking;
+        TRUNCATE TABLE SiteTree_LinkTracking;
+        TRUNCATE TABLE SiteTree_Live;
+        TRUNCATE TABLE SiteTree_Versions;
+        TRUNCATE TABLE SiteTree_ViewerGroups;
+SQL;
+        DB::query($sql);
+        $this->displayMessage($sql);
     }
 
     /**
@@ -64,16 +91,13 @@ class DevBuildExtension extends Extension
         $envIsAllowed = Director::isDev();
         $skipGeneration = $this->owner->getRequest()->getVar('skipgeneration');
 
-        return;
         if ($skipGeneration || !$envIsAllowed) {
             return;
         }
 
-        $this->displayMessage("<div class='build'><p><b>Generating ide helpers</b></p><ul>\n\n");
-
-        $this->generateRepository();
-
-        $this->displayMessage("</ul>\n<p><b>Generating ide helpers finished!</b></p></div>");
+        // $this->displayMessage("<div class='build'><p><b>Generating ide helpers</b></p><ul>\n\n");
+        // $this->generateRepository();
+        // $this->displayMessage("</ul>\n<p><b>Generating ide helpers finished!</b></p></div>");
     }
 
     /**

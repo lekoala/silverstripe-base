@@ -11,15 +11,15 @@ class ORMTest extends SapphireTest
      * Defines the fixture file to use for this test class
      * @var string
      */
-    protected static $fixture_file = 'TestModel.yml';
+    protected static $fixture_file = 'Test_BaseModel.yml';
 
     protected static $extra_dataobjects = array(
-        TestModel::class,
+        Test_BaseModel::class,
     );
 
     public function testPhoneField()
     {
-        $model = new TestModel();
+        $model = new Test_BaseModel();
 
         $field = new DBPhone('Phone');
 

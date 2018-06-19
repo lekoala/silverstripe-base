@@ -1,7 +1,7 @@
 .Security {
-    background: #eee url('https://source.unsplash.com/random');
+    background: #eee;
     background-size: cover;
-    .container {
+    .Layout .container {
         max-width: 400px;
         background: #fff;
         padding: $spacer $spacer*2;

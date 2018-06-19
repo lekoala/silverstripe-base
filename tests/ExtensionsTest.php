@@ -12,22 +12,22 @@ class ExtensionsTest extends SapphireTest
      * Defines the fixture file to use for this test class
      * @var string
      */
-    protected static $fixture_file = 'TestModel.yml';
+    protected static $fixture_file = 'Test_BaseModel.yml';
 
     protected static $extra_dataobjects = array(
-        TestModel::class,
+        Test_BaseModel::class,
     );
 
     public function testHasExtensions()
     {
-        $model = new TestModel();
+        $model = new Test_BaseModel();
 
         $this->assertTrue($model->hasExtension(IPExtension::class));
     }
 
     public function testIPExtension()
     {
-        $model = new TestModel();
+        $model = new Test_BaseModel();
         $model->write();
         $this->assertNotEmpty($model->Ip);
 

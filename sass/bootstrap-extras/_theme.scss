@@ -113,11 +113,23 @@ $btn-focus-width: $btn-focus-width/2;
     }
 }
 
+// Selection
+::selection {
+    background: var(--primary-color);
+    color: var(--primary-color-contrast);
+}
+
+::-moz-selection {
+    background: var(--primary-color);
+    color: var(--primary-color-contrast);
+}
+
 // Background
 .bg-primary {
     background: var(--primary-color) !important;
     color: var(--primary-color-contrast);
-    a {
+    a,
+    a:hover {
         color: var(--primary-color-contrast);
     }
 }
@@ -125,7 +137,8 @@ $btn-focus-width: $btn-focus-width/2;
 .bg-secondary {
     background: var(--secondary-color) !important;
     color: var(--secondary-color-contrast);
-    a {
+    a,
+    a:hover {
         color: var(--secondary-color-contrast);
     }
 }
