@@ -6,14 +6,14 @@ fr:
     MAXRESOLUTION: 'Résolution max.: 2048x2048px'
     MAXSIZE: 'Format max fichier: {size}'
   BaseForm:
-    DOSUBMIT: Submit
+    DOSUBMIT: Envoyer
   BaseSecurityAdminExtension:
     LockedMembers: 'Locked Members'
     MembersOnlyGroups: 'Only group members are shown. To add a user to a group, link it from an existing group.'
     RecentPasswordFailures: 'Recent Password Failures'
     SecurityAudit: 'Security Audit'
   BootstrapModal:
-    Close: Close
+    Close: Fermer
   ContactPageController:
     ERR_ENTER_EMAIL: 'Entrez votre email'
     ERR_ENTER_MESSAGE: 'Entrez votre message'
@@ -23,15 +23,15 @@ fr:
     MESSAGE_SENT: 'Votre message a bien été envoyé.'
   CookieConsent:
     ALLOWCOOKIES: 'Accepter cookies'
-    DECLINE: Decline
+    DECLINE: Refuser
     LINK: 'Savoir plus'
     MESSAGE: 'Ce site utilise des cookies afin de vous donner la meilleure expérience.'
-    MESSAGE_REQUIRED: 'This website require the usage of cookies. Please accept them to continue'
+    MESSAGE_REQUIRED: 'Ce site utilise des cookies. Veuillez les accepter afin de continuer. '
   CookiesRequiredPage:
-    ACCEPT_COOKIES: 'I accept the usage of cookies'
-    COOKIES_ARE_REQUIRED: 'Cookies are required to use this website'
+    ACCEPT_COOKIES: 'J''accepte l''usage de cookies. '
+    COOKIES_ARE_REQUIRED: 'Ce site utilise des cookies.'
   CountryDropdownField:
-    TITLE: Country
+    TITLE: Pays
   FlatpickrField:
     SELECT_A_DATE: 'Sélectionnez une date...'
   NewsItem:
@@ -41,15 +41,15 @@ fr:
   NewsSidebar:
     ARCHIVES: Archives
     POPULAR_POSTS: 'Posts populaires'
-    SEARCH: Search
+    SEARCH: Chercher
     TAGS: Tags
   PrivacyForm:
     IAGREE: 'Je confirme avoir lu et accepté… '
     PLEASEREVIEW: 'Veuillez lire les documents suivants afin de continuer'
   SimpleSearchControllerExtension:
     GO: Go
-    SEARCH: Search
-    SearchResults: 'Search Results'
+    SEARCH: Chercher
+    SearchResults: 'Résultats recherche'
   SocialExtension:
     DISCOVER: 'J''ai découvert '
     SEE: 'Un aperçu :'

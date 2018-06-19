@@ -64,8 +64,8 @@ class TranslationsImportExportTask extends BuildTask
 
     protected function getLangPath($module)
     {
-        $langPath = ModuleResourceLoader::resourcePath($module .':lang');
-        return Director::baseFolder() . '/' . str_replace([':','\\'], '/', $langPath);
+        $langPath = ModuleResourceLoader::resourcePath($module . ':lang');
+        return Director::baseFolder() . '/' . str_replace([':', '\\'], '/', $langPath);
     }
 
     protected function importTranslations($module)
@@ -225,7 +225,7 @@ class TranslationsImportExportTask extends BuildTask
 
         // Write them to a csv file
 
-        $destinationFilename =  str_replace('/lang', '/lang.csv', $fullLangPath);
+        $destinationFilename = str_replace('/lang', '/lang.csv', $fullLangPath);
         if ($this->debug) {
             Debug::show("Debug mode enabled : no output will be sent to $destinationFilename");
             die();

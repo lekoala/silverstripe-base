@@ -6,14 +6,14 @@ nl:
     MAXRESOLUTION: 'Max resolutie: 2048x2048px'
     MAXSIZE: 'Max documentgrootte: {size}'
   BaseForm:
-    DOSUBMIT: Submit
+    DOSUBMIT: Verzenden
   BaseSecurityAdminExtension:
     LockedMembers: 'Locked Members'
     MembersOnlyGroups: 'Only group members are shown. To add a user to a group, link it from an existing group.'
     RecentPasswordFailures: 'Recent Password Failures'
     SecurityAudit: 'Security Audit'
   BootstrapModal:
-    Close: Close
+    Close: Sluiten
   ContactPageController:
     ERR_ENTER_EMAIL: 'Vul uw e-mail in'
     ERR_ENTER_MESSAGE: 'Schrijf uw bericht'
@@ -23,15 +23,15 @@ nl:
     MESSAGE_SENT: 'Uw bericht werd verstuurd.'
   CookieConsent:
     ALLOWCOOKIES: 'Cookies accepteren'
-    DECLINE: Decline
+    DECLINE: Afwijzen
     LINK: 'Meer weten'
     MESSAGE: 'Deze website gebruikt cookies om uw surfervaring aangenamer te maken.'
     MESSAGE_REQUIRED: 'This website require the usage of cookies. Please accept them to continue'
   CookiesRequiredPage:
-    ACCEPT_COOKIES: 'I accept the usage of cookies'
-    COOKIES_ARE_REQUIRED: 'Cookies are required to use this website'
+    ACCEPT_COOKIES: 'Ik accepteer het gebruik van cookies'
+    COOKIES_ARE_REQUIRED: 'Er worden cookies gebruikt op deze website '
   CountryDropdownField:
-    TITLE: Country
+    TITLE: Land
   FlatpickrField:
     SELECT_A_DATE: 'Kies een datum...'
   NewsItem:
@@ -41,15 +41,15 @@ nl:
   NewsSidebar:
     ARCHIVES: Archives
     POPULAR_POSTS: 'Populaire posts'
-    SEARCH: Search
+    SEARCH: Zoeken
     TAGS: Tags
   PrivacyForm:
     IAGREE: 'Ik heb gelezen en goedgekeurd...'
     PLEASEREVIEW: 'Gelieve onze voorwaarden te accepteren alvorens verder te gaan'
   SimpleSearchControllerExtension:
     GO: Go
-    SEARCH: Search
-    SearchResults: 'Search Results'
+    SEARCH: Zoeken
+    SearchResults: Zoekresultaten
   SocialExtension:
     DISCOVER: 'Ik vond  '
     SEE: 'Je kan het hier zien :'
