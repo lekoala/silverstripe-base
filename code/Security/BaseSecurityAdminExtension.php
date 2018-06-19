@@ -13,6 +13,10 @@ use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\Forms\GridField\GridFieldConfig_RecordViewer;
 use LeKoala\Base\Forms\AlertField;
+use SilverStripe\Control\Director;
+use SilverStripe\Forms\HeaderField;
+use LeKoala\Base\Helpers\FileHelper;
+use SilverStripe\Security\Permission;
 
 /**
  */
@@ -54,6 +58,10 @@ class BaseSecurityAdminExtension extends Extension
         if (Security::config()->login_recording) {
             $this->addAuditTab($form);
         }
+
+        if (Permission::check('ADMIN')) {
+            $this->addLogTab($form);
+        }
     }
 
     /**
@@ -62,6 +70,31 @@ class BaseSecurityAdminExtension extends Extension
     protected function getRequest()
     {
         return $this->owner->getRequest();
+    }
+
+    protected function addLogTab(Form $form)
+    {
+        $logDir = Director::baseFolder();
+        $logFiles = glob($logDir . '/*.log');
+
+        $logTab = new Tab('Logs', _t('BaseSecurityAdminExtension.Logs', 'Logs'));
+        $form->Fields()->addFieldsToTab('Root', $logTab);
+
+        foreach ($logFiles as $logFile) {
+            $logName = pathinfo($logFile, PATHINFO_FILENAME);
+
+            $logTab->push(new HeaderField($logName, ucwords($logName)));
+
+            $filemtime = filemtime($logFile);
+
+            $logTab->push(new AlertField($logName . 'Alert', _t('BaseSecurityAdminExtension.LogAlert', "Last updated on {updated}", [
+                'updated' => date('Y-m-d H:i:s', $filemtime),
+            ])));
+
+            $lastLines = '<pre>' . FileHelper::tail($logFile, 10) . '</pre>';
+
+            $logTab->push(new LiteralField($logName, $lastLines));
+        }
     }
 
     protected function addAuditTab(Form $form)
@@ -81,7 +114,7 @@ class BaseSecurityAdminExtension extends Extension
                 'Email' => $Member_SNG->fieldLabel('Email'),
                 'LockedOutUntil' => $Member_SNG->fieldLabel('LockedOutUntil'),
                 'FailedLoginCount' => $Member_SNG->fieldLabel('FailedLoginCount'),
-                ]);
+            ]);
             $auditTab->push($membersLockedGrid);
         }
 
@@ -96,7 +129,7 @@ class BaseSecurityAdminExtension extends Extension
             'Member.Title' => $Member_SNG->fieldLabel('Title'),
             'Member.Email' => $Member_SNG->fieldLabel('Email'),
             'Member.FailedLoginCount' => $Member_SNG->fieldLabel('FailedLoginCount'),
-            ]);
+        ]);
         $recentPasswordFailuresGrid = new GridField('RecentPasswordFailures', _t('BaseSecurityAdminExtension.RecentPasswordFailures', "Recent Password Failures"), $recentPasswordFailures, $recentPasswordFailuresGridConfig);
         $recentPasswordFailuresGrid->setForm($form);
         $auditTab->push($recentPasswordFailuresGrid);
