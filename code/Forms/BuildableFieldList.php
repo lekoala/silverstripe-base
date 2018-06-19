@@ -193,6 +193,17 @@ class BuildableFieldList extends FieldList
      * @param string $name
      * @param string $title
      * @param array $attributes
+     * @return FilePondField
+     */
+    public function addFilePond($name = "ImageID", $title = null, $attributes = [])
+    {
+        return $this->addField(FilePondField::class, $name, $title, $attributes);
+    }
+
+    /**
+     * @param string $name
+     * @param string $title
+     * @param array $attributes
      * @return CheckboxField
      */
     public function addCheckbox($name = "IsEnabled", $title = null, $attributes = [])

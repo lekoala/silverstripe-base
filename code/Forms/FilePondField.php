@@ -137,7 +137,7 @@ class FilePondField extends BaseFileUploadField
     public function getServerOptions()
     {
         return [
-            'process' =>  $this->getUploadEnabled() ? $this->getLinkParameters('upload') : null,
+            'process' => $this->getUploadEnabled() ? $this->getLinkParameters('upload') : null,
             'fetch' => null,
             'revert' => null,
         ];
@@ -160,11 +160,19 @@ class FilePondField extends BaseFileUploadField
     protected function getLinkParameters($action)
     {
         $token = $this->getForm()->getSecurityToken()->getValue();
+        $record = $this->getForm()->getRecord();
+
+        $headers = [
+            'X-SecurityID' => $token
+        ];
+        // Allow us to track the record instance
+        if ($record) {
+            $headers['X-RecordClassName'] = get_class($record);
+            $headers['X-RecordID'] = $record->ID;
+        }
         return [
             'url' => $this->SafeLink($action),
-            'headers' => [
-                'X-SecurityID' => $token
-            ],
+            'headers' => $headers,
         ];
     }
 
@@ -209,19 +217,24 @@ class FilePondField extends BaseFileUploadField
         $this->setAttribute('data-module', 'filepond');
         $this->setAttribute('data-config', json_encode($config));
 
-        if (Director::isDev()) {
-            Requirements::css('https://rawgit.com/pqina/filepond/master/dist/filepond.css');
-            Requirements::javascript('https://rawgit.com/pqina/filepond/master/dist/filepond.min.js');
-            Requirements::javascript('https://rawgit.com/pqina/filepond-plugin-file-validate-type/master/dist/filepond-plugin-file-validate-type.min.js');
-            Requirements::javascript('https://rawgit.com/pqina/filepond-plugin-image-validate-size/master/dist/filepond-plugin-image-validate-size.min.js');
-            Requirements::javascript('https://rawgit.com/pqina/jquery-filepond/master/filepond.jquery.js');
-        } else {
-            Requirements::css('https://cdn.rawgit.com/pqina/filepond/52be702f/dist/filepond.css');
-            Requirements::javascript('https://cdn.rawgit.com/pqina/filepond/52be702f/dist/filepond.min.js');
-            Requirements::javascript('https://cdn.rawgit.com/pqina/filepond-plugin-file-validate-type/8e05c20f/dist/filepond-plugin-file-validate-type.min.js');
-            Requirements::javascript('https://cdn.rawgit.com/pqina/filepond-plugin-image-validate-size/ab2f4e80/dist/filepond-plugin-image-validate-size.min.js');
-            Requirements::javascript('https://cdn.rawgit.com/pqina/jquery-filepond/59286607/filepond.jquery.js');
-        }
+        Requirements::css("https://unpkg.com/filepond@1.8.0/dist/filepond.min.css");
+        Requirements::javascript("https://unpkg.com/filepond@1.8.0/dist/filepond.min.js");
+        Requirements::javascript("https://unpkg.com/filepond-plugin-file-validate-type@1.1.0/dist/filepond-plugin-file-validate-type.min.js");
+        Requirements::javascript("https://unpkg.com/filepond-plugin-file-validate-size@1.0.3/dist/filepond-plugin-file-validate-size.js");
+        Requirements::javascript("https://unpkg.com/jquery-filepond@1.0.0/filepond.jquery.js");
+        // if (Director::isDev()) {
+        //     Requirements::css('https://rawgit.com/pqina/filepond/master/dist/filepond.css');
+        //     Requirements::javascript('https://rawgit.com/pqina/filepond/master/dist/filepond.min.js');
+        //     Requirements::javascript('https://rawgit.com/pqina/filepond-plugin-file-validate-type/master/dist/filepond-plugin-file-validate-type.min.js');
+        //     Requirements::javascript('https://rawgit.com/pqina/filepond-plugin-image-validate-size/master/dist/filepond-plugin-image-validate-size.min.js');
+        //     Requirements::javascript('https://rawgit.com/pqina/jquery-filepond/master/filepond.jquery.js');
+        // } else {
+        //     Requirements::css('https://cdn.rawgit.com/pqina/filepond/52be702f/dist/filepond.css');
+        //     Requirements::javascript('https://cdn.rawgit.com/pqina/filepond/52be702f/dist/filepond.min.js');
+        //     Requirements::javascript('https://cdn.rawgit.com/pqina/filepond-plugin-file-validate-type/8e05c20f/dist/filepond-plugin-file-validate-type.min.js');
+        //     Requirements::javascript('https://cdn.rawgit.com/pqina/filepond-plugin-image-validate-size/ab2f4e80/dist/filepond-plugin-image-validate-size.min.js');
+        //     Requirements::javascript('https://cdn.rawgit.com/pqina/jquery-filepond/59286607/filepond.jquery.js');
+        // }
         Requirements::javascript('base/javascript/fields/FilePondField.js');
         Requirements::javascript('base/javascript/ModularBehaviour.js');
 

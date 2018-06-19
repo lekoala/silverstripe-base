@@ -44,8 +44,7 @@ class ClassHelper
     {
         $classes = array();
         if ($onlyDataObjects) {
-            $classes = ClassInfo::subclassesFor(DataObject::class);
-            array_shift($classes);
+            $classes = self::getValidDataObjects();
         } else {
             $manifest = ClassLoader::inst()->getManifest();
             $classes = $manifest->getClassNames();
@@ -102,6 +101,31 @@ class ClassHelper
             return $class;
         }
         return substr(strrchr($class, '\\'), 1);
+    }
+
+    /**
+     * All dataobjects
+     *
+     * @return array A map of lower\case\class => Regular\Case\Class
+     */
+    public static function getValidDataObjects()
+    {
+        $list = ClassInfo::getValidSubClasses(DataObject::class);
+        array_shift($list);
+        return $list;
+    }
+
+    /**
+     * Check if the given class is a valid data object
+     *
+     * @param string $class
+     * @return boolean
+     */
+    public static function isValidDataObject($class)
+    {
+        $class = strtolower(str_replace('-', '\\', $class));
+        $list = self::getValidDataObjects();
+        return isset($list[$class]);
     }
 
     /**

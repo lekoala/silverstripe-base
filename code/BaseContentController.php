@@ -22,6 +22,8 @@ use SilverStripe\ORM\Connect\DatabaseException;
 use SilverStripe\CMS\Controllers\ContentController;
 use LeKoala\Base\View\DeferBackend;
 use LeKoala\Base\Subsite\SubsiteHelper;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\Dev\Debug;
 
 /**
  * A more opiniated base controller for your app
@@ -89,6 +91,39 @@ class BaseContentController extends ContentController
 
         // Switch channel for clearer logs
         $this->logger = $this->logger->withName('app');
+    }
+
+    /**
+     * Returns the instance of the requested record for this request
+     * Permissions checks are up to you
+     *
+     * @return DataObject
+     */
+    public function getRequestedRecord()
+    {
+        $request = $this->getRequest();
+
+        // Look first in headers
+        $class = $request->getHeader('X-RecordClassName');
+        if (!$class) {
+            $class = $request->requestVar('_RecordClassName');
+        }
+        $ID = $request->param('ID');
+        if (!$class) {
+            // Help our fellow developpers
+            if ($ID == 'field') {
+                throw new ValidationException("Attempt to post on a FormField often result in loosing request params. No record class could be found");
+            }
+            throw new ValidationException("No class");
+        }
+        if (!ClassHelper::isValidDataObject($class)) {
+            throw new ValidationException("$class is not valid");
+        }
+        $id = $request->getHeader('X-RecordID');
+        if (!$id) {
+            $id = (int)$request->requestVar('_RecordID');
+        }
+        return DataObject::get_by_id($class, $id);
     }
 
     /**
@@ -172,15 +207,17 @@ class BaseContentController extends ContentController
         try {
             $result = parent::handleAction($request, $action);
         } catch (ValidationException $ex) {
-            $this->getLogger()->debug($ex);
+            $caller = $ex->getTrace();
+            $callerFile = $caller[0]['file'] ?? 'unknonwn';
+            $callerLine = $caller[0]['line'] ?? 0;
+            $this->getLogger()->debug($ex->getMessage() . ' in ' . basename($callerFile) . ':' . $callerLine);
 
             if (Director::is_ajax()) {
                 return $this->applicationResponse($ex->getMessage(), [], [
                     'code' => $ex->getCode(),
                 ], false);
             } else {
-                Alertify::show($ex->getMessage(), 'bad');
-                return $this->redirectBack();
+                return $this->error($ex->getMessage());
             }
         }
         return $result;
@@ -272,7 +309,7 @@ class BaseContentController extends ContentController
      * @param string|array $linkOrManipulations
      * @return HTTPResponse
      */
-    public function success($message, $linkOrManipulations = null)
+    public function success($message, $linkOrManipulations = true)
     {
         if (Director::is_ajax()) {
             return $this->applicationResponse($message, $linkOrManipulations, [], true);
@@ -288,7 +325,7 @@ class BaseContentController extends ContentController
      * @param string|array $linkOrManipulations
      * @return HTTPResponse
      */
-    public function error($message, $linkOrManipulations = null)
+    public function error($message, $linkOrManipulations = true)
     {
         if (Director::is_ajax()) {
             return $this->applicationResponse($message, $linkOrManipulations, [], false);

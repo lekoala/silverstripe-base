@@ -5,23 +5,69 @@ use SilverStripe\Forms\Tab;
 use SilverStripe\Forms\Form;
 use SilverStripe\Core\Extension;
 use SilverStripe\Security\Member;
-use SilverStripe\Security\Security;
-use SilverStripe\Forms\LiteralField;
-use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Security\LoginAttempt;
-use SilverStripe\Forms\GridField\GridField;
-use SilverStripe\Forms\GridField\GridFieldDataColumns;
-use SilverStripe\Forms\GridField\GridFieldConfig_RecordViewer;
 use LeKoala\Base\Forms\AlertField;
 use SilverStripe\Control\Director;
 use SilverStripe\Forms\HeaderField;
+use SilverStripe\Security\Security;
 use LeKoala\Base\Helpers\FileHelper;
+use SilverStripe\Forms\LiteralField;
+use SilverStripe\Admin\SecurityAdmin;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Security\Permission;
+use SilverStripe\Security\LoginAttempt;
+use LeKoala\Base\Forms\CmsInlineFormAction;
+use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\GridField\GridFieldDataColumns;
+use SilverStripe\Forms\GridField\GridFieldConfig_RecordViewer;
 
 /**
  */
 class BaseSecurityAdminExtension extends Extension
 {
+    private static $allowed_actions = [
+        'doClearLogs',
+        'doRotateLogs',
+    ];
+
+    /**
+     * @return SecurityAdmin
+     */
+    protected function getSecurityAdmin()
+    {
+        return $this->owner;
+    }
+
+    protected function redirectWithStatus($msg, $code = 200)
+    {
+        $admin = $this->getSecurityAdmin();
+        $response = $admin->getResponse();
+        $response->setStatusCode($code);
+        $response->addHeader('X-Status', rawurlencode($msg));
+        return $admin->redirectBack();
+    }
+
+    public function doClearLogs(HTTPRequest $request)
+    {
+        foreach ($this->getLogFiles() as $logFile) {
+            unlink($logFile);
+        }
+        $msg = "Logs cleared";
+        return $this->redirectWithStatus($msg);
+    }
+
+    public function doRotateLogs(HTTPRequest $request)
+    {
+        foreach ($this->getLogFiles() as $logFile) {
+            if (strpos($logFile, '-') !== false) {
+                continue;
+            }
+            $newname = dirname($logFile) . '/' . pathinfo($logFile, PATHINFO_FILENAME) . '-' . date('Ymd') . '.log';
+            rename($logFile, $newname);
+        }
+        $msg = "Logs rotated";
+        return $this->redirectWithStatus($msg);
+    }
+
     public function updateEditForm(Form $form)
     {
         // Roles are confusing
@@ -72,11 +118,19 @@ class BaseSecurityAdminExtension extends Extension
         return $this->owner->getRequest();
     }
 
-    protected function addLogTab(Form $form)
+    /**
+     * @return array
+     */
+    protected function getLogFiles()
     {
         $logDir = Director::baseFolder();
         $logFiles = glob($logDir . '/*.log');
+        return $logFiles;
+    }
 
+    protected function addLogTab(Form $form)
+    {
+        $logFiles = $this->getLogFiles();
         $logTab = new Tab('Logs', _t('BaseSecurityAdminExtension.Logs', 'Logs'));
         $form->Fields()->addFieldsToTab('Root', $logTab);
 
@@ -95,6 +149,11 @@ class BaseSecurityAdminExtension extends Extension
 
             $logTab->push(new LiteralField($logName, $lastLines));
         }
+
+        $clearLogsBtn = new CmsInlineFormAction('doClearLogs', _t('BaseSecurityAdminExtension.doClearLogs', 'Clear Logs'));
+        $logTab->push($clearLogsBtn);
+        $rotateLogsBtn = new CmsInlineFormAction('doRotateLogs', _t('BaseSecurityAdminExtension.doRotateLogs', 'Rotate Logs'));
+        $logTab->push($rotateLogsBtn);
     }
 
     protected function addAuditTab(Form $form)

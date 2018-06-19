@@ -9,6 +9,7 @@ use SilverStripe\Forms\Validator;
 use LeKoala\Base\Helpers\ClassHelper;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Control\RequestHandler;
+use function GuzzleHttp\json_encode;
 
 /**
  * An extended class for forms:
@@ -61,7 +62,7 @@ class BaseForm extends Form
                 if (!$recordType) {
                     $recordType = DataObject::class;
                 }
-                if (! $name instanceof $recordType) {
+                if (!$name instanceof $recordType) {
                     throw new Exception("Object must be an instance of $recordType, it is: " . get_class($name));
                 }
                 $this->record = $name;
@@ -98,6 +99,11 @@ class BaseForm extends Form
         }
         parent::__construct($controller, $name, $fields, $actions, $validator);
         $this->requirements();
+        if ($this->record) {
+            $this->loadDataFrom($this->record);
+        } elseif ($this->params) {
+            $this->loadDataFrom($this->params);
+        }
     }
 
     protected function Type()
@@ -140,7 +146,7 @@ class BaseForm extends Form
 
     public function doSubmit($data)
     {
-        throw new Exception("Please implement your own code to handle this");
+        throw new Exception("Please implement your own code to handle this. Submitted data is : " . json_encode($data));
     }
 
     /**

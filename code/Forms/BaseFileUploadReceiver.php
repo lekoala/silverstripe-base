@@ -37,7 +37,7 @@ trait BaseFileUploadReceiver
             return $this->record->getFolderName();
         }
         // Have a sane default for others
-        $class = ClassHelper::getClassWithoutNamespace($record);
+        $class = ClassHelper::getClassWithoutNamespace($this->record);
         $name = $this->getName();
         return $class . '/' . $name;
     }
