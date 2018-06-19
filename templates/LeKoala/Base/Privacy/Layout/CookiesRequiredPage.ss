@@ -1,4 +1,4 @@
-<div class="container my-4">
+<div class="container container-default">
     $Content
 
     <div class="mt-2">

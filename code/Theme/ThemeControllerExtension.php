@@ -48,6 +48,10 @@ class ThemeControllerExtension extends Extension
                 continue;
             }
             $name = basename($file);
+            // Skip editor.css
+            if ($name == 'editor.css') {
+                continue;
+            }
             Requirements::themedCSS($name);
         }
         if ($SiteConfig->CssTheme) {
