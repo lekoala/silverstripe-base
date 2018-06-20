@@ -34,6 +34,9 @@ class BaseDataObjectExtension extends DataExtension
         // Anything that is deleted in cascade should not be a relation (most of the time!)
         $this->turnRelationsIntoRecordEditor($fields, $cascade_delete);
 
+        $many_many = $this->owner->config()->many_many;
+        $this->improveAssetsGridField($fields, $many_many);
+
         // extraFields are wanted!
         $many_many_extraFields = $this->owner->config()->many_many_extraFields;
         $this->expandGridFieldSummary($fields, $many_many_extraFields);
@@ -108,6 +111,37 @@ class BaseDataObjectExtension extends DataExtension
         }
         foreach ($arr as $name) {
             $fields->removeByName($name);
+        }
+    }
+    /**
+     * @param BuildableFieldList $fields
+     * @param array $arr
+     * @return void
+     */
+    protected function improveAssetsGridField(BuildableFieldList $fields, $arr)
+    {
+        if (!$arr) {
+            return;
+        }
+        foreach ($arr as $relation => $class) {
+            if (!$this->isAssetClass($class)) {
+                continue;
+            }
+
+            if ($class == Image::class) {
+                $gridfield = $fields->getGridField($relation);
+                if (!$gridfield) {
+                    continue;
+                }
+                $config = $gridfield->getConfig();
+                $gridfield->addExtraClass('gridfield-gallery');
+                $GridFieldDataColumns = $config->getComponentByType(GridFieldDataColumns::class);
+                $display = [
+                    'Name' => 'Name',
+                    'LargeAssetThumbnail' => 'Thumbnail'
+                ];
+                $GridFieldDataColumns->setDisplayFields($display);
+            }
         }
     }
 

@@ -43,15 +43,6 @@ class BaseFileExtension extends DataExtension
         "Object" => DataObject::class,
     ];
 
-    public function updateSummaryFields(&$fields)
-    {
-        if ($this->owner->getIsImage()) {
-            $fields = [
-                'Name' => 'Name',
-                'LargeAssetThumbnail' => 'Thumbnail'
-            ];
-        }
-    }
     public function onBeforeWrite()
     {
         if (!$this->owner->ObjectID) {

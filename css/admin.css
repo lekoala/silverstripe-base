@@ -47,22 +47,47 @@
 }
 
 /* Image gallery */
-/* TODO: the gridfield should have a dedicated class */
 
-tr[data-class="SilverStripe\\Assets\\Image"] {
-    display: inline-block;
-    width: 380px;
+.grid-field.gridfield-gallery thead .col-LargeAssetThumbnail {
+    display: none;
 }
 
-tr[data-class="SilverStripe\\Assets\\Image"] td {
+.grid-field.gridfield-gallery tbody {
+    background: none;
+}
+
+.grid-field.gridfield-gallery tbody tr {
+    display: inline-block;
+    width: 380px;
+    background: #fff;
+}
+
+.grid-field.gridfield-gallery tbody tr:hover {
+    background: #f0f4f7;
+}
+
+.grid-field.gridfield-gallery tbody tr td {
     display: block;
 }
 
-tr[data-class="SilverStripe\\Assets\\Image"] td.col-Name,
-tr[data-class="SilverStripe\\Assets\\Image"] td.grid-field__col-compact {
+.grid-field.gridfield-gallery tbody tr td.col-Name {
     border: 0;
+    padding-bottom: 0;
 }
 
-.table tbody tr[data-class="SilverStripe\\Assets\\Image"]:first-child td {
+.grid-field.gridfield-gallery tbody tr td.grid-field__col-compact {
+    border: 0;
+    position: relative;
+    display:block;
+    width: 380px;
+}
+
+.grid-field.gridfield-gallery tbody tr td.grid-field__col-compact .gridfield-button-delete {
+    position: absolute;
+    right: 1.2308rem;
+    display:inline-block;
+}
+
+.grid-field.gridfield-gallery tbody tr:first-child td {
     border-top: 0;
 }
