@@ -230,7 +230,7 @@ class FilePondField extends BaseFileUploadField
         $this->setAttribute('data-config', json_encode($config));
 
         Requirements::css("https://unpkg.com/filepond/dist/filepond.min.css");
-        Requirements::javascript("https://unpkg.com/filepond-plugin-file-rename/dist/filepond-plugin-file-rename.min.js");
+        // Requirements::javascript("https://unpkg.com/filepond-plugin-file-rename/dist/filepond-plugin-file-rename.min.js");
         Requirements::javascript("https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.min.js");
         Requirements::javascript("https://unpkg.com/filepond-plugin-file-validate-size/dist/filepond-plugin-file-validate-size.min.js");
         Requirements::javascript("https://unpkg.com/filepond/dist/filepond.min.js");
