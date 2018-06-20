@@ -78,16 +78,25 @@
 .grid-field.gridfield-gallery tbody tr td.grid-field__col-compact {
     border: 0;
     position: relative;
-    display:block;
+    display: block;
     width: 380px;
 }
 
 .grid-field.gridfield-gallery tbody tr td.grid-field__col-compact .gridfield-button-delete {
     position: absolute;
     right: 1.2308rem;
-    display:inline-block;
+    display: inline-block;
 }
 
 .grid-field.gridfield-gallery tbody tr:first-child td {
     border-top: 0;
+}
+
+.grid-field.gridfield-gallery tbody tr.ss-gridfield-no-items {
+    display: table-row;
+    width: 100%;
+}
+
+.grid-field.gridfield-gallery tbody tr.ss-gridfield-no-items td {
+    display: table-cell;
 }

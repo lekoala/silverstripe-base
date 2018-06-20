@@ -136,6 +136,7 @@ class BaseFileExtension extends DataExtension
         if ($threshold === null) {
             $threshold = self::config()->auto_clear_threshold;
         }
+        // Set a default threshold if none set
         if (!$threshold) {
             if (Director::isDev()) {
                 $threshold = '-10 minutes';

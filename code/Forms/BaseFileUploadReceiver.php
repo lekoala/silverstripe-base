@@ -1,6 +1,7 @@
 <?php
 namespace LeKoala\Base\Forms;
 
+use InvalidArgumentException;
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\Image;
 use SilverStripe\Assets\Folder;
@@ -40,5 +41,41 @@ trait BaseFileUploadReceiver
         $class = ClassHelper::getClassWithoutNamespace($this->record);
         $name = str_replace('[]', '', $this->getName());
         return $class . '/' . $name;
+    }
+
+    /**
+     * Get the rename pattern if set
+     * (proxy of BaseUpload method for ease of use)
+     *
+     * @return string
+     */
+    public function getRenamePattern()
+    {
+        return $this->getUpload()->getRenamePattern();
+    }
+
+    /**
+     * Rename pattern can use the following variables:
+     * - {field}
+     * - {name}
+     * - {basename}
+     * - {extension}
+     * - {timestamp}
+     * - {date}
+     * - {datetime}
+     * (proxy of BaseUpload method for ease of use)
+     *
+     * @param string $renamePattern
+     * @return self
+     */
+    public function setRenamePattern($renamePattern)
+    {
+        $renamePattern = str_replace('{field}', $this->getName(), $renamePattern);
+        // Basic check for extension
+        if (strpos($renamePattern, '.') === false && strpos($renamePattern, '{name}') === false) {
+            throw new InvalidArgumentException("Pattern $renamePattern should contain an extension");
+        }
+        $this->getUpload()->renamePattern = $renamePattern;
+        return $this;
     }
 }

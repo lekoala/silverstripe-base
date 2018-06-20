@@ -1,6 +1,7 @@
 <?php
 namespace LeKoala\Base\Actions;
 
+use Exception;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Admin\LeftAndMain;
@@ -81,7 +82,7 @@ class ActionsGridFieldItemRequest extends DataExtension
             } elseif (is_string($result)) {
                 $message = $result;
             }
-        } catch (\Exception $ex) {
+        } catch (Exception $ex) {
             $error = true;
             $message = $ex->getMessage();
         }

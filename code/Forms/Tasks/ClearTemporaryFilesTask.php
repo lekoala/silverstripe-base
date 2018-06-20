@@ -1,5 +1,5 @@
 <?php
-namespace LeKoala\Base\Dev\Tasks;
+namespace LeKoala\Base\Forms\Tasks;
 
 use LeKoala\Base\Dev\BuildTask;
 use SilverStripe\Control\HTTPRequest;

@@ -7,13 +7,14 @@ use SilverStripe\Control\HTTP;
 use SilverStripe\Assets\Folder;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Forms\FormField;
+use LeKoala\Base\Forms\BaseUpload;
+use SilverStripe\Control\Director;
 use SilverStripe\View\Requirements;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Versioned\Versioned;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\ORM\DataObjectInterface;
-use SilverStripe\Control\Director;
-use SilverStripe\Versioned\Versioned;
 use LeKoala\Base\Extensions\BaseFileExtension;
 
 /**
@@ -83,6 +84,18 @@ class FilePondField extends BaseFileUploadField
      * @var bool|null
      */
     protected $multiUpload = null;
+
+    /**
+     * Retrieves the Upload handler
+     *
+     * The Upload class is overrided in the yml class
+     *
+     * @return BaseUpload
+     */
+    public function getUpload()
+    {
+        return $this->upload;
+    }
 
     public function setValue($value, $record = null)
     {
@@ -208,7 +221,6 @@ class FilePondField extends BaseFileUploadField
         $config = [
             'name' => $name, // This will also apply to the hidden fields
             'allowMultiple' => $multiple,
-            'allowFileTypeValidation' => true,
             'acceptedFileTypes' => $this->getAcceptedFileTypes(),
             'maxFiles' => $this->getAllowedMaxFileNumber(),
             'maxFileSize' => $this->getMaxFileSize(),
@@ -217,11 +229,12 @@ class FilePondField extends BaseFileUploadField
         $this->setAttribute('data-module', 'filepond');
         $this->setAttribute('data-config', json_encode($config));
 
-        Requirements::css("https://unpkg.com/filepond@1.8.0/dist/filepond.min.css");
-        Requirements::javascript("https://unpkg.com/filepond@1.8.0/dist/filepond.min.js");
-        Requirements::javascript("https://unpkg.com/filepond-plugin-file-validate-type@1.1.0/dist/filepond-plugin-file-validate-type.min.js");
-        Requirements::javascript("https://unpkg.com/filepond-plugin-file-validate-size@1.0.3/dist/filepond-plugin-file-validate-size.js");
-        Requirements::javascript("https://unpkg.com/jquery-filepond@1.0.0/filepond.jquery.js");
+        Requirements::css("https://unpkg.com/filepond/dist/filepond.min.css");
+        Requirements::javascript("https://unpkg.com/filepond-plugin-file-rename/dist/filepond-plugin-file-rename.min.js");
+        Requirements::javascript("https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.min.js");
+        Requirements::javascript("https://unpkg.com/filepond-plugin-file-validate-size/dist/filepond-plugin-file-validate-size.min.js");
+        Requirements::javascript("https://unpkg.com/filepond/dist/filepond.min.js");
+        Requirements::javascript("https://unpkg.com/jquery-filepond/filepond.jquery.js");
         // if (Director::isDev()) {
         //     Requirements::css('https://rawgit.com/pqina/filepond/master/dist/filepond.css');
         //     Requirements::javascript('https://rawgit.com/pqina/filepond/master/dist/filepond.min.js');
