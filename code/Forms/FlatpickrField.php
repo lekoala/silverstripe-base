@@ -592,5 +592,4 @@ class FlatpickrField extends TextField
 
         return $this;
     }
-
 }

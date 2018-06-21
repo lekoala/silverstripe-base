@@ -75,9 +75,9 @@ class InputMaskField extends TextField
         }
     }
 
-    public function setConfig($key, $value)
+    public function setConfig($key, $value = null)
     {
-        if ($value) {
+        if ($value !== null) {
             $this->config[$key] = $value;
         } else {
             unset($this->config[$key]);
@@ -140,6 +140,16 @@ class InputMaskField extends TextField
         return $this->setConfig('mask', $value);
     }
 
+    public function getRightAlign()
+    {
+        return $this->getConfig('rightAlign');
+    }
+
+    public function setRighAlign($value)
+    {
+        return $this->setConfig('rightAlign', $value);
+    }
+
     public function getAttributes()
     {
         $attributes = parent::getAttributes();
@@ -151,9 +161,9 @@ class InputMaskField extends TextField
 
     public function Field($properties = array())
     {
-        foreach ($this->config as $k => $v) {
-            $this->setAttribute('data-inputmask-' . $k, $v);
-        }
+        $this->setAttribute('data-module', 'inputmask');
+        $this->setAttribute('data-config', json_encode($this->config));
+
         $version = self::config()->version;
         // cdnjs does not maintain new versions
         // Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/$version/jquery.inputmask.bundle.min.js");
@@ -162,6 +172,7 @@ class InputMaskField extends TextField
         // rawgit is best effort, might not be reliable
         // Requirements::javascript("https://cdn.rawgit.com/RobinHerbots/Inputmask/$version/dist/min/jquery.inputmask.bundle.min.js");
         Requirements::javascript("https://cdn.jsdelivr.net/npm/inputmask@$version/dist/min/jquery.inputmask.bundle.min.js");
+        Requirements::javascript('base/javascript/ModularBehaviour.js');
         Requirements::javascript('base/javascript/fields/InputMaskField.js');
         return parent::Field($properties);
     }

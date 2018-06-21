@@ -11,6 +11,7 @@ class InputMaskCurrencyField extends InputMaskField
         parent::__construct($name, $title, $value);
 
         $this->setAlias(self::ALIAS_CURRENCY);
+        $this->setRighAlign(false);
     }
 
     public function setValue($value, $data = null)
