@@ -352,7 +352,8 @@ class FlatpickrField extends TextField
      */
     public function setRange($range, $confirm = true)
     {
-        $this->addPlugin(self::PLUGIN_RANGE);
+        // enable this when it works properly with altInput
+        // $this->addPlugin(self::PLUGIN_RANGE);
         $this->range = $range;
         if ($confirm) {
             $this->setConfirmDate(true);
