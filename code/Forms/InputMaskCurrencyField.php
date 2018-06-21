@@ -22,7 +22,7 @@ class InputMaskCurrencyField extends InputMaskField
 
         $this->setAlias(self::ALIAS_CURRENCY);
         $this->setRighAlign(false);
-        $this->setPrefix($this->getSymbol());
+        $this->setPrefix($this->getSymbol() . ' ');
         $patternInfos = $this->parsePattern();
         $this->setGroupSeparator($patternInfos['group']);
         $this->setRadixPoint($patternInfos['decimal']);

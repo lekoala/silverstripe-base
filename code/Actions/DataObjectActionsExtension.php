@@ -39,9 +39,9 @@ class DataObjectActionsExtension extends DataExtension
             return;
         }
         if ($this->owner->ID) {
-            $label = 'Save and Close';
+            $label = _t('DataObjectActionsExtension.SAVEANDCLOSE', 'Save and Close');
         } else {
-            $label = 'Create and Close';
+            $label = _t('DataObjectActionsExtension.CREATEANDCLOSE', 'Create and Close');
         }
         $saveAndClose = new FormAction('doSaveAndClose', $label);
         $saveAndClose->addExtraClass('btn-primary');
@@ -49,5 +49,12 @@ class DataObjectActionsExtension extends DataExtension
         $saveAndClose->addExtraClass('font-icon-level-up');
         $saveAndClose->setUseButtonTag(true);
         $actions->push($saveAndClose);
+    }
+
+    public function Utils()
+    {
+        $utils = new FieldList();
+        $this->owner->extend('updateUtils', $utils);
+        return $utils;
     }
 }

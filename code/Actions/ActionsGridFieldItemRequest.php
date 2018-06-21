@@ -60,6 +60,8 @@ class ActionsGridFieldItemRequest extends DataExtension
     /**
      * Handles custom actions
      *
+     * Use CustomAction class to trigger this
+     *
      * @param array The form data
      * @param Form The form object
      */
