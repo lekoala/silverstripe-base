@@ -42,6 +42,8 @@ Simply use default getCMSActions and use my new CustomAction class!
 
 Also refactor basic UI stuff that SilverStripe should already do (like having the delete button on the right).
 
+See [docs/Actions.md](docs/Actions.md) for documentation.
+
 ### Themable sites
 
 Make sites themable through the SiteConfig and offer support for variables in your css files.

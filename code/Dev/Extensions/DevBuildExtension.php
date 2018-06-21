@@ -96,8 +96,79 @@ SQL;
         }
 
         // $this->displayMessage("<div class='build'><p><b>Generating ide helpers</b></p><ul>\n\n");
+        // $this->generateQueryTraits();
         // $this->generateRepository();
         // $this->displayMessage("</ul>\n<p><b>Generating ide helpers finished!</b></p></div>");
+    }
+
+    protected function generateQueryTraits()
+    {
+        $classes = $this->getDataObjects();
+        $pages = ClassInfo::subclassesFor('Page');
+
+        $classesWithoutPages = array_diff_key($classes, $pages);
+
+        foreach ($classesWithoutPages as $lcClass => $class) {
+            $module = ClassHelper::findModuleForClass($class);
+
+            $moduleName = $module->getName();
+            if ($moduleName != 'mysite') {
+                continue;
+            }
+
+            $traitDir = $module->getPath() . '/code/traits';
+            if (!is_dir($traitDir)) {
+                mkdir($traitDir);
+            }
+            $className = ClassHelper::getClassWithoutNamespace($class);
+            $traitName = $className . 'Queries';
+            $file = ClassHelper::findFileForClass($class);
+            $content = file_get_contents($file);
+
+            // Do we need to insert the trait usage?
+            if (strpos($content, "use $traitName;") === false) {
+                // properly insert after class opens
+                $newContent = str_replace("extends DataObject {", "extends DataObject {\n    use $traitName;\n", $content);
+                //TODO: insert if namespaced
+                // $content = str_replace('use SilverStripe\ORM\DataObject;', "use SilverStripe\ORM\DataObject;\nuse \\$traitName;", $content);
+                if ($newContent != $content) {
+                    file_put_contents($file, $newContent);
+                    $this->displayMessage("<li>Trait usage added to $className</li>");
+                } else {
+                    $this->displayMessage("<li style=\"color:red\">Could not add trait to $className</li>");
+                }
+            }
+
+            // Generate trait
+            $code = <<<CODE
+<?php
+// phpcs:ignoreFile -- this is a generated file
+
+trait $traitName
+{
+    /**
+     * @params int|string|array \$idOrWhere numeric ID or where clause (as string or array)
+     * @return $class
+     */
+    public static function findOne(\$idOrWhere)
+    {
+        return \LeKoala\Base\ORM\QueryHelper::findOne(\\$class::class, \$idOrWhere);
+    }
+
+    /**
+     * @params array \$filters
+     * @return {$class}[]
+     */
+    public static function find(\$filters = null) {
+        return \LeKoala\Base\ORM\QueryHelper::find(\\$class::class, \$filters);
+    }
+CODE;
+
+            $code .= "\n}";
+
+            file_put_contents($traitDir . '/' . $traitName . '.php', $code);
+            $this->displayMessage("<li>Trait $traitName generated</li>");
+        }
     }
 
     /**
@@ -123,60 +194,26 @@ SQL;
 <?php
 // phpcs:ignoreFile -- this is a generated file
 class Repository {
-
-const FIRST = 'first';
-const LAST = 'last';
-const RANDOM = 'random';
-
-public static function getOne(\$class, \$idOrWhere) {
-    if(is_int(\$idOrWhere)) {
-        return \$class::get_by_id(\$class, \$idOrWhere);
-    }
-    if(is_string(\$idOrWhere)) {
-        switch(\$idOrWhere) {
-            case self::FIRST:
-                return \$class::get()->first();
-            case self::LAST:
-                return \$class::get()->last();
-            case self::RANDOM:
-                return \$class::get()->sort('RAND()')->first();
-            default:
-                return \$class::get_one(\$class, \$idOrWhere);
-        }
-    }
-    if(is_array(\$idOrWhere)) {
-        return \$class::get()->filter(\$idOrWhere)->first();
-    }
-}
-
-public static function getList(\$class, \$filters) {
-    \$list = \$class::get();
-    if(\$filters) {
-        \$list = \$list->filter(\$filters);
-    }
-    return \$list;
-}
-
 CODE;
         foreach ($classes as $lcClass => $class) {
             $classWithoutNS = ClassHelper::getClassWithoutNamespace($class);
 
             $method = <<<CODE
-/**
- * @params int|string|array \$idOrWhere numeric ID or where clause (as string or array)
- * @return $class
- */
-public static function $classWithoutNS(\$idOrWhere) {
-    return self::getOne(\\$class::class, \$idOrWhere);
-}
+    /**
+     * @params int|string|array \$idOrWhere numeric ID or where clause (as string or array)
+     * @return $class
+     */
+    public static function $classWithoutNS(\$idOrWhere) {
+        return \LeKoala\Base\ORM\QueryHelper::findOne(\\$class::class, \$idOrWhere);
+    }
 
-/**
- * @params array \$filters
- * @return {$class}[]
- */
-public static function {$classWithoutNS}List(\$filters = null) {
-    return self::getList(\\$class::class, \$filters);
-}
+    /**
+     * @params array \$filters
+     * @return {$class}[]
+     */
+    public static function {$classWithoutNS}List(\$filters = null) {
+        return \LeKoala\Base\ORM\QueryHelper::find(\\$class::class, \$filters);
+    }
 
 CODE;
             $code .= $method;

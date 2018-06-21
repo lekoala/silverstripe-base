@@ -2,11 +2,12 @@
 namespace LeKoala\Base\Helpers;
 
 use SilverStripe\Core\ClassInfo;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\Core\Extensible;
+use SilverStripe\Core\Manifest\Module;
 use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Core\Manifest\ClassManifest;
 use SilverStripe\Core\Injector\InjectorLoader;
-use SilverStripe\ORM\DataObject;
 
 /**
  *
@@ -132,11 +133,23 @@ class ClassHelper
      * Given a partial class name, attempt to determine the best module to assign strings to.
      *
      * @param string $class Either a FQN class name, or a non-qualified class name.
-     * @return string Name of module
+     * @return Module the module instance
      */
     public static function findModuleForClass($class)
     {
         $classManifest = ClassLoader::inst()->getManifest();
         return $classManifest->getOwnerModule($class);
+    }
+
+    /**
+     * Find file for class
+     *
+     * @param string $name
+     * @return string|null
+     */
+    public static function findFileForClass($class)
+    {
+        $classManifest = ClassLoader::inst()->getManifest();
+        return $classManifest->getItemPath($class);
     }
 }
