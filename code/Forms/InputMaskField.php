@@ -53,6 +53,13 @@ class InputMaskField extends TextField
     protected $config = [];
 
     /**
+     * Format to use when unmasking
+     *
+     * @var string
+     */
+    protected $dataFormat;
+
+    /**
      * @config
      * @var string
      */
@@ -112,12 +119,19 @@ class InputMaskField extends TextField
 
     public function getDataFormat()
     {
-        return $this->getConfig('dataformat');
+        return $this->dataFormat;
     }
 
+    /**
+     * The value you want when unmasking to hidden field
+     *
+     * @param string $value
+     * @return self
+     */
     public function setDataFormat($value)
     {
-        return $this->setConfig('dataformat', $value);
+        $this->dataFormat = $value;
+        return $this;
     }
 
     public function getAlias()
@@ -163,6 +177,9 @@ class InputMaskField extends TextField
     {
         $this->setAttribute('data-module', 'inputmask');
         $this->setAttribute('data-config', json_encode($this->config));
+        if ($this->dataFormat) {
+            $this->setAttribute('data-dataformat', $this->dataFormat);
+        }
 
         $version = self::config()->version;
         // cdnjs does not maintain new versions

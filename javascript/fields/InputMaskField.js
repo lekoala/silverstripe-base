@@ -19,12 +19,14 @@
         // Update real hidden field with unmasked value
         $this.on('keyup blur', function () {
             var $this = $(this);
-            var format = $this.data("inputmask-dataformat");
-            var val = $this.inputmask("unmaskedvalue");
+            var format = $this.data("dataformat");
+            var val = null;
             if (format) {
                 val = Inputmask.format(val, {
                     alias: format
                 });
+            } else {
+                val = $this.inputmask("unmaskedvalue");
             }
             $this.parent()
                 .find("input[type=hidden]")
