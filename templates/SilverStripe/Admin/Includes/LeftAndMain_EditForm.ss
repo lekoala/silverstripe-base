@@ -8,9 +8,9 @@
 				<% include SilverStripe\\Admin\\CMSBreadcrumbs %>
 			<% end_with %>
 		</div>
-        <% if $Utils %>
-        <div class="cms-content-header-utils flexbox-area-grow vertical-align-items">
-            <% loop $Utils %>
+        <% if $Record.getCMSUtils %>
+        <div class="cms-content-header-utils vertical-align-items">
+            <% loop $Record.getCMSUtils %>
                 $FieldHolder
             <% end_loop %>
         </div>

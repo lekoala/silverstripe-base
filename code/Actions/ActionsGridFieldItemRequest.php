@@ -47,8 +47,6 @@ class ActionsGridFieldItemRequest extends DataExtension
         if ($deleteAction) {
             $actions->remove($deleteAction);
             $actions->push($deleteAction);
-            // Really you don't want to click on it by mistake!
-            $deleteAction->setAttribute('style', 'position:absolute;right:1em;');
         }
         // Move cancel at the end
         $cancelButton = $actions->fieldByName('cancelbutton');

@@ -5,7 +5,7 @@ use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\HeaderField;
 
 /**
- *
+ * Mimics V3 usage (simply pass the first argument as title and name will be set accordingly)
  */
 class SimpleHeaderField extends HeaderField
 {

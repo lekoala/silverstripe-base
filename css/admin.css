@@ -100,3 +100,14 @@
 .grid-field.gridfield-gallery tbody tr.ss-gridfield-no-items td {
     display: table-cell;
 }
+
+/* Actions */
+
+#Form_ItemEditForm_action_doDelete {
+    position:absolute;
+    right:1.5385rem;
+}
+
+.cms-content-header-utils {
+    padding-right:1.5385rem;
+}

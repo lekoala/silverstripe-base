@@ -615,5 +615,4 @@ class FlatpickrField extends TextField
         $clone->setReadonly(true);
         return $clone;
     }
-
 }

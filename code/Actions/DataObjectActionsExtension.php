@@ -51,10 +51,10 @@ class DataObjectActionsExtension extends DataExtension
         $actions->push($saveAndClose);
     }
 
-    public function Utils()
+    public function getCMSUtils()
     {
         $utils = new FieldList();
-        $this->owner->extend('updateUtils', $utils);
+        $this->owner->extend('updateCMSUtils', $utils);
         return $utils;
     }
 }

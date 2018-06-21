@@ -47,8 +47,10 @@ class BaseDataObjectExtension extends DataExtension
 
         // readonly fields
         $readonly_fields = $this->owner->config()->readonly_fields;
-        foreach ($readonly_fields as $readonly) {
-            $fields->makeFieldReadonly($readonly);
+        if ($readonly_fields) {
+            foreach ($readonly_fields as $readonly) {
+                $fields->makeFieldReadonly($readonly);
+            }
         }
     }
 
@@ -162,7 +164,7 @@ class BaseDataObjectExtension extends DataExtension
             return;
         }
         foreach ($arr as $relation => $data) {
-            $gridfield = $fields->getGridField($class);
+            $gridfield = $fields->getGridField($relation);
             if (!$gridfield) {
                 continue;
             }
