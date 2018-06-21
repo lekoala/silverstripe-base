@@ -164,6 +164,46 @@ class InputMaskField extends TextField
         return $this->setConfig('rightAlign', $value);
     }
 
+    public function getPrefix()
+    {
+        return $this->getConfig('prefix');
+    }
+
+    public function setPrefix($value)
+    {
+        return $this->setConfig('prefix', $value);
+    }
+
+    public function getDigits()
+    {
+        return $this->getConfig('digits');
+    }
+
+    public function setDigits($value)
+    {
+        return $this->setConfig('digits', $value);
+    }
+
+    public function getGroupSeparator()
+    {
+        return $this->getConfig('groupSeparator');
+    }
+
+    public function setGroupSeparator($value)
+    {
+        return $this->setConfig('groupSeparator', $value);
+    }
+
+    public function getRadixPoint()
+    {
+        return $this->getConfig('radixPoint');
+    }
+
+    public function setRadixPoint($value)
+    {
+        return $this->setConfig('radixPoint', $value);
+    }
+
     public function getAttributes()
     {
         $attributes = parent::getAttributes();
