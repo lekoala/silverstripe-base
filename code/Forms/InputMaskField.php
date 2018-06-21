@@ -229,8 +229,8 @@ class InputMaskField extends TextField
         // rawgit is best effort, might not be reliable
         // Requirements::javascript("https://cdn.rawgit.com/RobinHerbots/Inputmask/$version/dist/min/jquery.inputmask.bundle.min.js");
         Requirements::javascript("https://cdn.jsdelivr.net/npm/inputmask@$version/dist/min/jquery.inputmask.bundle.min.js");
-        Requirements::javascript('base/javascript/ModularBehaviour.js');
         Requirements::javascript('base/javascript/fields/InputMaskField.js');
+        Requirements::javascript('base/javascript/ModularBehaviour.js');
         return parent::Field($properties);
     }
 }

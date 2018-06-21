@@ -64,9 +64,7 @@
 
             if (isJqueryModule) {
                 e.trigger('moduleAfterInit');
-            } else {
-                e[0].dispatchEvent('moduleAfterInit');
-            }
+            } else {}
         }
 
         // initialize every element
@@ -77,7 +75,7 @@
     };
 
     // onDomReady...
-    // we need the "complete" event since we work with deferred scripts
+    // we need the "complete" event since we may work with deferred scripts
     function ready(fn) {
         if (document.readyState === "complete") {
             fn();
@@ -89,13 +87,28 @@
         $('[data-module]').ModularBehaviour();
     });
 
+    var pending = 0;
+    var timeout;
+
     // after each successfull ajax request
-    // TODO: determine is this is accurate enough (maybe the content of the page takes some time to update)
-    $(document).ajaxComplete(function (event, xhr, settings) {
-        // If it returns an error, don't look for new components
-        if (xhr.status != 200) {
-            return;
+    var decodePath = function (str) {
+        return str.replace(/%2C/g, ',').replace(/\&amp;/g, '&').replace(/^\s+|\s+$/g, '');
+    };
+    $(document).ajaxSuccess(function (event, xhr, settings) {
+        // Check if jquery ondemand will trigger script loading
+        var newJsIncludes = [];
+        if (xhr.getResponseHeader && xhr.getResponseHeader('X-Include-JS') && $.isItemLoaded) {
+            var jsIncludes = xhr.getResponseHeader('X-Include-JS').split(',');
+            for (var i = 0; i < jsIncludes.length; i++) {
+                var jsIncludePath = decodePath(jsIncludes[i]);
+                if (!$.isItemLoaded(jsIncludePath)) {
+                    newJsIncludes.push(jsIncludePath);
+                }
+            }
         }
-        $('[data-module]').ModularBehaviour();
+        // Only fire if no new js include
+        if (!newJsIncludes.length) {
+            $('[data-module]').ModularBehaviour();
+        }
     });
 })(jQuery);
