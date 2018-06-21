@@ -592,4 +592,19 @@ class FlatpickrField extends TextField
 
         return $this;
     }
+
+    /**
+     * Create a new class for this field
+     */
+    public function performReadonlyTransformation()
+    {
+        $class = 'DatetimeField';
+        if (!$this->getEnableTime()) {
+            $class = 'DateField';
+        }
+        $readonly = $this->castedCopy('SilverStripe\\Forms\\' . $class);
+        $readonly->setReadonly(true);
+        return $readonly;
+    }
+
 }

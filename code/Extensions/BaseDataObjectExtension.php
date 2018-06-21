@@ -44,6 +44,12 @@ class BaseDataObjectExtension extends DataExtension
         // removed fields
         $removed_fields = $this->owner->config()->removed_fields;
         $this->removeFields($fields, $removed_fields);
+
+        // readonly fields
+        $readonly_fields = $this->owner->config()->readonly_fields;
+        foreach ($readonly_fields as $readonly) {
+            $fields->makeFieldReadonly($readonly);
+        }
     }
 
     public function augmentDatabase()
