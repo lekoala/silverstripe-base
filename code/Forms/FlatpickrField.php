@@ -230,7 +230,7 @@ class FlatpickrField extends TextField
      */
     public function setConfig($key, $value)
     {
-        if ($value) {
+        if ($value !== null) {
             $this->config[$key] = $value;
         } else {
             unset($this->config[$key]);
@@ -540,7 +540,11 @@ class FlatpickrField extends TextField
 
         self::requirements($lang, $this->plugins, $this->theme);
 
-        $this->setAttribute('placeholder', _t('FlatpickrField.SELECT_A_DATE', 'Select a date...'));
+        if ($this->readonly) {
+            $this->setAttribute('placeholder', _t('FlatpickrField.NO_DATE_SELECTED', 'No date'));
+        } else {
+            $this->setAttribute('placeholder', _t('FlatpickrField.SELECT_A_DATE', 'Select a date...'));
+        }
 
         return parent::Field($properties);
     }
@@ -593,18 +597,22 @@ class FlatpickrField extends TextField
         return $this;
     }
 
+    public function setReadonly($readonly)
+    {
+        $this->setConfig('clickOpens', !$readonly);
+        return parent::setReadonly($readonly);
+    }
+
     /**
-     * Create a new class for this field
+     * Returns a read-only version of this field.
+     *
+     * @return FormField
      */
     public function performReadonlyTransformation()
     {
-        $class = 'DatetimeField';
-        if (!$this->getEnableTime()) {
-            $class = 'DateField';
-        }
-        $readonly = $this->castedCopy('SilverStripe\\Forms\\' . $class);
-        $readonly->setReadonly(true);
-        return $readonly;
+        $clone = $this->castedCopy(self::class);
+        $clone->setReadonly(true);
+        return $clone;
     }
 
 }
