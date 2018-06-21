@@ -13,13 +13,24 @@ use SilverStripe\ORM\FieldType\DBDatetime;
  */
 class FlatpickrField extends TextField
 {
+    // Formats
     const DEFAULT_DATE_FORMAT = 'Y-m-d';
     const DEFAULT_TIME_FORMAT = 'H:i';
     const DEFAULT_DATETIME_FORMAT = 'Y-m-d H:i';
     const DEFAULT_ALT_DATE_FORMAT = 'l j F Y';
     const DEFAULT_ALT_TIME_FORMAT = 'H:i';
     const DEFAULT_ALT_DATETIME_FORMAT = 'l j F Y H:i';
-
+    // Plugins
+    const PLUGIN_CONFIRM_DATE = 'confirmDate/confirmDate';
+    const PLUGIN_RANGE = 'rangePlugin';
+    const PLUGIN_SCROLL = 'scrollPlugin';
+    const PLUGIN_MIN_MAX_TIME = 'minMaxTimePlugin';
+    const PLUGIN_WEEK_SELECT = 'weekSelect/weekSelect';
+    const PLUGIN_MONTH_SELECT = 'monthSelect/monthSelect';
+    const PLUGINS_WITH_CSS = [
+        self::PLUGIN_CONFIRM_DATE,
+        self::PLUGIN_MONTH_SELECT
+    ];
     /**
      * @var bool
      */
@@ -61,6 +72,32 @@ class FlatpickrField extends TextField
     protected $config = [];
 
     /**
+     * Array of plugins
+     *
+     * @var array
+     */
+    protected $plugins = [];
+
+    /**
+     * @var string
+     */
+    protected $theme;
+
+    /**
+     * Id of the second element
+     *
+     * @var string
+     */
+    protected $range;
+
+    /**
+     * Add confirm box
+     *
+     * @var bool
+     */
+    protected $confirmDate;
+
+    /**
      * @config
      * @var string
      */
@@ -87,6 +124,62 @@ class FlatpickrField extends TextField
     }
 
     /**
+     * @param string $plugin
+     * @return self
+     */
+    public function addPlugin($plugin)
+    {
+        if (!isset($this->plugins[$plugin])) {
+            $this->plugins[] = $plugin;
+        }
+        return $this;
+    }
+
+    /**
+     * @param string $plugin
+     * @return self
+     */
+    public function removePlugin($plugin)
+    {
+        if (isset($this->plugins[$plugin])) {
+            unset($this->plugins[$plugin]);
+        }
+        return $this;
+    }
+
+    /**
+     * @return void
+     */
+    public function clearPlugins()
+    {
+        $this->plugins = [];
+        return $this;
+    }
+
+    /**
+     * Get the value of theme
+     *
+     * @return string
+     */
+    public function getTheme()
+    {
+        return $this->theme;
+    }
+
+    /**
+     * Set the value of theme
+     *
+     * @param string $theme
+     *
+     * @return self
+     */
+    public function setTheme($theme)
+    {
+        $this->theme = $theme;
+        return $this;
+    }
+
+    /**
      * Convert a datetime format from Flatpickr to CLDR
      *
      * This allow to display the right format in php
@@ -98,8 +191,8 @@ class FlatpickrField extends TextField
     protected function convertDatetimeFormat($format)
     {
         return str_replace(
-            ['F','l','j','d','H','i','s'],
-            ['MMMM','cccc','d','dd','HH','mm','ss'],
+            ['F', 'l', 'j', 'd', 'H', 'i', 's'],
+            ['MMMM', 'cccc', 'd', 'dd', 'HH', 'mm', 'ss'],
             $format
         );
     }
@@ -154,6 +247,7 @@ class FlatpickrField extends TextField
     {
         $this->setDatetimeFormat($this->convertDatetimeFormat(self::DEFAULT_ALT_DATETIME_FORMAT));
         $this->setAltFormat(self::DEFAULT_ALT_DATETIME_FORMAT);
+        $this->setConfirmDate(true);
         return $this->setConfig('enableTime', $value);
     }
 
@@ -237,6 +331,58 @@ class FlatpickrField extends TextField
     public function setDateFormat($value)
     {
         return $this->setConfig('dateFormat', $value);
+    }
+
+    /**
+     * Get id of the second element
+     *
+     * @return string
+     */
+    public function getRange()
+    {
+        return $this->range;
+    }
+
+    /**
+     * Set id of the second element
+     *
+     * @param string $range Id of the second element
+     * @param bool $confirm
+     * @return self
+     */
+    public function setRange($range, $confirm = true)
+    {
+        $this->addPlugin(self::PLUGIN_RANGE);
+        $this->range = $range;
+        if ($confirm) {
+            $this->setConfirmDate(true);
+        }
+        return $this;
+    }
+
+
+    /**
+     * Get add confirm box
+     *
+     * @return bool
+     */
+    public function getConfirmDate()
+    {
+        return $this->confirmDate;
+    }
+
+    /**
+     * Set add confirm box
+     *
+     * @param bool $confirmDate Add confirm box
+     *
+     * @return self
+     */
+    public function setConfirmDate($confirmDate)
+    {
+        $this->addPlugin(self::PLUGIN_CONFIRM_DATE);
+        $this->confirmDate = $confirmDate;
+        return $this;
     }
 
     /**
@@ -340,11 +486,11 @@ class FlatpickrField extends TextField
     }
 
     /**
-    * Get date formatter with the standard locale / date format
-    *
-    * @throws \LogicException
-    * @return IntlDateFormatter
-    */
+     * Get date formatter with the standard locale / date format
+     *
+     * @throws \LogicException
+     * @return IntlDateFormatter
+     */
     protected function getFrontendFormatter()
     {
         $formatter = IntlDateFormatter::create(
@@ -382,28 +528,45 @@ class FlatpickrField extends TextField
         if ($lang != 'en') {
             $this->setConfig('locale', $lang);
         }
-
         $this->setAttribute('data-module', 'flatpickr');
         $this->setAttribute('data-config', json_encode($this->config));
-        self::requirements($lang);
+
+        if ($this->range) {
+            $this->setAttribute('data-range', $this->range);
+        }
+        if ($this->confirmDate) {
+            $this->setAttribute('data-confirm-date', true);
+        }
+
+        self::requirements($lang, $this->plugins, $this->theme);
 
         $this->setAttribute('placeholder', _t('FlatpickrField.SELECT_A_DATE', 'Select a date...'));
 
         return parent::Field($properties);
     }
 
-    public static function requirements($lang = null)
+    public static function requirements($lang = null, $plugins = [], $theme = null)
     {
         if ($lang === null) {
             $lang = substr(i18n::get_locale(), 0, 2);
         }
         $version = self::config()->version;
-        Requirements::javascript('base/javascript/ModularBehaviour.js');
         Requirements::css("https://cdnjs.cloudflare.com/ajax/libs/flatpickr/$version/flatpickr.min.css");
         Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/flatpickr/$version/flatpickr.js");
         if ($lang != 'en') {
             Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/flatpickr/$version/l10n/$lang.js");
         }
+        foreach ($plugins as $plugin) {
+            Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.5.0/plugins/$plugin.js");
+            if (isset(self::PLUGINS_WITH_CSS[$plugin])) {
+                Requirements::css("https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.5.0/plugins/$plugin.css");
+            }
+        }
+        if ($theme) {
+            Requirements::css("https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.5.0/themes/$theme.css");
+        }
+        Requirements::javascript('base/javascript/ModularBehaviour.js');
+        Requirements::javascript('base/javascript/fields/FlatpickrField.js');
     }
 
     /**
@@ -429,4 +592,5 @@ class FlatpickrField extends TextField
 
         return $this;
     }
+
 }

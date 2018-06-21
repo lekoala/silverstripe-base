@@ -14,6 +14,30 @@ use SilverStripe\View\Requirements;
  */
 class InputMaskField extends TextField
 {
+    // Base masks
+    const MASK_NUMERIC = '9';
+    const MASK_ALPHA = 'a';
+    const MASK_ALPHANUMERIC = '*';
+    // Base alias
+    const ALIAS_URL = 'url';
+    const ALIAS_IP = 'ip';
+    const ALIAS_EMAIL = 'email';
+    const ALIAS_DATE = 'date'; // alias of dd/mm/yyyy
+    const ALIAS_DATE_DDMMYYYY = 'dd/mm/yyyy';
+    const ALIAS_DATE_MMDDYYYY = 'mm/dd/yyyy';
+    const ALIAS_DATE_YYYYMMDD = 'yyyy/mm/dd';
+    const ALIAS_DATE_ISO = 'yyyy-mm-dd';
+    const ALIAS_DATETIME = 'datetime'; // dd/mm/yyyy hh:mm
+    const ALIAS_TIME = 'hh:mm:ss';
+    const ALIAS_TIME_SHORT = 'hh:mm';
+    const ALIAS_NUMERIC = 'numeric';
+    const ALIAS_CURRENCY = 'currency';
+    const ALIAS_DECIMAL = 'decimal';
+    const ALIAS_INTEGER = 'integer';
+    const ALIAS_PHONE = 'phone';
+    const ALIAS_PHONEBE = 'phonebe';
+    const ALIAS_REGEX = 'regex';
+
     /**
      * Override locale. If empty will default to current locale
      *
@@ -27,6 +51,12 @@ class InputMaskField extends TextField
      * @var array
      */
     protected $config = [];
+
+    /**
+     * @config
+     * @var string
+     */
+    private static $version = '4.0.1-beta.7';
 
     public function Type()
     {
@@ -124,7 +154,14 @@ class InputMaskField extends TextField
         foreach ($this->config as $k => $v) {
             $this->setAttribute('data-inputmask-' . $k, $v);
         }
-        Requirements::javascript('https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/3.3.4/jquery.inputmask.bundle.min.js');
+        $version = self::config()->version;
+        // cdnjs does not maintain new versions
+        // Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/$version/jquery.inputmask.bundle.min.js");
+        // unpkg does not support beta version
+        // Requirements::javascript("https://unpkg.com/inputmask@$version/dist/min/jquery.inputmask.bundle.min.js");
+        // rawgit is best effort, might not be reliable
+        // Requirements::javascript("https://cdn.rawgit.com/RobinHerbots/Inputmask/$version/dist/min/jquery.inputmask.bundle.min.js");
+        Requirements::javascript("https://cdn.jsdelivr.net/npm/inputmask@$version/dist/min/jquery.inputmask.bundle.min.js");
         Requirements::javascript('base/javascript/fields/InputMaskField.js');
         return parent::Field($properties);
     }

@@ -30,10 +30,15 @@
                 isJqueryModule = true;
             }
 
+            // Dispatch beforeInit event
+            // Pass the config along to define custom behaviour (moduleConfig is mutable)
             if (isJqueryModule) {
-                e.trigger('moduleBeforeInit');
+                e.trigger('moduleBeforeInit', [moduleConfig]);
             } else {
-                e[0].dispatchEvent('moduleBeforeInit');
+                var event = new CustomEvent('moduleBeforeInit', {
+                    'detail': moduleConfig
+                });
+                e[0].dispatchEvent(event);
             }
 
             // Prevent undefined config
@@ -72,7 +77,7 @@
     };
 
     // onDomReady...
-    // ! we need the "complete" event since we work with deferred scripts
+    // we need the "complete" event since we work with deferred scripts
     function ready(fn) {
         if (document.readyState === "complete") {
             fn();
@@ -87,6 +92,7 @@
     // after each successfull ajax request
     // TODO: determine is this is accurate enough (maybe the content of the page takes some time to update)
     $(document).ajaxComplete(function (event, xhr, settings) {
+        // If it returns an error, don't look for new components
         if (xhr.status != 200) {
             return;
         }

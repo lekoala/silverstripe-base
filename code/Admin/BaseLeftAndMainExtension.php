@@ -47,7 +47,7 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
             Requirements::customCSS($css, 'HidePermissions');
         }
 
-        // Remove subsite and security access if not on main site
+        // Remove subsite access if not on main site
         if (SubsiteHelper::CurrentSubsiteID()) {
             CMSMenu::remove_menu_item('SilverStripe-Subsites-Admin-SubsiteAdmin');
         }
