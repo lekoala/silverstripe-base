@@ -13,7 +13,7 @@ class QueryHelper
      * @param int|string|array $idOrWhere
      * @return DataObject
      */
-    public static function getOne($class, $idOrWhere)
+    public static function findOne($class, $idOrWhere)
     {
         if (is_int($idOrWhere)) {
             return $class::get_by_id($class, $idOrWhere);
@@ -40,7 +40,7 @@ class QueryHelper
      * @param array $filters
      * @return DataList
      */
-    public static function getList($class, $filters = null)
+    public static function find($class, $filters = null)
     {
         $list = $class::get();
         if ($filters) {

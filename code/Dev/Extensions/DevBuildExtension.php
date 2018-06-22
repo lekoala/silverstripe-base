@@ -89,16 +89,25 @@ SQL;
     public function afterCallActionHandler()
     {
         $envIsAllowed = Director::isDev();
-        $skipGeneration = $this->owner->getRequest()->getVar('skipgeneration');
+        $generateRepository = $this->owner->getRequest()->getVar('generateRepository');
+        $generateQueryTraits = $this->owner->getRequest()->getVar('generateQueryTraits');
 
-        if ($skipGeneration || !$envIsAllowed) {
-            return;
+        if ($generateQueryTraits || $generateRepository) {
+            $this->displayMessage("<div class='build'><p><b>Generating ide helpers</b></p><ul>\n\n");
         }
-
-        // $this->displayMessage("<div class='build'><p><b>Generating ide helpers</b></p><ul>\n\n");
-        // $this->generateQueryTraits();
-        // $this->generateRepository();
-        // $this->displayMessage("</ul>\n<p><b>Generating ide helpers finished!</b></p></div>");
+        if (!$envIsAllowed) {
+            $this->displayMessage("<li>Env is not allowed</li>");
+        } else {
+            if ($generateQueryTraits) {
+                $this->generateQueryTraits();
+            }
+            if ($generateRepository) {
+                $this->generateRepository();
+            }
+        }
+        if ($generateQueryTraits || $generateRepository) {
+            $this->displayMessage("</ul>\n<p><b>Generating ide helpers finished!</b></p></div>");
+        }
     }
 
     protected function generateQueryTraits()
@@ -143,7 +152,9 @@ SQL;
             $code = <<<CODE
 <?php
 // phpcs:ignoreFile -- this is a generated file
-
+CODE;
+            //TOOD: insert use statement if namespaced
+            $code .= <<<CODE
 trait $traitName
 {
     /**
@@ -194,11 +205,13 @@ CODE;
 <?php
 // phpcs:ignoreFile -- this is a generated file
 class Repository {
+
 CODE;
         foreach ($classes as $lcClass => $class) {
             $classWithoutNS = ClassHelper::getClassWithoutNamespace($class);
 
             $method = <<<CODE
+
     /**
      * @params int|string|array \$idOrWhere numeric ID or where clause (as string or array)
      * @return $class
