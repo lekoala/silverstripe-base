@@ -195,7 +195,11 @@ trait $traitName
 CODE;
 
             // Add relations getters
-            foreach (Config::inst()->get($class, 'has_one') as $has_one => $has_one_class) {
+            $has_ones = Config::inst()->get($class, 'has_one');
+            if (!$has_ones) {
+                $has_ones = [];
+            }
+            foreach ($has_ones as $has_one => $has_one_class) {
                 $column = $has_one . 'ID';
                 $code .= <<<CODE
 
@@ -212,13 +216,17 @@ CODE;
             }
 
             // Add indexes getters
-            foreach (Config::inst()->get($class, 'indexes') as $index => $indexes_spec) {
+            $indexes = Config::inst()->get($class, 'indexes');
+            if (!$indexes) {
+                $indexes = [];
+            }
+            foreach ($indexes as $index => $indexes_spec) {
                 $column = null;
                 $params = "\$id";
                 $filters = "['{$column}' => \$id]";
                 if ($indexes_spec == true) {
                     $column = $index;
-                } else if (is_array($index_spec)) {
+                } elseif (is_array($index_spec)) {
                     if (isset($index_spec['columns'])) {
                         // $column = implode('And', $index['columns']);
                         //TODO: better syntax for this
@@ -251,9 +259,6 @@ CODE;
 
             file_put_contents($traitFile, $code);
             $this->displayMessage("<li>Trait $traitName generated</li>");
-            if (!empty(Config::inst()->get($class, 'indexes'))) {
-                die('check');
-            }
         }
     }
 
