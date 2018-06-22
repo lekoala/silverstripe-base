@@ -2,12 +2,13 @@
 
 namespace LeKoala\Base\Dev\Extensions;
 
+use SilverStripe\ORM\DB;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Extension;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Control\Director;
+use SilverStripe\Core\Config\Config;
 use LeKoala\Base\Helpers\ClassHelper;
-use SilverStripe\ORM\DB;
 use LeKoala\Base\Extensions\BaseFileExtension;
 use LeKoala\ExcelImportExport\ExcelBulkLoader;
 
@@ -125,21 +126,22 @@ SQL;
                 continue;
             }
 
-            $traitDir = $module->getPath() . '/code/traits';
-            if (!is_dir($traitDir)) {
-                mkdir($traitDir);
-            }
             $className = ClassHelper::getClassWithoutNamespace($class);
+            $namespace = ClassHelper::getClassNamespace($class);
             $traitName = $className . 'Queries';
+            $traitNameNamespace = $namespace . '\\' . $traitName;
             $file = ClassHelper::findFileForClass($class);
             $content = file_get_contents($file);
 
             // Do we need to insert the trait usage?
             if (strpos($content, "use $traitName;") === false) {
                 // properly insert after class opens
-                $newContent = str_replace("extends DataObject {", "extends DataObject {\n    use $traitName;\n", $content);
-                //TODO: insert if namespaced
-                // $content = str_replace('use SilverStripe\ORM\DataObject;', "use SilverStripe\ORM\DataObject;\nuse \\$traitName;", $content);
+                // TODO: does not work if it implements anything
+                $newContent = $content;
+                $newContent = str_replace("extends DataObject {", "extends DataObject {\n    use $traitName;\n", $newContent);
+                if ($namespace) {
+                    $newContent = str_replace('use SilverStripe\ORM\DataObject;', "use SilverStripe\ORM\DataObject;\nuse \\$traitNameNamespace;", $newContent);
+                }
                 if ($newContent != $content) {
                     file_put_contents($file, $newContent);
                     $this->displayMessage("<li>Trait usage added to $className</li>");
@@ -148,13 +150,28 @@ SQL;
                 }
             }
 
+            // Do we need to generate a trait
+            $traitFile = dirname($file) . '/' . $traitName . '.php';
+            if (is_file($traitFile)) {
+                $traitContent = file_get_contents($traitFile);
+                if (strpos($traitContent, '* @autorefresh') === false) {
+                    $this->displayMessage("<li>Trait $traitName already exists and is not set to autorefresh</li>");
+                    continue;
+                }
+            }
+
             // Generate trait
-            $code = <<<CODE
-<?php
-// phpcs:ignoreFile -- this is a generated file
-CODE;
-            //TOOD: insert use statement if namespaced
+            $code = "<?php\n\n";
+
+            if ($namespace) {
+                $code .= "use $class;\n\n";
+            }
+
+            // Add default getters
             $code .= <<<CODE
+/**
+ * @autorefresh - remove this line if you edit this file manually
+ */
 trait $traitName
 {
     /**
@@ -168,17 +185,75 @@ trait $traitName
 
     /**
      * @params array \$filters
-     * @return {$class}[]
+     * @return \SilverStripe\ORM\DataList|{$class}
      */
-    public static function find(\$filters = null) {
+    public static function find(\$filters = null)
+    {
         return \LeKoala\Base\ORM\QueryHelper::find(\\$class::class, \$filters);
     }
+
 CODE;
 
-            $code .= "\n}";
+            // Add relations getters
+            foreach (Config::inst()->get($class, 'has_one') as $has_one => $has_one_class) {
+                $column = $has_one . 'ID';
+                $code .= <<<CODE
 
-            file_put_contents($traitDir . '/' . $traitName . '.php', $code);
+    /**
+     * @params array \$filters
+     * @return \SilverStripe\ORM\DataList|{$class}
+     */
+    public static function findBy{$column}(\$id)
+    {
+        return \LeKoala\Base\ORM\QueryHelper::find(\\$class::class, ['{$column}' => \$id]);
+    }
+
+CODE;
+            }
+
+            // Add indexes getters
+            foreach (Config::inst()->get($class, 'indexes') as $index => $indexes_spec) {
+                $column = null;
+                $params = "\$id";
+                $filters = "['{$column}' => \$id]";
+                if ($indexes_spec == true) {
+                    $column = $index;
+                } else if (is_array($index_spec)) {
+                    if (isset($index_spec['columns'])) {
+                        // $column = implode('And', $index['columns']);
+                        //TODO: better syntax for this
+                        // $params = implode(", ", $index['columns']);
+                        // $filters = "['{$column}' => \$id]";
+                    }
+                }
+
+                if (!$column) {
+                    continue;
+                }
+
+
+
+                $code .= <<<CODE
+
+    /**
+     * @params array \$filters
+     * @return \SilverStripe\ORM\DataList|{$class}
+     */
+    public static function findBy{$column}($params)
+    {
+        return \LeKoala\Base\ORM\QueryHelper::find(\\$class::class, $filters);
+    }
+
+CODE;
+            }
+
+            $code .= "}\n";
+
+            file_put_contents($traitFile, $code);
             $this->displayMessage("<li>Trait $traitName generated</li>");
+            if (!empty(Config::inst()->get($class, 'indexes'))) {
+                die('check');
+            }
         }
     }
 
@@ -222,7 +297,7 @@ CODE;
 
     /**
      * @params array \$filters
-     * @return {$class}[]
+     * @return \SilverStripe\ORM\DataList|{$class}
      */
     public static function {$classWithoutNS}List(\$filters = null) {
         return \LeKoala\Base\ORM\QueryHelper::find(\\$class::class, \$filters);
@@ -232,7 +307,7 @@ CODE;
             $code .= $method;
         }
 
-        $code .= "\n}";
+        $code .= "\n}\n";
 
         $dest = Director::baseFolder() . '/mysite/code/Repository.php';
         file_put_contents($dest, $code);

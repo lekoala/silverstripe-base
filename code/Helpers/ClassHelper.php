@@ -90,18 +90,26 @@ class ClassHelper
     /**
      * Get a class name without namespace
      *
-     * @param string|object $class
+     * @param string $class
      * @return string
      */
     public static function getClassWithoutNamespace($class)
     {
-        if (is_object($class)) {
-            $class = get_class($class);
-        }
-        if (strpos($class, '\\') === false) {
-            return $class;
-        }
-        return substr(strrchr($class, '\\'), 1);
+        $parts = explode("\\", $class);
+        return array_pop($parts);
+    }
+
+    /**
+     * Get a class name without namespace
+     *
+     * @param string $class
+     * @return string
+     */
+    public static function getClassNamespace($class)
+    {
+        $parts = explode("\\", $class);
+        array_pop($parts);
+        return implode("\\", $parts);
     }
 
     /**

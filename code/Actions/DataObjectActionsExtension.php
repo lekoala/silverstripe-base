@@ -8,6 +8,7 @@ use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Controller;
 use SilverStripe\Admin\CMSProfileController;
 use SilverStripe\SiteConfig\SiteConfig;
+use SilverStripe\Control\Director;
 
 /**
  * Class \LeKoala\Base\Actions\DataObjectActionsExtension
@@ -53,7 +54,12 @@ class DataObjectActionsExtension extends DataExtension
 
     public function getCMSUtils()
     {
-        $utils = new FieldList();
+        // Allow us to keep the extension point at no cost
+        if (method_exists($this->owner, 'getBaseCMSUtils')) {
+            $utils = $this->owner->getBaseCMSUtils();
+        } else {
+            $utils = new FieldList();
+        }
         $this->owner->extend('updateCMSUtils', $utils);
         return $utils;
     }
