@@ -61,6 +61,8 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
                 $this->requireFontAwesome();
             }
         }
+
+        Requirements::javascript("base/javascript/admin.js");
     }
 
     public function requireFontAwesome()

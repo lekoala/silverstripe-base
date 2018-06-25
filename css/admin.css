@@ -113,8 +113,12 @@
 }
 
 .btn-toolbar .bb-align {
-    display:inline-block;
+    display: inline-block;
     line-height: 32px;
     padding-left: 1.5385rem;
     padding-right: 1.5385rem;
+}
+
+label.btn {
+    margin-bottom: 0;
 }
