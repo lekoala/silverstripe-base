@@ -104,10 +104,17 @@
 /* Actions */
 
 #Form_ItemEditForm_action_doDelete {
-    position:absolute;
-    right:1.5385rem;
+    position: absolute;
+    right: 1.5385rem;
 }
 
 .cms-content-header-utils {
-    padding-right:1.5385rem;
+    padding-right: 1.5385rem;
+}
+
+.btn-toolbar .bb-align {
+    display:inline-block;
+    line-height: 32px;
+    padding-left: 1.5385rem;
+    padding-right: 1.5385rem;
 }

@@ -58,9 +58,11 @@ class BaseDataObjectExtension extends DataExtension
     {
         $db = $this->owner->uninherited('db');
         $class = get_class($this->owner);
+        // TODO: rename this see https://github.com/silverstripe/silverstripe-framework/issues/8088
         if (isset($db['Data'])) {
             Injector::inst()->get(LoggerInterface::class)->debug("Class $class should not have a Data field");
         }
+        // This is a reserved keyword as well
         $has_one = $this->owner->uninherited('has_one');
         if (isset($has_one['Record'])) {
             Injector::inst()->get(LoggerInterface::class)->debug("Class $class should not have a Record relation");

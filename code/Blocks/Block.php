@@ -55,14 +55,16 @@ final class Block extends DataObject
 {
     const ITEMS_KEY = 'Items';
     private static $table_name = 'Block'; // When using namespace, specify table name
+    public static $rename_columns = [
+        'Data' => 'BlockData'
+    ];
     private static $db = [
         'Type' => 'Varchar(59)',
         'MenuTitle' => 'Varchar(191)',
         'HTMLID' => 'Varchar(59)',
         'Content' => 'HTMLText',
         // Localized data
-        // TODO: rename this see https://github.com/silverstripe/silverstripe-framework/issues/8088
-        'Data' => DBJson::class,
+        'BlockData' => DBJson::class,
         // Unlocalized data
         'Settings' => DBJson::class,
     ];
@@ -89,7 +91,7 @@ final class Block extends DataObject
         'Summary' => 'Summary',
     ];
     private static $translate = [
-        "MenuTitle", "Content", "Data"
+        "MenuTitle", "Content", "AuditData"
     ];
     private static $defaults = [
         'Type' => ContentBlock::class,
@@ -370,14 +372,14 @@ final class Block extends DataObject
         return $val;
     }
     /**
-     * Consistently returns an array regardless of what is in Data
+     * Consistently returns an array regardless of what is in AuditData
      *
      * @return array
      */
     public function DataArray()
     {
-        if ($this->Data) {
-            return json_decode($this->Data, JSON_OBJECT_AS_ARRAY);
+        if ($this->AuditData) {
+            return json_decode($this->AuditData, JSON_OBJECT_AS_ARRAY);
         }
         return [];
     }
@@ -460,8 +462,8 @@ final class Block extends DataObject
         // Show debug infos
         if (Director::isDev() && isset($_GET['debug'])) {
             $json = '';
-            if ($this->Data) {
-                $json = \json_encode(json_decode($this->Data), \JSON_PRETTY_PRINT);
+            if ($this->AuditData) {
+                $json = \json_encode(json_decode($this->AuditData), \JSON_PRETTY_PRINT);
                 $debugData = new LiteralField('JsonData', '<pre>Data: <code>' . $json . '</code></pre>');
             } else {
                 $debugData = new LiteralField('JsonData', '<div class="message info">Does not contain any data</div>');

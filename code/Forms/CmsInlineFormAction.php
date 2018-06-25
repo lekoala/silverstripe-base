@@ -18,7 +18,16 @@ use SilverStripe\Forms\LiteralField;
  */
 class CmsInlineFormAction extends LiteralField
 {
+    /**
+     * @var string
+     */
     protected $url;
+
+    /**
+     * @var array
+     */
+    protected $params = [];
+
     /**
      * Create a new action button.
      * @param action The method to call when the button is clicked
@@ -39,11 +48,12 @@ class CmsInlineFormAction extends LiteralField
         if (!$this->url) {
             $ctrl = Controller::curr();
             $action = $this->name;
+            $params = $this->params;
             if ($ctrl instanceof ModelAdmin) {
                 $modelClass = $ctrl->getRequest()->param('ModelClass');
                 $action = $modelClass . '/' . $action;
+                $params = array_merge($ctrl->getRequest()->allParams(), $params);
             }
-            $params = array();
             if (!empty($params)) {
                 $action .= '?' . http_build_query($params);
             }

@@ -78,10 +78,18 @@ SQL;
             $dbSchema = DB::get_schema();
             foreach ($fields as $oldName => $newName) {
                 if ($dbSchema->hasField($tableName, $oldName)) {
-                    $this->displayMessage("<li>Renaming $oldName to $newName in $tableName</li>");
-                    $dbSchema->renameField($tableName, $oldName, $newName);
+                    if ($dbSchema->hasField($tableName, $newName)) {
+                        $this->displayMessage("<li>$oldName is already exist in $newName in $tableName. Data will be migrated and old column dropped.</li>");
+                        // Migrate data
+                        DB::query("UPDATE $tableName SET $newName = $oldName WHERE $newName IS NULL");
+                        // Remove column
+                        DB::query("ALTER TABLE $tableName DROP COLUMN $oldName");
+                    } else {
+                        $this->displayMessage("<li>Renaming $oldName to $newName in $tableName</li>");
+                        $dbSchema->renameField($tableName, $oldName, $newName);
+                    }
                 } else {
-                    $this->displayMessage("<li>$oldName is already renamed to $newName in $tableName</li>");
+                    $this->displayMessage("<li>$oldName does not exist anymore in $tableName</li>");
                 }
             }
         }

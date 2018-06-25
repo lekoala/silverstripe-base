@@ -6,9 +6,10 @@ use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Security\Member;
 use SilverStripe\ORM\DataExtension;
-use SilverStripe\Security\Permission;
 use SilverStripe\GraphQL\Controller;
 use SilverStripe\Admin\SecurityAdmin;
+use SilverStripe\Security\Permission;
+use LeKoala\Base\Security\MemberAudit;
 
 /**
  */
@@ -31,6 +32,23 @@ class BaseMemberExtension extends DataExtension
             $fields->removeByName('Permissions');
         }
     }
+
+    /**
+     * @param string $event
+     * @param string $data
+     * @return int
+     */
+    public function audit($event, $data = null)
+    {
+        $r = new MemberAudit;
+        $r->MemberID = $this->owner->ID;
+        $r->Event = $event;
+        if ($data) {
+            $r->AuditData = $data;
+        }
+        return $r->write();
+    }
+
 
     /**
      * @return array
