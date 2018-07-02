@@ -1,3 +1,4 @@
+/* global FilePondPluginFileValidateSize, FilePondPluginFileValidateType*/
 (function ($) {
     // $.fn.filepond.registerPlugin(FilePondPluginFileRename);
     $.fn.filepond.registerPlugin(FilePondPluginFileValidateSize);

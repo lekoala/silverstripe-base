@@ -12,6 +12,7 @@ use SilverStripe\SiteConfig\SiteConfig;
 use SilverStripe\Subsites\Model\Subsite;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Admin\LeftAndMainExtension;
+use SilverStripe\i18n\i18n;
 
 /**
  * Class \LeKoala\Base\LeftAndMainExtension
@@ -60,6 +61,10 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
             if (strpos($item->IconClass, 'fa fa-') === 0) {
                 $this->requireFontAwesome();
             }
+        }
+
+        if (isset($_GET['locale'])) {
+            i18n::set_locale($_GET['locale']);
         }
 
         Requirements::javascript("base/javascript/admin.js");

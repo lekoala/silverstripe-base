@@ -1,5 +1,6 @@
+/* global confirmDatePlugin */
 (function ($) {
-    $('input.flatpickr').on('moduleBeforeInit', function (event, config) {
+    $.fn.ModularBehaviour.beforeHooks.flatpickr = function (config) {
         var $this = $(this);
         var plugins = [];
         if ($this.data('range')) {
@@ -15,8 +16,8 @@
             plugins.push(new confirmDatePlugin);
         }
         config.plugins = plugins;
-    });
-    $('input.flatpickr').on('moduleAfterInit', function (event) {
+    };
+    $.fn.ModularBehaviour.afterHooks.flatpickr = function () {
         var $this = $(this);
         if ($this.data('rangeStart')) {
             var $other = $($this.data('rangeStart'));
@@ -29,5 +30,5 @@
                 fp.set('minDate', $other.val());
             }).trigger('change');
         }
-    });
+    };
 })(jQuery);

@@ -1,9 +1,11 @@
+/* global Inputmask */
 (function ($) {
-    $('input.inputmask').on('moduleBeforeInit', function (event, config) {
+    $.fn.ModularBehaviour.beforeHooks.inputmask = function (config) {
         var $this = $(this);
 
         var name = $this.attr("name");
         var val = $this.val();
+        var format = $this.data("dataformat");
 
         // Duplicate input field to store data value
         var hiddenInput = $("<input/>", {
@@ -18,8 +20,6 @@
 
         // Update real hidden field with unmasked value
         $this.on('keyup blur', function () {
-            var $this = $(this);
-            var format = $this.data("dataformat");
             var val = null;
             if (format) {
                 val = Inputmask.format(val, {
@@ -28,10 +28,12 @@
             } else {
                 val = $this.inputmask("unmaskedvalue");
             }
-            $this.parent()
-                .find("input[type=hidden]")
-                .val(val);
+            // Otherwise unmasked value is not using proper decimal separator
+            if (config.radixPoint && config.radixPoint === ',') {
+                val = val.replace(',', '.');
+            }
+            hiddenInput.val(val);
         });
 
-    });
+    };
 })(jQuery);

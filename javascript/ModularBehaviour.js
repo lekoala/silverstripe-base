@@ -30,26 +30,20 @@
                 isJqueryModule = true;
             }
 
-            // Dispatch beforeInit event
-            // Pass the config along to define custom behaviour (moduleConfig is mutable)
-            if (isJqueryModule) {
-                e.trigger('moduleBeforeInit', [moduleConfig]);
-            } else {
-                var event = new CustomEvent('moduleBeforeInit', {
-                    'detail': moduleConfig
-                });
-                e[0].dispatchEvent(event);
-            }
-
             // Prevent undefined config
             if (!moduleConfig) {
                 moduleConfig = {};
             }
 
+            // Dispatch beforeHooks
+            if (typeof $.fn.ModularBehaviour.beforeHooks[module] !== 'undefined') {
+                $.fn.ModularBehaviour.beforeHooks[module].call(e, moduleConfig);
+            }
+
             // apply = array of args
             // call = comma separated list of args
             // here, we pass as the first argument a config object
-            if ($.fn[module]) {
+            if (isJqueryModule) {
                 // It's a jquery module
                 $.fn[module].call(e, moduleConfig);
             } else if (typeof window[module] !== "undefined") {
@@ -62,9 +56,9 @@
 
             e.addClass(config.initClass);
 
-            if (isJqueryModule) {
-                e.trigger('moduleAfterInit');
-            } else {}
+            if (typeof $.fn.ModularBehaviour.afterHooks[module] !== 'undefined') {
+                $.fn.ModularBehaviour.afterHooks[module].call(e, moduleConfig);
+            }
         }
 
         // initialize every element
@@ -73,6 +67,10 @@
         });
         return this;
     };
+
+    // Define hooks
+    $.fn.ModularBehaviour.beforeHooks = {};
+    $.fn.ModularBehaviour.afterHooks = {};
 
     // onDomReady...
     // we need the "complete" event since we may work with deferred scripts
@@ -87,14 +85,11 @@
         $('[data-module]').ModularBehaviour();
     });
 
-    var pending = 0;
-    var timeout;
-
     // after each successfull ajax request
     var decodePath = function (str) {
         return str.replace(/%2C/g, ',').replace(/\&amp;/g, '&').replace(/^\s+|\s+$/g, '');
     };
-    $(document).ajaxSuccess(function (event, xhr, settings) {
+    $(document).ajaxSuccess(function (event, xhr, settings) { // eslint-disable-line no-unused-vars
         // Check if jquery ondemand will trigger script loading
         var newJsIncludes = [];
         if (xhr.getResponseHeader && xhr.getResponseHeader('X-Include-JS') && $.isItemLoaded) {

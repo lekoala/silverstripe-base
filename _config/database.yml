@@ -26,8 +26,14 @@ SilverStripe\Core\Injector\Injector:
     class: LeKoala\Base\ORM\FieldType\DBJson
   Phone:
     class: LeKoala\Base\ORM\FieldType\DBPhone
+  NumericVarchar:
+    class: LeKoala\Base\ORM\FieldType\DBNumericVarchar
   NiceEnum:
     class: LeKoala\Base\ORM\FieldType\DBNiceEnum
+  Currency:
+    class: LeKoala\Base\ORM\FieldType\DBBetterCurrency
+  Decimal:
+    class: LeKoala\Base\ORM\FieldType\DBBetterDecimal
   DBNullableClassName:
     class: LeKoala\Base\ORM\FieldType\DBNullableClassName
   # See DataObjectSchema:492

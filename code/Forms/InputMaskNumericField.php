@@ -4,18 +4,23 @@ namespace LeKoala\Base\Forms;
 use LeKoala\Base\Helpers\CurrencyFormatter;
 
 /**
- * Format currency
+ * Format numbers
  */
-class InputMaskCurrencyField extends InputMaskField
+class InputMaskNumericField extends InputMaskField
 {
     use CurrencyFormatter;
 
     public function __construct($name, $title = null, $value = null)
     {
         parent::__construct($name, $title, $value);
-        $this->setAlias(self::ALIAS_CURRENCY);
+        $this->setAlias(self::ALIAS_NUMERIC);
+        $this->applyDefaultNumericOptions();
+    }
+
+    public function applyDefaultNumericOptions()
+    {
         $this->setRighAlign(false);
-        $this->setPrefix($this->getCurrencySymbol() . ' ');
+        $this->setAutogroup(true);
         $this->setGroupSeparator($this->getCurrencyGroupingSeparator());
         $this->setRadixPoint($this->getCurrencyDecimalSeparator());
     }
@@ -30,6 +35,8 @@ class InputMaskCurrencyField extends InputMaskField
      */
     public function performReadonlyTransformation()
     {
-        return $this->castedCopy(InputMaskCurrencyField_Readonly::class);
+        $field = $this->castedCopy('SilverStripe\\Forms\\NumericField');
+        $field->setReadonly(true);
+        return $field;
     }
 }
