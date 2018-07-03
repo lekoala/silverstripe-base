@@ -1,18 +1,13 @@
 <?php
 namespace LeKoala\Base\Admin;
 
-use SilverStripe\Core\Convert;
+use SilverStripe\i18n\i18n;
 use SilverStripe\Admin\CMSMenu;
-use SilverStripe\ORM\ArrayList;
-use SilverStripe\View\ArrayData;
 use SilverStripe\Control\Director;
 use SilverStripe\View\Requirements;
-use LeKoala\Base\Subsite\SubsiteHelper;
 use SilverStripe\SiteConfig\SiteConfig;
-use SilverStripe\Subsites\Model\Subsite;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Admin\LeftAndMainExtension;
-use SilverStripe\i18n\i18n;
 
 /**
  * Class \LeKoala\Base\LeftAndMainExtension
@@ -22,6 +17,7 @@ use SilverStripe\i18n\i18n;
 class BaseLeftAndMainExtension extends LeftAndMainExtension
 {
     use Configurable;
+    use BaseLeftAndMainSubsite;
 
     public function init()
     {
@@ -48,10 +44,7 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
             Requirements::customCSS($css, 'HidePermissions');
         }
 
-        // Remove subsite access if not on main site
-        if (SubsiteHelper::CurrentSubsiteID()) {
-            CMSMenu::remove_menu_item('SilverStripe-Subsites-Admin-SubsiteAdmin');
-        }
+        $this->removeSubsiteFromMenu();
 
         // Check if we need font awesome (if any item use IconClass fa fa-something)
         // eg: private static $menu_icon_class = 'fa fa-calendar';
@@ -63,11 +56,12 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
             }
         }
 
-        if (isset($_GET['locale'])) {
-            i18n::set_locale($_GET['locale']);
-        }
+        // if (isset($_GET['locale'])) {
+        //     i18n::set_locale($_GET['locale']);
+        // }
 
         Requirements::javascript("base/javascript/admin.js");
+        $this->requireSubsiteAdminStyles();
     }
 
     public function requireFontAwesome()
@@ -76,39 +70,5 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
         // Fix icon size
         // Moved to admin.css
         // Requirements::customCSS(".menu__icon.fa { font-size: 17px !important}", "FontAwesomeMenuIcons");
-    }
-
-    public function ListSubsitesExpanded()
-    {
-        if (!SubsiteHelper::UsesSubsite()) {
-            return false;
-        }
-
-        $list = Subsite::all_accessible_sites();
-        if ($list == null || $list->count() == 1 && $list->first()->DefaultSite == true) {
-            return false;
-        }
-
-        $currentSubsiteID = SubsiteHelper::CurrentSubsiteID();
-
-        Requirements::javascript('silverstripe/subsites:javascript/LeftAndMain_Subsites.js');
-
-        $output = ArrayList::create();
-
-        foreach ($list as $subsite) {
-            $currentState = $subsite->ID == $currentSubsiteID ? 'selected' : '';
-
-            $color = $subsite->SiteConfig()->dbObject('PrimaryColor');
-
-            $output->push(ArrayData::create([
-                'CurrentState' => $currentState,
-                'ID' => $subsite->ID,
-                'Title' => Convert::raw2xml($subsite->Title),
-                'BackgroundColor' => $color->Color(),
-                'Color' => $color->ContrastColor(),
-            ]));
-        }
-
-        return $output;
     }
 }

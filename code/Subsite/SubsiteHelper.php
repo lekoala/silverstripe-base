@@ -4,6 +4,7 @@ namespace LeKoala\Base\Subsite;
 
 use SilverStripe\Subsites\State\SubsiteState;
 use SilverStripe\Subsites\Model\Subsite;
+use SilverStripe\ORM\DataObject;
 
 class SubsiteHelper
 {
@@ -23,6 +24,18 @@ class SubsiteHelper
             return SubsiteState::singleton()->getSubsiteId();
         }
         return 0;
+    }
+
+    /**
+     * @return Subsite
+     */
+    public static function CurrentSubsite()
+    {
+        $id = self::CurrentSubsiteID();
+        if (self::UsesSubsite()) {
+            return DataObject::get_by_id(Subsite::class, $id);
+        }
+        return false;
     }
 
     /**
