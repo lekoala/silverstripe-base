@@ -63,13 +63,14 @@ abstract class BaseModelAdmin extends ModelAdmin
     }
 
     /**
-     * @param DataObject $record
+     * @param DataObject|ArrayData $record
      * @return string
      */
-    public static function getEditLink(DataObject $record)
+    public static function getEditLink($record)
     {
         $URLSegment = static::config()->url_segment;
-        $recordClass = get_class($record);
+        //TODO: check how this work out with namespace
+        $recordClass = $record->ClassName;
         $ID = $record->ID;
         return "/admin/$URLSegment/$recordClass/EditForm/field/recordClass/item/$ID/edit";
     }

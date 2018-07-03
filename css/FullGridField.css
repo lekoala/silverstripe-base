@@ -1,0 +1,13 @@
+.cms table.grid-field__table tr th.main.col-FullGridSelect {
+    width: 20px;
+    text-align: center;
+}
+
+.cms table.grid-field__table tr td.col-FullGridSelect {
+    padding-left: 1.5385rem;
+    text-align: center;
+}
+
+.cms table.grid-field__table tr td.col-FullGridSelect .checkbox {
+    margin-left: 0;
+}
