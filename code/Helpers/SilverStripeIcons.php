@@ -8,7 +8,7 @@ class SilverStripeIcons
     const ICON_PRINT = 'print';
     const ICON_LIST = 'list';
     const ICON_PLUS_CIRCLED = 'plus-circled';
-    const ICON_CHECK_MARK_ = 'check-mark-';
+    const ICON_CHECK_MARK_2 = 'check-mark-2';
     const ICON_BOOK = 'book';
     const ICON_BOOK_OPEN = 'book-open';
     const ICON_PLUS = 'plus';
@@ -21,7 +21,7 @@ class SilverStripeIcons
     const ICON_TORSO = 'torso';
     const ICON_CHART_PIE = 'chart-pie';
     const ICON_SITEMAP = 'sitemap';
-    const ICON_GLOBE_ = 'globe-';
+    const ICON_GLOBE_1 = 'globe-1';
     const ICON_CHAT = 'chat';
     const ICON_COMMENT = 'comment';
     const ICON_LOGOUT = 'logout';
@@ -58,7 +58,7 @@ class SilverStripeIcons
     const ICON_DOWN_OPEN_BIG = 'down-open-big';
     const ICON_UP_OPEN_BIG = 'up-open-big';
     const ICON_RIGHT_OPEN_BIG = 'right-open-big';
-    const ICON_DOT_ = 'dot-';
+    const ICON_DOT_3 = 'dot-3';
     const ICON_SAVE = 'save';
     const ICON_ROCKET = 'rocket';
     const ICON_CANCEL = 'cancel';

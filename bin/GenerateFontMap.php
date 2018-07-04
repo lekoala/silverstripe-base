@@ -1,6 +1,6 @@
 <?php
 
-$re = '/font-icon-([a-zA-Z-]*)/m';
+$re = '/font-icon-([a-zA-Z-0-9]*)/m';
 $str = '.font-icon-search:before {
   content: "\\73";
 }

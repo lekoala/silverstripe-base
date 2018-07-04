@@ -7,9 +7,12 @@ use SilverStripe\Forms\GridField\GridField_FormAction;
 use SilverStripe\Forms\GridField\GridField_URLHandler;
 use SilverStripe\Forms\GridField\GridField_HTMLProvider;
 use SilverStripe\Forms\GridField\GridField_ActionProvider;
+use SilverStripe\Control\Controller;
 
 /**
  * Provide a simple way to declare buttons that affects a whole GridField
+ *
+ * This implements a URL Handler that can be called by the button
  */
 abstract class GridFieldTableButton implements GridField_HTMLProvider, GridField_ActionProvider, GridField_URLHandler
 {
@@ -36,6 +39,11 @@ abstract class GridFieldTableButton implements GridField_HTMLProvider, GridField
     protected $fontIcon;
 
     /**
+     * @var string
+     */
+    protected $parentID;
+
+    /**
      * @param string $targetFragment The HTML fragment to write the button into
      * @param string $buttonLabel
      */
@@ -54,6 +62,11 @@ abstract class GridFieldTableButton implements GridField_HTMLProvider, GridField
         return strtolower(str_replace('Button', '', $class));
     }
 
+    public function getButtonLabel()
+    {
+        return $this->buttonLabel;
+    }
+
     /**
      * Place the export button in a <p> tag below the field
      */
@@ -64,7 +77,7 @@ abstract class GridFieldTableButton implements GridField_HTMLProvider, GridField
         $button = new GridField_FormAction(
             $gridField,
             $action,
-            $this->buttonLabel,
+            $this->getButtonLabel(),
             $action,
             null
         );
@@ -89,7 +102,21 @@ abstract class GridFieldTableButton implements GridField_HTMLProvider, GridField
     public function handleAction(GridField $gridField, $actionName, $arguments, $data)
     {
         if (in_array($actionName, $this->getActions($gridField))) {
-            return $this->handle($gridField);
+            $controller = Controller::curr();
+            $result = $this->handle($gridField, $controller);
+            if ($result) {
+                return $result;
+            }
+
+            // Do something!
+            if ($this->noAjax) {
+                return $controller->redirectBack();
+            } else {
+                $controller->getResponse()->setStatusCode(
+                    200,
+                    'Action completed'
+                );
+            }
         }
     }
 
@@ -103,12 +130,12 @@ abstract class GridFieldTableButton implements GridField_HTMLProvider, GridField
         );
     }
 
-    abstract public function handle($gridField, $request = null);
+    abstract public function handle(GridField $gridField, Controller $controller);
 
     /**
      * Get the value of fontIcon
      *
-     * @return  string
+     * @return string
      */
     public function getFontIcon()
     {
@@ -118,14 +145,37 @@ abstract class GridFieldTableButton implements GridField_HTMLProvider, GridField
     /**
      * Set the value of fontIcon
      *
-     * @param  string  $fontIcon
+     * @param string $fontIcon
      *
-     * @return  self
+     * @return self
      */
     public function setFontIcon($fontIcon)
     {
         $this->fontIcon = $fontIcon;
 
+        return $this;
+    }
+
+
+    /**
+     * Get the parent record id
+     *
+     * @return int
+     */
+    public function getParentID()
+    {
+        return $this->parentID;
+    }
+
+    /**
+     * Set the parent record id
+     *
+     * @param int $id
+     * @return self
+     */
+    public function setParentID($id)
+    {
+        $this->parentID = $id;
         return $this;
     }
 }
