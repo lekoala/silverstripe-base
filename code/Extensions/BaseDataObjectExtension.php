@@ -7,9 +7,11 @@ use SilverStripe\Assets\File;
 use SilverStripe\Assets\Image;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Forms\FieldList;
+use SilverStripe\ORM\ManyManyList;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\ORM\UnsavedRelationList;
 use LeKoala\Base\Forms\BuildableFieldList;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\Forms\GridField\GridFieldDeleteAction;
@@ -52,6 +54,29 @@ class BaseDataObjectExtension extends DataExtension
                 $fields->makeFieldReadonly($readonly);
             }
         }
+    }
+
+    /**
+     * Syntax helper for getExtraData
+     *
+     * @param string $relation
+     * @param int $id
+     * @param string $key
+     * @param mixed $default
+     * @return mixed
+     */
+    public function getManyManyExtraData($relation, $id, $key, $default = null)
+    {
+        /* @var $list ManyManyList */
+        $list = $this->owner->$relation();
+        if ($list instanceof UnsavedRelationList) {
+            return $default;
+        }
+        $val = $list->getExtraData($relation, $id);
+        if (!$val) {
+            return $default;
+        }
+        return $val[$key];
     }
 
     public function augmentDatabase()

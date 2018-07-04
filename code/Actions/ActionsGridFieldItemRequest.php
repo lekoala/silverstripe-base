@@ -72,7 +72,8 @@ class ActionsGridFieldItemRequest extends DataExtension
         if (!$this->owner->record->canEdit()) {
             return $this->httpError(403);
         }
-        // TODO: add security check
+        $definedActions = $record->getCMSActions();
+        //TODO: check why defined actions are empty it should help checking that the call is valid
         $message = null;
         $error = false;
         try {

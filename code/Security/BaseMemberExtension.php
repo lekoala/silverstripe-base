@@ -10,11 +10,14 @@ use SilverStripe\GraphQL\Controller;
 use SilverStripe\Admin\SecurityAdmin;
 use SilverStripe\Security\Permission;
 use LeKoala\Base\Security\MemberAudit;
+use LeKoala\Base\Actions\CustomAction;
 
 /**
  */
 class BaseMemberExtension extends DataExtension
 {
+    use MasqueradeMember;
+
     public function updateCMSFields(FieldList $fields)
     {
         $ctrl = Controller::curr();
@@ -32,6 +35,52 @@ class BaseMemberExtension extends DataExtension
             $fields->removeByName('Permissions');
         }
     }
+
+    public function updateCMSActions(FieldList $actions)
+    {
+        // Admin can unlock people
+        if (Permission::check('ADMIN') && $this->owner->isLockedOut()) {
+            $actions->push($doUnlock = new CustomAction('doUnlock', 'Unlock'));
+        }
+
+        // Login as (but cannot login as yourself :-) )
+        if (Permission::check('ADMIN') && $this->owner->ID != Member::currentUserID()) {
+            $actions->push($doLoginAs = new CustomAction('doLoginAs', 'Login as'));
+        }
+    }
+
+    public function doUnlock()
+    {
+        $attempts = LoginAttempt::get()->filter($filter = array(
+            'Email' => $this->owner->Email
+        ))->sort('Created', 'DESC')->exclude('Status', 'Success')->limit(10);
+
+        foreach ($attempts as $attempt) {
+            $attempt->delete();
+        }
+
+        $this->owner->LockedOutUntil = null;
+        $this->owner->write();
+
+        return 'Member unlocked';
+    }
+
+    /**
+     * @return boolean
+     */
+    public function NotMe()
+    {
+        return $this->owner->ID !== Member::currentUserID();
+    }
+
+    /**
+     * @return boolean
+     */
+    public function IsAdmin()
+    {
+        return Permission::check('CMS_ACCESS');
+    }
+
 
     /**
      * @param string $event

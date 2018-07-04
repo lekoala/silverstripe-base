@@ -18,6 +18,20 @@ abstract class GridFieldRowButton implements GridField_ColumnProvider, GridField
 {
 
     /**
+     * A silverstripe icon
+     *
+     * @var string
+     */
+    protected $fontIcon;
+
+    /**
+     * Adds class grid-field__icon-action--hidden-on-hover if set
+     *
+     * @var boolean
+     */
+    protected $hiddenOnHover = true;
+
+    /**
      * @var int
      */
     protected $parentID;
@@ -31,30 +45,6 @@ abstract class GridFieldRowButton implements GridField_ColumnProvider, GridField
         $class = ClassHelper::getClassWithoutNamespace(get_called_class());
         // ! without lowercase, in does not work
         return strtolower(str_replace('Button', '', $class));
-    }
-
-    /**
-     * Get the parent record id
-     *
-     * @return int
-     */
-    public function getParentID()
-    {
-        return $this->parentID;
-    }
-
-    /**
-     * Set the parent record id
-     *
-     * This will be passed as ParentID along RecordID in the arguments parameter
-     *
-     * @param int $id
-     * @return self
-     */
-    public function setParentID($id)
-    {
-        $this->parentID = $id;
-        return $this;
     }
 
     /**
@@ -141,6 +131,16 @@ abstract class GridFieldRowButton implements GridField_ColumnProvider, GridField
             ->addExtraClass('gridfield-button-' . $actionName . ' no-ajax')
             ->setAttribute('title', $this->getButtonLabel());
 
+        if ($this->hiddenOnHover) {
+            $field->addExtraClass('grid-field__icon-action--hidden-on-hover');
+        }
+
+        if ($this->fontIcon) {
+            $field->addExtraClass('grid-field__icon-action btn--icon-large font-icon-' . $this->fontIcon);
+        } else {
+            // TODO: add some way to do something nice
+        }
+
         return $field->Field();
     }
 
@@ -164,5 +164,77 @@ abstract class GridFieldRowButton implements GridField_ColumnProvider, GridField
             // Do something!
             return $controller->redirectBack();
         }
+    }
+
+    /**
+     * Get the parent record id
+     *
+     * @return int
+     */
+    public function getParentID()
+    {
+        return $this->parentID;
+    }
+
+    /**
+     * Set the parent record id
+     *
+     * This will be passed as ParentID along RecordID in the arguments parameter
+     *
+     * @param int $id
+     * @return self
+     */
+    public function setParentID($id)
+    {
+        $this->parentID = $id;
+        return $this;
+    }
+
+    /**
+     * Get a silverstripe icon
+     *
+     * @return  string
+     */
+    public function getFontIcon()
+    {
+        return $this->fontIcon;
+    }
+
+    /**
+     * Set a silverstripe icon
+     *
+     * @param  string  $fontIcon  A silverstripe icon
+     *
+     * @return  self
+     */
+    public function setFontIcon(string $fontIcon)
+    {
+        $this->fontIcon = $fontIcon;
+
+        return $this;
+    }
+
+    /**
+     * Get adds class grid-field__icon-action--hidden-on-hover if set
+     *
+     * @return  boolean
+     */
+    public function getHiddenOnHover()
+    {
+        return $this->hiddenOnHover;
+    }
+
+    /**
+     * Set adds class grid-field__icon-action--hidden-on-hover if set
+     *
+     * @param  boolean  $hiddenOnHover  Adds class grid-field__icon-action--hidden-on-hover if set
+     *
+     * @return  self
+     */
+    public function setHiddenOnHover(boolean $hiddenOnHover)
+    {
+        $this->hiddenOnHover = $hiddenOnHover;
+
+        return $this;
     }
 }
