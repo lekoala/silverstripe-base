@@ -2,9 +2,19 @@
 
 namespace LeKoala\Base\Dev;
 
-use SilverStripe\Dev\DebugView;
+use Exception;
+use SilverStripe\ORM\DB;
+use Psr\Log\LoggerInterface;
+use SilverStripe\Core\Convert;
 use SilverStripe\Dev\Backtrace;
+use SilverStripe\Dev\DebugView;
+use SilverStripe\Core\ClassInfo;
+use SilverStripe\Control\Director;
 use SilverStripe\Core\Environment;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\View\Parsers\SQLFormatter;
+use SilverStripe\ORM\Connect\DatabaseException;
+use LeKoala\Base\Helpers\DatabaseHelper;
 
 class BetterDebugView extends DebugView
 {
@@ -17,7 +27,6 @@ class BetterDebugView extends DebugView
     /**
      * @param string $file
      * @param string $line
-     * @param string $text
      * @return string
      */
     public static function makeIdeLink($file, $line)
@@ -34,6 +43,94 @@ class BetterDebugView extends DebugView
         $shortname = basename($file);
         $link = "<a href=\"$ide_link\">$shortname:$line</a>";
         return $link;
+    }
+
+    /**
+     * Similar to renderVariable() but respects debug() method on object if available
+     *
+     * @param mixed $val
+     * @param array $caller
+     * @param bool $showHeader
+     * @param int $argumentIndex
+     * @return string
+     */
+    public function debugVariable($val, $caller, $showHeader = true, $argumentIndex = 0)
+    {
+        $text = $this->debugVariableText($val);
+
+        // Get arguments name
+        $args = $this->extractArgumentsName($caller['file'], $caller['line']);
+
+        if ($showHeader) {
+            $callerFormatted = $this->formatCaller($caller);
+            $argumentName = $args[$argumentIndex] ?? 'Debug';
+            return "<div style=\"background-color: white; text-align: left;\">\n<hr>\n"
+                . "<h3>$argumentName <span style=\"font-size: 65%\">($callerFormatted)</span>\n</h3>\n"
+                . $text
+                . "</div>";
+        } else {
+            return $text;
+        }
+    }
+
+    /**
+     * @param string $file
+     * @param int $line
+     * @return array
+     */
+    protected function extractArgumentsName($file, $line)
+    {
+        // Arguments passed to the function are stored in matches
+        $src = file($file);
+        $src_line = $src[$line - 1];
+        preg_match("/d\((.+)\)/", $src_line, $matches);
+        // Find all arguments, ignore variables within parenthesis
+        $arguments = array();
+        if (!empty($matches[1])) {
+            $arguments = array_map('trim', preg_split("/(?![^(]*\)),/", $matches[1]));
+        }
+        return $arguments;
+    }
+
+    /**
+     * Get debug text for this object
+     *
+     * Use symfony dumper if it exists
+     *
+     * @param mixed $val
+     * @return string
+     */
+    public function debugVariableText($val)
+    {
+        // Check debug
+        if (is_object($val) && ClassInfo::hasMethod($val, 'debug')) {
+            return $val->debug();
+        }
+
+        if (function_exists('dump')) {
+            ob_start();
+            dump($val);
+            return ob_get_clean();
+        }
+
+        return parent::debugVariableText($val);
+    }
+
+    /**
+     * Formats the caller of a method
+     *
+     * Improve method by creating the ide link
+     *
+     * @param  array $caller
+     * @return string
+     */
+    protected function formatCaller($caller)
+    {
+        $return = self::makeIdeLink($caller['file'], $caller['line']);
+        if (!empty($caller['class']) && !empty($caller['function'])) {
+            $return .= " - {$caller['class']}::{$caller['function']}()";
+        }
+        return $return;
     }
 
     /**
@@ -67,12 +164,36 @@ class BetterDebugView extends DebugView
         return $output;
     }
 
+    public function writeException(Exception $exception)
+    {
+        $infos = self::makeIdeLink($exception->getFile(), $exception->getLine());
+
+        $output = '<div class="build error">';
+        $output .= "<p><strong>" . get_class($exception) . "</strong> in $infos</p>";
+        $message = $exception->getMessage();
+        if ($exception instanceof DatabaseException) {
+            $sql = $exception->getSQL();
+            $parameters = $exception->getParameters();
+            $sql = DB::inline_parameters($sql, $parameters);
+
+            $formattedSQL = DatabaseHelper::formatSQL($sql);
+
+            $message = "Couldn't run query:<br/>" . $formattedSQL;
+        }
+        $output .= "<p>" . $message . "</p>";
+        $output .= '</div>';
+
+        $output .= $this->renderTrace($exception->getTrace());
+
+        echo $output;
+    }
+
     /**
-    * Render a call track
-    *
-    * @param  array $trace The debug_backtrace() array
-    * @return string
-    */
+     * Render a call track
+     *
+     * @param  array $trace The debug_backtrace() array
+     * @return string
+     */
     public function renderTrace($trace)
     {
         $output = '<div class="info">';

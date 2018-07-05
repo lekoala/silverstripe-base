@@ -2,6 +2,7 @@
 namespace LeKoala\Base\Forms\GridField;
 
 use SilverStripe\Core\Extension;
+use SilverStripe\Forms\GridField\GridFieldDataColumns;
 
 class GridFieldExtension extends Extension
 {
@@ -36,5 +37,57 @@ class GridFieldExtension extends Extension
         }
 
         return $arr;
+    }
+
+    /**
+     * @return GridFieldDataColumns
+     */
+    public function getDataColumns()
+    {
+        $cols = $this->owner->getConfig()->getComponentByType(GridFieldDataColumns::class);
+        if (!$cols) {
+            throw new Exception('GridFieldDataColumns does not exist on this GridField');
+        }
+        return $cols;
+    }
+
+    /**
+     * @return array
+     */
+    public function getDisplayFields()
+    {
+        return $this->getDataColumns()->getDisplayFields();
+    }
+
+    /**
+     * Shorhand for setting field labels
+     *
+     * @param array $displayFields
+     * @return GridField
+     */
+    public function setDisplayFields($displayFields)
+    {
+        $this->getDataColumns()->setDisplayFields($displayFields);
+        return $this->owner;
+    }
+
+    /**
+     * @return array
+     */
+    public function getFieldFormatting()
+    {
+        return $this->getDataColumns()->getFieldFormatting();
+    }
+
+    /**
+     * Shorhand for setting field formatting
+     *
+     * @param array $fieldFormatting
+     * @return GridField
+     */
+    public function setFieldFormatting($fieldFormatting)
+    {
+        $this->getDataColumns()->setFieldFormatting($fieldFormatting);
+        return $this->owner;
     }
 }

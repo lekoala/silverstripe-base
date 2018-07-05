@@ -1,14 +1,21 @@
 <?php
 namespace LeKoala\Base\Dev;
 
+use Exception;
+use SilverStripe\ORM\DB;
+use Psr\Log\LoggerInterface;
+use SilverStripe\Dev\Backtrace;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Environment;
-use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Core\Manifest\ClassLoader;
-use SilverStripe\Dev\BuildTask as DefaultBuildTask;
 use LeKoala\Base\Helpers\ClassHelper;
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Core\Manifest\ClassLoader;
+use SilverStripe\ORM\Connect\DatabaseException;
+use SilverStripe\Dev\BuildTask as DefaultBuildTask;
+use SilverStripe\Logging\DetailedErrorFormatter;
 
 /**
  * This is an improved BuildTask
@@ -34,7 +41,7 @@ abstract class BuildTask extends DefaultBuildTask
     const ERROR = 'error';
 
     /**
-     * @var SilverStripe\Control\HTTPReques
+     * @var SilverStripe\Control\HTTPRequest
      */
     protected $request;
 
@@ -47,7 +54,16 @@ abstract class BuildTask extends DefaultBuildTask
     {
         $this->outputHeader();
         $this->request = $request;
-        $this->init($request);
+
+        // We need to catch exception ourselves due to a subsite bug
+        // @link https://github.com/silverstripe/silverstripe-subsites/issues/377
+        try {
+            $this->init($request);
+        } catch (Exception $ex) {
+            $debug = new BetterDebugView;
+            $debug->writeException($ex);
+        }
+
         $this->outputFooter();
     }
 
@@ -106,7 +122,11 @@ abstract class BuildTask extends DefaultBuildTask
     protected function increaseTimeLimitTo($timeLimit = null)
     {
         Environment::increaseTimeLimitTo($timeLimit);
-        $this->message("Time limit has been set to $timeLimit", "info");
+        if (!$timeLimit) {
+            $this->message("Time limit is disabled", "info");
+        } else {
+            $this->message("Time limit has been set to $timeLimit seconds", "info");
+        }
     }
 
     /**
@@ -285,5 +305,13 @@ abstract class BuildTask extends DefaultBuildTask
     protected function isLive()
     {
         return Director::isLive();
+    }
+
+    /**
+     * @return LoggerInterface
+     */
+    public function getLogger()
+    {
+        return Injector::inst()->get(LoggerInterface::class)->withName('BuildTask');
     }
 }

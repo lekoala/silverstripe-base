@@ -2,10 +2,12 @@
 namespace LeKoala\Base\Admin;
 
 use SilverStripe\i18n\i18n;
+use Psr\Log\LoggerInterface;
 use SilverStripe\Admin\CMSMenu;
 use SilverStripe\Control\Director;
 use SilverStripe\View\Requirements;
 use SilverStripe\SiteConfig\SiteConfig;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Admin\LeftAndMainExtension;
 
@@ -70,5 +72,13 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
         // Fix icon size
         // Moved to admin.css
         // Requirements::customCSS(".menu__icon.fa { font-size: 17px !important}", "FontAwesomeMenuIcons");
+    }
+
+    /**
+     * @return LoggerInterface
+     */
+    public function getLogger()
+    {
+        return Injector::inst()->get(LoggerInterface::class)->withName('Admin');
     }
 }

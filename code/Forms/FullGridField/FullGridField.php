@@ -82,43 +82,7 @@ class FullGridField extends GridField
         $this->getConfig()->getComponentByType(FullGridFieldCheckbox::class)->setPreventRemove($preventRemove);
     }
 
-    /**
-     * @return array
-     */
-    public function getDisplayFields()
-    {
-        return $this->getConfig()->getComponentByType(GridFieldDataColumns::class)->getDisplayFields();
-    }
 
-    /**
-     * Shorhand for setting field labels
-     *
-     * @param array $displayFields
-     * @return void
-     */
-    public function setDisplayFields($displayFields)
-    {
-        $this->getConfig()->getComponentByType(GridFieldDataColumns::class)->setDisplayFields($displayFields);
-    }
-
-    /**
-     * @return array
-     */
-    public function getFieldFormatting()
-    {
-        return $this->getConfig()->getComponentByType(GridFieldDataColumns::class)->getFieldFormatting();
-    }
-
-    /**
-     * Shorhand for setting field formatting
-     *
-     * @param array $fieldFormatting
-     * @return void
-     */
-    public function setFieldFormatting($fieldFormatting)
-    {
-        $this->getConfig()->getComponentByType(GridFieldDataColumns::class)->setFieldFormatting($fieldFormatting);
-    }
 
     public function createDefaultConfig()
     {

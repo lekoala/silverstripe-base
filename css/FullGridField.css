@@ -10,4 +10,5 @@
 
 .cms table.grid-field__table tr td.col-FullGridSelect .checkbox {
     margin-left: 0;
+    position:relative;
 }

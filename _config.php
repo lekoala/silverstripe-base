@@ -1,15 +1,50 @@
 <?php
 
 use SilverStripe\Control\Director;
-use LeKoala\Base\i18n\BaseI18n;
-use SilverStripe\Core\Environment;
 
+// Add a benchmark helper
 if (!function_exists('bm')) {
     function bm($cb = null)
     {
         \LeKoala\Base\Dev\Benchmark::run($cb);
     }
 }
+// Add a debug helper
+if (!function_exists('d')) {
+    function d()
+    {
+        // Don't show on live
+        if (Director::isLive()) {
+            return;
+        }
+
+        $debugView = \SilverStripe\Dev\Debug::create_debug_view();
+        $i = 0;
+        foreach (func_get_args() as $val) {
+            echo $debugView->debugVariable($val, \SilverStripe\Dev\Debug::caller(), true, $i);
+            $i++;
+        }
+        exit();
+    }
+}
+// Add a logger helper
+if (!function_exists('l')) {
+    function l()
+    {
+        $priority = 100;
+        $extras = func_get_args();
+        $message = array_shift($extras);
+        \SilverStripe\Core\Injector\Injector::inst()->get(\Psr\Log\LoggerInterface::class)->log($priority, $message, $extras);
+    }
+}
+// Add global translation helper
+if (!function_exists('_g')) {
+    function _g($entity)
+    {
+        return \LeKoala\Base\i18n\BaseI18n::globalTranslation($entity);
+    }
+}
+
 
 if (Director::isDev()) {
     error_reporting(-1);
@@ -17,11 +52,7 @@ if (Director::isDev()) {
 
     // Enable IDEAnnotator
     if (!empty($_SERVER['SERVER_NAME']) &&
-        in_array(
-            substr($_SERVER['SERVER_NAME'], strrpos($_SERVER['SERVER_NAME'], '.') + 1),
-            ['dev', 'local', 'localhost']
-        )
-        ) {
+        in_array(substr($_SERVER['SERVER_NAME'], strrpos($_SERVER['SERVER_NAME'], '.') + 1), ['dev', 'local', 'localhost'])) {
         \SilverStripe\Core\Config\Config::modify()->set('SilverLeague\IDEAnnotator\DataObjectAnnotator', 'enabled', true);
     }
 }
@@ -62,11 +93,3 @@ if (!isset($_SERVER['PHP_AUTH_USER'])) {
     ->addButtonsToLine(1, 'styleselect')
     ->setOption('statusbar', false)
     ->setOption('importcss_append', true);
-
-// Add global translation helper
-if (!function_exists('_g')) {
-    function _g($entity)
-    {
-        return BaseI18n::globalTranslation($entity);
-    }
-}
