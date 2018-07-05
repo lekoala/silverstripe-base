@@ -1,6 +1,9 @@
 <?php
 namespace LeKoala\Base\Helpers;
 
+use RecursiveIteratorIterator;
+use RecursiveDirectoryIterator;
+
 class FileHelper
 {
 
