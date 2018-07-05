@@ -85,4 +85,19 @@ class FileHelper
         }
         return rmdir($dir);
     }
+
+
+    /**
+     * @param int $bytes
+     * @param integer $decimals
+     * @return string
+     */
+    public static function humanFilesize($bytes, $decimals = 2)
+    {
+        if ($bytes < 1024) {
+            return $bytes . ' B';
+        }
+        $factor = floor(log($bytes, 1024));
+        return sprintf("%.{$decimals}f ", $bytes / pow(1024, $factor)) . ['B', 'KB', 'MB', 'GB', 'TB', 'PB'][$factor];
+    }
 }

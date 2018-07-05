@@ -140,6 +140,7 @@ class BaseSecurityAdminExtension extends Extension
             $logTab->push(new HeaderField($logName, ucwords($logName)));
 
             $filemtime = filemtime($logFile);
+            $filesize = filesize($logFile);
 
             $logTab->push(new AlertField($logName . 'Alert', _t('BaseSecurityAdminExtension.LogAlert', "Last updated on {updated}", [
                 'updated' => date('Y-m-d H:i:s', $filemtime),
@@ -148,6 +149,9 @@ class BaseSecurityAdminExtension extends Extension
             $lastLines = '<pre>' . FileHelper::tail($logFile, 10) . '</pre>';
 
             $logTab->push(new LiteralField($logName, $lastLines));
+            $logTab->push(new LiteralField($logName . 'Size', '<p>' . _t('BaseSecurityAdminExtension.LogSize', "Total size is {size}", [
+                'size' => FileHelper::humanFilesize($filesize)
+            ]) . '</p>'));
         }
 
         $clearLogsBtn = new CmsInlineFormAction('doClearLogs', _t('BaseSecurityAdminExtension.doClearLogs', 'Clear Logs'));

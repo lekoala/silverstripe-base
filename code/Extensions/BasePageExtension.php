@@ -15,6 +15,7 @@ class BasePageExtension extends DataExtension
 
     /**
      * Easily require the page in requireDefaultRecords using this method
+     * Even works across multiple subsites
      *
      * @param string $segment Default url segment for the page
      * @param string $class The page class
@@ -43,7 +44,13 @@ class BasePageExtension extends DataExtension
                 $page->URLSegment = $segment;
                 $page->writeAll();
                 $page->flushCache();
-                DB::alteration_message($class . ' created', 'created');
+
+                $site = 'main site';
+                if ($SubsiteID) {
+                    $site = 'subsite ' . $SubsiteID;
+                }
+
+                DB::alteration_message($class . ' created on ' . $site, 'created');
             }
         });
     }
