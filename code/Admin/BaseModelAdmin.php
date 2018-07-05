@@ -69,9 +69,9 @@ abstract class BaseModelAdmin extends ModelAdmin
     public static function getEditLink($record)
     {
         $URLSegment = static::config()->url_segment;
-        //TODO: check how this work out with namespace
         $recordClass = $record->ClassName;
+        $sanitisedClass = $this->sanitiseClassName($recordClass);
         $ID = $record->ID;
-        return "/admin/$URLSegment/$recordClass/EditForm/field/recordClass/item/$ID/edit";
+        return "/admin/$URLSegment/$sanitisedClass/EditForm/field/recordClass/item/$ID/edit";
     }
 }

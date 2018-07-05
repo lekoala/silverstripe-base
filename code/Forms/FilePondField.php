@@ -248,8 +248,8 @@ class FilePondField extends BaseFileUploadField
         //     Requirements::javascript('https://cdn.rawgit.com/pqina/filepond-plugin-image-validate-size/ab2f4e80/dist/filepond-plugin-image-validate-size.min.js');
         //     Requirements::javascript('https://cdn.rawgit.com/pqina/jquery-filepond/59286607/filepond.jquery.js');
         // }
-        Requirements::javascript('base/javascript/fields/FilePondField.js');
         Requirements::javascript('base/javascript/ModularBehaviour.js');
+        Requirements::javascript('base/javascript/fields/FilePondField.js');
 
         return parent::Field($properties);
     }

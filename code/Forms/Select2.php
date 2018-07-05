@@ -1,14 +1,26 @@
 <?php
 namespace LeKoala\Base\Forms;
 
+use SilverStripe\ORM\DB;
 use SilverStripe\i18n\i18n;
-use SilverStripe\View\Requirements;
 use LeKoala\Base\View\Bootstrap;
-use SilverStripe\Control\Controller;
+use SilverStripe\Admin\ModelAdmin;
 use SilverStripe\Admin\LeftAndMain;
+use SilverStripe\View\Requirements;
+use SilverStripe\Control\Controller;
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\HTTPResponse;
+use SilverStripe\ORM\ArrayLib;
 
 trait Select2
 {
+    /**
+     * @config
+     * @var array
+     */
+    private static $allowed_actions = [
+        'autocomplete'
+    ];
 
     /**
      * Override locale. If empty will default to current locale
@@ -38,6 +50,26 @@ trait Select2
      */
     protected $config = [];
 
+    /**
+     * Ajax class
+     *
+     * @var string
+     */
+    protected $ajaxClass;
+
+    /**
+     * Ajax where
+     *
+     * @var string|array
+     */
+    protected $ajaxWhere;
+
+    /**
+     * @config
+     * @var string
+     */
+    private static $version = '4.0.6-rc.0';
+
     public function Type()
     {
         return 'select2';
@@ -48,6 +80,13 @@ trait Select2
         return 'select no-chosen ' . parent::extraClass();
     }
 
+    /**
+     * Get a config key value
+     *
+     * @see https://select2.org/configuration/options-api
+     * @param string $key
+     * @return string
+     */
     public function getConfig($key)
     {
         if (isset($this->config[$key])) {
@@ -55,9 +94,16 @@ trait Select2
         }
     }
 
+    /**
+     * Set a config value
+     *
+     * @param string $key
+     * @param string $value
+     * @return string
+     */
     public function setConfig($key, $value)
     {
-        if ($value) {
+        if ($value !== null) {
             $this->config[$key] = $value;
         } else {
             unset($this->config[$key]);
@@ -105,6 +151,140 @@ trait Select2
         return $this->setConfig('tokenSeparators', $value);
     }
 
+    public function getAjax()
+    {
+        return $this->getConfig('ajax');
+    }
+
+    public function setAjax($url, $dataType = 'json')
+    {
+        $config = [
+            'url' => $url,
+            'dataType' => $dataType,
+        ];
+        return $this->setConfig('ajax', $config);
+    }
+
+    /**
+     * Define a callback that returns the results as a map of id => title
+     *
+     * @param string $class
+     * @param string|array $where
+     * @return $this
+     */
+    public function setAjaxWizard($class, $where = null)
+    {
+        $this->ajaxClass = $class;
+        $this->ajaxWhere = $where;
+        return $this;
+    }
+
+    /**
+     * Get ajax where
+     *
+     * @return string
+     */
+    public function getAjaxWhere()
+    {
+        return $this->ajaxWhere;
+    }
+
+    /**
+     * Set ajax where
+     *
+     * @param string $ajaxWhere
+     * @return self
+     */
+    public function setAjaxWhere($ajaxWhere)
+    {
+        $this->ajaxWhere = $ajaxWhere;
+        return $this;
+    }
+
+    /**
+     * Get ajax class
+     *
+     * @return string
+     */
+    public function getAjaxClass()
+    {
+        return $this->ajaxClass;
+    }
+
+    /**
+     * Set ajax class
+     *
+     * @param string $ajaxClass  Ajax class
+     * @return self
+     */
+    public function setAjaxClass(string $ajaxClass)
+    {
+        $this->ajaxClass = $ajaxClass;
+
+        return $this;
+    }
+
+    public function autocomplete(HTTPRequest $request)
+    {
+        if ($this->isDisabled() || $this->isReadonly()) {
+            return $this->httpError(403);
+        }
+
+        // CSRF check
+        $token = $this->getForm()->getSecurityToken();
+        if (!$token->checkRequest($request)) {
+            return $this->httpError(400, "Invalid token");
+        }
+
+        $name = $this->getName();
+        $term = '%' . $request->getVar('term') . '%';
+
+        $class = $this->ajaxClass;
+
+        // Where
+        $where = $this->ajaxWhere;
+        $params[] = $term;
+        if (is_array($where)) {
+            if (ArrayLib::is_associative($where)) {
+                $newWhere = [];
+                foreach ($where as $col => $param) {
+                    $params[] = $param;
+                    $newWhere[] = "$col = ?";
+                }
+                $where = $newWhere;
+            }
+            $where = implode(' AND ', $where);
+        }
+
+        $sng = $class::singleton();
+        $baseTable = $sng->baseTable();
+
+        // Make a fast query to the table without orm overhead
+        $sql = 'SELECT ID AS id, Title AS text FROM ' . $baseTable . ' WHERE Title IS NOT NULL AND Title LIKE ?';
+        if ($where) {
+            $sql .= " AND $where";
+        }
+        $query = DB::prepared_query($sql, $params);
+        $results = iterator_to_array($query);
+
+        $more = false;
+        $body = json_encode(['results' => $results, 'pagination' => ['more' => $more]]);
+
+        $response = new HTTPResponse($body);
+        $response->addHeader('Content-Type', 'application/json');
+        return $response;
+    }
+
+    /**
+     * Return a link to this field.
+     *
+     * @param string $action
+     * @return string
+     */
+    public function Link($action = null)
+    {
+        return Controller::join_links($this->form->FormAction(), 'field/' . $this->getName(), $action);
+    }
 
     /**
      * Get locale to use for this field
@@ -171,6 +351,13 @@ trait Select2
             }
         }
 
+        // Ajax wizard, needs a form to get controller link
+        if ($this->ajaxClass) {
+            $token = $this->getForm()->getSecurityToken()->getValue();
+            $url = $this->Link('autocomplete') . '?SecurityID=' . $token;
+            $this->setAjax($url);
+        }
+
         $config = $this->config;
 
         // Do not use select2 because it is reserved
@@ -184,6 +371,7 @@ trait Select2
         if ($lang != 'en') {
             Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/i18n/$lang.js");
         }
+        Requirements::javascript('base/javascript/ModularBehaviour.js');
         Requirements::javascript('base/javascript/fields/Select2Field.js');
         return parent::Field($properties);
     }

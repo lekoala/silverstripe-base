@@ -102,12 +102,16 @@ class BetterDebugView extends DebugView
      */
     public function debugVariableText($val)
     {
+        if (empty($val)) {
+            return '<em>(empty)</em>';
+        }
+
         // Check debug
         if (is_object($val) && ClassInfo::hasMethod($val, 'debug')) {
             return $val->debug();
         }
 
-        if (function_exists('dump')) {
+        if (function_exists('dump') && (is_object($val) || is_array($val))) {
             ob_start();
             dump($val);
             return ob_get_clean();
