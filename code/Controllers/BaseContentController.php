@@ -14,6 +14,7 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\Connect\DatabaseException;
 use SilverStripe\CMS\Controllers\ContentController;
 use LeKoala\Base\View\DeferBackend;
+use SilverStripe\View\SSViewer;
 
 /**
  * A more opiniated base controller for your app
@@ -80,6 +81,11 @@ class BaseContentController extends ContentController
             Alertify::checkFlashMessage($this->getSession());
         } catch (Exception $ex) {
             // There might not be a session
+        }
+
+        // Always helpful!
+        if (Director::isDev() && !Director::is_ajax()) {
+            SSViewer::config()->source_file_comments = true;
         }
 
         // Switch channel for clearer logs

@@ -1,0 +1,11 @@
+---
+Name: base-cms
+---
+SilverStripe\CMS\Model\SiteTree:
+  meta_generator: ''
+SilverStripe\Admin\LeftAndMain:
+  extra_requirements_css:
+    - 'base/css/admin.css'
+  extensions:
+    - LeKoala\Base\Admin\BaseLeftAndMainExtension
+    - LeKoala\Base\Blocks\BlocksLeftAndMainExtension

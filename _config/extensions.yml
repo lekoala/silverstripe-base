@@ -7,12 +7,6 @@ SilverStripe\ORM\DataObject:
 SilverStripe\Assets\File:
   extensions:
     - LeKoala\Base\Extensions\BaseFileExtension
-SilverStripe\Admin\LeftAndMain:
-  extra_requirements_css:
-    - 'base/css/admin.css'
-  extensions:
-    - LeKoala\Base\Admin\BaseLeftAndMainExtension
-    - LeKoala\Base\Blocks\BlocksLeftAndMainExtension
 SilverStripe\CMS\Model\SiteTree:
   extensions:
     - LeKoala\Base\Extensions\SocialShareExtension
