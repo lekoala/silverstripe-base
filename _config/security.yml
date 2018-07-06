@@ -1,8 +1,10 @@
 ---
 Name: base-security
 ---
+# Global settings
 SilverStripe\Security\Security:
   login_recording: true
+# Extensions
 SilverStripe\Admin\SecurityAdmin:
   extensions:
     - LeKoala\Base\Security\BaseSecurityAdminExtension
@@ -15,3 +17,13 @@ LeKoala\Base\Security\MemberAudit:
 # Prevent any destructive operation and safely migrate
 SilverStripe\Assets\FileMigrationHelper:
   delete_invalid_files: false
+# Extensions for login/logout actions
+SilverStripe\Security\MemberAuthenticator\LoginHandler:
+  extensions:
+    - LeKoala\Base\Security\LoginHandlerExtension
+SilverStripe\Security\MemberAuthenticator\LogoutHandler:
+  extensions:
+    - LeKoala\Base\Security\LogoutHandlerExtension
+SilverStripe\Security\MemberAuthenticator\LostPasswordHandler:
+  extensions:
+    - LeKoala\Base\Security\LostPasswordHandlerExtension

@@ -17,6 +17,7 @@ use LeKoala\Base\Actions\CustomAction;
 class BaseMemberExtension extends DataExtension
 {
     use MasqueradeMember;
+    use MemberAuthenticatorExtensions;
 
     public function updateCMSFields(FieldList $fields)
     {
