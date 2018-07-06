@@ -87,10 +87,32 @@ trait Select2
         if ($value && $this->getAjaxClass()) {
             $class = $this->getAjaxClass();
             $record = DataObject::get_by_id($class, $value);
-            $source = array_merge([$record->ID => $record->getTitle()], $this->getSource());
-            $this->setSource($source);
+            $this->addRecordToSource($record);
         }
         return parent::setValue($value, $data);
+    }
+
+    /**
+     * Add a record to the source
+     *
+     * Useful for ajax scenarios where the list is not prepulated but still needs to display
+     * something on first load
+     *
+     * @param DataObject $record
+     * @return boolean true if the record has been added, false otherwise
+     */
+    public function addRecordToSource($record)
+    {
+        if (!$record) {
+            return false;
+        }
+        $source = $this->getSource();
+        if (isset($source[$record->ID])) {
+            return false;
+        }
+        $source = array_merge([$record->ID => $record->getTitle()], $source);
+        $this->setSource($source);
+        return true;
     }
 
     /**
