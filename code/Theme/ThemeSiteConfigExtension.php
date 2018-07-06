@@ -46,6 +46,7 @@ class ThemeSiteConfigExtension extends DataExtension
         "SecondaryColor" => DBColor::class,
         "ThemeColor" => DBColor::class,
         "MaskColor" => DBColor::class,
+        //TODO refactor font into a DBComposite field
         "HeaderFontFamily" => "Varchar(59)",
         "HeaderFontWeight" => "Int",
         "BodyFontFamily" => "Varchar(59)",
@@ -209,7 +210,7 @@ class ThemeSiteConfigExtension extends DataExtension
         $Icon = new SmartUploadField('Icon');
         $Icon->setFolderName("Theme");
         $themeTab->push($Icon);
-        $Favicon =new SmartUploadField('Favicon');
+        $Favicon = new SmartUploadField('Favicon');
         $Favicon->setFolderName("Theme");
         $Favicon->setAllowedExtensions('zip');
         $Favicon->setDescription("Upload the zip file generated with <a href=\"https://realfavicongenerator.net/\" target=\"_blank\">Real Favicon Generator</a>. Theme Color will be used as background for your icon.");
@@ -268,6 +269,12 @@ class ThemeSiteConfigExtension extends DataExtension
             } catch (Exception $ex) {
             }
         }
+
+        // Generate palette if necessary
+        if ($this->owner->PrimaryColor && !$this->owner->SecondaryColor) {
+            $this->owner->SecondaryColor = $this->owner->dbObject('PrimaryColor')->ComplementaryColor();
+        }
+        // TODO: generate mask and theme based on color contrast
     }
     /**
      * Assign theme color from webmanifest
@@ -295,12 +302,5 @@ class ThemeSiteConfigExtension extends DataExtension
         file_put_contents($tmpName, $FaviconData);
         $dir = $this->getThemeAssetsFolder();
         ZipHelper::unzipTo($tmpName, $dir);
-    }
-    /**
-     * @return string
-     */
-    public function CopyrightYear()
-    {
-        return date('Y');
     }
 }

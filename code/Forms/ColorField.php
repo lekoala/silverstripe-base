@@ -51,7 +51,10 @@ class ColorField extends TextField
 
     public function getInputType()
     {
-        return 'color';
+        // Use text instead of color to allow empty
+        // @link https://github.com/bgrins/spectrum/issues/201
+        return 'text';
+        // return 'color';
     }
 
     public function Type()

@@ -126,4 +126,11 @@ JS;
         Requirements::customScript($script, "GoogleAnalytics");
         return true;
     }
+    /**
+     * @return string
+     */
+    public function CopyrightYear()
+    {
+        return date('Y');
+    }
 }
