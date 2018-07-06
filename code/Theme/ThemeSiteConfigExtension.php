@@ -24,10 +24,12 @@ use SilverStripe\AssetAdmin\Forms\UploadField;
  * @property string $PrimaryColor
  * @property string $SecondaryColor
  * @property string $ThemeColor
+ * @property string $MaskColor
  * @property string $HeaderFontFamily
  * @property int $HeaderFontWeight
  * @property string $BodyFontFamily
  * @property int $BodyFontWeight
+ * @property string $CssTheme
  * @property string $GoogleFonts
  * @property int $LogoID
  * @property int $IconID

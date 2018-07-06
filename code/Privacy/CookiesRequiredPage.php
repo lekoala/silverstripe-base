@@ -6,6 +6,10 @@ use Page;
 use LeKoala\Base\Extensions\BasePageExtension;
 use LeKoala\Base\View\CookieConsent;
 
+/**
+ * Class \LeKoala\Base\Privacy\CookiesRequiredPage
+ *
+ */
 class CookiesRequiredPage extends Page
 {
     private static $table_name = 'CookiesRequiredPage'; // When using namespace, specify table name

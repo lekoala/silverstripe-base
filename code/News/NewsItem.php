@@ -33,13 +33,13 @@ use LeKoala\Base\VideoEmbed\VideoEmbed;
  * @method \SilverStripe\Assets\File File()
  * @method \LeKoala\Base\News\NewsPage Page()
  * @method \LeKoala\Base\News\NewsCategory Category()
+ * @method \SilverStripe\ORM\ManyManyList|\SilverStripe\Assets\Image[] Images()
  * @method \SilverStripe\ORM\ManyManyList|\LeKoala\Base\Tags\Tag[] Tags()
  * @mixin \LeKoala\Base\Extensions\URLSegmentExtension
  * @mixin \LeKoala\Base\Extensions\SmartDataObjectExtension
  * @mixin \LeKoala\Base\Tags\TaggableExtension
  * @mixin \LeKoala\Base\Extensions\SocialShareExtension
  * @mixin \LeKoala\Base\Extensions\EmbeddableExtension
- * @mixin \TractorCow\Fluent\Extension\FluentExtension
  */
 class NewsItem extends DataObject
 {

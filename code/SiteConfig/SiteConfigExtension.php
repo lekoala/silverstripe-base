@@ -19,17 +19,19 @@ use SilverStripe\Forms\CheckboxField;
 /**
  * Class \LeKoala\Base\SiteConfigExtension
  *
- * @property \SilverStripe\SiteConfig\SiteConfig|\LeKoala\Base\SiteConfigExtension $owner
- * @property string $ContactInfos
- * @property string $ContactAddress
+ * @property \SilverStripe\SiteConfig\SiteConfig|\LeKoala\Base\SiteConfig\SiteConfigExtension $owner
  * @property string $ContactEmail
  * @property string $ContactPhone
+ * @property string $ContactAddress
+ * @property string $ContactInfos
+ * @property string $LegalName
  * @property string $DefaultFromEmail
  * @property string $EmailFooter
  * @property string $FooterText
  * @property string $Copyright
  * @property string $GoogleAnalyticsCode
  * @property string $GoogleMapsApiKey
+ * @property boolean $ForceSSL
  */
 class SiteConfigExtension extends DataExtension
 {

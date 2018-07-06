@@ -14,7 +14,7 @@ use SilverStripe\ORM\FieldType\DBClassName;
 /**
  * Class \LeKoala\Base\Theme\ThemeControllerExtension
  *
- * @property \SilverStripe\CMS\Controllers\ContentController|\LeKoala\Base\Theme\ThemeControllerExtension $owner
+ * @property \LeKoala\Base\Controllers\BaseContentController|\LeKoala\Base\Theme\ThemeControllerExtension $owner
  */
 class ThemeControllerExtension extends Extension
 {

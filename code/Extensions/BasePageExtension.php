@@ -9,6 +9,8 @@ use LeKoala\Base\Subsite\SubsiteHelper;
 
 /**
  * Useful utilities for pages
+ *
+ * @property \SilverStripe\CMS\Model\SiteTree|\LeKoala\Base\Extensions\BasePageExtension $owner
  */
 class BasePageExtension extends DataExtension
 {

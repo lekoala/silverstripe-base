@@ -13,6 +13,9 @@ use LeKoala\Base\Security\MemberAudit;
 use LeKoala\Base\Actions\CustomAction;
 
 /**
+ * Class \LeKoala\Base\Security\BaseMemberExtension
+ *
+ * @property \SilverStripe\Security\Member|\LeKoala\Base\Security\BaseMemberExtension $owner
  */
 class BaseMemberExtension extends DataExtension
 {

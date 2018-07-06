@@ -9,6 +9,11 @@ use SilverStripe\View\Parsers\URLSegmentFilter;
 use SilverStripe\Control\Controller;
 use SilverStripe\Admin\LeftAndMain;
 
+/**
+ * Class \LeKoala\Base\Dev\Extensions\DevGroupExtension
+ *
+ * @property \LeKoala\Base\Dev\Extensions\DevGroupExtension $owner
+ */
 class DevGroupExtension extends DataExtension
 {
     public function onAfterWrite()

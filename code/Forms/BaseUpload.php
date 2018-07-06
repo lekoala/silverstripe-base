@@ -6,6 +6,10 @@ use SilverStripe\Assets\Upload;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Assets\FileNameFilter;
 
+/**
+ * Class \LeKoala\Base\Forms\BaseUpload
+ *
+ */
 class BaseUpload extends Upload
 {
     /**

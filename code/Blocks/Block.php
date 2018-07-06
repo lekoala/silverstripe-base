@@ -38,7 +38,7 @@ use SilverStripe\View\Parsers\URLSegmentFilter;
  * @property string $MenuTitle
  * @property string $HTMLID
  * @property string $Content
- * @property string $Data
+ * @property string $BlockData
  * @property string $Settings
  * @property int $Sort
  * @property int $ImageID
@@ -49,7 +49,6 @@ use SilverStripe\View\Parsers\URLSegmentFilter;
  * @method \SilverStripe\ORM\ManyManyList|\SilverStripe\Assets\File[] Files()
  * @mixin \LeKoala\Base\Extensions\SortableExtension
  * @mixin \LeKoala\Base\Extensions\SmartDataObjectExtension
- * @mixin \TractorCow\Fluent\Extension\FluentExtension
  */
 final class Block extends DataObject
 {

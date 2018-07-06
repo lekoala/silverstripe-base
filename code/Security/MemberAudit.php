@@ -10,11 +10,12 @@ use LeKoala\Base\ORM\FieldType\DBJson;
  *
  * Simply call $member->audit('myevent',$mydata) to create a new audit record
  *
- * @property string $Action
- * @property string $Data
- * @property string $Ip
+ * @property string $Event
+ * @property string $AuditData
+ * @property string $IP
  * @property int $MemberID
- * @method Member Member()
+ * @method \SilverStripe\Security\Member Member()
+ * @mixin \LeKoala\Base\Extensions\IPExtension
  */
 class MemberAudit extends DataObject
 {

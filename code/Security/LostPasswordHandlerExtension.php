@@ -3,6 +3,11 @@ namespace LeKoala\Base\Security;
 
 use SilverStripe\Core\Extension;
 
+/**
+ * Class \LeKoala\Base\Security\LostPasswordHandlerExtension
+ *
+ * @property \SilverStripe\Security\MemberAuthenticator\LostPasswordHandler|\LeKoala\Base\Security\LostPasswordHandlerExtension $owner
+ */
 class LostPasswordHandlerExtension extends Extension
 {
 

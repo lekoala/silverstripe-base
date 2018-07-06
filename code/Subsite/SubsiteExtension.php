@@ -7,6 +7,8 @@ use SilverStripe\SiteConfig\SiteConfig;
 
 /**
  * Improve subsites
+ *
+ * @property \SilverStripe\Subsites\Model\Subsite|\LeKoala\Base\Subsite\SubsiteExtension $owner
  */
 class SubsiteExtension extends DataExtension
 {

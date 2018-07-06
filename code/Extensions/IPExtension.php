@@ -10,7 +10,10 @@ use SilverStripe\Control\Controller;
 use LeKoala\Base\ORM\FieldType\IPAddress;
 
 /**
+ * Class \LeKoala\Base\Extensions\IPExtension
  *
+ * @property \LeKoala\Base\Security\MemberAudit|\LeKoala\Base\Extensions\IPExtension $owner
+ * @property string $IP
  */
 class IPExtension extends DataExtension
 {

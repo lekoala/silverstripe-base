@@ -12,6 +12,10 @@ use SilverStripe\Subsites\State\SubsiteState;
 
 /**
  * Attach a dataobject to a subsite
+ *
+ * @property \LeKoala\Base\Subsite\DataObjectSubsite $owner
+ * @property int $SubsiteID
+ * @method \SilverStripe\Subsites\Model\Subsite Subsite()
  */
 class DataObjectSubsite extends DataExtension
 {

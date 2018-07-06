@@ -23,6 +23,11 @@ use SilverStripe\AssetAdmin\Controller\AssetAdmin;
  * - Ensure thumbnails are generated
  * - Shorthands methods for standard sizes thumbnails (SmallAssetThumbnail, LargeAssetThumbnail)
  * - Smart cropping
+ *
+ * @property \SilverStripe\Assets\File|\LeKoala\Base\Extensions\BaseFileExtension $owner
+ * @property boolean $IsTemporary
+ * @property int $ObjectID
+ * @method \SilverStripe\ORM\DataObject Object()
  */
 class BaseFileExtension extends DataExtension
 {

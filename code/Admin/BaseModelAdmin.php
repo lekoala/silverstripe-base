@@ -9,7 +9,11 @@ use LeKoala\Base\Subsite\SubsiteHelper;
 use SilverStripe\Forms\GridField\GridField;
 use LeKoala\Base\Helpers\ClassHelper;
 
-abstract class BaseModelAdmin extends ModelAdmin
+abstract /**
+ * Class \LeKoala\Base\Admin\BaseModelAdmin
+ *
+ */
+class BaseModelAdmin extends ModelAdmin
 {
 
     /**

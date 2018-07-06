@@ -12,6 +12,11 @@ use LeKoala\Base\Helpers\ClassHelper;
 use LeKoala\Base\Extensions\BaseFileExtension;
 use LeKoala\ExcelImportExport\ExcelBulkLoader;
 
+/**
+ * Class \LeKoala\Base\Dev\Extensions\DevBuildExtension
+ *
+ * @property \SilverStripe\Dev\DevBuildController|\LeKoala\Base\Dev\Extensions\DevBuildExtension $owner
+ */
 class DevBuildExtension extends Extension
 {
     public function beforeCallActionHandler()

@@ -21,6 +21,9 @@ use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\Forms\GridField\GridFieldConfig_RecordViewer;
 
 /**
+ * Class \LeKoala\Base\Security\BaseSecurityAdminExtension
+ *
+ * @property \SilverStripe\Admin\SecurityAdmin|\LeKoala\Base\Security\BaseSecurityAdminExtension $owner
  */
 class BaseSecurityAdminExtension extends Extension
 {

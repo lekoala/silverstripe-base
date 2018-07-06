@@ -5,6 +5,10 @@ namespace LeKoala\Base\Privacy;
 use Page;
 use LeKoala\Base\Extensions\BasePageExtension;
 
+/**
+ * Class \LeKoala\Base\Privacy\PrivacyNoticePage
+ *
+ */
 class PrivacyNoticePage extends Page
 {
     private static $table_name = 'PrivacyNoticePage'; // When using namespace, specify table name

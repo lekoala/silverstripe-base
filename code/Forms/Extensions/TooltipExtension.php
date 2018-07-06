@@ -6,7 +6,7 @@ use SilverStripe\Core\Extension;
 /**
  * Class \LeKoala\Base\Forms\Extensions\TooltipExtension
  *
- * @property \SilverStripe\Forms\FormField|\LeKoala\Base\Forms\Extensions\TooltipExtension $owner
+ * @property \SilverStripe\Forms\GridField\GridField|\LeKoala\Base\Forms\Extensions\TooltipExtension $owner
  */
 class TooltipExtension extends Extension
 {

@@ -4,6 +4,11 @@ namespace LeKoala\Base\Forms\GridField;
 use SilverStripe\Core\Extension;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
 
+/**
+ * Class \LeKoala\Base\Forms\GridField\GridFieldExtension
+ *
+ * @property \SilverStripe\Forms\GridField\GridField|\LeKoala\Base\Forms\GridField\GridFieldExtension $owner
+ */
 class GridFieldExtension extends Extension
 {
     public function updateNewRowClasses(&$classes, $total, $index, $record)

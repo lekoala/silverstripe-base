@@ -18,6 +18,8 @@ use SilverStripe\View\SSViewer;
 
 /**
  * A more opiniated base controller for your app
+ *
+ * @mixin \LeKoala\Base\Theme\ThemeControllerExtension
  */
 class BaseContentController extends ContentController
 {

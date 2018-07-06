@@ -5,6 +5,13 @@ namespace LeKoala\Base\Privacy;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataExtension;
 
+/**
+ * Class \LeKoala\Base\Privacy\PrivacyMemberExtension
+ *
+ * @property \SilverStripe\Security\Member|\LeKoala\Base\Privacy\PrivacyMemberExtension $owner
+ * @property string $PrivacyChecked
+ * @property string $TermsChecked
+ */
 class PrivacyMemberExtension extends DataExtension
 {
     private static $db = [

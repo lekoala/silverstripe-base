@@ -5,6 +5,10 @@ namespace LeKoala\Base\Privacy;
 use Page;
 use LeKoala\Base\Extensions\BasePageExtension;
 
+/**
+ * Class \LeKoala\Base\Privacy\TermsAndConditionsPage
+ *
+ */
 class TermsAndConditionsPage extends Page
 {
     private static $table_name = 'TermsAndConditionsPage'; // When using namespace, specify table name

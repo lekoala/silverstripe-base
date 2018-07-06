@@ -26,6 +26,8 @@ use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
  * - after delete, cleanup tables
  * - non versioned class should publish their own assets
  * - declarative cms fields : removed_fields, ...
+ *
+ * @property \LeKoala\Base\Blocks\Block|\LeKoala\Base\News\NewsCategory|\LeKoala\Base\News\NewsItem|\LeKoala\Base\Security\MemberAudit|\LeKoala\Base\Tags\Tag|\SilverStripe\Assets\File|\SilverStripe\SiteConfig\SiteConfig|\SilverStripe\CMS\Model\SiteTree|\SilverStripe\Security\Group|\SilverStripe\Security\Member|\SilverStripe\Subsites\Model\Subsite|\LeKoala\Base\Extensions\BaseDataObjectExtension $owner
  */
 class BaseDataObjectExtension extends DataExtension
 {
