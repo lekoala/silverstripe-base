@@ -1,5 +1,5 @@
 <?php
-namespace LeKoala\Base;
+namespace LeKoala\Base\SiteConfig;
 
 use SilverStripe\Forms\Tab;
 use SilverStripe\Assets\File;
