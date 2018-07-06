@@ -160,4 +160,26 @@ class ClassHelper
         $classManifest = ClassLoader::inst()->getManifest();
         return $classManifest->getItemPath($class);
     }
+
+    /**
+     * Sanitise a model class' name for inclusion in a link
+     *
+     * @param string $class
+     * @return string
+     */
+    public static function sanitiseClassName($class)
+    {
+        return str_replace('\\', '-', $class);
+    }
+
+    /**
+     * Unsanitise a model class' name from a URL param
+     *
+     * @param string $class
+     * @return string
+     */
+    public static function unsanitiseClassName($class)
+    {
+        return str_replace('-', '\\', $class);
+    }
 }

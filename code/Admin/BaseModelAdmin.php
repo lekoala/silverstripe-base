@@ -7,6 +7,7 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\Admin\ModelAdmin;
 use LeKoala\Base\Subsite\SubsiteHelper;
 use SilverStripe\Forms\GridField\GridField;
+use LeKoala\Base\Helpers\ClassHelper;
 
 abstract class BaseModelAdmin extends ModelAdmin
 {
@@ -70,7 +71,7 @@ abstract class BaseModelAdmin extends ModelAdmin
     {
         $URLSegment = static::config()->url_segment;
         $recordClass = $record->ClassName;
-        $sanitisedClass = $this->sanitiseClassName($recordClass);
+        $sanitisedClass = ClassHelper::sanitiseClassName($recordClass);
         $ID = $record->ID;
         return "/admin/$URLSegment/$sanitisedClass/EditForm/field/recordClass/item/$ID/edit";
     }
