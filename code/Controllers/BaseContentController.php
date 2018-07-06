@@ -19,6 +19,8 @@ use SilverStripe\View\SSViewer;
 /**
  * A more opiniated base controller for your app
  *
+ * Most group of functions are grouped within traits when possible
+ *
  * @mixin \LeKoala\Base\Theme\ThemeControllerExtension
  */
 class BaseContentController extends ContentController

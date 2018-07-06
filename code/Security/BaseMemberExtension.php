@@ -6,15 +6,19 @@ use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Security\Member;
 use SilverStripe\ORM\DataExtension;
+use SilverStripe\Security\Security;
 use SilverStripe\GraphQL\Controller;
 use SilverStripe\Admin\SecurityAdmin;
 use SilverStripe\Security\Permission;
-use LeKoala\Base\Security\MemberAudit;
 use LeKoala\Base\Actions\CustomAction;
+use LeKoala\Base\Security\MemberAudit;
 
 /**
- * Class \LeKoala\Base\Security\BaseMemberExtension
+ * A lot of base functionalities for your members
  *
+ * Most group of functions are grouped within traits when possible
+ *
+ * @link https://docs.silverstripe.org/en/4/developer_guides/extending/how_tos/track_member_logins/
  * @property \SilverStripe\Security\Member|\LeKoala\Base\Security\BaseMemberExtension $owner
  */
 class BaseMemberExtension extends DataExtension
@@ -22,12 +26,99 @@ class BaseMemberExtension extends DataExtension
     use MasqueradeMember;
     use MemberAuthenticatorExtensions;
 
+    private static $db = [
+        'LastVisited' => 'Datetime',
+        'NumVisit' => 'Int',
+    ];
+
+    public function canLogIn($result)
+    {
+    }
+
+    /**
+     * @deprecated
+     */
+    public function beforeMemberLoggedIn()
+    {
+    }
+
+    public function afterMemberLoggedIn()
+    {
+        $this->logVisit();
+    }
+
+    /**
+     * Called by CookieAuthenticationHandler
+     */
+    public function memberAutoLoggedIn()
+    {
+        $this->logVisit();
+    }
+
+    public function beforeMemberLoggedOut($request)
+    {
+    }
+
+    public function afterMemberLoggedOut($request)
+    {
+    }
+
+    /**
+     * Returns the fields for the member form - used in the registration/profile module.
+     * It should return fields that are editable by the admin and the logged-in user.
+     *
+     * @param FieldList $fields
+     */
+    public function updateMemberFormFields(FieldList $fields)
+    {
+    }
+
+    public function updateMemberPasswordField($password)
+    {
+    }
+
+    public function updateDateFormat($format)
+    {
+    }
+
+    public function updateTimeFormat($format)
+    {
+    }
+
+    public function updateGroups($groups)
+    {
+    }
+
+    public function onBeforeChangePassword($password, $valid)
+    {
+    }
+
+    public function onAfterChangePassword($password, $valid)
+    {
+    }
+
+    public function registerFailedLogin()
+    {
+    }
+
     public function updateCMSFields(FieldList $fields)
     {
         $ctrl = Controller::curr();
+
+        $fields->makeFieldReadonly([
+            'LastVisited',
+            'NumVisit',
+        ]);
+
         // Some fields don't make sense upon creation
         if (!$this->owner->ID) {
-            $fields->removeByName('FailedLoginCount');
+            $fields->removeByName(
+                [
+                    'FailedLoginCount',
+                    'LastVisited',
+                    'NumVisit',
+                ]
+            );
         }
         // Some fields required ADMIN rights
         if (!Permission::check('ADMIN')) {
@@ -35,8 +126,12 @@ class BaseMemberExtension extends DataExtension
         }
         // Some things should never be shown outside of SecurityAdmin
         if (get_class($ctrl) != SecurityAdmin::class) {
-            $fields->removeByName('DirectGroups');
-            $fields->removeByName('Permissions');
+            $fields->removeByName([
+                'DirectGroups',
+                'Permissions',
+                'LastVisited',
+                'NumVisit',
+            ]);
         }
     }
 
@@ -116,6 +211,18 @@ class BaseMemberExtension extends DataExtension
         return $r->write();
     }
 
+    protected function logVisit()
+    {
+        if (!Security::database_is_ready()) {
+            return;
+        }
+
+        DB::query(sprintf(
+            'UPDATE "Member" SET "LastVisited" = %s, "NumVisit" = "NumVisit" + 1 WHERE "ID" = %d',
+            DB::get_conn()->now(),
+            $this->owner->ID
+        ));
+    }
 
     /**
      * @return array

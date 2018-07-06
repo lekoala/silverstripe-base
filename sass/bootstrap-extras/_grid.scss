@@ -1,0 +1,5 @@
+// Avoid images getting outside the grid
+.row img {
+    max-width: 100%;
+    height: auto;
+}
