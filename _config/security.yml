@@ -18,6 +18,9 @@ LeKoala\Base\Security\MemberAudit:
 SilverStripe\Assets\FileMigrationHelper:
   delete_invalid_files: false
 # Extensions for login/logout actions
+SilverStripe\Core\Injector\Injector:
+  SilverStripe\Security\MemberAuthenticator\MemberLoginForm:
+    class: 'LeKoala\Base\Security\MemberLoginForm'
 SilverStripe\Security\MemberAuthenticator\LoginHandler:
   extensions:
     - LeKoala\Base\Security\LoginHandlerExtension
