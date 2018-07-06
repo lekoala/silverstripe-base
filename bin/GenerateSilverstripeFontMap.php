@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * It is not always easy to know which icons are available in the cms
+ * This file parse the css file and output a list of constants to use in your projects
+ * Just copy/paste and good to go!
+ */
+
 $re = '/font-icon-([a-zA-Z-0-9]*)/m';
 $str = '.font-icon-search:before {
   content: "\\73";
