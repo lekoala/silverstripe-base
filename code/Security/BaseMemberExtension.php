@@ -52,18 +52,32 @@ class BaseMemberExtension extends DataExtension
 
     public function doUnlock()
     {
-        $attempts = LoginAttempt::get()->filter($filter = array(
-            'Email' => $this->owner->Email
-        ))->sort('Created', 'DESC')->exclude('Status', 'Success')->limit(10);
+        $lastSuccess = LoginAttempt::get()->filter($filter = array(
+            'MemberID' => $this->owner->ID
+        ))->sort('Created', 'DESC')->filter('Status', 'Success')->first();
 
-        foreach ($attempts as $attempt) {
-            $attempt->delete();
+        $sql = 'DELETE FROM LoginAttempt WHERE MemberID = ? AND Status = ?';
+        $params = [
+            $this->owner->ID,
+            'Failure'
+        ];
+        if ($lastSuccess) {
+            $sql .= ' AND ID > ?';
+            $params[] = $lastSuccess->ID;
         }
 
-        $this->owner->LockedOutUntil = null;
-        $this->owner->write();
+        // Cleanup failure attempt
+        DB::prepared_query($sql, $params);
 
-        return 'Member unlocked';
+        try {
+            $this->owner->LockedOutUntil = null;
+            $this->owner->write();
+
+            $msg = _t('BaseMemberExtension.MEMBER_UNLOCKED', 'Member unlocked');
+        } catch (Exception $ex) {
+            $msg = $ex->getMessage();
+        }
+        return $msg;
     }
 
     /**

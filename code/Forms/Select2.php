@@ -3,14 +3,15 @@ namespace LeKoala\Base\Forms;
 
 use SilverStripe\ORM\DB;
 use SilverStripe\i18n\i18n;
+use SilverStripe\ORM\ArrayLib;
 use LeKoala\Base\View\Bootstrap;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\Admin\ModelAdmin;
 use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\View\Requirements;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
-use SilverStripe\ORM\ArrayLib;
 
 trait Select2
 {
@@ -78,6 +79,18 @@ trait Select2
     public function extraClass()
     {
         return 'select no-chosen ' . parent::extraClass();
+    }
+
+    public function setValue($value, $data = null)
+    {
+        // For ajax, we need to add the option to the list
+        if ($value && $this->getAjaxClass()) {
+            $class = $this->getAjaxClass();
+            $record = DataObject::get_by_id($class, $value);
+            $source = array_merge([$record->ID => $record->getTitle()], $this->getSource());
+            $this->setSource($source);
+        }
+        return parent::setValue($value, $data);
     }
 
     /**
@@ -222,6 +235,14 @@ trait Select2
         $this->ajaxClass = $ajaxClass;
 
         return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isAjax()
+    {
+        return $this->ajaxClass || $this->getConfig('ajax');
     }
 
     public function autocomplete(HTTPRequest $request)
@@ -386,6 +407,10 @@ trait Select2
     {
         // Tags can be created on the fly and cannot be validated
         if ($this->getTags()) {
+            return true;
+        }
+
+        if ($this->isAjax()) {
             return true;
         }
 

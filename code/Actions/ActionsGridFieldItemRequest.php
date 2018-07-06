@@ -66,6 +66,7 @@ class ActionsGridFieldItemRequest extends DataExtension
     public function doCustomAction($data, $form)
     {
         $action = key($data['action_doCustomAction']);
+        d($action);
         $controller = $this->getToplevelController();
         $record = $this->owner->record;
         // Check permission
