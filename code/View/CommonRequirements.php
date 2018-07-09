@@ -15,6 +15,12 @@ class CommonRequirements
      * @config
      * @var string
      */
+    private static $accouting_version = '0.4.1';
+
+    /**
+     * @config
+     * @var string
+     */
     private static $moment_version = '2.22.2';
 
     /**
@@ -71,6 +77,16 @@ class CommonRequirements
         if ($timezone) {
             Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/$tzversion/moment-timezone-with-data.min.js");
         }
+    }
+
+    /**
+     * @link http://openexchangerates.github.io/accounting.js/
+     * @return void
+     */
+    public static function accouting()
+    {
+        $version = self::config()->accouting_version;
+        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/accounting.js/$version/accounting.min.js");
     }
 
     /**
