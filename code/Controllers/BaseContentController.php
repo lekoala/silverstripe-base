@@ -72,6 +72,12 @@ class BaseContentController extends ContentController
             throw $ex;
         }
 
+        // Without this, objects cannot decide for themselves if they want hash rewrite
+        // @link https://github.com/silverstripe/silverstripe-framework/issues/7447
+        // @link https://docs.silverstripe.org/en/4/developer_guides/templates/how_tos/disable_anchor_links/
+        SSViewer::setRewriteHashLinksDefault(false);
+
+        // Force SSL from client config
         $SiteConfig = $this->SiteConfig();
         if ($SiteConfig->ForceSSL) {
             Director::forceSSL();

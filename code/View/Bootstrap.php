@@ -43,6 +43,12 @@ class Bootstrap
     private static $bootstrap_native_version = '2.0.15';
 
     /**
+     * @config
+     * @var string
+     */
+    private static $js_cookie_version = '2.2.0';
+
+    /**
      * Require defaults js requirements for bootstrap
      *
      * @return void
@@ -51,11 +57,13 @@ class Bootstrap
     {
         $jquery_version = self::config()->jquery_version;
         $bootstrap_version = self::config()->bootstrap_version;
+        $js_cookie_version = self::config()->js_cookie_version;
 
         Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/jquery/$jquery_version/jquery.min.js");
         // with Popper JS but no jQuery
         Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/$bootstrap_version/js/bootstrap.bundle.js");
-        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.0/js.cookie.min.js");
+        // Helpers
+        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/js-cookie/$js_cookie_version/js.cookie.min.js");
         Requirements::javascript("base/javascript/BootstrapHelpers.js");
     }
 
