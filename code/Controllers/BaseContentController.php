@@ -103,6 +103,24 @@ class BaseContentController extends ContentController
     }
 
     /**
+     * @param string $segment
+     * @return string
+     */
+    public function IsCurrentSegment($segment)
+    {
+        return $segment == $this->URLSegment ? 'current' : 'link';
+    }
+
+    /**
+     * @param string $segment
+     * @return string
+     */
+    public function IsCurrentAction($action)
+    {
+        return $action == $this->action ? 'current' : 'link';
+    }
+
+    /**
      * The class to be applied on your body tag
      *
      * Called <body class="$BodyClass"> in your templates

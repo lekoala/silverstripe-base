@@ -230,7 +230,12 @@ class InputMaskField extends TextField
         if ($this->dataFormat) {
             $this->setAttribute('data-dataformat', $this->dataFormat);
         }
+        self::requirements();
+        return parent::Field($properties);
+    }
 
+    public static function requirements()
+    {
         $version = self::config()->version;
         // cdnjs does not maintain new versions
         // Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/$version/jquery.inputmask.bundle.min.js");
@@ -241,6 +246,5 @@ class InputMaskField extends TextField
         Requirements::javascript("https://cdn.jsdelivr.net/npm/inputmask@$version/dist/min/jquery.inputmask.bundle.min.js");
         Requirements::javascript('base/javascript/ModularBehaviour.js');
         Requirements::javascript('base/javascript/fields/InputMaskField.js');
-        return parent::Field($properties);
     }
 }

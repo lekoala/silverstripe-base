@@ -2,6 +2,7 @@
 namespace LeKoala\Base\Forms;
 
 use SilverStripe\Forms\TextField;
+use SilverStripe\View\Requirements;
 
 /**
  *
