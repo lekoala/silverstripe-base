@@ -6,6 +6,7 @@ use SilverStripe\Forms\Form;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Validator;
+use SilverStripe\View\Requirements;
 use LeKoala\Base\Helpers\ClassHelper;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Control\RequestHandler;
@@ -143,6 +144,18 @@ class BaseForm extends Form
     protected function buildValidator(BuildableFieldList $fields)
     {
         return new RequiredFields;
+    }
+
+    /**
+     * Manually enable RequiredFields javascript validation
+     *
+     * @return void
+     */
+    protected function enableJsValidation()
+    {
+        $this->setAttribute("data-module", "RequiredFields");
+        Requirements::javascript("base/javascript/ModularBehaviour.js");
+        Requirements::javascript("base/javascript/RequiredFields.js");
     }
 
     /**
