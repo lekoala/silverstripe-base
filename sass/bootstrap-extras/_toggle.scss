@@ -1,79 +1,68 @@
 // https://medium.com/claritydesignsystem/pure-css-accessible-checkboxes-and-radios-buttons-54063e759bb3
 // https://github.com/lokesh-coder/pretty-checkbox
-
 $toggle-size: $font-size-base !default;
 $toggle-line-height: $toggle-size * 1.5 !default;
 $toggle-top: ($toggle-line-height - $toggle-size) / 2;
-$toggle-input-background : $input-bg;
-$toggle-input-disabled-background:  $input-disabled-bg;
+$toggle-input-background: $input-bg;
+$toggle-input-disabled-background: $input-disabled-bg;
 $toggle-border-color: $input-border-color;
 $toggle-border-hover-color: $link-hover-color;
 $toggle-border-focus-color: $input-focus-color;
 $toggle-border-disabled-color: $text-muted;
 $toggle-border-width: $input-border-width;
-
-.checkbox, ul.optionset, .radio, .switch {
-    position:relative;
-    display:inline-block;
-
-    // Hide the input but keep it accessible
-    input[type="checkbox"], input[type="radio"] {
+// global
+.checkbox,
+ul.optionset,
+.radio,
+.switch {
+    position: relative;
+    display: inline-block; // Hide the input but keep it accessible
+    input[type="checkbox"],
+    input[type="radio"] {
         opacity: 0;
-        position:absolute;
-
-        &:disabled + label {
+        position: absolute;
+        &:disabled+label {
             cursor: default;
         }
     }
-
     label {
-        cursor:pointer;
+        cursor: pointer;
         position: relative;
         display: inline-block;
         line-height: $toggle-line-height;
-
-        padding:0;
+        padding: 0;
         padding-left: $toggle-size*1.5;
         padding-right: $toggle-size*1.5;
-
-        &::before, &::after {
+        &::before,
+        &::after {
             position: absolute;
-            content: ' ';
-
-            // Needed for the line-height to take effect
+            content: ' '; // Needed for the line-height to take effect
             display: inline-block;
-        }
-
-        // Background element (square, circle, swich holder)
+        } // Background element (square, circle, swich holder)
         &::before {
             height: $toggle-size;
             width: $toggle-size;
-
             background: $toggle-input-background;
             border: $toggle-border-width solid $toggle-border-color;
-
             left: 0px;
             top: $toggle-top;
-        }
-
-        // Togglable element (dot, checkmark...)
+        } // Togglable element (dot, checkmark...)
         &::after {
-            top:$toggle-line-height / 2;
-            left:$toggle-size / 2;
-            transform:translate(-50%,-50%);
+            top: $toggle-line-height / 2;
+            left: $toggle-size / 2;
+            transform: translate(-50%, -50%);
         }
-
         &:hover {
             &::before {
-                border-color:$toggle-border-hover-color;
+                border-color: $toggle-border-hover-color;
             }
         }
     }
-
 }
 
-.checkbox, ul.checkboxset {
-
+// checkbox
+.checkbox,
+ul.checkboxset {
     label {
         &::after {
             // Checkmark in css
@@ -81,133 +70,103 @@ $toggle-border-width: $input-border-width;
             height: $toggle-size/2;
             border: solid $toggle-border-focus-color;
             border-width: 0 $toggle-border-width*2 $toggle-border-width*2 0;
-            transform: translate(-50%,-50%) rotate(45deg) ;
-
-            // Hide by default
+            transform: translate(-50%, -50%) rotate(45deg); // Hide by default
             transition: opacity .3s ease-out;
-            opacity:0;
+            opacity: 0;
         }
-    }
-
-    // Unhide on the checked state
-    input[type="checkbox"]:checked + label::after {
-        opacity:1;
-    }
-
-    // Adding focus styles on the outer-box of the fake checkbox
-    input[type="checkbox"]:focus + label::before {
+    } // Unhide on the checked state
+    input[type="checkbox"]:checked+label::after {
+        opacity: 1;
+    } // Adding focus styles on the outer-box of the fake checkbox
+    input[type="checkbox"]:focus+label::before {
         border-color: $toggle-border-focus-color;
-    }
-
-    // Disabled state
-    input[type="checkbox"]:disabled + label::before {
+    } // Disabled state
+    input[type="checkbox"]:disabled+label::before {
         border-color: $toggle-border-disabled-color;
         background-color: $toggle-input-disabled-background;
     }
-    input[type="checkbox"]:disabled + label::after {
+    input[type="checkbox"]:disabled+label::after {
         border-color: $toggle-border-disabled-color;
-        background:$toggle-input-disabled-background;
+        background: $toggle-input-disabled-background;
     }
 }
 
-.radio {
-
+// radio
+.radio,
+ul.optionset:not(.checkboxset) {
     label {
         &::after {
             // Circle in css
             background: $toggle-border-focus-color;
             height: $toggle-size/2;
             width: $toggle-size/2;
-            border-radius:$toggle-size;
-
-            // Hide by default
+            border-radius: $toggle-size; // Hide by default
             transition: opacity .3s ease-out;
-            opacity:0;
+            opacity: 0;
         }
     }
-
     label {
         // Outer box of the fake checkbox
         &::before {
             border-radius: $toggle-size;
         }
-    }
-
-    // Unhide on the checked state
-    input[type="radio"]:checked + label::after {
-        opacity:1;
-    }
-
-    // Adding focus styles on the outer-box of the fake checkbox
-    input[type="radio"]:focus + label::before {
+    } // Unhide on the checked state
+    input[type="radio"]:checked+label::after {
+        opacity: 1;
+    } // Adding focus styles on the outer-box of the fake checkbox
+    input[type="radio"]:focus+label::before {
         border-color: $toggle-border-focus-color;
-    }
-
-    // Disabled state
-    input[type="radio"]:disabled + label::before {
+    } // Disabled state
+    input[type="radio"]:disabled+label::before {
         border-color: $toggle-border-disabled-color;
         background-color: $toggle-input-disabled-background;
     }
-    input[type="radio"]:disabled + label::after {
+    input[type="radio"]:disabled+label::after {
         border-color: $toggle-border-disabled-color;
-        background:$toggle-input-disabled-background;
+        background: $toggle-input-disabled-background;
     }
 }
 
-
+// switch
 .switch {
-
     label {
-		line-height:$toggle-line-height*1.2;
-        padding-left:$toggle-size*2.5;
-
-		&:before, &:after {
-			font-size: 1.2em;
-			line-height:0.8;
-		}
-
-        // Outer box of the switch
+        line-height: $toggle-line-height*1.2;
+        padding-left: $toggle-size*2.5;
+        &:before,
+        &:after {
+            font-size: 1.2em;
+            line-height: 0.8;
+        } // Outer box of the switch
         &::before {
             height: $toggle-size;
             width: $toggle-size*1.5;
-
             border-radius: $toggle-size;
-        }
-
-        // Dot in css
+        } // Dot in css
         &::after {
             // Circle in css
             background: $toggle-border-focus-color;
             height: $toggle-size/1.5;
             width: $toggle-size/1.5;
-            border-radius:100%;
-
+            border-radius: 100%;
             transition: left .2s ease-out;
         }
-
-    }
-
-    // Show success
-    input[type="checkbox"]:checked + label::before {
+    } // Show success
+    input[type="checkbox"]:checked+label::before {
         background: $toggle-border-focus-color;
     }
-    input[type="checkbox"]:checked + label::after {
+    input[type="checkbox"]:checked+label::after {
         left: $toggle-size;
-        background:#fff;
-    }
-
-    // Adding focus styles on the outer-box of the fake checkbox
-    input[type="checkbox"]:focus + label::before {
+        background: #fff;
+    } // Adding focus styles on the outer-box of the fake checkbox
+    input[type="checkbox"]:focus+label::before {
         border-color: $toggle-border-focus-color;
-    }
-
-    // Disabled state
-    input[type="checkbox"]:disabled + label::before {
+    } // Disabled state
+    input[type="checkbox"]:disabled+label::before {
         border-color: $toggle-border-disabled-color;
         background-color: $toggle-input-disabled-background;
     }
-    input[type="checkbox"]:disabled + label::after {
+    input[type="checkbox"]:disabled+label::after {
         border-color: $toggle-border-disabled-color;
-        background:$toggle-input-disabled-background;
+        background: $toggle-input-disabled-background;
     }
 }
