@@ -83,7 +83,7 @@ class CommonRequirements
      * @link http://openexchangerates.github.io/accounting.js/
      * @return void
      */
-    public static function accouting()
+    public static function accounting()
     {
         $version = self::config()->accouting_version;
         Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/accounting.js/$version/accounting.min.js");
