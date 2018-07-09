@@ -68,15 +68,19 @@ class CookieConsent
         if (self::config()->cookies_required) {
             $message = _t('CookieConsent.MESSAGE_REQUIRED', "This website require the usage of cookies. Please accept them to continue");
         }
+
+        $PrimaryColor = $SiteConfig->dbObject('PrimaryColor');
+        $ThemeColor = $SiteConfig->dbObject('ThemeColor');
+
         $baseOpts = [
             'palette' => [
                 'popup' => [
-                    'background' => $SiteConfig->ThemeColor,
-                    'text' => $SiteConfig->dbObject('ThemeColor')->ContrastColor(),
+                    'background' => $ThemeColor->Color(),
+                    'text' => $ThemeColor->ContrastColor(),
                 ],
                 'button' => [
-                    'background' => $SiteConfig->PrimaryColor,
-                    'text' => $SiteConfig->dbObject('PrimaryColor')->ContrastColor(),
+                    'background' => $PrimaryColor->HighlightColor(),
+                    'text' => $PrimaryColor->ContrastColor(),
                 ]
             ],
             'content' => [
