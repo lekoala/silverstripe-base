@@ -107,9 +107,9 @@ class BetterDebugView extends DebugView
         }
 
         // Check debug
-        if (is_object($val) && ClassInfo::hasMethod($val, 'debug')) {
-            return $val->debug();
-        }
+        // if (is_object($val) && ClassInfo::hasMethod($val, 'debug')) {
+        //     return $val->debug();
+        // }
 
         if (function_exists('dump') && (is_object($val) || is_array($val))) {
             ob_start();

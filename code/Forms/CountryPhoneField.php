@@ -71,7 +71,7 @@ class CountryPhoneField extends FieldGroup
     }
 
     /**
-     * Value in E164 format
+     * Value in E164 format (no formatting)
      *
      * @return string
      */
@@ -89,8 +89,8 @@ class CountryPhoneField extends FieldGroup
     }
 
     /**
-    * @return PhoneNumberUtil
-    */
+     * @return PhoneNumberUtil
+     */
     public function getPhoneNumberUtil()
     {
         return PhoneNumberUtil::getInstance();

@@ -127,3 +127,10 @@ table .btn-link {
     padding: 0;
     margin: 0;
 }
+
+/* UI fixes */
+
+.cms .grid-field .add-existing-autocompleter button.action_gridfield_relationadd span {
+    /* Looks broken otherwise */
+    float: none;
+}
