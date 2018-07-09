@@ -26,15 +26,34 @@ trait Messaging
     }
 
     /**
-     * @param string|boolean $link Pass true to redirect back
+     * @param string|array|boolean $link Pass true to redirect back
      * @return HTTPResponse
      */
     public function redirectTo($link)
     {
+        // If we have an array, it only applies to json response
         if ($link === true || is_array($link)) {
             return $this->redirectBack();
         }
-        return $this->redirect($this->Link($link));
+        if (strpos($link, '/') !== 0) {
+            $link = $this->Link($link);
+        }
+        return $this->redirect($link);
+    }
+
+    /**
+     * @param string $message
+     * @param string|array $linkOrManipulations (defaults to redirect back)
+     * @param string $alert
+     * @return HTTPResponse
+     */
+    public function redirectWithAlert($message, $linkOrManipulations = true, $alert = "info")
+    {
+        if (Director::is_ajax()) {
+            return $this->applicationResponse($message, $linkOrManipulations, [], true);
+        }
+        $this->sessionMessage($message, $alert);
+        return $this->redirectTo($linkOrManipulations);
     }
 
     /**
@@ -44,13 +63,17 @@ trait Messaging
      */
     public function success($message, $linkOrManipulations = true)
     {
-        if (Director::is_ajax()) {
-            return $this->applicationResponse($message, $linkOrManipulations, [], true);
-        }
-        $this->sessionMessage($message, 'good');
-        if ($linkOrManipulations) {
-            return $this->redirectTo($linkOrManipulations);
-        }
+        return $this->redirectWithAlert($message, $linkOrManipulations, 'good');
+    }
+
+    /**
+     * @param string $message
+     * @param string|array $linkOrManipulations
+     * @return HTTPResponse
+     */
+    public function warn($message, $linkOrManipulations = true)
+    {
+        return $this->redirectWithAlert($message, $linkOrManipulations, 'warn');
     }
 
     /**
@@ -60,13 +83,7 @@ trait Messaging
      */
     public function error($message, $linkOrManipulations = true)
     {
-        if (Director::is_ajax()) {
-            return $this->applicationResponse($message, $linkOrManipulations, [], false);
-        }
-        $this->sessionMessage($message, 'bad');
-        if ($linkOrManipulations) {
-            return $this->redirectTo($linkOrManipulations);
-        }
+        return $this->redirectWithAlert($message, $linkOrManipulations, 'bad');
     }
 
     /**

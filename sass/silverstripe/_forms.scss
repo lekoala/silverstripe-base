@@ -113,24 +113,38 @@ form {
     .description {
         display: block;
         margin-top: $form-text-margin-top;
-        font-size:80%;
+        font-size: 80%;
     }
     .field {
         margin-bottom: $form-group-margin-bottom;
     }
-
     .btn-toolbar {
         .action {
             @extend .btn;
-            @include button-variant($primary,$primary);
+            @include button-variant($primary, $primary);
         }
         p {
-            margin:0;
+            margin: 0;
         }
         a {
             @extend .btn;
             @extend .btn-link;
-            font-size:1em;
+            font-size: 1em;
         }
+    }
+    .optionset,
+    .checkboxset {
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+    }
+    .field.required {
+        > label:after {
+            content: " *";
+        }
+    }
+    .error {
+        color: $danger;
     }
 }

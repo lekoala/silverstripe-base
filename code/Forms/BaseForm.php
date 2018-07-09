@@ -9,7 +9,6 @@ use SilverStripe\Forms\Validator;
 use LeKoala\Base\Helpers\ClassHelper;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Control\RequestHandler;
-use function GuzzleHttp\json_encode;
 
 /**
  * An extended class for forms:
@@ -131,7 +130,9 @@ class BaseForm extends Form
      */
     protected function buildActions(BuildableFieldList $actions)
     {
-        $actions->addAction("doSubmit", _t('BaseForm.DOSUBMIT', "Submit"));
+        if (method_exists($this, 'doSubmit')) {
+            $actions->addAction("doSubmit", _t('BaseForm.DOSUBMIT', "Submit"));
+        }
         return $actions;
     }
 
@@ -142,11 +143,6 @@ class BaseForm extends Form
     protected function buildValidator(BuildableFieldList $fields)
     {
         return new RequiredFields;
-    }
-
-    public function doSubmit($data)
-    {
-        throw new Exception("Please implement your own code to handle this. Submitted data is : " . json_encode($data));
     }
 
     /**

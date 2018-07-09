@@ -62,6 +62,9 @@ class Alertify
             case 'bad':
                 $type = 'error';
                 break;
+            case 'warn':
+                $type = 'warning';
+                break;
         }
         $settings = '';
         foreach (self::config()->defaults as $k => $v) {
