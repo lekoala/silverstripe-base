@@ -56,8 +56,6 @@ class BetterDebugView extends DebugView
      */
     public function debugVariable($val, $caller, $showHeader = true, $argumentIndex = 0)
     {
-        $text = $this->debugVariableText($val);
-
         // Get arguments name
         $args = $this->extractArgumentsName($caller['file'], $caller['line']);
 
@@ -65,13 +63,20 @@ class BetterDebugView extends DebugView
             $callerFormatted = $this->formatCaller($caller);
             $defaultArgumentName = is_int($argumentIndex) ? 'Debug' : $argumentIndex;
             $argumentName = $args[$argumentIndex] ?? $defaultArgumentName;
+
+            // Sql trick
+            if (strpos(strtolower($argumentName), 'sql') !== false) {
+                $text = DatabaseHelper::formatSQL($val);
+            } else {
+                $text = $this->debugVariableText($val);
+            }
+
             return "<div style=\"background-color: white; text-align: left;\">\n<hr>\n"
                 . "<h3>$argumentName <span style=\"font-size: 65%\">($callerFormatted)</span>\n</h3>\n"
                 . $text
                 . "</div>";
-        } else {
-            return $text;
         }
+        return $this->debugVariableText($val);
     }
 
     /**
