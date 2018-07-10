@@ -72,17 +72,33 @@ class CookieConsent
         $PrimaryColor = $SiteConfig->dbObject('PrimaryColor');
         $ThemeColor = $SiteConfig->dbObject('ThemeColor');
 
-        $baseOpts = [
+        $paletteOpts = [
             'palette' => [
                 'popup' => [
-                    'background' => $ThemeColor->Color(),
-                    'text' => $ThemeColor->ContrastColor(),
+                    'background' => '#efefef',
+                    'text' => '#404040',
                 ],
                 'button' => [
-                    'background' => $PrimaryColor->HighlightColor(),
-                    'text' => $PrimaryColor->ContrastColor(),
+                    'background' => '#8ec760',
+                    'text' => '#ffffff',
                 ]
-            ],
+            ]
+        ];
+        if ($PrimaryColor->getValue()) {
+            $paletteOpts = [
+                'palette' => [
+                    'popup' => [
+                        'background' => $ThemeColor->Color(),
+                        'text' => $ThemeColor->ContrastColor(),
+                    ],
+                    'button' => [
+                        'background' => $PrimaryColor->HighlightColor(),
+                        'text' => $PrimaryColor->HighlightContrastColor(),
+                    ]
+                ]
+            ];
+        }
+        $contentOpts = [
             'content' => [
                 'message' => $message,
                 'dismiss' => _t('CookieConsent.DECLINE', 'Decline'),
@@ -91,6 +107,7 @@ class CookieConsent
                 'href' => $privacyLink,
             ]
         ];
+        $baseOpts = array_merge($paletteOpts, $contentOpts);
         $finalOpts = array_merge($baseOpts, $opts);
         $jsonOpts = json_encode($finalOpts, JSON_PRETTY_PRINT);
 

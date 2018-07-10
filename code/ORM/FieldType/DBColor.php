@@ -13,6 +13,8 @@ use SilverStripe\ORM\FieldType\DBVarchar;
 class DBColor extends DBVarchar
 {
     const CONTRAST_THRESHOLD = 128;
+    const DARK = '#000000';
+    const LIGHT = '#FFFFFF';
 
     private static $casting = [
         'Luminance' => 'Float',
@@ -162,14 +164,14 @@ class DBColor extends DBVarchar
         return self::clamp(0.2126 * ($R / 255) + 0.7152 * ($G / 255) + 0.0722 * ($B / 255));
     }
 
-    protected static function HEX_TO_HSL($hexcode)
+    protected static function HEX_TO_HSL($hex)
     {
-        $hexcode = trim($hexcode, '#');
+        $hex = trim($hex, '#');
 
-        // $hexcode is the six digit hex colour code we want to convert
-        $redhex = substr($hexcode, 0, 2);
-        $greenhex = substr($hexcode, 2, 2);
-        $bluehex = substr($hexcode, 4, 2);
+        // $hex is the six digit hex colour code we want to convert
+        $redhex = substr($hex, 0, 2);
+        $greenhex = substr($hex, 2, 2);
+        $bluehex = substr($hex, 4, 2);
 
         // $var_r, $var_g and $var_b are the three decimal fractions to be input to our RGB-to-HSL conversion routine
         $var_r = (hexdec($redhex)) / 255;
@@ -218,7 +220,7 @@ class DBColor extends DBVarchar
         return [$h, $s, $l];
     }
 
-    protected static function hue_2_rgb($v1, $v2, $vh)
+    protected static function HUE_TO_RGB($v1, $v2, $vh)
     {
         if ($vh < 0) {
             $vh += 1;
@@ -260,7 +262,7 @@ class DBColor extends DBVarchar
 
         // Input is HSL value of complementary colour, held in $h2, $s, $l as fractions of 1
         // Output is RGB in normal 255 255 255 format, held in $r, $g, $b
-        // Hue is converted using function hue_2_rgb, shown at the end of this code
+        // Hue is converted using function HUE_TO_RGB, shown at the end of this code
         if ($s == 0) {
             $r = $l * 255;
             $g = $l * 255;
@@ -273,9 +275,9 @@ class DBColor extends DBVarchar
             };
 
             $var_1 = 2 * $l - $var_2;
-            $r = 255 * self::hue_2_rgb($var_1, $var_2, $h2 + (1 / 3));
-            $g = 255 * self::hue_2_rgb($var_1, $var_2, $h2);
-            $b = 255 * self::hue_2_rgb($var_1, $var_2, $h2 - (1 / 3));
+            $r = 255 * self::HUE_TO_RGB($var_1, $var_2, $h2 + (1 / 3));
+            $g = 255 * self::HUE_TO_RGB($var_1, $var_2, $h2);
+            $b = 255 * self::HUE_TO_RGB($var_1, $var_2, $h2 - (1 / 3));
         };
 
         $rhex = sprintf("%02X", round($r));
@@ -288,31 +290,57 @@ class DBColor extends DBVarchar
     }
 
     /**
+     * @param string $hex
+     * @param string $dark
+     * @param string $light
+     * @return string
+     */
+    protected static function HEX_CONTRAST($hex, $dark = null, $light = null)
+    {
+        if ($dark === null) {
+            $dark = self::DARK;
+        }
+        if ($light === null) {
+            $light = self::LIGHT;
+        }
+        list($R, $G, $B) = self::HEX_TO_RGB($hex);
+        $yiq = (($R * 299) + ($G * 587) + ($B * 114)) / 1000;
+        return ($yiq >= self::CONTRAST_THRESHOLD) ? $dark : $light;
+    }
+
+    /**
      * Get a contrast color
      *
      * @param string $dark
      * @param string $light
      * @return string
      */
-    public function ContrastColor($dark = '#000000', $light = '#ffffff')
+    public function ContrastColor($dark = null, $light = null)
     {
-        list($R, $G, $B) = self::HEX_TO_RGB($this->Color());
-        $yiq = (($R * 299) + ($G * 587) + ($B * 114)) / 1000;
-        return ($yiq >= self::CONTRAST_THRESHOLD) ? $dark : $light;
+        return self::HEX_CONTRAST($this->Color(), $dark, $light);
     }
 
     /**
-     * Get a higlight color
+     * Get a higlight color (a blend with a dark or white color based on contrast)
      *
      * @param float $opacity
      * @return string
      */
     public function HighlightColor($opacity = 0.8)
     {
-        list($R, $G, $B) = self::HEX_TO_RGB($this->Color());
-        $yiq = (($R * 299) + ($G * 587) + ($B * 114)) / 1000;
-        $background = ($yiq >= self::CONTRAST_THRESHOLD) ? '#000000' : '#ffffff';
+        $background = self::HEX_CONTRAST($this->Color());
         return $this->Blend($opacity, $background);
+    }
+
+    /**
+     * Get a contrast color for higlight
+     *
+     * @param string $dark
+     * @param string $light
+     * @return string
+     */
+    public function HighlightContrastColor($dark = null, $light = null) {
+        return self::HEX_CONTRAST($this->HighlightColor(), $dark, $light);
     }
 
     /**
