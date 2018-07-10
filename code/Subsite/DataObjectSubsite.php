@@ -77,12 +77,15 @@ class DataObjectSubsite extends DataExtension
     public function updateCMSFields(FieldList $fields)
     {
         $SubsiteID = SubsiteState::singleton()->getSubsiteId();
-        if ($SubsiteID && !$this->owner->SubsiteID) {
+
+        if ($SubsiteID) {
+            // We have a current subsite, add a hidden field to track state
             $fields->push(HiddenField::create('SubsiteID', 'SubsiteID', $SubsiteID));
         } else {
-            $SubsiteID = DropdownField::create('SubsiteID', 'Subsite', Subsite::get()->map());
-            $fields->addFieldsToTab('Root.Main', $SubsiteID);
-            $SubsiteID->setHasEmptyDefault(true);
+            // On main site, allow choosing subsite
+            $SubsiteIDField = DropdownField::create('SubsiteID', 'Subsite', Subsite::get()->map());
+            $fields->addFieldsToTab('Root.Main', $SubsiteIDField);
+            $SubsiteIDField->setHasEmptyDefault(true);
         }
     }
 

@@ -140,8 +140,8 @@ class ActionsGridFieldItemRequest extends DataExtension
     /**
      * Gets the back link
      *
-     * @return  string
-     * @todo  This had to be directly copied from {@link GridFieldDetailForm_ItemRequest}
+     * @return string
+     * @todo This had to be directly copied from {@link GridFieldDetailForm_ItemRequest}
      * because it is a protected method and not visible to a decorator!
      */
     public function getBackLink()
@@ -153,7 +153,7 @@ class ActionsGridFieldItemRequest extends DataExtension
             if ($toplevelController->hasMethod('Backlink')) {
                 $backlink = $toplevelController->Backlink();
             } elseif ($this->owner->getController()->hasMethod('Breadcrumbs')) {
-                $parents = $this->owner->getController()->Breadcrumbs(false)->items;
+                $parents = $this->owner->getController()->Breadcrumcdbs(false)->items;
                 $backlink = array_pop($parents)->Link;
             }
         }
