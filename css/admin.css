@@ -130,18 +130,30 @@ table .btn-link {
 
 /* UI fixes */
 
+/* Looks broken otherwise */
+
 .cms .grid-field .add-existing-autocompleter button.action_gridfield_relationadd span {
-    /* Looks broken otherwise */
     float: none;
 }
 
-.cms .field select, .field .chosen-container-single .chosen-single {
-    /* select height can be weirdly inconsistent */
-    /* size=1 select have no height, some select have a bigger height, chosen has 36px .. */
-    height:35px;
+/* select height can be weirdly inconsistent
+   size=1 select have no height, some select have a bigger height, chosen has 36px .. */
+
+.cms .field select,
+.field .chosen-container-single .chosen-single {
+    height: 35px;
 }
 
+/* the margin top prevents label alignment and looks strange */
+
 .form__fieldgroup>.form__fieldgroup-item {
-    /* the margin top prevents label alignment and looks strange */
-    margin-top:0;
+    margin-top: 0;
+}
+
+/* elements following a table have no margin */
+
+.grid-field+.field,
+.grid-field+h2,
+.grid-field+h3 {
+    margin-top: 1.2308rem;
 }
