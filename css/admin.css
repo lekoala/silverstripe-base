@@ -150,10 +150,25 @@ table .btn-link {
     margin-top: 0;
 }
 
-/* elements following a table have no margin */
+/* grid field without a footer have no margin bottom */
 
-.grid-field+.field,
-.grid-field+h2,
-.grid-field+h3 {
-    margin-top: 1.2308rem;
+fieldset.grid-field {
+    margin-bottom: 1.2308rem;
+}
+
+/* pagination looks awful in thead */
+
+.grid-field thead .grid-field__title-row th {
+    position:relative;
+}
+.grid-field thead .pagination-records-number {
+    position:absolute;
+    top:.9231rem;
+    right:1.5385rem;
+}
+
+/* large table can extend the screen width */
+
+.cms .grid-field__table tr th.main > span {
+    white-space: normal;
 }
