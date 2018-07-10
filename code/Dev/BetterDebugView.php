@@ -63,7 +63,8 @@ class BetterDebugView extends DebugView
 
         if ($showHeader) {
             $callerFormatted = $this->formatCaller($caller);
-            $argumentName = $args[$argumentIndex] ?? 'Debug';
+            $defaultArgumentName = is_int($argumentIndex) ? 'Debug' : $argumentIndex;
+            $argumentName = $args[$argumentIndex] ?? $defaultArgumentName;
             return "<div style=\"background-color: white; text-align: left;\">\n<hr>\n"
                 . "<h3>$argumentName <span style=\"font-size: 65%\">($callerFormatted)</span>\n</h3>\n"
                 . $text

@@ -11,7 +11,7 @@ if (!function_exists('bm')) {
 }
 // Add a debug helper
 if (!function_exists('d')) {
-    function d()
+    function d(...$args)
     {
         // Don't show on live
         if (Director::isLive()) {
@@ -19,8 +19,16 @@ if (!function_exists('d')) {
         }
 
         $debugView = \SilverStripe\Dev\Debug::create_debug_view();
+        // Also show latest object in backtrace
+        foreach (debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT) as $row) {
+            if (!empty($row['object'])) {
+                $args[] = $row['object'];
+                break;
+            }
+        }
+        // Show args
         $i = 0;
-        foreach (func_get_args() as $val) {
+        foreach ($args as $val) {
             echo $debugView->debugVariable($val, \SilverStripe\Dev\Debug::caller(), true, $i);
             $i++;
         }

@@ -80,6 +80,10 @@ class DataObjectSubsite extends DataExtension
 
         if ($SubsiteID) {
             // We have a current subsite, add a hidden field to track state
+            // Override with owner subsite ID if different
+            if ($this->owner->SubsiteID) {
+                $SubsiteID = $this->owner->SubsiteID;
+            }
             $fields->push(HiddenField::create('SubsiteID', 'SubsiteID', $SubsiteID));
         } else {
             // On main site, allow choosing subsite
