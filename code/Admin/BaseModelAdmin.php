@@ -21,7 +21,7 @@ class BaseModelAdmin extends ModelAdmin
      */
     public function getSubsiteId()
     {
-        return SubsiteHelper::CurrentSubsiteID();
+        return SubsiteHelper::currentSubsiteID();
     }
 
     public static function getRequiredPermissions()

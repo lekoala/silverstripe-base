@@ -10,6 +10,6 @@ trait SubsiteController
      */
     public function getSubsiteId()
     {
-        return SubsiteHelper::CurrentSubsiteID();
+        return SubsiteHelper::currentSubsiteID();
     }
 }

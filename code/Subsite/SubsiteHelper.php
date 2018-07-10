@@ -18,7 +18,7 @@ class SubsiteHelper
      *
      * @return int
      */
-    public static function CurrentSubsiteID()
+    public static function currentSubsiteID()
     {
         if (self::UsesSubsite()) {
             return SubsiteState::singleton()->getSubsiteId();
@@ -29,9 +29,9 @@ class SubsiteHelper
     /**
      * @return Subsite
      */
-    public static function CurrentSubsite()
+    public static function currentSubsite()
     {
-        $id = self::CurrentSubsiteID();
+        $id = self::currentSubsiteID();
         if (self::UsesSubsite()) {
             return DataObject::get_by_id(Subsite::class, $id);
         }
@@ -97,7 +97,7 @@ class SubsiteHelper
      */
     public static function withSubsite($ID, $cb)
     {
-        $currentID = self::CurrentSubsiteID();
+        $currentID = self::currentSubsiteID();
         SubsiteState::singleton()->setSubsiteId($ID);
         $cb();
         SubsiteState::singleton()->setSubsiteId($currentID);
@@ -122,7 +122,7 @@ class SubsiteHelper
             $cb(0);
         }
 
-        $currentID = self::CurrentSubsiteID();
+        $currentID = self::currentSubsiteID();
         $subsites = Subsite::get();
         foreach ($subsites as $subsite) {
             // TODO: maybe use changeSubsite instead?

@@ -22,7 +22,7 @@ trait BaseLeftAndMainSubsite
      */
     public function removeSubsiteFromMenu()
     {
-        if (SubsiteHelper::CurrentSubsiteID()) {
+        if (SubsiteHelper::currentSubsiteID()) {
             CMSMenu::remove_menu_item('SilverStripe-Subsites-Admin-SubsiteAdmin');
         }
     }
@@ -65,7 +65,7 @@ CSS;
             return false;
         }
 
-        $currentSubsiteID = SubsiteHelper::CurrentSubsiteID();
+        $currentSubsiteID = SubsiteHelper::currentSubsiteID();
 
         Requirements::javascript('silverstripe/subsites:javascript/LeftAndMain_Subsites.js');
 
