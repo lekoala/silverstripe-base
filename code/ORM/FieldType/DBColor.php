@@ -339,7 +339,8 @@ class DBColor extends DBVarchar
      * @param string $light
      * @return string
      */
-    public function HighlightContrastColor($dark = null, $light = null) {
+    public function HighlightContrastColor($dark = null, $light = null)
+    {
         return self::HEX_CONTRAST($this->HighlightColor(), $dark, $light);
     }
 

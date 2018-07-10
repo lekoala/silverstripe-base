@@ -9,6 +9,9 @@ Only:
 SilverStripe\Subsites\Model\Subsite:
   extensions:
     - LeKoala\Base\Subsite\SubsiteExtension
+SilverStripe\Subsites\Admin\SubsiteAdmin:
+  extensions:
+    - LeKoala\Base\Subsite\SubsiteAdminExtension
 SilverStripe\Subsites\Extensions\FileSubsites:
   # We don't want to assign subsite by default
   # because folders can be created from various locations

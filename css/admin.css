@@ -134,3 +134,14 @@ table .btn-link {
     /* Looks broken otherwise */
     float: none;
 }
+
+.cms .field select, .field .chosen-container-single .chosen-single {
+    /* select height can be weirdly inconsistent */
+    /* size=1 select have no height, some select have a bigger height, chosen has 36px .. */
+    height:35px;
+}
+
+.form__fieldgroup>.form__fieldgroup-item {
+    /* the margin top prevents label alignment and looks strange */
+    margin-top:0;
+}

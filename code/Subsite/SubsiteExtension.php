@@ -47,7 +47,7 @@ class SubsiteExtension extends DataExtension
      */
     public function getLocalDomain()
     {
-        return $this->owner->Domains()->where("Domain LIKE '%.local'")->first();
+        return $this->owner->Domains()->where("Domain LIKE '%.local%'")->first();
     }
 
     /**
