@@ -77,6 +77,6 @@ class BaseModelAdmin extends ModelAdmin
         $recordClass = $record->ClassName;
         $sanitisedClass = ClassHelper::sanitiseClassName($recordClass);
         $ID = $record->ID;
-        return "/admin/$URLSegment/$sanitisedClass/EditForm/field/recordClass/item/$ID/edit";
+        return "/admin/$URLSegment/$sanitisedClass/EditForm/field/$sanitisedClass/item/$ID/edit";
     }
 }
