@@ -153,7 +153,7 @@ class ActionsGridFieldItemRequest extends DataExtension
             if ($toplevelController->hasMethod('Backlink')) {
                 $backlink = $toplevelController->Backlink();
             } elseif ($this->owner->getController()->hasMethod('Breadcrumbs')) {
-                $parents = $this->owner->getController()->Breadcrumcdbs(false)->items;
+                $parents = $this->owner->getController()->Breadcrumbs(false)->items;
                 $backlink = array_pop($parents)->Link;
             }
         }
