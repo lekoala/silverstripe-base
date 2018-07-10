@@ -208,7 +208,8 @@ ul.checkboxset {
     }
 }
 
-.radio {
+.radio,
+ul.optionset:not(.checkboxset) {
     label {
         &::after {
             background: var(--primary-color);
