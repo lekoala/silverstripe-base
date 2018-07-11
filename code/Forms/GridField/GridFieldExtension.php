@@ -33,12 +33,18 @@ class GridFieldExtension extends Extension
         $class = $this->owner->getModelClass();
         $singl = $class::singleton();
 
-        foreach ($fields as $index => $v) {
+        $i = 0;
+        foreach ($fields as $index => $label) {
             if (is_numeric($index)) {
-                $arr[$v] = $singl->fieldLabel($v);
+                $key = $label;
+                $parts = explode('.', $key);
+                $label = $singl->fieldLabel($parts[0]);
             } else {
-                $arr[$index] = $v;
+                $key = $index;
+                $index = $i;
             }
+            $arr[$key] = $label;
+            $i++;
         }
 
         return $arr;
