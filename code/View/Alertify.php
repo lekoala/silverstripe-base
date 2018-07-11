@@ -49,6 +49,11 @@ class Alertify
             Requirements::css('https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.11.1/css/alertify.min.css');
             Requirements::css('https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.11.1/css/themes/' . $theme . '.min.css');
         }
+        $settings = '';
+        foreach (self::config()->defaults as $k => $v) {
+            $settings .= "alertify.defaults.$k = '$v';\n";
+        }
+        Requirements::customScript($settings, 'AlertifySettings');
     }
 
     public static function show($message, $type)
@@ -66,11 +71,6 @@ class Alertify
                 $type = 'warning';
                 break;
         }
-        $settings = '';
-        foreach (self::config()->defaults as $k => $v) {
-            $settings .= "alertify.defaults.$k = '$v';\n";
-        }
-        Requirements::customScript($settings, 'AlertifySettings');
         $js = "alertify.notify('$msg', '$type', 0);";
         Requirements::customScript($js);
     }

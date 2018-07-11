@@ -123,6 +123,7 @@ class ThemeControllerExtension extends Extension
             $replaceCount = 0;
             $cssFileContent = preg_replace($replaceRegex, $value, $cssFileContent, -1, $replaceCount);
             // For colors, also add variants
+            // It's a lot of regexes, but it's better than compiling ourselves
             if ($dbObject instanceof DBColor) {
                 // Add contrast
                 $val = $dbObject->ContrastColor();
@@ -135,6 +136,10 @@ class ThemeControllerExtension extends Extension
                 // Add muted
                 $val = $dbObject->HighlightColor(0.5);
                 $regex = "/var\s?\(--{$declarationName}-muted\)/";
+                $cssFileContent = preg_replace($regex, $val, $cssFileContent, -1, $replaceCount);
+                // Add transparent
+                $val = $dbObject->CSSColor(0.8);
+                $regex = "/var\s?\(--{$declarationName}-transparent\)/";
                 $cssFileContent = preg_replace($regex, $val, $cssFileContent, -1, $replaceCount);
             }
         }
