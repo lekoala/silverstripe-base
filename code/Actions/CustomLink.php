@@ -7,11 +7,26 @@ use SilverStripe\Forms\FormField;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Convert;
 
+/**
+ * Custom links to include in getCMSActions
+ */
 class CustomLink extends LiteralField
 {
-    protected $title;
+    use CustomButton;
+
+    /**
+     * @var link
+     */
     protected $link;
+
+    /**
+     * @var string
+     */
     protected $confirmation;
+
+    /**
+     * @var boolean
+     */
     protected $newWindow = true;
 
     public function __construct($name, $title = null, $link = null)
@@ -22,16 +37,24 @@ class CustomLink extends LiteralField
         if ($link === null) {
             $link = Controller::curr()->Link($name);
         }
+        parent::__construct($name, '');
+
+        // Reset the title later on because we passed '' to parent
         $this->title = $title;
         $this->link = $link;
-        parent::__construct($name, '');
+    }
+
+    public function Type()
+    {
+        return 'custom-link';
     }
 
     public function FieldHolder($properties = array())
     {
         $link = $this->link;
-        $title = $this->title;
-        $classes = "btn btn-default";
+
+        $title = $this->getButtonTitle();
+        $classes = $this->extraClass();
         $attrs = '';
         if ($this->newWindow) {
             $attrs .= ' target="_blank"';
@@ -39,6 +62,7 @@ class CustomLink extends LiteralField
         if ($this->confirmation) {
             $attrs .= ' onclick="return confirm("' . Convert::raw2htmlatt($this->confirmation) . '");"';
         }
+
         $content = '<a href="' . $link . '" class="' . $classes . '"' . $attrs . '>' . $title . '</a>';
         $this->content = $content;
         return parent::FieldHolder();
