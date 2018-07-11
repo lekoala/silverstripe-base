@@ -26,15 +26,22 @@ trait Messaging
     }
 
     /**
+     * A smarter redirect function
+     *
      * @param string|array|boolean $link Pass true to redirect back
      * @return HTTPResponse
      */
     public function redirectTo($link)
     {
+        // Already redirected - do not show user_error
+        if ($this->redirectedTo()) {
+            return null;
+        }
         // If we have an array, it only applies to json response
         if ($link === true || is_array($link)) {
             return $this->redirectBack();
         }
+        // Links without starting / call the link method
         if (strpos($link, '/') !== 0) {
             $link = $this->Link($link);
         }

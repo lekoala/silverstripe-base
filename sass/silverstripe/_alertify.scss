@@ -1,0 +1,17 @@
+.alertify-notifier {
+    .ajs-message {
+        box-shadow: $box-shadow;
+
+        &.ajs-success {
+            @include alert-variant(theme-color-level('success', $alert-bg-level), theme-color-level('success', $alert-border-level), theme-color-level('success', $alert-color-level));
+            text-shadow: none;
+        }
+        &.ajs-error {
+            @include alert-variant(theme-color-level('danger', $alert-bg-level), theme-color-level('danger', $alert-border-level), theme-color-level('danger', $alert-color-level));
+            text-shadow: none;
+        }
+        &.ajs-warning {
+            @include alert-variant(theme-color-level('warning', $alert-bg-level), theme-color-level('warning', $alert-border-level), theme-color-level('warning', $alert-color-level));
+        }
+    }
+}
