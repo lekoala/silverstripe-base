@@ -12,6 +12,10 @@ class DBBetterCurrency extends DBCurrency
 {
     use CurrencyFormatter;
 
+    private static $casting = [
+        "HTMLAmount" => "HTMLFragment"
+    ];
+
     /**
      * Returns the number as a currency, eg “$1,000.00”.
      *
