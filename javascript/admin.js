@@ -1,5 +1,6 @@
 /**
  * Tweaks for the CMS
+ * TODO: how to avoid attaching everything to document
  */
 (function ($) {
     // Allow select with a data map attribute to update other selects
@@ -23,6 +24,21 @@
         // Otherwise in a gridfield the row might be clicked
         event.stopPropagation();
         copyTextToClipboard($(this).data('value'));
+    });
+
+    // Confirmable stuff
+    $(document).on('click', 'button[data-confirm],a[data-confirm]', function(event) {
+        return confirm($(this).data('confirm'));
+    });
+
+    // Promptable stuff
+    $(document).on('click', 'button[data-prompt]', function(event) {
+        var result = prompt($(this).data('prompt'), $(this).data('promptDefault'));
+        if(result) {
+            $.cookie('prompt_result', result);
+            return true;
+        }
+        return false;
     });
 
     // Prevent submit with enter

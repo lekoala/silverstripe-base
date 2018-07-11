@@ -44,6 +44,16 @@ abstract class GridFieldTableButton implements GridField_HTMLProvider, GridField
     protected $parentID;
 
     /**
+     * @var string
+     */
+    protected $prompt;
+
+    /**
+     * @var string
+     */
+    protected $promptDefault;
+
+    /**
      * @param string $targetFragment The HTML fragment to write the button into
      * @param string $buttonLabel
      */
@@ -87,6 +97,13 @@ abstract class GridFieldTableButton implements GridField_HTMLProvider, GridField
         }
         if ($this->fontIcon) {
             $button->addExtraClass('font-icon-' . $this->fontIcon);
+        }
+        if ($this->prompt) {
+            $button->setAttribute('data-prompt', $this->prompt);
+            $promptDefault = $this->getPromptDefault();
+            if ($promptDefault) {
+                $button->setAttribute('data-prompt-default', $promptDefault);
+            }
         }
         $button->setForm($gridField->getForm());
         return array(
@@ -176,6 +193,50 @@ abstract class GridFieldTableButton implements GridField_HTMLProvider, GridField
     public function setParentID($id)
     {
         $this->parentID = $id;
+        return $this;
+    }
+
+    /**
+     * Get the value of prompt
+     *
+     * @return string
+     */
+    public function getPrompt()
+    {
+        return $this->prompt;
+    }
+
+    /**
+     * Set the value of prompt
+     *
+     * @param string $prompt
+     * @return self
+     */
+    public function setPrompt($prompt)
+    {
+        $this->prompt = $prompt;
+        return $this;
+    }
+
+    /**
+     * Get the value of promptDefault
+     *
+     * @return string
+     */
+    public function getPromptDefault()
+    {
+        return $this->promptDefault;
+    }
+
+    /**
+     * Set the value of promptDefault
+     *
+     * @param string $promptDefault
+     * @return self
+     */
+    public function setPromptDefault($promptDefault)
+    {
+        $this->promptDefault = $promptDefault;
         return $this;
     }
 }

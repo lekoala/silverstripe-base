@@ -60,7 +60,7 @@ class CustomLink extends LiteralField
             $attrs .= ' target="_blank"';
         }
         if ($this->confirmation) {
-            $attrs .= ' onclick="return confirm("' . Convert::raw2htmlatt($this->confirmation) . '");"';
+            $attrs .= ' data-confirm="' . Convert::raw2htmlatt($this->confirmation) . '"';
         }
 
         $content = '<a href="' . $link . '" class="' . $classes . '"' . $attrs . '>' . $title . '</a>';
