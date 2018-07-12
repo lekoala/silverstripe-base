@@ -20,16 +20,13 @@ class CustomAction extends FormAction
         parent::__construct($name, $title, $form);
     }
 
-    public function Type()
-    {
-        return 'custom-action';
-    }
-
     public function Field($properties = array())
     {
         if ($this->buttonIcon) {
             $this->buttonContent = $this->getButtonTitle();
         }
+        // Note: type should stay "action" to properly submit
+        $this->addExtraClass('custom-action');
         return parent::Field($properties);
     }
 }
