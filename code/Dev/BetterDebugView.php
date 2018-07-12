@@ -71,10 +71,16 @@ class BetterDebugView extends DebugView
                 $text = $this->debugVariableText($val);
             }
 
-            return "<div style=\"background-color: white; text-align: left;\">\n<hr>\n"
+            $html = "<div style=\"background-color: white; text-align: left;\">\n<hr>\n"
                 . "<h3>$argumentName <span style=\"font-size: 65%\">($callerFormatted)</span>\n</h3>\n"
                 . $text
                 . "</div>";
+
+            if (Director::is_ajax()) {
+                $html = strip_tags($html);
+            }
+
+            return $html;
         }
         return $this->debugVariableText($val);
     }
@@ -108,21 +114,25 @@ class BetterDebugView extends DebugView
      */
     public function debugVariableText($val)
     {
+        // Empty stuff is tricky
         if (empty($val)) {
-            return '<em>(empty)</em>';
+            $valtype = gettype($val);
+            return "<em>(empty $valtype)</em>";
         }
 
-        // Check debug
-        // if (is_object($val) && ClassInfo::hasMethod($val, 'debug')) {
-        //     return $val->debug();
-        // }
-
-        if (function_exists('dump') && (is_object($val) || is_array($val))) {
-            ob_start();
-            dump($val);
-            return ob_get_clean();
+        if (Director::is_ajax()) {
+            // In ajax context, we can still use debug info
+            if (is_object($val) && ClassInfo::hasMethod($val, 'debug')) {
+                return $val->debug();
+            }
+        } else {
+            // Otherwise, we'd rater a full and usable object dump
+            if (function_exists('dump') && (is_object($val) || is_array($val))) {
+                ob_start();
+                dump($val);
+                return ob_get_clean();
+            }
         }
-
         return parent::debugVariableText($val);
     }
 
