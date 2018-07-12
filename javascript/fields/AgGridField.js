@@ -26,6 +26,23 @@
 
             // let the grid know which columns and what data to use
             this.gridOptions = $.extend({}, this.settings);
+
+            // handle changes saved to input
+            // @link https://www.ag-grid.com/javascript-grid-events/
+            this.gridOptions.onRowDataChanged = function () {
+                self.saveRowData();
+            }
+            this.gridOptions.onRowDataUpdated = function () {
+                self.saveRowData();
+            }
+            this.gridOptions.onCellValueChanged = function (oldValue, newValue) {
+                // console.log('changed', oldValue, newValue);
+                self.saveRowData();
+            }
+            // this.gridOptions.onRowValueChanged = function () {
+            //     console.log('row changed');
+            //     self.saveRowData();
+            // }
             // create the grid passing in the div to use together with the columns & data we want to use
             new agGrid.Grid(this.element, this.gridOptions);
 
@@ -41,19 +58,25 @@
         log: function (text) {
             console.log(text);
         },
+        saveRowData: function () {
+            var input = $(this.element).parent().find('.ag-hidden-value');
+            var data = this.getRowData();
+            input.val(JSON.stringify(data));
+            // console.log(data, JSON.stringify(data));
+        },
         getRowData: function () {
             var rowData = [];
+            var self = this;
             this.gridOptions.api.forEachNode(function (node) {
                 rowData.push(node.data);
             });
-            console.log('Row Data:');
-            console.log(rowData);
+            return rowData;
         },
         clearData: function () {
             this.gridOptions.api.setRowData([]);
         },
         createNewRowData: function () {
-            return [];
+            return {};
         },
         addRow: function () {
             var newItem = this.createNewRowData();

@@ -36,6 +36,9 @@ abstract class JsonFormField extends FormField
         return $attrs;
     }
 
+    /**
+     * @return string
+     */
     public function getValueJson()
     {
         $v = $this->value;
@@ -52,7 +55,7 @@ abstract class JsonFormField extends FormField
     {
         // Allow set raw json as value
         if ($value && is_string($value) && strpos($value, '[') === 0) {
-            $value = json_decode($value, JSON_OBJECT_AS_ARRAY);
+            $value = json_decode($value);
         }
         parent::setValue($value, $data);
     }

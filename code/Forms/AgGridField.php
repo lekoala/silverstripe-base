@@ -105,9 +105,7 @@ class AgGridField extends JsonFormField
         $config = array_merge($this->config()->default_config, $this->config);
         $config['columnDefs'] = array_values($this->columns);
 
-        if ($this->value) {
-            $config['rowData'] = $this->value;
-        }
+        $config['rowData'] = $this->value ?? [];
 
         return json_encode($config);
     }
