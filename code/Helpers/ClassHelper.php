@@ -8,6 +8,8 @@ use SilverStripe\Core\Manifest\Module;
 use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Core\Manifest\ClassManifest;
 use SilverStripe\Core\Injector\InjectorLoader;
+use SilverStripe\Security\Member;
+use SilverStripe\Security\Group;
 
 /**
  *
@@ -85,6 +87,23 @@ class ClassHelper
             }
         }
         return $related;
+    }
+
+    /**
+     * Expand non namespaced class to the full namespaced class name
+     *
+     * @param string $class
+     * @return string
+     */
+    public static function expandClass($class)
+    {
+        switch ($class) {
+            case 'Member':
+                return Member::class;
+            case 'Group':
+                return Group::class;
+        }
+        return $class;
     }
 
     /**
