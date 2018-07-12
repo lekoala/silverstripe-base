@@ -4,6 +4,9 @@
  * Specify data-module="myJqueryPlugin" and pass config
  * options in data-config=""
  *
+ * data-config can also store reference to a node with the
+ * config as json data
+ *
  * Plugins are rebound on ajax load automatically
  */
 (function ($) {
@@ -25,6 +28,11 @@
             var isJqueryModule = false;
             var module = e.data(config.moduleKey);
             var moduleConfig = e.data(config.configKey);
+
+            // External config selector
+            if (typeof moduleConfig === 'string' && moduleConfig.charAt(0) === '#') {
+                moduleConfig = $.parseJSON($(moduleConfig).text());
+            }
 
             if (typeof $.fn[module] !== 'undefined') {
                 isJqueryModule = true;

@@ -26,17 +26,8 @@
             var self = this;
             var $el = $(this.element);
 
-            // specify the data
-            var rowData = [{
-                Filters: "Company",
-                FilterType: "=",
-                Value: "1"
-            }];
-
             // let the grid know which columns and what data to use
-            this.gridOptions = $.extend({}, this.settings, {
-                rowData: rowData
-            });
+            this.gridOptions = $.extend({}, this.settings);
             // create the grid passing in the div to use together with the columns & data we want to use
             new agGrid.Grid(this.element, this.gridOptions);
 

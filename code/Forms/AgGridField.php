@@ -2,13 +2,12 @@
 namespace LeKoala\Base\Forms;
 
 use Exception;
-use SilverStripe\Forms\FormField;
 use SilverStripe\View\Requirements;
 
 /**
  * @link https://www.ag-grid.com/javascript-getting-started/
  */
-class AgGridField extends FormField
+class AgGridField extends JsonFormField
 {
     use ConfigurableField;
 
@@ -55,9 +54,7 @@ class AgGridField extends FormField
      * @config
      * @return array
      */
-    private static $default_config = [
-
-    ];
+    private static $default_config = [];
 
     public static function requirements()
     {
@@ -65,7 +62,7 @@ class AgGridField extends FormField
 
         Requirements::javascript('https://unpkg.com/ag-grid/dist/ag-grid.min.noStyle.js');
         Requirements::css('https://unpkg.com/ag-grid/dist/styles/ag-grid.css');
-        Requirements::css('https://unpkg.com/ag-grid/dist/styles/'.$theme.'.css');
+        Requirements::css('https://unpkg.com/ag-grid/dist/styles/' . $theme . '.css');
 
         Requirements::javascript('base/javascript/ModularBehaviour.js');
         Requirements::javascript('base/javascript/fields/AgGridField.js');
@@ -86,14 +83,29 @@ class AgGridField extends FormField
 
     public function Field($properties = array())
     {
-        $config = $this->config;
-        $config['columnDefs']= array_values($this->columns);
-
         $this->addExtraClass(self::config()->theme);
         $this->setAttribute('data-module', 'AgGridField');
-        $this->setAttribute('data-config', json_encode($config));
+        // Reference config in div
+        $this->setAttribute('data-config', '#' . $this->ID() . 'Config');
         self::requirements();
         return parent::Field($properties);
+    }
+
+    /**
+     * Because config can be very large, avoid storing it in an html attr
+     *
+     * @return string
+     */
+    public function JsonConfig()
+    {
+        $config = $this->config;
+        $config['columnDefs'] = array_values($this->columns);
+
+        if ($this->value) {
+            $config['rowData'] = $this->value;
+        }
+
+        return json_encode($config);
     }
 
     public function getEnableSorting()
@@ -156,7 +168,7 @@ class AgGridField extends FormField
         // Check for options for select
         if ($type == self::TYPE_SELECT) {
             if ($opts && !isset($opts[self::KEY_CELL_EDITOR_PARAMS])) {
-                throw new Exception('Please define a "'.self::KEY_CELL_EDITOR_PARAMS.'" in options');
+                throw new Exception('Please define a "' . self::KEY_CELL_EDITOR_PARAMS . '" in options');
             }
 
             // Simplify declaration
@@ -192,11 +204,11 @@ class AgGridField extends FormField
     }
 
     /**
-    * Get column details
+     * Get column details
 
-    * @param string $key
-    * @return array
-    */
+     * @param string $key
+     * @return array
+     */
     public function getColumn($key)
     {
         if (isset($this->columns[$key])) {
