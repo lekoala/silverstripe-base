@@ -1,6 +1,6 @@
 /**
  * Tweaks for the CMS
- * TODO: how to avoid attaching everything to document
+ * TODO: how to avoid attaching everything to document (use entwine?)
  */
 (function ($) {
     // Allow select with a data map attribute to update other selects
@@ -27,14 +27,14 @@
     });
 
     // Confirmable stuff
-    $(document).on('click', 'button[data-confirm],a[data-confirm]', function(event) {
+    $(document).on('click', 'button[data-confirm],a[data-confirm]', function (event) {
         return confirm($(this).data('confirm'));
     });
 
     // Promptable stuff
-    $(document).on('click', 'button[data-prompt]', function(event) {
+    $(document).on('click', 'button[data-prompt]', function (event) {
         var result = prompt($(this).data('prompt'), $(this).data('promptDefault'));
-        if(result) {
+        if (result) {
             $.cookie('prompt_result', result);
             return true;
         }
@@ -49,6 +49,25 @@
             $(this).parents('.field').next('.field').find(':input').first().focus();
         }
         return true;
+    });
+
+    // Load tab if set in url
+    $.entwine('ss', function ($) {
+        $('ul.ui-tabs-nav a').entwine({
+            onmatch: function () {
+                this._super();
+
+                var url = this.attr('href'),
+                    hash = url.split('#')[1];
+
+                if (window.location.hash) {
+                    var currHash = location.hash.substring(1);
+                    if (currHash == hash) {
+                        this.trigger('click');
+                    }
+                }
+            }
+        });
     });
 
 })(jQuery);

@@ -24,3 +24,6 @@ SilverStripe\Forms\FormField:
 SilverStripe\Forms\GridField\GridField:
   extensions:
     - LeKoala\Base\Forms\GridField\GridFieldExtension
+SilverStripe\Versioned\VersionedGridFieldItemRequest:
+  extensions:
+    - LeKoala\Base\Forms\GridField\VersionedGridFieldItemRequestExtension
