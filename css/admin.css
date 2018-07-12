@@ -159,16 +159,30 @@ fieldset.grid-field {
 /* pagination looks awful in thead */
 
 .grid-field thead .grid-field__title-row th {
-    position:relative;
+    position: relative;
 }
+
 .grid-field thead .pagination-records-number {
-    position:absolute;
-    top:.9231rem;
-    right:1.5385rem;
+    position: absolute;
+    top: .9231rem;
+    right: 1.5385rem;
 }
 
 /* large table can extend the screen width */
 
-.cms .grid-field__table tr th.main > span {
+.cms .grid-field__table tr th.main>span {
     white-space: normal;
+}
+
+/* form fields tweaks */
+
+.ag-cell-edit-input {
+    height: 100% !important;
+    border: 0 !important;
+    padding: 0 11px !important;
+    border-radius: 0 !important;
+}
+
+select.ag-cell-edit-input {
+    padding: 0 0 !important;
 }

@@ -5,9 +5,7 @@
 
     // Create the defaults once
     var pluginName = "AgGridField",
-        defaults = {
-            rowSelection: 'multiple'
-        };
+        defaults = {};
 
     // The actual plugin constructor
     function Plugin(element, options) {
@@ -33,10 +31,10 @@
 
             // Attach events
             var parent = $(this.element).parent();
-            parent.find('.ag-add-row').on('click', function() {
+            parent.find('.ag-add-row').on('click', function () {
                 self.addRow();
             });
-            parent.find('.ag-remove-selected').on('click', function() {
+            parent.find('.ag-remove-selected').on('click', function () {
                 self.removeSelected();
             });
         },

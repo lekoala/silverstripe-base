@@ -54,7 +54,11 @@ class AgGridField extends JsonFormField
      * @config
      * @return array
      */
-    private static $default_config = [];
+    private static $default_config = [
+        'rowSelection' => 'multiple',
+        'editType' => 'fullRow',
+        'singleClickEdit' => 'true',
+    ];
 
     public static function requirements()
     {
@@ -98,7 +102,7 @@ class AgGridField extends JsonFormField
      */
     public function JsonConfig()
     {
-        $config = $this->config;
+        $config = array_merge($this->config()->default_config, $this->config);
         $config['columnDefs'] = array_values($this->columns);
 
         if ($this->value) {
