@@ -1,15 +1,17 @@
 <?php
 namespace LeKoala\Base\Helpers;
 
+use SilverStripe\Assets\File;
+use SilverStripe\Assets\Image;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Security\Group;
 use SilverStripe\Core\Extensible;
+use SilverStripe\Security\Member;
 use SilverStripe\Core\Manifest\Module;
 use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Core\Manifest\ClassManifest;
 use SilverStripe\Core\Injector\InjectorLoader;
-use SilverStripe\Security\Member;
-use SilverStripe\Security\Group;
 
 /**
  *
@@ -102,6 +104,10 @@ class ClassHelper
                 return Member::class;
             case 'Group':
                 return Group::class;
+            case 'File':
+                return File::class;
+            case 'Image':
+                return Image::class;
         }
         return $class;
     }
