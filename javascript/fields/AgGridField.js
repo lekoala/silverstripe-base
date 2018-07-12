@@ -44,7 +44,7 @@
             //     self.saveRowData();
             // }
             // create the grid passing in the div to use together with the columns & data we want to use
-            new agGrid.Grid(this.element, this.gridOptions);
+            new agGrid.Grid(this.element, this.gridOptions); // eslint-disable-line no-undef
 
             // Attach events
             var parent = $(this.element).parent();

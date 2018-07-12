@@ -53,7 +53,6 @@ class CustomLink extends LiteralField
         } else {
             $this->link = $this->getDefaultLink($link);
         }
-
     }
 
     public function getDefaultLink($params = null)
