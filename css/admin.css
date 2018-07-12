@@ -174,7 +174,7 @@ fieldset.grid-field {
     white-space: normal;
 }
 
-/* form fields tweaks */
+/* ag grid */
 
 .ag-cell-edit-input {
     height: 100% !important;
@@ -185,4 +185,26 @@ fieldset.grid-field {
 
 select.ag-cell-edit-input {
     padding: 0 0 !important;
+}
+
+/* bulk */
+
+.col-bulkSelect,
+.bulkManagerOptions th {
+    position: relative;
+}
+
+#bulkActionName_Holder {
+    margin-bottom: 0;
+}
+
+.bulkManagerOptions th:last-child {
+    padding-top: 0;
+    vertical-align: middle;
+}
+
+.bulkManagerOptions .form-check-input {
+    position: relative;
+    display: inline-block;
+    margin-right: 0;
 }
