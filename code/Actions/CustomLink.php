@@ -42,17 +42,18 @@ class CustomLink extends LiteralField
             $title = FormField::name_to_label($name);
         }
 
-        // Link
+        parent::__construct($name, '');
+
+        // Reset the title later on because we passed '' to parent
+        $this->title = $title;
+
+         // Link (use $this->name, called after parent construct)
         if ($link && is_string($link)) {
             $this->link = $link;
         } else {
             $this->link = $this->getDefaultLink($link);
         }
 
-        parent::__construct($name, '');
-
-        // Reset the title later on because we passed '' to parent
-        $this->title = $title;
     }
 
     public function getDefaultLink($params = null)
