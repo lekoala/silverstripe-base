@@ -6,7 +6,13 @@ use \SilverStripe\View\Parsers\SQLFormatter as SS_SQLFormatter;
 
 class DatabaseHelper
 {
-    public static function formatSQL($sql)
+    /**
+     * Format sql using built in formatter or custom one
+     *
+     * @param string $sql
+     * @return string The formatted string
+     */
+    public static function formatSQL(string $sql)
     {
         // If we have jdorn formatter
         if (class_exists('SqlFormatter')) {

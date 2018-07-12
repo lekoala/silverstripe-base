@@ -65,7 +65,7 @@ class BetterDebugView extends DebugView
             $argumentName = $args[$argumentIndex] ?? $defaultArgumentName;
 
             // Sql trick
-            if (strpos(strtolower($argumentName), 'sql') !== false) {
+            if (strpos(strtolower($argumentName), 'sql') !== false && is_string($val)) {
                 $text = DatabaseHelper::formatSQL($val);
             } else {
                 $text = $this->debugVariableText($val);
