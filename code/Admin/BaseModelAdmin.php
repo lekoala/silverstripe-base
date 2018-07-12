@@ -9,7 +9,8 @@ use LeKoala\Base\Subsite\SubsiteHelper;
 use SilverStripe\Forms\GridField\GridField;
 use LeKoala\Base\Helpers\ClassHelper;
 
-abstract /**
+abstract
+/**
  * Class \LeKoala\Base\Admin\BaseModelAdmin
  *
  */
@@ -31,6 +32,22 @@ class BaseModelAdmin extends ModelAdmin
             return false;
         }
         return parent::getRequiredPermissions();
+    }
+
+    /**
+     * Get the record asked by CustomLink or CMSInlineAction
+     *
+     * @return bool|DataObject
+     */
+    public function getRequestedRecord()
+    {
+        $request = $this->getRequest();
+        $ModelClass = $request->getVar('ModelClass');
+        $ID = $request->getVar('ID');
+        if ($ID) {
+            return DataObject::get_by_id($ModelClass, $ID);
+        }
+        return false;
     }
 
     public function getList()

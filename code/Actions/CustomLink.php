@@ -1,11 +1,13 @@
 <?php
 namespace LeKoala\Base\Actions;
 
-use SilverStripe\Forms\FormAction;
-use SilverStripe\Forms\LiteralField;
-use SilverStripe\Forms\FormField;
-use SilverStripe\Control\Controller;
+use Exception;
 use SilverStripe\Core\Convert;
+use SilverStripe\Forms\FormField;
+use SilverStripe\Admin\ModelAdmin;
+use SilverStripe\Forms\FormAction;
+use SilverStripe\Control\Controller;
+use SilverStripe\Forms\LiteralField;
 
 /**
  * Custom links to include in getCMSActions
@@ -29,20 +31,51 @@ class CustomLink extends LiteralField
      */
     protected $newWindow = true;
 
+    /**
+     * @param string $name
+     * @param string $title
+     * @param string|array $link Will default to name of link on current controller if not set
+     */
     public function __construct($name, $title = null, $link = null)
     {
         if ($title === null) {
             $title = FormField::name_to_label($name);
         }
-        if ($link === null) {
-            $link = Controller::curr()->Link($name);
+
+        // Link
+        if ($link && is_string($link)) {
+            $this->link = $link;
+        } else {
+            $this->link = $this->getDefaultLink($link);
         }
+
         parent::__construct($name, '');
 
         // Reset the title later on because we passed '' to parent
         $this->title = $title;
-        $this->link = $link;
     }
+
+    public function getDefaultLink($params = null)
+    {
+        if ($params && !is_array($params)) {
+            throw new Exception("Params need to be an array");
+        }
+        if (empty($params)) {
+            $params = [];
+        }
+        $ctrl = Controller::curr();
+        $action = $this->name;
+        if ($ctrl instanceof ModelAdmin) {
+            $modelClass = $ctrl->getRequest()->param('ModelClass');
+            $action = $modelClass . '/' . $action;
+            $params = array_merge($ctrl->getRequest()->allParams(), $params);
+        }
+        if (!empty($params)) {
+            $action .= '?' . http_build_query($params);
+        }
+        return $ctrl->Link($action);
+    }
+
 
     public function Type()
     {
