@@ -22,7 +22,7 @@
     border-radius: 0;
 }
 
-/* Font awesome icons in menu */
+/* Icons in menu */
 
 .menu__icon.fa {
     font-size: 17px !important
@@ -31,6 +31,7 @@
 .menu__icon {
     width: 22px;
     left: 10px;
+    margin-top:0;
     text-align: center;
 }
 

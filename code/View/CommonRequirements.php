@@ -54,6 +54,12 @@ class CommonRequirements
     private static $fa5_version = '5.1.0';
 
     /**
+     * @config
+     * @var string
+     */
+    private static $boxicons_version = '1.6.0';
+
+    /**
      * Include all files in a given path
      *
      * @param string $path
@@ -139,5 +145,15 @@ class CommonRequirements
     {
         $version = self::config()->fa5_version;
         Requirements::css("https://use.fontawesome.com/releases/v${version}/css/all.css");
+    }
+
+    /**
+     * @link https://boxicons.com/cheatsheet
+     * @return void
+     */
+    public static function boxIcons()
+    {
+        $version = self::config()->boxicons_version;
+        Requirements::css("https://cdn.jsdelivr.net/npm/boxicons@$version/css/boxicons.min.css");
     }
 }

@@ -63,6 +63,8 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
                 CommonRequirements::fontAwesome4();
             } elseif (strpos($item->IconClass, 'fas fa-') === 0) {
                 CommonRequirements::fontAwesome5();
+            } elseif (strpos($item->IconClass, 'bx bx-') === 0) {
+                CommonRequirements::boxIcons();
             }
         }
 
