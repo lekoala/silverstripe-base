@@ -42,6 +42,18 @@ class CommonRequirements
     private static $countdown_version = '2.2.0';
 
     /**
+     * @config
+     * @var string
+     */
+    private static $fa4_version = '4.7.0';
+
+    /**
+     * @config
+     * @var string
+     */
+    private static $fa5_version = '5.1.0';
+
+    /**
      * Include all files in a given path
      *
      * @param string $path
@@ -107,5 +119,25 @@ class CommonRequirements
     {
         $version = self::config()->countdown_version;
         Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/jquery.countdown/$version/jquery.countdown.min.js");
+    }
+
+    /**
+     * @link https://fontawesome.com/v4.7.0/cheatsheet/
+     * @return void
+     */
+    public static function fontAwesome4()
+    {
+        $version = self::config()->fa4_version;
+        Requirements::css("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/$version/css/font-awesome.min.css");
+    }
+
+    /**
+     * @link https://fontawesome.com/cheatsheet
+     * @return void
+     */
+    public static function fontAwesome5()
+    {
+        $version = self::config()->fa5_version;
+        Requirements::css("https://use.fontawesome.com/releases/v${version}/css/all.css");
     }
 }

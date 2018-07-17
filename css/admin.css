@@ -28,6 +28,16 @@
     font-size: 17px !important
 }
 
+.menu__icon {
+    width: 22px;
+    left: 10px;
+    text-align: center;
+}
+
+.menu__icon.icon-16 {
+    left: 14px;
+}
+
 /* Row classes */
 
 .cms table.ss-gridfield-table tr.green.odd {

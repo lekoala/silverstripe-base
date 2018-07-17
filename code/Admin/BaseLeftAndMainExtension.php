@@ -10,6 +10,7 @@ use SilverStripe\SiteConfig\SiteConfig;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Admin\LeftAndMainExtension;
+use LeKoala\Base\View\CommonRequirements;
 
 /**
  * Class \LeKoala\Base\LeftAndMainExtension
@@ -56,11 +57,12 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
 
         // Check if we need font awesome (if any item use IconClass fa fa-something)
         // eg: private static $menu_icon_class = 'fa fa-calendar';
-        // @link https://fontawesome.com/v4.7.0/cheatsheet/
         $items = $this->owner->MainMenu();
         foreach ($items as $item) {
             if (strpos($item->IconClass, 'fa fa-') === 0) {
-                $this->requireFontAwesome();
+                CommonRequirements::fontAwesome4();
+            } elseif (strpos($item->IconClass, 'fas fa-') === 0) {
+                CommonRequirements::fontAwesome5();
             }
         }
 
@@ -101,14 +103,6 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
 .cms-login-status .cms-login-status__logout-link:focus, .cms-login-status .cms-login-status__logout-link:hover {background-color: $border}
 CSS;
         Requirements::customCSS($styles);
-    }
-
-    public function requireFontAwesome()
-    {
-        Requirements::css('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css');
-        // Fix icon size
-        // Moved to admin.css
-        // Requirements::customCSS(".menu__icon.fa { font-size: 17px !important}", "FontAwesomeMenuIcons");
     }
 
     /**
