@@ -1,12 +1,18 @@
 .cms-menu {
-    box-shadow: none;
+    -webkit-box-shadow: inset -1px 0 0 #373E42;
+    box-shadow: inset -1px 0 0 #373E42;
     background: #20282C;
 }
 
+.cms-menu .cms-panel-content {
+    -webkit-box-shadow: inset -1px 0 0 #373E42;
+    box-shadow: inset -1px 0 0 #373E42;
+}
+
 .cms-menu__list li a {
-    margin-bottom: 1px;
     color: #BFC0C0;
-    border-right: 0;
+    -webkit-box-shadow: inset -1px 0 0 #373E42;
+    box-shadow: inset -1px 0 0 #373E42;
     background-color: rgba(255, 255, 255, 0.05);
 }
 
@@ -24,6 +30,8 @@
 .cms-menu .cms-panel-toggle {
     background: #20282C;
     border-color: #373E42;
+    -webkit-box-shadow: inset -1px 0 0 #373E42;
+    box-shadow: inset -1px 0 0 #373E42;
 }
 
 .menu__icon {

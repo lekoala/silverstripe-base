@@ -4,6 +4,22 @@
     color: #fff;
     display: block;
     margin: 10px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+/* More compact dropdown */
+
+.cms .cms-menu .cms-subsites {
+    padding: 0;
+}
+
+.cms .cms-menu .cms-subsites .field.dropdown {
+    margin: 0;
+}
+
+.cms-subsites .field .chosen-container-single .chosen-single {
+    border-radius: 0;
 }
 
 /* Font awesome icons in menu */
