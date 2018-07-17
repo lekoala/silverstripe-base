@@ -27,28 +27,6 @@ trait BaseLeftAndMainSubsite
         }
     }
 
-    public function requireSubsiteAdminStyles()
-    {
-        $subsite = self::CurrentSubsite();
-        if (!$subsite) {
-            return;
-        }
-
-        $PrimaryColor = $subsite->SiteConfig()->dbObject('PrimaryColor');
-
-        $bg = $PrimaryColor->getValue();
-        $border = $PrimaryColor->HighlightColor();
-
-        $styles = <<<CSS
-.cms-menu__header {background: $bg}
-.cms-sitename {border-color: $border}
-.cms-sitename:focus, .cms-sitename:hover {background-color: $border}
-.cms-login-status .cms-login-status__profile-link:focus, .cms-login-status .cms-login-status__profile-link:hover {background-color: $border}
-.cms-login-status .cms-login-status__logout-link:focus, .cms-login-status .cms-login-status__logout-link:hover {background-color: $border}
-CSS;
-        Requirements::customCSS($styles);
-    }
-
     public function CurrentSubsite()
     {
         return SubsiteHelper::CurrentSubsite();

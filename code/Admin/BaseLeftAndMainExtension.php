@@ -21,6 +21,12 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
     use Configurable;
     use BaseLeftAndMainSubsite;
 
+    /**
+     * @config
+     * @var boolean
+     */
+    private static $dark_theme = false;
+
     public function init()
     {
         $SiteConfig = SiteConfig::current_site_config();
@@ -62,8 +68,39 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
         //     i18n::set_locale($_GET['locale']);
         // }
 
+        if (self::config()->dark_theme) {
+            Requirements::css('base/css/admin-dark.css');
+        }
+
         Requirements::javascript("base/javascript/admin.js");
-        $this->requireSubsiteAdminStyles();
+        $this->requireAdminStyles();
+    }
+
+    /**
+     * This styles the top left box to match the current theme
+     *
+     * @return void
+     */
+    public function requireAdminStyles()
+    {
+        $SiteConfig = SiteConfig::current_site_config();
+        if (!$SiteConfig->PrimaryColor) {
+            return;
+        }
+
+        $PrimaryColor = $SiteConfig->dbObject('PrimaryColor');
+
+        $bg = $PrimaryColor->Color();
+        $border = $PrimaryColor->HighlightColor();
+
+        $styles = <<<CSS
+.cms-menu__header {background: $bg}
+.cms-sitename {border-color: $border}
+.cms-sitename:focus, .cms-sitename:hover {background-color: $border}
+.cms-login-status .cms-login-status__profile-link:focus, .cms-login-status .cms-login-status__profile-link:hover {background-color: $border}
+.cms-login-status .cms-login-status__logout-link:focus, .cms-login-status .cms-login-status__logout-link:hover {background-color: $border}
+CSS;
+        Requirements::customCSS($styles);
     }
 
     public function requireFontAwesome()

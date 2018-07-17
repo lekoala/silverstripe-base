@@ -43,8 +43,8 @@ class CookieConsent
      * @var string
      */
     private static $opts = [
-        'position' => 'bottom',
-        'theme' => 'edgeless',
+        'position' => 'bottom-left',
+        'theme' => 'classic', // leave empty or classic or edgeless
         'type' => 'opt-in',
     ];
 
@@ -121,7 +121,7 @@ class CookieConsent
         $cookiesLink = '/';
         if (self::config()->cookies_required) {
             //TODO: make url configurable
-            $cookiesLink ='/cookies-required';
+            $cookiesLink = '/cookies-required';
         }
 
         // Include custom init

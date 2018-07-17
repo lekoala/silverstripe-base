@@ -1,0 +1,31 @@
+.cms-menu {
+    box-shadow: none;
+    background: #20282C;
+}
+
+.cms-menu__list li a {
+    margin-bottom: 1px;
+    color: #BFC0C0;
+    border-right: 0;
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.cms-menu__list li a:hover,
+.cms-menu__list li a:focus,
+.cms-menu__list li a:active {
+    color: #FFF;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.cms-menu__list li.current a {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.cms-menu .cms-panel-toggle {
+    background: #20282C;
+    border-color: #373E42;
+}
+
+.menu__icon {
+    color: #BFC0C0;
+}
