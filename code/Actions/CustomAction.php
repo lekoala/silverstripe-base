@@ -5,6 +5,8 @@ use SilverStripe\Forms\FormAction;
 
 /**
  * Custom actions to use in getCMSActions
+ *
+ * Actions handlers are declared on the DataObject itself
  */
 class CustomAction extends FormAction
 {
@@ -18,6 +20,11 @@ class CustomAction extends FormAction
         $name = 'doCustomAction[' . $name . ']';
 
         parent::__construct($name, $title, $form);
+    }
+
+    public function actionName()
+    {
+        return rtrim(str_replace('action_doCustomAction[', '', $this->name), ']');
     }
 
     public function Field($properties = array())

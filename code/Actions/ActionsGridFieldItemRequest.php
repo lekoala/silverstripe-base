@@ -30,6 +30,7 @@ class ActionsGridFieldItemRequest extends DataExtension
     private static $allowed_actions = array(
         'doSaveAndClose',
         'doCustomAction',
+        'doCustomLink',
     );
     /**
      * Updates the detail form to include new form actions and buttons
@@ -57,25 +58,38 @@ class ActionsGridFieldItemRequest extends DataExtension
             $actions->push($cancelButton);
         }
     }
+
     /**
-     * Handles custom actions
+     * Forward a given action to a DataObject
      *
-     * Use CustomAction class to trigger this
+     * Action must be declared in getCMSActions to be called
      *
-     * @param array The form data
-     * @param Form The form object
+     * @param string $action
+     * @param array $data
+     * @param Form $form
+     * @return HTTPResponse|DBHTMLText
      */
-    public function doCustomAction($data, $form)
+    protected function forwardActionToRecord($action, $data = [], $form = null)
     {
-        $action = key($data['action_doCustomAction']);
         $controller = $this->getToplevelController();
         $record = $this->owner->record;
-        // Check permission
-        if (!$this->owner->record->canEdit()) {
-            return $this->httpError(403);
-        }
         $definedActions = $record->getCMSActions();
-        //TODO: check why defined actions are empty it should help checking that the call is valid
+        // Check if the action is indeed available
+        $match = false;
+        if (!empty($definedActions)) {
+            foreach ($definedActions as $definedAction) {
+                $definedActionName = $definedAction->getName();
+                if ($definedAction->hasMethod('actionName')) {
+                    $definedActionName = $definedAction->actionName();
+                }
+                if ($definedActionName == $action) {
+                    $match = true;
+                }
+            }
+        }
+        if (!$match) {
+            return $this->owner->httpError(403, 'Action not available');
+        }
         $message = null;
         $error = false;
         try {
@@ -109,11 +123,43 @@ class ActionsGridFieldItemRequest extends DataExtension
             $controller = $this->getToplevelController();
             $controller->getResponse()->addHeader('X-Status', rawurlencode($message));
         } else {
-            $form->sessionMessage($message, $status, ValidationResult::CAST_HTML);
+            if ($form) {
+                $form->sessionMessage($message, $status, ValidationResult::CAST_HTML);
+            }
         }
         // Redirect after save
         return $this->redirectAfterSave($isNewRecord);
     }
+
+    /**
+     * Handles custom links
+     *
+     * Use CustomLink with default behaviour to trigger this
+     *
+     * @param HTTPRequest $request
+     * @return HTTPResponse|DBHTMLText
+     */
+    public function doCustomLink(HTTPRequest $request)
+    {
+        $action = $request->getVar('CustomLink');
+        return $this->forwardActionToRecord($action);
+    }
+
+    /**
+     * Handles custom actions
+     *
+     * Use CustomAction class to trigger this
+     *
+     * @param array The form data
+     * @param Form The form object
+     * @return HTTPResponse|DBHTMLText
+     */
+    public function doCustomAction($data, $form)
+    {
+        $action = key($data['action_doCustomAction']);
+        return $this->forwardActionToRecord($action, $data, $form);
+    }
+
     /**
      * Saves the form and goes back to list view
      *
@@ -128,6 +174,7 @@ class ActionsGridFieldItemRequest extends DataExtension
         $controller->getResponse()->addHeader("X-Pjax", "Content");
         return $controller->redirect($this->getBackLink());
     }
+
     /**
      * Gets the top level controller.
      *
@@ -143,6 +190,7 @@ class ActionsGridFieldItemRequest extends DataExtension
         }
         return $c;
     }
+
     /**
      * Gets the back link
      *
@@ -168,6 +216,7 @@ class ActionsGridFieldItemRequest extends DataExtension
         }
         return $backlink;
     }
+
     /**
      * Response object for this request after a successful save
      *

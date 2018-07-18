@@ -5,7 +5,7 @@ use SilverStripe\Core\Convert;
 use SilverStripe\Admin\ModelAdmin;
 use SilverStripe\Control\Controller;
 use SilverStripe\Forms\LiteralField;
-use LeKoala\Base\Controllers\DefaultLink;
+use LeKoala\Base\Actions\DefaultLink;
 
 /**
  * CmsInlineFormAction

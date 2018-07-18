@@ -3,10 +3,10 @@ namespace LeKoala\Base\Forms;
 
 use SilverStripe\Core\Convert;
 use SilverStripe\Admin\ModelAdmin;
+use SilverStripe\View\Requirements;
 use SilverStripe\Control\Controller;
 use SilverStripe\Forms\LiteralField;
-use SilverStripe\View\Requirements;
-use LeKoala\Base\Controllers\DefaultLink;
+use LeKoala\Base\Actions\DefaultLink;
 
 /**
  * A simple pure css modal for usage in the cms
