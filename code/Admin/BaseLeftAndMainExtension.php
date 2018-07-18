@@ -28,6 +28,18 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
      */
     private static $dark_theme = false;
 
+    /**
+     * @config
+     * @var array
+     */
+    private static $removed_items = [];
+
+    /**
+     * @config
+     * @var array
+     */
+    private static $reordered_items = [];
+
     public function init()
     {
         $SiteConfig = SiteConfig::current_site_config();
@@ -35,24 +47,8 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
             Director::forceSSL();
         }
 
-        // Hide items if necessary, example yml:
-        //
-        // LeKoala\Base\Admin\BaseLeftAndMainExtension:
-        //   removed_items:
-        //      - SilverStripe-CampaignAdmin-CampaignAdmin
-        //
-        // This is just hiding stuff, a more robust solution would be to not install these things
-        $removedItems = self::config()->removed_items;
-        if ($removedItems) {
-            $css = '';
-            foreach ($removedItems as $item) {
-                CMSMenu::remove_menu_item($item);
-                $itemParts = explode('-', $item);
-                $css .= 'li.valCMS_ACCESS_' . end($itemParts) . '{display:none}' . "\n";
-            }
-            Requirements::customCSS($css, 'HidePermissions');
-        }
-
+        $this->removeMenuItems();
+        $this->reorderMenuItems();
         $this->removeSubsiteFromMenu();
 
         // Check if we need font awesome (if any item use IconClass fa fa-something)
@@ -78,6 +74,62 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
 
         Requirements::javascript("base/javascript/admin.js");
         $this->requireAdminStyles();
+    }
+
+    /**
+     * Hide items if necessary, example yml:
+     *
+     *    LeKoala\Base\Admin\BaseLeftAndMainExtension:
+     *      removed_items:
+     *        - SilverStripe-CampaignAdmin-CampaignAdmin
+     *
+     * @return void
+     */
+    protected function removeMenuItems()
+    {
+        $removedItems = self::config()->removed_items;
+        if ($removedItems) {
+            $css = '';
+            foreach ($removedItems as $item) {
+                CMSMenu::remove_menu_item($item);
+                $itemParts = explode('-', $item);
+                $css .= 'li.valCMS_ACCESS_' . end($itemParts) . '{display:none}' . "\n";
+            }
+            Requirements::customCSS($css, 'HidePermissions');
+        }
+    }
+
+    /**
+     * Reorder menu items based on a given array
+     *
+     * @return void
+     */
+    protected function reorderMenuItems()
+    {
+        $reorderedItems = self::config()->reordered_items;
+        if (empty($reorderedItems)) {
+            return;
+        }
+
+        $currentMenuItems = CMSMenu::get_menu_items();
+        CMSMenu::clear_menu();
+        // Let's add items in the given order
+        $priority = 500;
+        foreach ($reorderedItems as $itemName) {
+            foreach ($currentMenuItems as $key => $item) {
+                if ($key != $itemName) {
+                    continue;
+                }
+                $item->priority = $priority;
+                $priority -= 10;
+                CMSMenu::add_menu_item($key, $item->title, $item->url, $item->controller, $item->priority);
+                unset($currentMenuItems[$key]);
+            }
+        }
+        // Add remaining items
+        foreach ($currentMenuItems as $key => $item) {
+            CMSMenu::add_menu_item($key, $item->title, $item->url, $item->controller, $item->priority);
+        }
     }
 
     /**
