@@ -16,8 +16,11 @@ trait DefaultLink
      * @param array $params
      * @return string
      */
-    public function getDefaultLink($action, array $params = [])
+    public function getDefaultLink($action, array $params = null)
     {
+        if ($params === null) {
+            $params = [];
+        }
         $ctrl = Controller::curr();
         if ($ctrl instanceof ModelAdmin) {
             $modelClass = $ctrl->getRequest()->param('ModelClass');
