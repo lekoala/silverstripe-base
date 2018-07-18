@@ -12,7 +12,7 @@
     text-shadow: -0.06ex 0 rgba(0, 0, 0, 0.6), 0.06ex 0 rgba(0, 0, 0, 0.6);
 }
 
-/* More compact dropdown */
+/* More compact dropdown + visible if collapsed */
 
 .cms .cms-menu .cms-subsites {
     padding: 0;
@@ -24,6 +24,20 @@
 
 .cms-subsites .field .chosen-container-single .chosen-single {
     border-radius: 0;
+}
+
+.cms .cms-menu .cms-subsites select {
+    visibility: hidden;
+    height: 34px;
+    border-radius: 0;
+}
+
+.cms .cms-menu.collapsed .cms-subsites {
+    display: block;
+}
+
+.cms-menu.collapsed .cms-subsites .chosen-drop {
+    min-width: 180px;
 }
 
 /* Icons in menu */
