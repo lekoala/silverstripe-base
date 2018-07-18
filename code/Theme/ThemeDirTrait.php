@@ -6,7 +6,9 @@ use SilverStripe\View\SSViewer;
 trait KnowsThemeDir
 {
     /**
-     * Get current theme dir
+     * Get current theme dir (regardless of current theme set)
+     *
+     * This will work in admin for instance
      *
      * @return string
      */
@@ -25,5 +27,18 @@ trait KnowsThemeDir
             return 'themes/' . $mainTheme;
         }
         return project();
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isAdminTheme()
+    {
+        $themes = SSViewer::get_themes();
+        if (empty($themes)) {
+            return false;
+        }
+        $theme = $themes[0];
+        return strpos($theme, 'silverstripe/admin') === 0;
     }
 }

@@ -21,8 +21,7 @@ class ThemeControllerExtension extends Extension
     use KnowsThemeDir;
     public function onAfterInit()
     {
-        // Do nothing in admin
-        if (Controller::curr() instanceof LeftAndMain) {
+        if ($this->isAdminTheme()) {
             return;
         }
         $this->requireGoogleFonts();
@@ -52,6 +51,8 @@ class ThemeControllerExtension extends Extension
             if ($name == 'editor.css') {
                 continue;
             }
+            // themedCSS use filename without extension
+            $name = rtrim($name, '.css');
             Requirements::themedCSS($name);
         }
         if ($SiteConfig->CssTheme) {
