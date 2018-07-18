@@ -118,6 +118,6 @@ class CmsInlineModal extends LiteralField
      */
     public function setIframeAction($action)
     {
-        return $this->setIframe($this->getDefaultLink($action));
+        return $this->setIframe($this->getControllerLink($action));
     }
 }

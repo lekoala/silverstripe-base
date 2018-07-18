@@ -53,7 +53,7 @@ class CmsInlineFormAction extends LiteralField
     public function getUrl()
     {
         if (!$this->url) {
-            return $this->getDefaultLink($this->action, $this->params);
+            return $this->getControllerLink($this->action, $this->params);
         }
         return $this->url;
     }

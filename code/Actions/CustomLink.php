@@ -53,7 +53,7 @@ class CustomLink extends LiteralField
         if ($link && is_string($link)) {
             $this->link = $link;
         } else {
-            $this->link = $this->getDefaultLink($name, $link);
+            $this->link = $this->getModelLink($name, $link);
         }
     }
 
