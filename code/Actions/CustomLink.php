@@ -8,6 +8,7 @@ use SilverStripe\Admin\ModelAdmin;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Control\Controller;
 use SilverStripe\Forms\LiteralField;
+use LeKoala\Base\Controllers\DefaultLink;
 
 /**
  * Custom links to include in getCMSActions
@@ -15,6 +16,7 @@ use SilverStripe\Forms\LiteralField;
 class CustomLink extends LiteralField
 {
     use CustomButton;
+    use DefaultLink;
 
     /**
      * @var link
@@ -51,31 +53,9 @@ class CustomLink extends LiteralField
         if ($link && is_string($link)) {
             $this->link = $link;
         } else {
-            $this->link = $this->getDefaultLink($link);
+            $this->link = $this->getDefaultLink($name, $link);
         }
     }
-
-    public function getDefaultLink($params = null)
-    {
-        if ($params && !is_array($params)) {
-            throw new Exception("Params need to be an array");
-        }
-        if (empty($params)) {
-            $params = [];
-        }
-        $ctrl = Controller::curr();
-        $action = $this->name;
-        if ($ctrl instanceof ModelAdmin) {
-            $modelClass = $ctrl->getRequest()->param('ModelClass');
-            $action = $modelClass . '/' . $action;
-            $params = array_merge($ctrl->getRequest()->allParams(), $params);
-        }
-        if (!empty($params)) {
-            $action .= '?' . http_build_query($params);
-        }
-        return $ctrl->Link($action);
-    }
-
 
     public function Type()
     {

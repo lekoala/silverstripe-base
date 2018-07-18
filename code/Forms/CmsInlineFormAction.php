@@ -5,6 +5,7 @@ use SilverStripe\Core\Convert;
 use SilverStripe\Admin\ModelAdmin;
 use SilverStripe\Control\Controller;
 use SilverStripe\Forms\LiteralField;
+use LeKoala\Base\Controllers\DefaultLink;
 
 /**
  * CmsInlineFormAction
@@ -18,6 +19,8 @@ use SilverStripe\Forms\LiteralField;
  */
 class CmsInlineFormAction extends LiteralField
 {
+    use DefaultLink;
+
     /**
      * @var string
      */
@@ -49,20 +52,8 @@ class CmsInlineFormAction extends LiteralField
     }
     public function getUrl()
     {
-        // Some sensible defaults if no url is specified
         if (!$this->url) {
-            $ctrl = Controller::curr();
-            $action = $this->name;
-            $params = $this->params;
-            if ($ctrl instanceof ModelAdmin) {
-                $modelClass = $ctrl->getRequest()->param('ModelClass');
-                $action = $modelClass . '/' . $action;
-                $params = array_merge($ctrl->getRequest()->allParams(), $params);
-            }
-            if (!empty($params)) {
-                $action .= '?' . http_build_query($params);
-            }
-            return $ctrl->Link($action);
+            return $this->getDefaultLink($this->action, $this->params);
         }
         return $this->url;
     }

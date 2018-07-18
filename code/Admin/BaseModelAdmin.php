@@ -85,6 +85,21 @@ class BaseModelAdmin extends ModelAdmin
     }
 
     /**
+     * Render a dialog
+     *
+     * @param array $customFields
+     * @return string
+     */
+    protected function renderDialog($customFields = null)
+    {
+        // Set empty content by default otherwise it will render the full page
+        if (empty($customFields['Content'])) {
+            $customFields['Content'] = '';
+        }
+        return $this->renderWith('Silverstripe\\Admin\\CMSDialog', $customFields);
+    }
+
+    /**
      * @param DataObject|ArrayData $record
      * @return string
      */

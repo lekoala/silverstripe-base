@@ -23,13 +23,13 @@
 /* Box */
 
 .pure-modal .pure-modal-wrap {
-    background-color: #ddd;
+    background-color: #f7f8fa;
     box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);
-    padding: 32px;
+    padding: 3.077rem 1.5385rem;
     width: 60%;
-    margin: 20px auto;
+    margin: 1.5385rem auto;
     align-self: flex-start;
-    border-radius: 2px;
+    border-radius: 3px;
     transition: all 0.3s ease;
 }
 
@@ -66,19 +66,19 @@
 
 .pure-modal .pure-modal-overlay .close {
     position: absolute;
-    right: 16px;
-    top: 16px;
+    right: 1.5385rem;
+    top: 1.5385rem;
     width: 32px;
     height: 32px;
-    text-align:center;
-    line-height:32px;
-    display:inline-block;
-    color: #282c34;
+    text-align: center;
+    line-height: 32px;
+    display: inline-block;
+    color: rgba(0, 0, 0, 0.6);
 }
 
 .pure-modal .pure-modal-overlay .close:hover {
     cursor: pointer;
-    color: #4b5361;
+    color: rgba(0, 0, 0, 0.8);
 }
 
 .pure-modal .o-close {
