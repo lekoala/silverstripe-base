@@ -37,7 +37,7 @@ class CustomLink extends LiteralField
     /**
      * @param string $name
      * @param string $title
-     * @param string|array $link Will default to name of link on current controller if not set
+     * @param string|array $link Will default to name of link on current record if not set
      */
     public function __construct($name, $title = null, $link = null)
     {

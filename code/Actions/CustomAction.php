@@ -7,6 +7,9 @@ use SilverStripe\Forms\FormAction;
  * Custom actions to use in getCMSActions
  *
  * Actions handlers are declared on the DataObject itself
+ *
+ * Because it is an action, it will be submitted through ajax
+ * If you want to create links that open files or show a new page, use CustomLink
  */
 class CustomAction extends FormAction
 {

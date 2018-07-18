@@ -119,13 +119,18 @@ class ActionsGridFieldItemRequest extends DataExtension
         if ($error) {
             $status = 'bad';
         }
+        // We don't have a form, simply return the result
+        if (!$form) {
+            if ($error) {
+                return $this->owner->httpError(403, $message);
+            }
+            return $message;
+        }
         if (Director::is_ajax()) {
             $controller = $this->getToplevelController();
             $controller->getResponse()->addHeader('X-Status', rawurlencode($message));
         } else {
-            if ($form) {
-                $form->sessionMessage($message, $status, ValidationResult::CAST_HTML);
-            }
+            $form->sessionMessage($message, $status, ValidationResult::CAST_HTML);
         }
         // Redirect after save
         return $this->redirectAfterSave($isNewRecord);
