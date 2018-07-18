@@ -73,12 +73,12 @@
     text-align: center;
     line-height: 32px;
     display: inline-block;
-    color: rgba(0, 0, 0, 0.6);
+    color: rgba(0, 0, 0, 0.7);
 }
 
 .pure-modal .pure-modal-overlay .close:hover {
     cursor: pointer;
-    color: rgba(0, 0, 0, 0.8);
+    color: rgba(0, 0, 0, 0.9);
 }
 
 .pure-modal .o-close {

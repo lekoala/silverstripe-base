@@ -8,6 +8,10 @@
     overflow: hidden;
 }
 
+.ui-tabs-anchor.nav-link.active {
+    text-shadow: -0.06ex 0 rgba(0, 0, 0, 0.6), 0.06ex 0 rgba(0, 0, 0, 0.6);
+}
+
 /* More compact dropdown */
 
 .cms .cms-menu .cms-subsites {
@@ -31,7 +35,7 @@
 .menu__icon {
     width: 22px;
     left: 10px;
-    margin-top:0;
+    margin-top: 0;
     text-align: center;
 }
 
