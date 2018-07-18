@@ -10,6 +10,7 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest;
+use SilverStripe\Control\Director;
 
 /**
  * Decorates {@link GridDetailForm_ItemRequest} to use new form actions and buttons.
@@ -104,7 +105,12 @@ class ActionsGridFieldItemRequest extends DataExtension
         if ($error) {
             $status = 'bad';
         }
-        $form->sessionMessage($message, $status, ValidationResult::CAST_HTML);
+        if (Director::is_ajax()) {
+            $controller = $this->getToplevelController();
+            $controller->getResponse()->addHeader('X-Status', rawurlencode($message));
+        } else {
+            $form->sessionMessage($message, $status, ValidationResult::CAST_HTML);
+        }
         // Redirect after save
         return $this->redirectAfterSave($isNewRecord);
     }
