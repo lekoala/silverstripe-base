@@ -43,6 +43,17 @@
     left: 14px;
 }
 
+@media (min-width: 768px) {
+    .collapsed .menu__icon {
+        /* box width 60px, icon width = 22px 60-22/2 = 19 */
+        left: 19px;
+    }
+    .collapsed .menu__icon.icon-16 {
+        /* box width 60px, icon width = 16px 60-16/2 = 22 */
+        left: 22px;
+    }
+}
+
 /* Row classes */
 
 .cms table.ss-gridfield-table tr.green.odd {
