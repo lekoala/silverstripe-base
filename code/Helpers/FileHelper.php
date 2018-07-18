@@ -86,6 +86,19 @@ class FileHelper
         return rmdir($dir);
     }
 
+    /**
+     * @link https://www.digitalocean.com/community/questions/proper-permissions-for-web-server-s-directory
+     * @param string $dir
+     * @return bool
+     */
+    public static function ensureDir($dir)
+    {
+        if (!is_dir($dir)) {
+            return mkdir($dir, 0755, true);
+        }
+        return true;
+    }
+
 
     /**
      * @param int $bytes
