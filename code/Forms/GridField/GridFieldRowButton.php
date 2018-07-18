@@ -210,7 +210,6 @@ abstract class GridFieldRowButton implements GridField_ColumnProvider, GridField
     public function setFontIcon(string $fontIcon)
     {
         $this->fontIcon = $fontIcon;
-
         return $this;
     }
 

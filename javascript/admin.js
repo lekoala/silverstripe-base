@@ -51,8 +51,8 @@
         return true;
     });
 
-    // Load tab if set in url
     $.entwine('ss', function ($) {
+        // Load tab if set in url
         $('ul.ui-tabs-nav a').entwine({
             onmatch: function () {
                 this._super();
@@ -66,6 +66,14 @@
                         this.trigger('click');
                     }
                 }
+            }
+        });
+        // Prevent navigation for no ajax
+        $('.grid-field__icon-action.no-ajax').entwine({
+            onmatch: function () {},
+            onunmatch: function () {},
+            onclick: function (e) {
+                e.stopPropagation();
             }
         });
     });

@@ -139,7 +139,6 @@ class CustomLink extends LiteralField
     public function setConfirmation($confirmation)
     {
         $this->confirmation = $confirmation;
-
         return $this;
     }
 
@@ -159,7 +158,6 @@ class CustomLink extends LiteralField
     public function setNewWindow($newWindow)
     {
         $this->newWindow = $newWindow;
-
         return $this;
     }
 }

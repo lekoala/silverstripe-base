@@ -55,11 +55,11 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
         // eg: private static $menu_icon_class = 'fa fa-calendar';
         $items = $this->owner->MainMenu();
         foreach ($items as $item) {
-            if (strpos($item->IconClass, 'fa fa-') === 0) {
+            if (strpos($item->IconClass, 'fa fa-') !== false) {
                 CommonRequirements::fontAwesome4();
-            } elseif (strpos($item->IconClass, 'fas fa-') === 0) {
+            } elseif (strpos($item->IconClass, 'fas fa-') !== false) {
                 CommonRequirements::fontAwesome5();
-            } elseif (strpos($item->IconClass, 'bx bx-') === 0) {
+            } elseif (strpos($item->IconClass, 'bx bx-') !== false) {
                 CommonRequirements::boxIcons();
             }
         }

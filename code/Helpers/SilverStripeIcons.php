@@ -1,6 +1,11 @@
 <?php
 namespace LeKoala\Base\Helpers;
 
+/**
+ * All icons in SilverStripe are prefixed with font-icon-{something}
+ *
+ * This class list constants that can be used as suffix
+ */
 class SilverStripeIcons
 {
     const ICON_SEARCH = 'search';
