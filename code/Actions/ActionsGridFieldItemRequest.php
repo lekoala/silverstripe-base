@@ -75,7 +75,7 @@ class ActionsGridFieldItemRequest extends DataExtension
         $record = $this->owner->record;
         $definedActions = $record->getCMSActions();
         // Check if the action is indeed available
-        $clickedAction = null;
+        $match = false;
         if (!empty($definedActions)) {
             foreach ($definedActions as $definedAction) {
                 $definedActionName = $definedAction->getName();
@@ -83,11 +83,11 @@ class ActionsGridFieldItemRequest extends DataExtension
                     $definedActionName = $definedAction->actionName();
                 }
                 if ($definedActionName == $action) {
-                    $clickedAction = $definedAction;
+                    $match = true;
                 }
             }
         }
-        if (!$clickedAction) {
+        if (!$match) {
             return $this->owner->httpError(403, 'Action not available');
         }
         $message = null;
@@ -110,7 +110,7 @@ class ActionsGridFieldItemRequest extends DataExtension
                 'ActionsGridFieldItemRequest.DONE',
                 'Action {action} was done on {name}',
                 array(
-                    'action' => $clickedAction->getTitle(),
+                    'action' => $action,
                     'name' => $record->i18n_singular_name(),
                 )
             );

@@ -16,13 +16,4 @@ trait HasLogger
     {
         return Injector::inst()->get(LoggerInterface::class)->withName(ClassHelper::getClassWithoutNamespace(get_called_class()));
     }
-
-    /**
-     * a static proxy
-     * @return LoggerInterface
-     */
-    public static function staticLogger()
-    {
-        return Injector::inst()->get(LoggerInterface::class)->withName(ClassHelper::getClassWithoutNamespace(get_called_class()));
-    }
 }
