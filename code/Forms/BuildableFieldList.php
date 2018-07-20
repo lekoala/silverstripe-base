@@ -16,6 +16,9 @@ use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Forms\HiddenField;
 
+/**
+ * A field list that can create it its fields
+ */
 class BuildableFieldList extends FieldList
 {
     /**
@@ -29,6 +32,7 @@ class BuildableFieldList extends FieldList
     protected $currentTab = null;
 
     /**
+     * The entity scope that will be used to attempt translation
      * @var string
      */
     protected $i18nEntity = 'Global';
@@ -61,6 +65,7 @@ class BuildableFieldList extends FieldList
                 $name = $name[1];
             }
             $fallback = FormField::name_to_label($name);
+            $fallback = str_replace(['[', ']', '_'], ' ', $fallback);
             // Attempt translation
             $validKey = str_replace(['[', ']', '_'], '', $name);
             $title = _t($this->i18nEntity . '.' . $validKey, $fallback);
@@ -295,7 +300,44 @@ class BuildableFieldList extends FieldList
     public function setI18nEntity($i18nEntity)
     {
         $this->i18nEntity = $i18nEntity;
+        return $this;
+    }
 
+    /**
+     * Get the value of defaultTab
+     */
+    public function getDefaultTab()
+    {
+        return $this->defaultTab;
+    }
+
+    /**
+     * Set the value of defaultTab
+     *
+     * @return  self
+     */
+    public function setDefaultTab($defaultTab)
+    {
+        $this->defaultTab = $defaultTab;
+        return $this;
+    }
+
+    /**
+     * Get the value of defaultKey
+     */
+    public function getDefaultKey()
+    {
+        return $this->defaultKey;
+    }
+
+    /**
+     * Set the value of defaultKey
+     *
+     * @return  self
+     */
+    public function setDefaultKey($defaultKey)
+    {
+        $this->defaultKey = $defaultKey;
         return $this;
     }
 }

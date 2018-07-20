@@ -10,23 +10,31 @@ use SilverStripe\Forms\FormField;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\CheckboxField;
+use LeKoala\Base\Forms\BuildableFieldList;
 
-class BlockFieldList extends FieldList
+/**
+ * Easily add fields to your blocks
+ */
+class BlockFieldList extends BuildableFieldList
 {
+    /**
+     * @var string
+     */
     protected $defaultTab = 'Main';
-    protected $defaultKey = 'Data';
 
-    protected function normalizeTitle($name, $title = null)
-    {
-        if ($title === null) {
-            if (is_array($name)) {
-                $name = $name[1];
-            }
-            $title = FormField::name_to_label($name);
-        }
-        return $title;
-    }
+    /**
+     * @var string
+     */
+    protected $defaultKey = 'BlockData';
 
+    /**
+     * Automatically expand the given name to match the default key
+     * and items if necessary
+     *
+     * @param string $name
+     * @param string $baseKey Will use defaultKey if not provided
+     * @return string
+     */
     protected function normalizeName($name, $baseKey = null)
     {
         if ($baseKey === null) {
@@ -41,6 +49,12 @@ class BlockFieldList extends FieldList
             $name = $baseKey . '[' . $name . ']';
         }
         return $name;
+    }
+
+    protected function normalizeTitle($name, $title = "")
+    {
+        $name = str_replace([$this->defaultKey . '[', ']'], '', $name);
+        return parent::normalizeTitle($name, $title);
     }
 
     /**
@@ -62,86 +76,28 @@ class BlockFieldList extends FieldList
         $this->setDefaultKey($key);
     }
 
-    public function addField($class, $name, $title)
+    /**
+     * Add a field to the list
+     *
+     * @param string $class
+     * @param string $name
+     * @param string $title
+     * @param array $attributes
+     * @return FormField
+     */
+    public function addField($class, $name, $title = "", $attributes = [])
     {
-        $title = $this->normalizeTitle($name, $title);
         $name = $this->normalizeName($name);
-        $field = $class::create($name, $title);
-        $this->addFieldsToTab('Root.' . $this->defaultTab, $field);
-        return $field;
+        return parent::addField($class, $name, $title);
     }
 
-    public function addHeader($title, $level = 2)
-    {
-        static $i = 0;
-        $i++;
-        $field = HeaderField::create("H[$i]", $title, $level);
-        $this->addFieldsToTab('Root.' . $this->defaultTab, $field);
-        return $field;
-    }
-
-    public function addUpload($name = "ImageID", $title = null)
-    {
-        return $this->addField(UploadField::class, $name, $title);
-    }
-
-    public function addCheckbox($name = "IsEnabled", $title = null)
-    {
-        return $this->addField(CheckboxField::class, $name, $title);
-    }
-
-    public function addText($name = "Title", $title = null)
-    {
-        return $this->addField(TextField::class, $name, $title);
-    }
-
-    public function addTextarea($name = "Description", $title = null)
-    {
-        return $this->addField(TextareaField::class, $name, $title);
-    }
-
+    /**
+     * @param string $name
+     * @param string $title
+     * @return BlockButtonField
+     */
     public function addButton($name = "Button", $title = null)
     {
         return $this->addField(BlockButtonField::class, $name, $title);
-    }
-
-    /**
-     * Get the value of defaultTab
-     */
-    public function getDefaultTab()
-    {
-        return $this->defaultTab;
-    }
-
-    /**
-     * Set the value of defaultTab
-     *
-     * @return  self
-     */
-    public function setDefaultTab($defaultTab)
-    {
-        $this->defaultTab = $defaultTab;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of defaultKey
-     */
-    public function getDefaultKey()
-    {
-        return $this->defaultKey;
-    }
-
-    /**
-     * Set the value of defaultKey
-     *
-     * @return  self
-     */
-    public function setDefaultKey($defaultKey)
-    {
-        $this->defaultKey = $defaultKey;
-
-        return $this;
     }
 }

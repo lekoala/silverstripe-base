@@ -53,6 +53,8 @@ use SilverStripe\View\Parsers\URLSegmentFilter;
 final class Block extends DataObject
 {
     const ITEMS_KEY = 'Items';
+    const DATA_KEY = 'BlockData';
+    const SETTINGS_KEY = 'Settings';
     private static $table_name = 'Block'; // When using namespace, specify table name
     public static $rename_columns = [
         'Data' => 'BlockData'
@@ -62,7 +64,7 @@ final class Block extends DataObject
         'MenuTitle' => 'Varchar(191)',
         'HTMLID' => 'Varchar(59)',
         'Content' => 'HTMLText',
-        // Localized data
+        // Localized data (do not use Data field)
         'BlockData' => DBJson::class,
         // Unlocalized data
         'Settings' => DBJson::class,
@@ -306,11 +308,11 @@ final class Block extends DataObject
     public function __get($name)
     {
         // A Data field
-        if (strpos($name, 'Data[') === 0) {
+        if (strpos($name, self::DATA_KEY . '[') === 0) {
             return $this->getIn($name, $this->DataArray());
         }
         // A Settings field
-        if (strpos($name, 'Settings[') === 0) {
+        if (strpos($name, self::SETTINGS_KEY . '[') === 0) {
             return $this->getIn($name, $this->SettingsArray());
         }
         return parent::__get($name);
@@ -324,11 +326,11 @@ final class Block extends DataObject
     public function hasField($name)
     {
         // A Data field
-        if (strpos($name, 'Data[') === 0) {
+        if (strpos($name, self::DATA_KEY . '[') === 0) {
             return true;
         }
         // A Settings field
-        if (strpos($name, 'Settings[') === 0) {
+        if (strpos($name, self::SETTINGS_KEY . '[') === 0) {
             return true;
         }
         return parent::hasField($name);
@@ -371,14 +373,14 @@ final class Block extends DataObject
         return $val;
     }
     /**
-     * Consistently returns an array regardless of what is in AuditData
+     * Consistently returns an array regardless of what is in BlockData
      *
      * @return array
      */
     public function DataArray()
     {
-        if ($this->AuditData) {
-            return json_decode($this->AuditData, JSON_OBJECT_AS_ARRAY);
+        if ($this->BlockData) {
+            return json_decode($this->BlockData, JSON_OBJECT_AS_ARRAY);
         }
         return [];
     }
