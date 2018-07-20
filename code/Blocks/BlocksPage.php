@@ -44,9 +44,6 @@ class BlocksPage extends Page
     protected static $is_writing = false;
     public function updateBodyClass(&$class)
     {
-        if (is_callable('parent::updateBodyClass')) {
-            parent::updateBodyClass($class);
-        }
         $arr = $this->getBlocksListArray();
         if (!empty($arr)) {
             $class .= ' Starts-' . $arr[0];
