@@ -53,9 +53,14 @@
 
     $.entwine('ss', function ($) {
         // Load tab if set in url
+        var tabLoaded = false;
         $('ul.ui-tabs-nav a').entwine({
             onmatch: function () {
                 this._super();
+
+                if(tabLoaded) {
+                    return;
+                }
 
                 var url = this.attr('href'),
                     hash = url.split('#')[1];
@@ -64,6 +69,7 @@
                     var currHash = location.hash.substring(1);
                     if (currHash == hash) {
                         this.trigger('click');
+                        tabLoaded = true;
                     }
                 }
             }
