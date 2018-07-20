@@ -25,7 +25,7 @@ class BasePageExtension extends DataExtension
      */
     public function requirePageForSegment($segment, $class, $data = [])
     {
-        SubsiteHelper::withSubsites(function ($SubsiteID) use ($segment, $class, $data) {
+        SubsiteHelper::withSubsites(function ($SubsiteID = 0) use ($segment, $class, $data) {
             $page = SiteTree::get_by_link($segment);
             if ($page) {
                 // We have a page but the class does not match
