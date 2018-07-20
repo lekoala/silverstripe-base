@@ -68,6 +68,7 @@ class BasePageExtension extends DataExtension
 
     /**
      * Update meta tags
+     * @link https://github.com/tractorcow/silverstripe-opengraph
      * @param string $tags
      * @return void
      */
@@ -82,9 +83,21 @@ class BasePageExtension extends DataExtension
 
         $SiteConfig = SiteConfig::current_site_config();
         $descriptionText = $owner->MetaDescription;
+        if (!$descriptionText && $owner->hasField('Content')) {
+            $descriptionText = preg_replace('/\s+/', ' ', $owner->dbObject('Content')->Summary());
+        }
         $imageLink = '';
+        if ($owner->hasMethod('getMetaImage')) {
+            $imageLink = $owner->getMetaImage();
+        }
+        $ogType = "website";
+        if ($owner->hasMethod('getOGType')) {
+            $ogType = $owner->getOGType();
+        }
         $shareTitle = $owner->getTitle();
-
+        if ($owner->hasMethod('getShareTitle')) {
+            $shareTitle = $owner->getShareTitle();
+        }
         $tags = '';
         // OpenGraph
         $tags .= "\n<!-- OpenGraph Meta Tags -->\n";
@@ -92,7 +105,6 @@ class BasePageExtension extends DataExtension
         $siteTitle = $SiteConfig->Title;
         $tags .= $this->createMetaTag('og:site_name', $siteTitle);
         // og:site_name
-        $ogType = "website";
         $tags .= $this->createMetaTag('og:type', $ogType);
         // og:title
         $tags .= $this->createMetaTag('og:title', $shareTitle);
