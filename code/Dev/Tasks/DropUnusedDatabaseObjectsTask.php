@@ -33,11 +33,11 @@ class DropUnusedDatabaseObjectsTask extends BuildTask
         $go = $options['go'];
 
         if (!$go) {
-            echo('Previewing what this task is about to do.');
+            echo ('Previewing what this task is about to do.');
         } else {
-            echo("Let's clean this up!");
+            echo ("Let's clean this up!");
         }
-        echo('<hr/>');
+        echo ('<hr/>');
         $this->removeTables($request, $go);
         $this->removeFields($request, $go);
     }
@@ -129,6 +129,7 @@ class DropUnusedDatabaseObjectsTask extends BuildTask
         $schema = DB::get_schema();
         $dataObjectSchema = DataObject::getSchema();
         $classes = $this->getClassesWithTables();
+        $allDataObjects = array_values($this->getValidDataObjects());
         $tableList = $schema->tableList();
         $tablesToRemove = $tableList;
 
@@ -159,7 +160,7 @@ class DropUnusedDatabaseObjectsTask extends BuildTask
                     self::removeFromArray($lcTable . '_' . strtolower($rel), $tablesToRemove);
                 }
             }
-            // TODO: this will miss classes relations without own table
+            // We catch relations without own classes later on
             $manyMany = $class::config()->many_many;
             if (!empty($manyMany)) {
                 foreach ($manyMany as $rel => $obj) {
@@ -170,6 +171,22 @@ class DropUnusedDatabaseObjectsTask extends BuildTask
 
         //at this point, we should only have orphans table in dbTables var
         foreach ($tablesToRemove as $lcTable => $table) {
+            // Remove many_many tables without own base table
+            if (strpos($table, '_') !== false) {
+                $parts = explode('_', $table);
+                $potentialClass = $parts[0];
+                $potentialRelation = $parts[1];
+                foreach ($allDataObjects as $dataObjectClass) {
+                    $classParts = explode('\\', $dataObjectClass);
+                    $tableClass = end($classParts);
+                    if ($tableClass == $potentialClass) {
+                        $manyManyRelations = $dataObjectClass::config()->many_many;
+                        if (isset($manyManyRelations[$potentialRelation])) {
+                            continue 2;
+                        }
+                    }
+                }
+            }
             if ($go) {
                 DB::query('DROP TABLE `' . $table . '`');
                 $this->message("Dropped $table", 'obsolete');
@@ -181,6 +198,18 @@ class DropUnusedDatabaseObjectsTask extends BuildTask
         if (empty($tablesToRemove)) {
             $this->message("No table to remove", "repaired");
         }
+    }
+
+    /**
+     * All dataobjects
+     *
+     * @return array
+     */
+    protected function getValidDataObjects()
+    {
+        $list = ClassInfo::getValidSubClasses(DataObject::class);
+        array_shift($list);
+        return $list;
     }
 
     /**
