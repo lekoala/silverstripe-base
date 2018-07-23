@@ -101,7 +101,7 @@ class FlatpickrField extends TextField
      * @config
      * @var string
      */
-    private static $version = '4.5.0';
+    private static $version = '4.5.1';
 
     /**
      * @config

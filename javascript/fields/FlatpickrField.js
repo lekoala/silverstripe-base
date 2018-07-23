@@ -21,13 +21,24 @@
         var $this = $(this);
         if ($this.data('rangeStart')) {
             var $other = $($this.data('rangeStart'));
+            var isUpdating = false;
             $this.on('change', function () {
+                if (isUpdating) {
+                    return;
+                }
+                isUpdating = true;
                 var fp = document.querySelector("#" + $other.attr('id'))._flatpickr;
                 fp.set('maxDate', $this.val());
+                isUpdating = false;
             }).trigger('change');
             $other.on('change', function () {
+                if (isUpdating) {
+                    return;
+                }
+                isUpdating = true;
                 var fp = document.querySelector("#" + $this.attr('id'))._flatpickr;
                 fp.set('minDate', $other.val());
+                isUpdating = false;
             }).trigger('change');
         }
     };
