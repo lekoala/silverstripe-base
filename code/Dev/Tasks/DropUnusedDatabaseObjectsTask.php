@@ -159,6 +159,7 @@ class DropUnusedDatabaseObjectsTask extends BuildTask
                     self::removeFromArray($lcTable . '_' . strtolower($rel), $tablesToRemove);
                 }
             }
+            // TODO: this will miss classes relations without own table
             $manyMany = $class::config()->many_many;
             if (!empty($manyMany)) {
                 foreach ($manyMany as $rel => $obj) {
