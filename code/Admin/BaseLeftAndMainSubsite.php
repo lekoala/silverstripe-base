@@ -52,14 +52,18 @@ trait BaseLeftAndMainSubsite
         foreach ($list as $subsite) {
             $currentState = $subsite->ID == $currentSubsiteID ? 'selected' : '';
 
-            $color = $subsite->SiteConfig()->dbObject('PrimaryColor');
+            $SiteConfig = $subsite->SiteConfig();
+            if (!$SiteConfig) {
+                continue;
+            }
+            $PrimaryColor = $SiteConfig->dbObject('PrimaryColor');
 
             $output->push(ArrayData::create([
                 'CurrentState' => $currentState,
                 'ID' => $subsite->ID,
                 'Title' => Convert::raw2xml($subsite->Title),
-                'BackgroundColor' => $color->Color(),
-                'Color' => $color->ContrastColor(),
+                'BackgroundColor' => $PrimaryColor->Color(),
+                'Color' => $PrimaryColor->ContrastColor(),
             ]));
         }
 
