@@ -5,7 +5,11 @@ use SilverStripe\Core\Extension;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
 
 /**
- * Class \LeKoala\Base\Forms\GridField\GridFieldExtension
+ * Ease of use for day to day coding relative to GridField usage
+ *
+ * - Allow coloring row classes based on sublying model
+ * - Helper methods for field labels
+ * - Data columns helpers
  *
  * @property \SilverStripe\Forms\GridField\GridField|\LeKoala\Base\Forms\GridField\GridFieldExtension $owner
  */

@@ -7,6 +7,7 @@ use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\EmailField;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\HeaderField;
+use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\DropdownField;
@@ -14,7 +15,7 @@ use SilverStripe\Forms\PasswordField;
 use SilverStripe\Forms\TextareaField;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\AssetAdmin\Forms\UploadField;
-use SilverStripe\Forms\HiddenField;
+use SilverStripe\Forms\GridField\GridFieldConfig;
 
 /**
  * A field list that can create it its fields
@@ -51,6 +52,7 @@ class BuildableFieldList extends FieldList
         $arr = $fields->toArray();
         return new self($arr);
     }
+
     /**
      * Slightly improve way to normalize titles in forms
      *

@@ -288,6 +288,12 @@ class FlatpickrField extends TextField
         return $this->getConfig('altFormat');
     }
 
+    /**
+     * Please note that altFormat should match the format for the database
+     *
+     * @param string $value
+     * @return self
+     */
     public function setAltFormat($value)
     {
         return $this->setConfig('altFormat', $value);

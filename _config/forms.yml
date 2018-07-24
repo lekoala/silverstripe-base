@@ -14,6 +14,7 @@ SilverStripe\Core\Injector\Injector:
   SilverStripe\Forms\TimeField:
     class: LeKoala\Base\Forms\FlatpickrField
     calls:
+      - [setEnableTime, [true]]
       - [setNoCalendar, [true]]
 SilverStripe\Forms\FormField:
   # casting:
