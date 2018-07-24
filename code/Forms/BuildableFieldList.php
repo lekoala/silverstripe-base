@@ -135,6 +135,18 @@ class BuildableFieldList extends FieldList
     }
 
     /**
+     * Push a FormField already defined
+     *
+     * @param FormField $field
+     * @return FormField
+     */
+    public function pushField(FormField $field)
+    {
+        $this->pushOrAddToTab($field);
+        return $field;
+    }
+
+    /**
      * Add a field to the list
      *
      * @param string $class
