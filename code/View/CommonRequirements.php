@@ -60,6 +60,12 @@ class CommonRequirements
     private static $boxicons_version = '1.6.0';
 
     /**
+     * @config
+     * @var string
+     */
+    private static $plyr_version = '3.3.22';
+
+    /**
      * Include all files in a given path
      *
      * @param string $path
@@ -73,6 +79,35 @@ class CommonRequirements
             $file = str_replace($base . '/', '', $file);
             Requirements::javascript($file);
         }
+    }
+
+    /**
+     * @link https://polyfill.io/v2/docs/
+     * @return void
+     */
+    public static function polyfillIo()
+    {
+        Requirements::javascript('https://cdn.polyfill.io/v2/polyfill.min.js');
+    }
+
+    /**
+     * @link https://github.com/sampotts/plyr
+     * @param bool $css Include css, defaults to true
+     * @param bool $polyfilled Use polyfilled version, defaults to false
+     * @return void
+     */
+    public static function plyr($css = true, $polyfilled = false)
+    {
+        $version = self::config()->plyr_version;
+        if ($css) {
+            Requirements::css("https://cdn.plyr.io/$version/plyr.css");
+        }
+        if ($polyfilled) {
+            Requirements::javascript("https://cdn.plyr.io/$version/plyr.polyfilled.js");
+        } else {
+            Requirements::javascript("https://cdn.plyr.io/$version/plyr.js");
+        }
+
     }
 
     /**
