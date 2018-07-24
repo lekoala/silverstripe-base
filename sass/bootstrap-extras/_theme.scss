@@ -21,7 +21,7 @@ $btn-focus-width: $btn-focus-width/2;
     border-color: var(--#{$color});
     @include box-shadow($btn-box-shadow);
     &:hover {
-        color: var(--#{$color}-contrast);
+        color: var(--#{$color}-highlight-contrast);
         background-color: var(--#{$color}-highlight);
         border-color: var(--#{$color}-highlight);
     }

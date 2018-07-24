@@ -89,6 +89,18 @@ class SubsiteHelper
     }
 
     /**
+     * @param string $ID
+     * @return void
+     */
+    public static function changeSubsite($ID)
+    {
+        if (!self::UsesSubsite()) {
+            return;
+        }
+        Subsite::changeSubsite($ID);
+    }
+
+    /**
      * Execute the callback in given subsite
      *
      * @param int $ID Subsite ID or 0 for main site

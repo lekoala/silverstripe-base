@@ -119,6 +119,8 @@ class ThemeControllerExtension extends Extension
             // There is no value, use default
             if (!$value) {
                 $value = $declarationValue;
+                // Object must use colors so that colors variants are consistent
+                $dbObject->setValue($declarationValue);
             }
             $replaceRegex = "/var\s?\(--{$declarationName}\)/";
             $replaceCount = 0;
@@ -133,6 +135,10 @@ class ThemeControllerExtension extends Extension
                 // Add highlight
                 $val = $dbObject->HighlightColor();
                 $regex = "/var\s?\(--{$declarationName}-highlight\)/";
+                $cssFileContent = preg_replace($regex, $val, $cssFileContent, -1, $replaceCount);
+                // Add highlight contrast
+                $val = $dbObject->HighlightContrastColor();
+                $regex = "/var\s?\(--{$declarationName}-highlight-contrast\)/";
                 $cssFileContent = preg_replace($regex, $val, $cssFileContent, -1, $replaceCount);
                 // Add muted
                 $val = $dbObject->HighlightColor(0.5);

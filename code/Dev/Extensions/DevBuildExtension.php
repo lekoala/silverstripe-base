@@ -11,16 +11,29 @@ use SilverStripe\Core\Config\Config;
 use LeKoala\Base\Helpers\ClassHelper;
 use LeKoala\Base\Extensions\BaseFileExtension;
 use LeKoala\ExcelImportExport\ExcelBulkLoader;
+use LeKoala\Base\Subsite\SubsiteHelper;
 
 /**
- * Class \LeKoala\Base\Dev\Extensions\DevBuildExtension
+ * Allow the following functions before dev build
+ * - renameColumns
+ * - truncateSiteTree
+ *
+ * Allow the following functions after dev build:
+ * - generateRepository
+ * - generateQueryTraits
+ *
+ * Preserve current subsite
  *
  * @property \SilverStripe\Dev\DevBuildController|\LeKoala\Base\Dev\Extensions\DevBuildExtension $owner
  */
 class DevBuildExtension extends Extension
 {
+    protected $currentSubsite;
+
     public function beforeCallActionHandler()
     {
+        $this->currentSubsite = SubsiteHelper::currentSubsiteID();
+
         $renameColumns = $this->owner->getRequest()->getVar('renameColumns');
         if ($renameColumns) {
             $this->displayMessage("<div class='build'><p><b>Renaming columns</b></p><ul>\n\n");
@@ -121,6 +134,10 @@ SQL;
         }
         if ($generateQueryTraits || $generateRepository) {
             $this->displayMessage("</ul>\n<p><b>Generating ide helpers finished!</b></p></div>");
+        }
+
+        if ($this->currentSubsite) {
+            SubsiteHelper::changeSubsite($this->currentSubsite);
         }
     }
 

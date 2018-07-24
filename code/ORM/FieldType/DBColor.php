@@ -305,7 +305,8 @@ class DBColor extends DBVarchar
         }
         list($R, $G, $B) = self::HEX_TO_RGB($hex);
         $yiq = (($R * 299) + ($G * 587) + ($B * 114)) / 1000;
-        return ($yiq >= self::CONTRAST_THRESHOLD) ? $dark : $light;
+        $contrast = ($yiq >= self::CONTRAST_THRESHOLD) ? $dark : $light;
+        return $contrast;
     }
 
     /**
