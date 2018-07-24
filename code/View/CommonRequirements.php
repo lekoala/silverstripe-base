@@ -107,7 +107,6 @@ class CommonRequirements
         } else {
             Requirements::javascript("https://cdn.plyr.io/$version/plyr.js");
         }
-
     }
 
     /**

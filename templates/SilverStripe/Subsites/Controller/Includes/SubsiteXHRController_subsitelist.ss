@@ -2,7 +2,7 @@
 	<div class="field dropdown">
 		<select id="SubsitesSelect">
 			<% loop $ListSubsitesExpanded %>
-				<option value="$ID" $CurrentState style="color:$Color;background:$BackgroundColor">$Title.RAW</option>
+				<option value="$ID" $CurrentState <% if not $CurrentState %>style="color:$Color;background:$BackgroundColor"<% end_if %>>$Title.RAW</option>
 			<% end_loop %>
 		</select>
 	</div>

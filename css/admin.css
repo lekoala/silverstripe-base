@@ -40,6 +40,15 @@
     min-width: 180px;
 }
 
+.cms-subsites .field .chosen-drop .active-result:hover {
+    opacity: 0.9;
+}
+
+.cms-subsites .field .chosen-drop .result-selected {
+    color: #999;
+    background: #ccc;
+}
+
 /* Icons in menu */
 
 .menu__icon.fa {
