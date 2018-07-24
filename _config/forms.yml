@@ -9,13 +9,11 @@ SilverStripe\Core\Injector\Injector:
   SilverStripe\Forms\DatetimeField:
     class: LeKoala\Base\Forms\FlatpickrField
     calls:
-      - [setEnableTime, [true]]
-      - [setDisableDescription, [true]]
+      - [setDateTimeOptions]
   SilverStripe\Forms\TimeField:
     class: LeKoala\Base\Forms\FlatpickrField
     calls:
-      - [setEnableTime, [true]]
-      - [setNoCalendar, [true]]
+      - [setTimeOptions]
 SilverStripe\Forms\FormField:
   # casting:
     # This makes graphql crash so don't use it

@@ -104,6 +104,7 @@ class FlatpickrField extends TextField
      * @var array
      */
     private static $default_config = [
+        'allowInput' => true, // Otherwise it will show as a readonly field
         'altInput' => true,
         'altInputClass' => 'flatpickr-alt',
         'defaultDate' => '',
@@ -562,20 +563,20 @@ class FlatpickrField extends TextField
     /**
      * Set disable description
      *
-     * @param  boolean  $disableDescription  Disable description
+     * @param boolean $disableDescription
      *
-     * @return  self
+     * @return self
      */
     public function setDisableDescription($disableDescription)
     {
         $this->disableDescription = $disableDescription;
-
         return $this;
     }
 
     public function setReadonly($readonly)
     {
         $this->setConfig('clickOpens', !$readonly);
+        $this->setConfig('allowInput', !$readonly);
         return parent::setReadonly($readonly);
     }
 
@@ -590,5 +591,27 @@ class FlatpickrField extends TextField
         $clone->replaceConfig($this->config);
         $clone->setReadonly(true);
         return $clone;
+    }
+
+    /**
+     * Set typical options for a DateTime field
+     * @return self
+     */
+    public function setDateTimeOptions()
+    {
+        $this->setEnableTime(true);
+        $this->setDisableDescription(true);
+        return $this;
+    }
+
+    /**
+     * Set typical options for a Time field
+     * @return self
+     */
+    public function setTimeOptions()
+    {
+        $this->setEnableTime(true);
+        $this->setNoCalendar(true);
+        return $this;
     }
 }

@@ -8,8 +8,11 @@ use SilverStripe\Assets\Image;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\ORM\ManyManyList;
+use SilverStripe\ORM\Connect\Query;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\Versioned\Versioned;
+use SilverStripe\ORM\DataObjectSchema;
+use SilverStripe\ORM\Queries\SQLUpdate;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\UnsavedRelationList;
 use LeKoala\Base\Forms\BuildableFieldList;
@@ -56,6 +59,24 @@ class BaseDataObjectExtension extends DataExtension
                 $fields->makeFieldReadonly($readonly);
             }
         }
+    }
+
+    /**
+     * Quickly apply update to the modal without using the ORM
+     *
+     * @param array $data
+     * @return Query
+     */
+    public function directUpdate($data)
+    {
+        $schema = DataObjectSchema::create();
+        $table = $schema->tableName(get_class($this->owner));
+        $query = new SQLUpdate($table);
+        foreach ($data as $k => $v) {
+            $query->assign($k, $v);
+        }
+        $query->addWhere('ID = ' . $this->owner->ID);
+        return $query->execute();
     }
 
     /**

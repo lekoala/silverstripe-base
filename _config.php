@@ -1,6 +1,7 @@
 <?php
 
 use SilverStripe\Control\Director;
+use SilverStripe\Core\Environment;
 
 // Add a benchmark helper
 if (!function_exists('bm')) {
@@ -53,6 +54,14 @@ if (!function_exists('_g')) {
     }
 }
 
+// Timezone setting
+$SS_TIMEZONE = Environment::getEnv('SS_TIMEZONE');
+if ($SS_TIMEZONE) {
+    if (!in_array($SS_TIMEZONE, timezone_identifiers_list())) {
+        throw new Exception("Timezone $SS_TIMEZONE is not valid");
+    }
+    date_default_timezone_set($SS_TIMEZONE);
+}
 
 if (Director::isDev()) {
     error_reporting(-1);
