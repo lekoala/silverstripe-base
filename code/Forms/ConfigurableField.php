@@ -5,18 +5,18 @@ namespace LeKoala\Base\Forms;
 trait ConfigurableField
 {
     /**
-      * Config array
-      *
-      * @var array
-      */
+     * Config array
+     *
+     * @var array
+     */
     protected $config = [];
 
     /**
-    * Get a config key value
-    *
-    * @param string $key
-    * @return string
-    */
+     * Get a config key value
+     *
+     * @param string $key
+     * @return string
+     */
     public function getConfig($key)
     {
         if (isset($this->config[$key])) {
@@ -38,6 +38,33 @@ trait ConfigurableField
         } else {
             unset($this->config[$key]);
         }
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function readConfig()
+    {
+        return $this->config;
+    }
+
+    /**
+     * @return self
+     */
+    public function clearConfig()
+    {
+        $this->config = [];
+        return $this;
+    }
+
+    /**
+     * @param array $config
+     * @return self
+     */
+    public function replaceConfig($config)
+    {
+        $this->config = $config;
         return $this;
     }
 }

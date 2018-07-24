@@ -27,4 +27,12 @@ class SortableExtension extends DataExtension
             $this->owner->Sort = $class::get()->max('Sort') + 1;
         }
     }
+    public function PreviousInList($list)
+    {
+        return $list->where('Sort < ' . $this->owner->Sort)->sort('Sort DESC')->first();
+    }
+    public function NextInList($list)
+    {
+        return $list->where('Sort < ' . $this->Sort)->sort('Sort ASC')->first();
+    }
 }

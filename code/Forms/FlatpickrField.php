@@ -13,6 +13,8 @@ use SilverStripe\ORM\FieldType\DBDatetime;
  */
 class FlatpickrField extends TextField
 {
+    use ConfigurableField;
+
     // Formats
     const DEFAULT_DATE_FORMAT = 'Y-m-d';
     const DEFAULT_TIME_FORMAT = 'H:i';
@@ -65,13 +67,6 @@ class FlatpickrField extends TextField
     protected $timezone = null;
 
     /**
-     * Config array
-     *
-     * @var array
-     */
-    protected $config = [];
-
-    /**
      * Array of plugins
      *
      * @var array
@@ -105,6 +100,7 @@ class FlatpickrField extends TextField
 
     /**
      * @config
+     * @link https://flatpickr.js.org/options/
      * @var array
      */
     private static $default_config = [
@@ -205,37 +201,6 @@ class FlatpickrField extends TextField
     public function extraClass()
     {
         return 'text ' . parent::extraClass();
-    }
-
-    /**
-     * Get a config key value
-     *
-     * @see https://flatpickr.js.org/options/
-     * @param string $key
-     * @return string
-     */
-    public function getConfig($key)
-    {
-        if (isset($this->config[$key])) {
-            return $this->config[$key];
-        }
-    }
-
-    /**
-     * Set a config value
-     *
-     * @param string $key
-     * @param string $value
-     * @return string
-     */
-    public function setConfig($key, $value)
-    {
-        if ($value !== null) {
-            $this->config[$key] = $value;
-        } else {
-            unset($this->config[$key]);
-        }
-        return $this;
     }
 
     public function getEnableTime()
@@ -548,7 +513,11 @@ class FlatpickrField extends TextField
         self::requirements($lang, $this->plugins, $this->theme);
 
         if ($this->readonly) {
-            $this->setAttribute('placeholder', _t('FlatpickrField.NO_DATE_SELECTED', 'No date'));
+            if ($this->getNoCalendar() && $this->getEnableTime()) {
+                $this->setAttribute('placeholder', _t('FlatpickrField.NO_TIME_SELECTED', 'No time'));
+            } else {
+                $this->setAttribute('placeholder', _t('FlatpickrField.NO_DATE_SELECTED', 'No date'));
+            }
         } else {
             $this->setAttribute('placeholder', _t('FlatpickrField.SELECT_A_DATE', 'Select a date...'));
         }
@@ -618,6 +587,7 @@ class FlatpickrField extends TextField
     public function performReadonlyTransformation()
     {
         $clone = $this->castedCopy(self::class);
+        $clone->replaceConfig($this->config);
         $clone->setReadonly(true);
         return $clone;
     }
