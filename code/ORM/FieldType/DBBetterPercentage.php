@@ -6,6 +6,8 @@ use LeKoala\Base\Forms\InputMaskPercentageField;
 
 /**
  * Improve percentage field
+ *
+ * Keep in mind percentage should be a number between 0 and 1 (or over 1 in case of percentage above 100%)
  */
 class DBBetterPercentage extends DBPercentage
 {
@@ -19,6 +21,8 @@ class DBBetterPercentage extends DBPercentage
     public function scaffoldFormField($title = null, $params = null)
     {
         $field = new InputMaskPercentageField($this->name, $title);
+        $field->setIsDecimal(true);
+        //TODO : handle % over 100 with a given condition
         return $field;
     }
 }

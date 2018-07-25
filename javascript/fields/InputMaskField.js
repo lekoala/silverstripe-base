@@ -5,13 +5,13 @@
 
         var name = $this.attr("name");
         var val = $this.val();
-        var format = $this.data("dataformat");
+        var dataformat = $this.data("dataformat");
+        var isDecimal = $this.data("isDecimal");
 
         // Duplicate input field to store data value
         var hiddenInput = $("<input/>", {
             type: "hidden",
-            name: name,
-            value: val
+            name: name
         });
         $this.parent().append(hiddenInput);
 
@@ -21,12 +21,17 @@
         // Update real hidden field with unmasked value
         $this.on('keyup blur', function () {
             var val = null;
-            if (format) {
+            // Apply a given formatting
+            if (dataformat) {
                 val = Inputmask.format(val, {
-                    alias: format
+                    alias: dataformat
                 });
             } else {
                 val = $this.inputmask("unmaskedvalue");
+            }
+            // Decimal %
+            if (isDecimal) {
+                val = val / 100;
             }
             // Otherwise unmasked value is not using proper decimal separator
             if (config.radixPoint && config.radixPoint === ',') {
@@ -34,6 +39,9 @@
             }
             hiddenInput.val(val);
         });
-
+        $.fn.ModularBehaviour.afterHooks.inputmask = function (config) {
+            // Trigger blur to compute value
+            $(this).trigger('blur');
+        }
     };
 })(jQuery);
