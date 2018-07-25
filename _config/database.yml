@@ -34,6 +34,8 @@ SilverStripe\Core\Injector\Injector:
     class: LeKoala\Base\ORM\FieldType\DBBetterCurrency
   Decimal:
     class: LeKoala\Base\ORM\FieldType\DBBetterDecimal
+  Percentage:
+    class: LeKoala\Base\ORM\FieldType\DBBetterPercentage
   DBNullableClassName:
     class: LeKoala\Base\ORM\FieldType\DBNullableClassName
   # See DataObjectSchema:492

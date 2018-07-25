@@ -1,20 +1,16 @@
 <?php
 namespace LeKoala\Base\Forms;
 
-use LeKoala\Base\Helpers\CurrencyFormatter;
-
 /**
- * Format currency
+ * Format numbers
  */
-class InputMaskCurrencyField extends InputMaskNumericField
+class InputMaskPercentageField extends InputMaskNumericField
 {
-    use CurrencyFormatter;
-
     public function __construct($name, $title = null, $value = null)
     {
         parent::__construct($name, $title, $value);
-        $this->setAlias(self::ALIAS_CURRENCY);
-        $this->setPrefix($this->getCurrencySymbol() . ' ');
+        $this->setAlias(self::ALIAS_PERCENTAGE);
+        $this->setMax('');
     }
 
     public function setValue($value, $data = null)
@@ -27,6 +23,8 @@ class InputMaskCurrencyField extends InputMaskNumericField
      */
     public function performReadonlyTransformation()
     {
-        return $this->castedCopy(InputMaskCurrencyField_Readonly::class);
+        $field = $this->castedCopy('SilverStripe\\Forms\\NumericField');
+        $field->setReadonly(true);
+        return $field;
     }
 }

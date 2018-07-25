@@ -14,6 +14,8 @@ use SilverStripe\View\Requirements;
  */
 class InputMaskField extends TextField
 {
+    use ConfigurableField;
+
     // Base masks
     const MASK_NUMERIC = '9';
     const MASK_ALPHA = 'a';
@@ -34,6 +36,7 @@ class InputMaskField extends TextField
     const ALIAS_CURRENCY = 'currency';
     const ALIAS_DECIMAL = 'decimal';
     const ALIAS_INTEGER = 'integer';
+    const ALIAS_PERCENTAGE = 'percentage';
     const ALIAS_PHONE = 'phone';
     const ALIAS_PHONEBE = 'phonebe';
     const ALIAS_REGEX = 'regex';
@@ -44,13 +47,6 @@ class InputMaskField extends TextField
      * @var string
      */
     protected $locale = null;
-
-    /**
-     * Input mask data config
-     *
-     * @var array
-     */
-    protected $config = [];
 
     /**
      * Format to use when unmasking
@@ -74,24 +70,6 @@ class InputMaskField extends TextField
     {
         return 'text ' . parent::extraClass();
     }
-
-    public function getConfig($key)
-    {
-        if (isset($this->config)) {
-            return $this->config[$key];
-        }
-    }
-
-    public function setConfig($key, $value = null)
-    {
-        if ($value !== null) {
-            $this->config[$key] = $value;
-        } else {
-            unset($this->config[$key]);
-        }
-        return $this;
-    }
-
 
     /**
      * Get locale to use for this field
@@ -164,26 +142,6 @@ class InputMaskField extends TextField
         return $this->setConfig('rightAlign', $value);
     }
 
-    public function getPrefix()
-    {
-        return $this->getConfig('prefix');
-    }
-
-    public function setPrefix($value)
-    {
-        return $this->setConfig('prefix', $value);
-    }
-
-    public function getDigits()
-    {
-        return $this->getConfig('digits');
-    }
-
-    public function setDigits($value)
-    {
-        return $this->setConfig('digits', $value);
-    }
-
     public function getGroupSeparator()
     {
         return $this->getConfig('groupSeparator');
@@ -202,16 +160,6 @@ class InputMaskField extends TextField
     public function setRadixPoint($value)
     {
         return $this->setConfig('radixPoint', $value);
-    }
-
-    public function getAutogroup()
-    {
-        return $this->getConfig('autoGroup');
-    }
-
-    public function setAutogroup($value)
-    {
-        return $this->setConfig('autoGroup', $value);
     }
 
     public function getAttributes()

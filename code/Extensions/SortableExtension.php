@@ -30,7 +30,7 @@ class SortableExtension extends DataExtension
     public function getNextSort()
     {
         $class = get_class($this->owner);
-        $max = (int) $class::get()->max('Sort');
+        $max = (int)$class::get()->max('Sort');
         return $max + 1;
     }
     public function PreviousInList($list)
