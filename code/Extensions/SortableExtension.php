@@ -23,9 +23,14 @@ class SortableExtension extends DataExtension
     public function onBeforeWrite()
     {
         if (!$this->owner->Sort) {
-            $class = get_class($this->owner);
-            $this->owner->Sort = $class::get()->max('Sort') + 1;
+            // This allows you to define your own method if needed
+            $this->owner->Sort = $this->owner->getNextSort();
         }
+    }
+    public function getNextSort()
+    {
+        $class = get_class($this->owner);
+        return $class::get()->max('Sort') + 1;
     }
     public function PreviousInList($list)
     {
