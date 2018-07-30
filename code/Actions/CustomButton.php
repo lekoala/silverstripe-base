@@ -62,7 +62,7 @@ trait CustomButton
      * Feel free to use SilverStripeIcons constants
      *
      * @param string $buttonIcon An icon for this button
-     * @return self
+     * @return $this
      */
     public function setButtonIcon(string $buttonIcon)
     {

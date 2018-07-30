@@ -66,7 +66,7 @@ trait BaseFileUploadReceiver
      * (proxy of BaseUpload method for ease of use)
      *
      * @param string $renamePattern
-     * @return self
+     * @return $this
      */
     public function setRenamePattern($renamePattern)
     {

@@ -122,7 +122,7 @@ class FlatpickrField extends TextField
 
     /**
      * @param string $plugin
-     * @return self
+     * @return $this
      */
     public function addPlugin($plugin)
     {
@@ -134,7 +134,7 @@ class FlatpickrField extends TextField
 
     /**
      * @param string $plugin
-     * @return self
+     * @return $this
      */
     public function removePlugin($plugin)
     {
@@ -168,7 +168,7 @@ class FlatpickrField extends TextField
      *
      * @param string $theme
      *
-     * @return self
+     * @return $this
      */
     public function setTheme($theme)
     {
@@ -258,7 +258,7 @@ class FlatpickrField extends TextField
      * Please note that altFormat should match the format for the database
      *
      * @param string $value
-     * @return self
+     * @return $this
      */
     public function setAltFormat($value)
     {
@@ -320,7 +320,7 @@ class FlatpickrField extends TextField
      *
      * @param string $range Id of the second element
      * @param bool $confirm
-     * @return self
+     * @return $this
      */
     public function setRange($range, $confirm = true)
     {
@@ -349,7 +349,7 @@ class FlatpickrField extends TextField
      *
      * @param bool $confirmDate Add confirm box
      *
-     * @return self
+     * @return $this
      */
     public function setConfirmDate($confirmDate)
     {
@@ -565,7 +565,7 @@ class FlatpickrField extends TextField
      *
      * @param boolean $disableDescription
      *
-     * @return self
+     * @return $this
      */
     public function setDisableDescription($disableDescription)
     {
@@ -595,7 +595,7 @@ class FlatpickrField extends TextField
 
     /**
      * Set typical options for a DateTime field
-     * @return self
+     * @return $this
      */
     public function setDateTimeOptions()
     {
@@ -606,7 +606,7 @@ class FlatpickrField extends TextField
 
     /**
      * Set typical options for a Time field
-     * @return self
+     * @return $this
      */
     public function setTimeOptions()
     {

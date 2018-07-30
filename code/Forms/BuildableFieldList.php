@@ -42,7 +42,7 @@ class BuildableFieldList extends FieldList
      * Returns an instance of BuildableFieldList from a FieldList
      *
      * @param FieldList $fields
-     * @return self
+     * @return $this
      */
     public static function fromFieldList(FieldList $fields = null)
     {

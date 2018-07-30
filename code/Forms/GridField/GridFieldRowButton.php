@@ -182,7 +182,7 @@ abstract class GridFieldRowButton implements GridField_ColumnProvider, GridField
      * This will be passed as ParentID along RecordID in the arguments parameter
      *
      * @param int $id
-     * @return self
+     * @return $this
      */
     public function setParentID($id)
     {

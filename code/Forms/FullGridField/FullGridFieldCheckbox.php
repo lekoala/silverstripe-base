@@ -54,7 +54,7 @@ class FullGridFieldCheckbox implements GridField_SaveHandler, GridField_ColumnPr
     /**
      * Set the value of preventRemove
      *
-     * @return self
+     * @return $this
      */
     public function setPreventRemove($preventRemove)
     {
@@ -220,7 +220,7 @@ class FullGridFieldCheckbox implements GridField_SaveHandler, GridField_ColumnPr
      *
      * @param string $saveToRelation
      *
-     * @return self
+     * @return $this
      */
     public function setSaveToRelation(string $saveToRelation)
     {
@@ -244,7 +244,7 @@ class FullGridFieldCheckbox implements GridField_SaveHandler, GridField_ColumnPr
      *
      * @param array $filters
      *
-     * @return self
+     * @return $this
      */
     public function setFilters(array $filters)
     {
@@ -267,7 +267,7 @@ class FullGridFieldCheckbox implements GridField_SaveHandler, GridField_ColumnPr
      * Set the value of sqlSelect
      *
      * @param SQLSelect $sqlSelect
-     * @return self
+     * @return $this
      */
     public function setSqlSelect($sqlSelect)
     {

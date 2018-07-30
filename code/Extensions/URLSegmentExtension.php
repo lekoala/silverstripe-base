@@ -1,6 +1,7 @@
 <?php
 namespace LeKoala\Base\Extensions;
 
+use SilverStripe\ORM\DataObject;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\ORM\ValidationResult;
@@ -23,9 +24,51 @@ class URLSegmentExtension extends DataExtension
             "columns" => ["URLSegment"]
         ],
     ];
+
+    /**
+     * Get a class by URLSegment
+     *
+     * @param string $class
+     * @param string $URLSegment
+     * @return DataObject
+     */
+    public static function getByURLSegment($class, $URLSegment)
+    {
+        return $class::get()->filter('URLSegment', $URLSegment)->first();
+    }
+
     public function updateCMSFields(FieldList $fields)
     {
+        $URLSegment = $fields->dataFieldByName('URLSegment');
+        if ($URLSegment) {
+            $URLSegment->setTitle(_t('URLSegmentExtension.URLSEGMENT', 'URL Segment'));
+        }
     }
+
+    /**
+     * We have this link method by default that allows us to define
+     * a link for this record
+     *
+     * You can define your own methods in your DataObject class
+     *
+     * @param string $action
+     * @return string
+     */
+    public function Link($action = null)
+    {
+        $url = $this->owner->Page()->Link($this->owner->URLSegment);
+        if ($action) {
+            $url .= "/$action";
+        }
+        return $url;
+    }
+
+    /**
+     * Cannot use the same url segment
+     *
+     * @param ValidationResult $validationResult
+     * @return void
+     */
     public function validate(ValidationResult $validationResult)
     {
         $duplicate = $this->getDuplicateRecord();
@@ -33,6 +76,13 @@ class URLSegmentExtension extends DataExtension
             $validationResult->addFieldError("URLSegment", "Segment already used by record #" . $duplicate->ID);
         }
     }
+
+    /**
+     * Find another record with the same url segment
+     *
+     * @param string $segment
+     * @return DataObject
+     */
     public function getDuplicateRecord($segment = null)
     {
         if ($segment === null) {
@@ -44,6 +94,14 @@ class URLSegmentExtension extends DataExtension
         $class = get_class($this->owner);
         return $class::get()->exclude('ID', $this->owner->ID)->filter("URLSegment", $segment)->first();
     }
+
+    /**
+     * This method allows you to customize url segment generation
+     *
+     * By default, URL segment is based on page title
+     *
+     * @return string
+     */
     public function getBaseURLSegment()
     {
         $segment = $this->owner->getTitle();
@@ -52,11 +110,17 @@ class URLSegmentExtension extends DataExtension
         }
         $filter = new URLSegmentFilter();
         $baseSegment = $filter->filter($segment);
-        if (\is_numeric($baseSegment)) {
+        if (is_numeric($baseSegment)) {
             return false;
         }
         return $baseSegment;
     }
+
+    /**
+     * Generate a new url segment and checks for duplicates
+     *
+     * @return string
+     */
     public function generateURLSegment()
     {
         $baseSegment = $segment = $this->getBaseURLSegment();
@@ -72,6 +136,7 @@ class URLSegmentExtension extends DataExtension
         }
         return $segment;
     }
+
     public function onBeforeWrite()
     {
         // Generate segment if no segment

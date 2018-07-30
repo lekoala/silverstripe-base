@@ -37,7 +37,7 @@ class CountriesData
     }
     /**
      * @param string $file
-     * @return self
+     * @return $this
      */
     public static function getInstance($file = null)
     {

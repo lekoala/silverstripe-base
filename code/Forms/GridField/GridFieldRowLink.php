@@ -189,7 +189,7 @@ class GridFieldRowLink implements GridField_ColumnProvider
      *
      * @param string $name
      *
-     * @return self
+     * @return $this
      */
     public function setName(string $name)
     {
@@ -213,7 +213,7 @@ class GridFieldRowLink implements GridField_ColumnProvider
      *
      * @param string $title
      *
-     * @return self
+     * @return $this
      */
     public function setTitle(string $title)
     {

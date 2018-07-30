@@ -103,7 +103,7 @@ class CmsInlineModal extends LiteralField
      * Set the value of iframe
      *
      * @param string $iframe
-     * @return self
+     * @return $this
      */
     public function setIframe($iframe)
     {
@@ -114,7 +114,7 @@ class CmsInlineModal extends LiteralField
 
     /**
      * @param string $action
-     * @return self
+     * @return $this
      */
     public function setIframeAction($action)
     {

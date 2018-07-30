@@ -110,7 +110,7 @@ class BaseUpload extends Upload
      * Set the value of renamePattern
      *
      * @param string $renamePattern
-     * @return self
+     * @return $this
      */
     public function setRenamePattern($renamePattern)
     {

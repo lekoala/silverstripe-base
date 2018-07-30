@@ -50,7 +50,7 @@ trait ConfigurableField
     }
 
     /**
-     * @return self
+     * @return $this
      */
     public function clearConfig()
     {
@@ -60,7 +60,7 @@ trait ConfigurableField
 
     /**
      * @param array $config
-     * @return self
+     * @return $this
      */
     public function replaceConfig($config)
     {

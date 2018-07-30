@@ -159,7 +159,7 @@ class AgGridField extends JsonFormField
      * @param string $display The header name
      * @param string $type Type of editor
      * @param array $opts Other options to merge in
-     * @return self
+     * @return $this
      */
     public function addColumn($name, $display = null, $type = 'text', $opts = null)
     {
@@ -223,7 +223,7 @@ class AgGridField extends JsonFormField
      *
      * @param string $key
      * @param array $col
-     * @return self
+     * @return $this
      */
     public function setColumn($key, $col)
     {
@@ -256,7 +256,7 @@ class AgGridField extends JsonFormField
      * Set the value of columns
      *
      * @param array $columns
-     * @return self
+     * @return $this
      */
     public function setColumns($columns)
     {
@@ -279,7 +279,7 @@ class AgGridField extends JsonFormField
      *
      * @param boolean $columnsEditable for your columns
      *
-     * @return self
+     * @return $this
      */
     public function setColumnsEditable(boolean $columnsEditable)
     {

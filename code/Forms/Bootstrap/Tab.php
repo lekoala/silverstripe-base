@@ -18,7 +18,7 @@ class Tab extends DefaultTab
     /**
      * Set the value of selected
      *
-     * @return self
+     * @return $this
      */
     public function setSelected($selected)
     {

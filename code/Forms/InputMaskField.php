@@ -104,7 +104,7 @@ class InputMaskField extends TextField
      * The value you want when unmasking to hidden field
      *
      * @param string $value
-     * @return self
+     * @return $this
      */
     public function setDataFormat($value)
     {

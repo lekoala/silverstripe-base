@@ -92,7 +92,7 @@ class ColumnsField extends FieldGroup
     /**
      * @param int $col
      * @param int $size
-     * @return self
+     * @return $this
      */
     public function setColumnSize($col, $size)
     {

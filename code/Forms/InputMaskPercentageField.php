@@ -63,7 +63,7 @@ class InputMaskPercentageField extends InputMaskNumericField
     /**
      * Set the value of isDecimal
      *
-     * @return self
+     * @return $this
      */
     public function setIsDecimal($isDecimal)
     {

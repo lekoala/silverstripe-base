@@ -164,7 +164,7 @@ abstract class GridFieldTableButton implements GridField_HTMLProvider, GridField
      *
      * @param string $fontIcon
      *
-     * @return self
+     * @return $this
      */
     public function setFontIcon($fontIcon)
     {
@@ -188,7 +188,7 @@ abstract class GridFieldTableButton implements GridField_HTMLProvider, GridField
      * Set the parent record id
      *
      * @param int $id
-     * @return self
+     * @return $this
      */
     public function setParentID($id)
     {
@@ -210,7 +210,7 @@ abstract class GridFieldTableButton implements GridField_HTMLProvider, GridField
      * Set the value of prompt
      *
      * @param string $prompt
-     * @return self
+     * @return $this
      */
     public function setPrompt($prompt)
     {
@@ -232,7 +232,7 @@ abstract class GridFieldTableButton implements GridField_HTMLProvider, GridField
      * Set the value of promptDefault
      *
      * @param string $promptDefault
-     * @return self
+     * @return $this
      */
     public function setPromptDefault($promptDefault)
     {

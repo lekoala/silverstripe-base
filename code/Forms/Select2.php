@@ -228,7 +228,7 @@ trait Select2
      * Set ajax where
      *
      * @param string $ajaxWhere
-     * @return self
+     * @return $this
      */
     public function setAjaxWhere($ajaxWhere)
     {
@@ -250,7 +250,7 @@ trait Select2
      * Set ajax class
      *
      * @param string $ajaxClass  Ajax class
-     * @return self
+     * @return $this
      */
     public function setAjaxClass(string $ajaxClass)
     {
