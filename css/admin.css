@@ -255,8 +255,16 @@ select.ag-cell-edit-input {
 /* bulk */
 
 .col-bulkSelect,
-.bulkManagerOptions th {
+.bulkManagerOptions th:last-child {
     position: relative;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.col-bulkSelect input.checkbox,
+.bulkManagerOptions th:last-child input.checkbox {
+    display: inline-block;
+    margin: 0 auto;
 }
 
 #bulkActionName_Holder {
@@ -265,11 +273,9 @@ select.ag-cell-edit-input {
 
 .bulkManagerOptions th:last-child {
     padding-top: 0;
-    vertical-align: middle;
 }
 
 .bulkManagerOptions .form-check-input {
-    position: relative;
     display: inline-block;
-    margin-right: 0;
+    margin: 0 auto;
 }
