@@ -8,14 +8,22 @@ use SilverStripe\Admin\ModelAdmin;
 use LeKoala\Base\Subsite\SubsiteHelper;
 use SilverStripe\Forms\GridField\GridField;
 use LeKoala\Base\Helpers\ClassHelper;
+use SilverStripe\Forms\GridField\GridFieldDeleteAction;
 
-abstract
 /**
- * Class \LeKoala\Base\Admin\BaseModelAdmin
- *
+ * Improved ModelAdmin
+ * - Built in subsite support
+ * - Helpers
  */
-class BaseModelAdmin extends ModelAdmin
+abstract class BaseModelAdmin extends ModelAdmin
 {
+    /**
+     * Do not delete from list by default
+     *
+     * @config
+     * @var boolean
+     */
+    private static $can_delete_from_list = false;
 
     /**
      * @return int
@@ -62,6 +70,19 @@ class BaseModelAdmin extends ModelAdmin
         }
 
         return $list;
+    }
+
+    public function getEditForm($id = null, $fields = null)
+    {
+        $form = parent::getEditForm($id, $fields);
+
+        $gridField = $this->getGridField($form);
+        $gridField->getConfig()->removeComponentsByType(GridFieldDeleteAction::class);
+        if (self::config()->can_delete_from_list) {
+            $gridField->getConfig()->addComponent(new GridFieldDeleteAction(false));
+        }
+
+        return $form;
     }
 
     /**
