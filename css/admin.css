@@ -252,17 +252,19 @@ select.ag-cell-edit-input {
     padding: 0 0 !important;
 }
 
-/* bulk */
+/* bulk checkboxes are misaligned and ui is ugly */
 
 .col-bulkSelect,
 .bulkManagerOptions th:last-child {
     position: relative;
     vertical-align: middle;
     text-align: center;
+    padding-right: 0 !important;
+    padding-left: 0 !important;
 }
 
 .col-bulkSelect input.checkbox,
-.bulkManagerOptions th:last-child input.checkbox {
+.bulkManagerOptions th:last-child input.form-check-input {
     display: inline-block;
     margin: 0 auto;
 }
@@ -275,7 +277,28 @@ select.ag-cell-edit-input {
     padding-top: 0;
 }
 
-.bulkManagerOptions .form-check-input {
-    display: inline-block;
+.bulkManagerOptions .form-check-label {
+    display: block;
     margin: 0 auto;
+    width: 25px;
+    height: 34px;
+    padding-top: 10.5px;
+}
+
+.bulkManagerOptions {
+    background: rgb(231, 234, 240);
+}
+
+.bulkManagerOptions th {
+    padding: 0;
+}
+
+.bulkManagerOptions .chosen-container-single .chosen-single {
+    border-radius: 0;
+}
+
+.bulkManagerOptions select {
+    visibility: hidden;
+    height: 34px;
+    border-radius: 0;
 }
