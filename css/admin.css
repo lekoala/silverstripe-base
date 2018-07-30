@@ -1,3 +1,9 @@
+/* Prevent double scroll in 4.2 */
+
+body.cms {
+    overflow: hidden;
+}
+
 /* Cosmetic changes */
 
 .cms-sitename a {
