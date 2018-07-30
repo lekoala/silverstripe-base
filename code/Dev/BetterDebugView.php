@@ -31,6 +31,13 @@ class BetterDebugView extends DebugView
      */
     public static function makeIdeLink($file, $line)
     {
+        $shortname = basename($file);
+
+        // does not make sense in testing or live
+        if (!Director::isDev()) {
+            return "$shortname:$line";
+        }
+
         $placeholder = self::config()->ide_placeholder;
 
         // each dev can define their own settings
@@ -40,7 +47,6 @@ class BetterDebugView extends DebugView
         }
 
         $ide_link = str_replace(['{file}', '{line}'], [$file, $line], $placeholder);
-        $shortname = basename($file);
         $link = "<a href=\"$ide_link\">$shortname:$line</a>";
         return $link;
     }
