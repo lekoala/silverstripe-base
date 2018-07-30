@@ -30,6 +30,15 @@ class CustomAction extends FormAction
         return rtrim(str_replace('action_doCustomAction[', '', $this->name), ']');
     }
 
+    /**
+     * Get the title of the button (without icons or anything)
+     * Called by ActionsGridFieldItemRequest to build default message
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
     public function Field($properties = array())
     {
         if ($this->buttonIcon) {

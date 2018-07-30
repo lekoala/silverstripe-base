@@ -84,7 +84,8 @@ class CustomLink extends LiteralField
 
 
     /**
-     * Get the value of title
+     * Get the title of the link
+     * Called by ActionsGridFieldItemRequest to build default message
      */
     public function getTitle()
     {

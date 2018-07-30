@@ -27,7 +27,7 @@ use SilverStripe\Dev\CliDebugView;
  *
  *  "autoload": {
  *        "psr-4": {
- *            "LeKoala\\Base\\": "base/code/"
+ *            "LeKoala\\Base\\": "base/src/"
  *        }
  *   },
  *

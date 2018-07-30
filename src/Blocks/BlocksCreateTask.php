@@ -110,7 +110,7 @@ SCSS;
         }
         $this->message("Creating block $name", "created");
 
-        $mysite = Director::baseFolder() . '/mysite/code/Blocks';
+        $mysite = Director::baseFolder() . '/mysite/src/Blocks';
         if (!is_dir($mysite)) {
             mkdir($mysite);
         }

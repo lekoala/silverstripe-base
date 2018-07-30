@@ -344,7 +344,7 @@ CODE;
 
         $code .= "\n}\n";
 
-        $dest = Director::baseFolder() . '/mysite/code/Repository.php';
+        $dest = Director::baseFolder() . '/app/src/Repository.php';
         file_put_contents($dest, $code);
 
         $this->displayMessage("<li>Repository class generated</li>");
