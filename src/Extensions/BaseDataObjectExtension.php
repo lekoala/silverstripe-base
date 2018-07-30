@@ -59,6 +59,11 @@ class BaseDataObjectExtension extends DataExtension
                 $fields->makeFieldReadonly($readonly);
             }
         }
+
+        // remove tracking tabs
+        $fields->removeByName([
+            'LinkTracking', 'FileTracking'
+        ]);
     }
 
     /**
