@@ -4,6 +4,14 @@ body.cms {
     overflow: hidden;
 }
 
+/* Somehow checkboxes are misaligned */
+
+@media (min-width: 992px) {
+    .cms-edit-form .form-group.checkbox>.form__field-holder {
+        padding-left: 42px;
+    }
+}
+
 /* Cosmetic changes */
 
 .cms-sitename a {
