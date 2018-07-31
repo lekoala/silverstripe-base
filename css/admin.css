@@ -4,6 +4,21 @@ body.cms {
     overflow: hidden;
 }
 
+/* Warning is too big */
+
+.btn-toolbar .btn.actions-warning {
+    display: none;
+    position: absolute;
+    bottom: 50px;
+    left: 0;
+    border: 1px solid #ced5e1;
+    background: #f7f8fa;
+}
+
+.btn-toolbar button:hover+.btn.actions-warning {
+    display: block;
+}
+
 /* Somehow checkboxes are misaligned */
 
 @media (min-width: 992px) {
