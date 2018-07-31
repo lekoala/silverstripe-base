@@ -1,12 +1,15 @@
 <?php
 namespace LeKoala\Base\ORM\FieldType;
 
+use SilverStripe\ORM\ArrayLib;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\ORM\FieldType\DBEnum;
 
 /**
  * A smarter enum that allows you to feed values from a method
- * This method is expected to return a static array with key=>values pairs
+ *
+ * Sample usage
+ * "MyEnum" => "NiceEnum('MyClass')" calls MyClass::listMyEnum that should return an associative array
  */
 class DBNiceEnum extends DBEnum
 {
@@ -58,10 +61,23 @@ class DBNiceEnum extends DBEnum
         $method = 'list' . ucfirst($this->name);
         $class = $this->class;
         if (!method_exists($class, $method)) {
-            return [];
+            return ArrayLib::valuekey($this->getEnum());
         }
         return $class::$method();
     }
+
+    /**
+     * @return array
+     */
+    public function enumValues($hasEmpty = false)
+    {
+        $arr = $this->toArray();
+        if ($hasEmpty) {
+            $arr = array_merge(['' => ''], $arr);
+        }
+        return $arr;
+    }
+
 
     /**
      * Display the label of the enum value
