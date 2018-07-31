@@ -5,9 +5,10 @@ namespace LeKoala\Base\Admin;
 use SilverStripe\Forms\Form;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Admin\ModelAdmin;
-use LeKoala\Base\Subsite\SubsiteHelper;
-use SilverStripe\Forms\GridField\GridField;
 use LeKoala\Base\Helpers\ClassHelper;
+use LeKoala\Base\Subsite\SubsiteHelper;
+use SilverStripe\Admin\AdminRootController;
+use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldDeleteAction;
 
 /**
@@ -130,6 +131,7 @@ abstract class BaseModelAdmin extends ModelAdmin
         $recordClass = $record->ClassName;
         $sanitisedClass = ClassHelper::sanitiseClassName($recordClass);
         $ID = $record->ID;
-        return "/admin/$URLSegment/$sanitisedClass/EditForm/field/$sanitisedClass/item/$ID/edit";
+        $AdminURL = trim(AdminRootController::admin_url(), '/');
+        return "/$AdminURL/$URLSegment/$sanitisedClass/EditForm/field/$sanitisedClass/item/$ID/edit";
     }
 }

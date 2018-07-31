@@ -58,7 +58,7 @@ class CmsInlineModal extends LiteralField
         $content .= $this->content;
         // Iframe if set
         if ($this->iframe) {
-            $content .= '<iframe src="' . $this->iframe . '" width="100%%" height="400px" frameBorder="0"></iframe>';
+            $content .= '<iframe src="' . $this->iframe . '" width="100%%" style="max-height:400px" frameBorder="0" scrolling="auto" onload="resizeIframe(this);"></iframe>';
         }
         $content .= '</div>';
         $content .= '</div>';
