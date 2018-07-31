@@ -23,10 +23,9 @@ class DBNullableClassName extends DBClassName
         $this->setDefault(null);
     }
 
-
     /**
-    * @return void
-    */
+     * @return void
+     */
     public function requireField()
     {
         $enums = $this->getEnumObsolete();

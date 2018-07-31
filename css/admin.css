@@ -4,6 +4,15 @@ body.cms {
     overflow: hidden;
 }
 
+/* HTMLEditor should be full width ! */
+
+.cms-edit-form .form-group.htmleditor.stacked .form__field-holder {
+    -webkit-box-flex: 0;
+    -webkit-flex: 0 0 100%;
+    flex: 0 0 100%;
+    max-width: 100%;
+}
+
 /* Warning is too big */
 
 .btn-toolbar .btn.actions-warning {
