@@ -86,7 +86,7 @@ class FullGridField extends GridField
 
     public function createDefaultConfig()
     {
-        $config = new GridFieldConfig();
+        $config = GridFieldConfig::create();
 
         $config->addComponent(new GridFieldToolbarHeader());
         $config->addComponent($sort = new GridFieldTitleHeader());

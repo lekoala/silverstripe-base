@@ -498,7 +498,7 @@ final class Block extends DataObject
         if ($list) {
             $class = $list->dataClass();
             $singleton = $class::singleton();
-            $gridConfig = new GridFieldConfig_RecordEditor();
+            $gridConfig = GridFieldConfig_RecordEditor::create();
             if ($singleton->hasExtension(SortableExtension::class)) {
                 $gridConfig->addComponent(new GridFieldOrderableRows());
             }
@@ -510,7 +510,7 @@ final class Block extends DataObject
         if ($list) {
             $class = $list->dataClass();
             $singleton = $class::singleton();
-            $gridConfig = new GridFieldConfig_RecordEditor();
+            $gridConfig = GridFieldConfig_RecordEditor::create();
             if ($singleton->hasExtension(SortableExtension::class)) {
                 $gridConfig->addComponent(new GridFieldOrderableRows());
             }
