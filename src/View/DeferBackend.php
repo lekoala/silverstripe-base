@@ -35,4 +35,21 @@ class DeferBackend extends Requirements_Backend
         }
         return parent::customScript($script, $uniquenessID);
     }
+
+    public function getCSS()
+    {
+        $css = array_diff_key($this->css, $this->blocked);
+        // Theme and assets files should always come last to have a proper cascade
+        $allCss = [];
+        $themeCss = [];
+        foreach ($css as $file => $arr) {
+            if (strpos($file, 'themes') === 0 || strpos($file, '/assets') === 0) {
+                $themeCss[$file] = $arr;
+            } else {
+                $allCss[$file] = $arr;
+            }
+        }
+        return array_merge($allCss, $themeCss);
+    }
+
 }
