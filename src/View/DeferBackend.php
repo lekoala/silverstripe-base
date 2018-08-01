@@ -51,5 +51,4 @@ class DeferBackend extends Requirements_Backend
         }
         return array_merge($allCss, $themeCss);
     }
-
 }

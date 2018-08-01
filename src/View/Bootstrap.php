@@ -34,7 +34,7 @@ class Bootstrap
      * @config
      * @var string
      */
-    private static $bootstrap_version = '4.1.1';
+    private static $bootstrap_version = '4.1.3';
 
     /**
      * @config
