@@ -7,7 +7,7 @@ This module is under heavy work in progress, things breaks and will change. Use 
 
 ## Requirements
 
-* SilverStripe ^4.1
+* SilverStripe ^4.2
 
 ## Installation
 
@@ -36,9 +36,7 @@ All the content is saved into the Content field and therefore can be used with n
 ### Extended DataObject actions
 
 If you find that adding the "betterbuttons" module just to add a couple of actions and a Save and Close functionnality
-on your DataObject is too much, I got you covered.
-
-Simply use default getCMSActions and use my new CustomAction class!
+on your DataObject is too much, I got you covered. Simply use default getCMSActions and see them working just fine!
 
 Also refactor basic UI stuff that SilverStripe should already do (like having the delete button on the right).
 
@@ -49,6 +47,19 @@ See [docs/Actions.md](docs/Actions.md) for documentation.
 Make sites themable through the SiteConfig and offer support for variables in your css files.
 
 See [docs/Theming.md](docs/Theming.md) for documentation.
+
+### New or improved db field types
+
+Need for phone, country, color fields? Yes!
+Should your enums map labels to a static method? Yes!
+Should your scaffolding use better input fields? Sure!
+:-)
+
+### Forms
+
+Lots of new form fields.
+
+See [docs/Forms.md](docs/Forms.md) for documentation.
 
 ### Extensions
 
