@@ -30,7 +30,7 @@ class CookieConsent
      * @config
      * @var string
      */
-    private static $version = '3.0.6';
+    private static $version = '3.1.0';
 
     /**
      * @config
