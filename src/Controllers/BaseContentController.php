@@ -15,6 +15,7 @@ use SilverStripe\ORM\Connect\DatabaseException;
 use SilverStripe\CMS\Controllers\ContentController;
 use LeKoala\Base\View\DeferBackend;
 use SilverStripe\View\SSViewer;
+use LeKoala\Base\View\CookieConsent;
 
 /**
  * A more opiniated base controller for your app
@@ -78,9 +79,16 @@ class BaseContentController extends ContentController
         SSViewer::setRewriteHashLinksDefault(false);
 
         // Force SSL from client config
+        // You should really do this with your webserver config instead
         $SiteConfig = $this->SiteConfig();
         if ($SiteConfig->ForceSSL) {
             Director::forceSSL();
+        }
+
+        // Third party scripts (google analytics, etc)
+        $SiteConfig->requireGoogleAnalytics();
+        if (CookieConsent::IsEnabled()) {
+            CookieConsent::requirements();
         }
 
         $this->setLangFromRequest();

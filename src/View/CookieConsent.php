@@ -11,12 +11,14 @@ use SilverStripe\ORM\DataObject;
 use LeKoala\Base\Privacy\PrivacyNoticePage;
 
 /**
+ * Add cookie consent to your website
+ *
+ * When consent is given, global onConsentReceived() will be called. As an helper, you can use CookieConsent::addScript to do that for you.
  *
  * @link https://cookieconsent.insites.com
  * @link https://cookieconsent.insites.com/documentation/disabling-cookies/
  * @link https://cookiesandyou.com/
  * @link https://www.cookiebot.com/en/gdpr-cookies/
- *
  */
 class CookieConsent
 {
@@ -36,6 +38,12 @@ class CookieConsent
      * @config
      * @var boolean
      */
+    private static $enabled = true;
+
+    /**
+     * @config
+     * @var boolean
+     */
     private static $cookies_required = false;
 
     /**
@@ -48,9 +56,17 @@ class CookieConsent
         'type' => 'opt-in',
     ];
 
+    /**
+     * @var array
+     */
+    protected static $scripts = [];
 
     /**
      * Add requirements
+     *
+     * Make sure to call this AFTER you have define scripts that should be loaded conditionally
+     * @link https://stackoverflow.com/questions/45794634/loading-google-analytics-after-page-load-by-appending-script-in-head-doesnt-alw
+     * @return void
      */
     public static function requirements()
     {
@@ -109,7 +125,7 @@ class CookieConsent
         ];
         $baseOpts = array_merge($paletteOpts, $contentOpts);
         $finalOpts = array_merge($baseOpts, $opts);
-        $jsonOpts = json_encode($finalOpts, JSON_PRETTY_PRINT);
+        $jsonOpts = json_encode($finalOpts);
 
         // Include script
         $version = self::config()->version;
@@ -124,8 +140,17 @@ class CookieConsent
             $cookiesLink = '/cookies-required';
         }
 
+        $js = '';
+        if (!empty(self::$scripts)) {
+            $js .= 'function onConsentReceived() {';
+            foreach (self::$scripts as $name => $script) {
+                $js .= "\n//$name\n$script";
+            }
+            $js .= "\n}";
+        }
+
         // Include custom init
-        $js = <<<JS
+        $js .= <<<JS
 window.addEventListener("load", function(){
     var opts = $jsonOpts;
     var onChange = function(status) {
@@ -133,12 +158,51 @@ window.addEventListener("load", function(){
         if(status == 'dismiss' && $cookiesRequired) {
             window.location.href = '$cookiesLink';
         }
+        // Call any third party script
+        if(status == "allow" && typeof onConsentReceived != 'undefined') {
+            onConsentReceived();
+        }
     };
-    opts.onInitialise = opts.onStatusChange = opts.onRevokeChoice = onChange;
+    var onInit = function(status) {
+        // Call any third party script
+        if(status == "allow" && typeof onConsentReceived != 'undefined') {
+            onConsentReceived();
+        }
+    };
+    opts.onInitialise = onInit;
+    opts.onStatusChange = opts.onRevokeChoice = onChange;
     window.cookieconsent.initialise(opts);
 });
 JS;
         Requirements::customScript($js, 'CookiesConsentInit');
+    }
+
+    /**
+     * @return array
+     */
+    public static function getScripts()
+    {
+        return self::$scripts;
+    }
+
+    /**
+     * @return void
+     */
+    public static function clearScripts()
+    {
+        self::$scripts = [];
+    }
+
+    /**
+     * Add a script that should be wrapped by onConsentReceived
+     *
+     * @param string $script
+     * @param string $name
+     * @return void
+     */
+    public static function addScript($script, $name)
+    {
+        self::$scripts[$name] = $script;
     }
 
     /**
@@ -152,6 +216,14 @@ JS;
         Requirements::clear("//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/$version/cookieconsent.min.css");
         Requirements::clear("//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/$version/cookieconsent.min.js");
         Requirements::clear('CookiesConsentInit');
+    }
+
+    /**
+     * @return boolean
+     */
+    public static function IsEnabled()
+    {
+        return self::config()->enabled;
     }
 
     /**

@@ -15,6 +15,7 @@ use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
 use SilverStripe\Forms\HeaderField;
 use LeKoala\Base\Forms\Builder;
 use SilverStripe\Forms\CheckboxField;
+use LeKoala\Base\View\CookieConsent;
 
 /**
  * Class \LeKoala\Base\SiteConfigExtension
@@ -54,6 +55,7 @@ class SiteConfigExtension extends DataExtension
         // Site config
         "ForceSSL" => "Boolean",
     ];
+
     public function updateCMSFields(FieldList $fields)
     {
         // Contact fields
@@ -95,10 +97,21 @@ class SiteConfigExtension extends DataExtension
         // Config
         $fields->addFieldsToTab('Root.Access', new CheckboxField('ForceSSL'));
     }
+
+    /**
+     * A map link
+     *
+     * @return string
+     */
     public function ContactAddressMapLink()
     {
         return 'https://www.google.com/maps/search/?api=1&query=' . urlencode($this->owner->ContactAddress);
     }
+
+    /**
+     * Call this in your controller manually
+     * @return void
+     */
     public function requireGoogleMaps()
     {
         if (!$this->owner->GoogleMapsApiKey) {
@@ -107,6 +120,11 @@ class SiteConfigExtension extends DataExtension
         Requirements::javascript('https://maps.googleapis.com/maps/api/js?key=' . $this->owner->GoogleMapsApiKey);
         return true;
     }
+
+    /**
+     * Called automatically by BaseContentController
+     * @return void
+     */
     public function requireGoogleAnalytics()
     {
         if (!Director::isLive()) {
@@ -120,12 +138,18 @@ class SiteConfigExtension extends DataExtension
 (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
 m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-ga('create', {$this->owner->GoogleAnalyticsCode}, 'auto');
+ga('create', '{$this->owner->GoogleAnalyticsCode}', 'auto');
 ga('send', 'pageview');
 JS;
-        Requirements::customScript($script, "GoogleAnalytics");
+        if (CookieConsent::IsEnabled()) {
+            CookieConsent::addScript($script, "GoogleAnalytics");
+        } else {
+            Requirements::customScript($script, "GoogleAnalytics");
+        }
+
         return true;
     }
+
     /**
      * @return string
      */
