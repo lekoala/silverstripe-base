@@ -30,6 +30,7 @@ class BaseContentController extends ContentController
     use SubsiteController;
     use ImprovedActions;
     use Messaging;
+    use PageGetters;
 
     /**
      * Inject public dependencies into the controller
