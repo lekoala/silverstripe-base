@@ -21,7 +21,7 @@ body.cms {
     bottom: 50px;
     left: 0;
     border: 1px solid #ced5e1;
-    background: #f7f8fa;
+    background: #fff;
 }
 
 .btn-toolbar button:hover+.btn.actions-warning {
@@ -51,6 +51,8 @@ body.cms {
 }
 
 /* More compact dropdown + visible if collapsed */
+
+/* Maybe not necessary some day https://github.com/silverstripe/silverstripe-subsites/issues/380#issuecomment-409434462 */
 
 .cms .cms-menu .cms-subsites {
     padding: 0;

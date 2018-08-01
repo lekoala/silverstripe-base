@@ -31,7 +31,12 @@ class SubsiteExtension extends DataExtension
         $Domains = $fields->dataFieldByName('Domains');
         if ($Domains) {
             $fields->removeByName('Domains');
-            $fields->insertAfter('Theme', $Domains);
+            $Theme = $fields->dataFieldByName('Theme');
+            if ($Theme) {
+                $fields->insertAfter('Theme', $Domains);
+            } else {
+                $fields->addFieldsToTab('Root.Main', $Domains);
+            }
         }
     }
 
