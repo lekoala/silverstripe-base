@@ -39,10 +39,12 @@ trait Messaging
         }
         // If we have an array, it only applies to json response
         if ($link === true || is_array($link)) {
-            return $this->redirectBack();
+            $link = $this->getBackURL()
+                ? : $this->getReturnReferer()
+                ? : '/';
         }
         // Links without starting / call the link method
-        if (strpos($link, '/') !== 0) {
+        if (strpos($link, '/') !== 0 && strpos($link, 'http') !== 0) {
             $link = $this->Link($link);
         }
         return $this->redirect($link);

@@ -8,6 +8,13 @@ use LeKoala\Base\Helpers\ClassHelper;
 use LeKoala\Base\Subsite\SubsiteHelper;
 use SilverStripe\ORM\ValidationException;
 
+/**
+ * Improves SilverStripe defaults actions
+ *
+ * - If a method accepts a HTTPRequest, it does not need to be declared in allowed_actions
+ * - adds getRequestedRecord helper (a generic way to fetch a record based on given parameters)
+ * - Improve handleAction to catch ValidationException and display them according to context (json response in ajax or alert message)
+ */
 trait ImprovedActions
 {
     /**
@@ -121,7 +128,6 @@ trait ImprovedActions
             $callerFile = $caller[0]['file'] ?? 'unknonwn';
             $callerLine = $caller[0]['line'] ?? 0;
             $this->getLogger()->debug($ex->getMessage() . ' in ' . basename($callerFile) . ':' . $callerLine);
-
             if (Director::is_ajax()) {
                 return $this->applicationResponse($ex->getMessage(), [], [
                     'code' => $ex->getCode(),

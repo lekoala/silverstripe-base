@@ -4,18 +4,19 @@ namespace LeKoala\Base\Controllers;
 use \Exception;
 use SilverStripe\i18n\i18n;
 use LeKoala\Base\View\Alertify;
+use SilverStripe\View\SSViewer;
 use SilverStripe\Control\Cookie;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Environment;
+use LeKoala\Base\View\DeferBackend;
 use SilverStripe\ORM\DatabaseAdmin;
 use SilverStripe\Security\Security;
 use SilverStripe\View\Requirements;
+use LeKoala\Base\View\CookieConsent;
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\Connect\DatabaseException;
 use SilverStripe\CMS\Controllers\ContentController;
-use LeKoala\Base\View\DeferBackend;
-use SilverStripe\View\SSViewer;
-use LeKoala\Base\View\CookieConsent;
 
 /**
  * A more opiniated base controller for your app
