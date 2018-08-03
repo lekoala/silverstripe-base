@@ -42,6 +42,10 @@ trait Messaging
             $link = $this->getBackURL()
                 ? : $this->getReturnReferer()
                 ? : '/';
+
+            if (strpos($link, '/' . $this->getRequest()->getURL()) !== false) {
+                $link = $this->Link();
+            }
         }
         // Links without starting / call the link method
         if (strpos($link, '/') !== 0 && strpos($link, 'http') !== 0) {

@@ -32,7 +32,7 @@ class PublishAllFilesTask extends BuildTask
     public function init()
     {
         set_time_limit(0);
-        SubsiteHelper::DisableFilter();
+        SubsiteHelper::disableFilter();
         $admin = $this->getAssetAdmin();
 
         $originalDir = BASE_PATH . '/'. Director::publicDir() . '/assets/';

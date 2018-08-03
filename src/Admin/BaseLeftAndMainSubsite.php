@@ -34,7 +34,7 @@ trait BaseLeftAndMainSubsite
 
     public function ListSubsitesExpanded()
     {
-        if (!SubsiteHelper::UsesSubsite()) {
+        if (!SubsiteHelper::usesSubsite()) {
             return false;
         }
 

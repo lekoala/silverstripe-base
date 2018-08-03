@@ -20,9 +20,9 @@ class SubsiteExtension extends DataExtension
      */
     public function SiteConfig()
     {
-        SubsiteHelper::DisableFilter();
+        SubsiteHelper::disableFilter();
         $config = SiteConfig::get()->filter('SubsiteID', $this->owner->ID)->first();
-        SubsiteHelper::RestoreFilter();
+        SubsiteHelper::restoreFilter();
         return $config;
     }
 

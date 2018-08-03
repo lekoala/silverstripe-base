@@ -2,9 +2,10 @@
 
 namespace LeKoala\Base\Subsite;
 
-use SilverStripe\Subsites\State\SubsiteState;
-use SilverStripe\Subsites\Model\Subsite;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Control\Controller;
+use SilverStripe\Subsites\Model\Subsite;
+use SilverStripe\Subsites\State\SubsiteState;
 
 class SubsiteHelper
 {
@@ -14,13 +15,18 @@ class SubsiteHelper
     protected static $previousState;
 
     /**
+     * @var int
+     */
+    protected static $previousSubsite;
+
+    /**
      * Return current subsite id (even if module is not installed, which returns 0)
      *
      * @return int
      */
     public static function currentSubsiteID()
     {
-        if (self::UsesSubsite()) {
+        if (self::usesSubsite()) {
             return SubsiteState::singleton()->getSubsiteId();
         }
         return 0;
@@ -32,7 +38,7 @@ class SubsiteHelper
     public static function currentSubsite()
     {
         $id = self::currentSubsiteID();
-        if (self::UsesSubsite()) {
+        if (self::usesSubsite()) {
             return DataObject::get_by_id(Subsite::class, $id);
         }
         return false;
@@ -44,7 +50,7 @@ class SubsiteHelper
      *
      * @return bool
      */
-    public static function UsesSubsite()
+    public static function usesSubsite()
     {
         return class_exists(SubsiteState::class);
     }
@@ -54,9 +60,9 @@ class SubsiteHelper
      *
      * @return void
      */
-    public static function EnableFilter()
+    public static function enableFilter()
     {
-        if (!self::UsesSubsite()) {
+        if (!self::usesSubsite()) {
             return;
         }
         self::$previousState = Subsite::$disable_subsite_filter;
@@ -68,9 +74,9 @@ class SubsiteHelper
      *
      * @return void
      */
-    public static function DisableFilter()
+    public static function disableFilter()
     {
-        if (!self::UsesSubsite()) {
+        if (!self::usesSubsite()) {
             return;
         }
         self::$previousState = Subsite::$disable_subsite_filter;
@@ -78,26 +84,51 @@ class SubsiteHelper
     }
 
     /**
-     * Restore subsite filter based on previous set (set when called EnableFilter or DisableFilter)
+     * Restore subsite filter based on previous set (set when called enableFilter or disableFilter)
      */
-    public static function RestoreFilter()
+    public static function restoreFilter()
     {
-        if (!self::UsesSubsite()) {
+        if (!self::usesSubsite()) {
             return;
         }
         Subsite::$disable_subsite_filter = self::$previousState;
     }
 
     /**
+     * @return int
+     */
+    public static function SubsiteIDFromSession()
+    {
+        return Controller::curr()->getRequest()->getSession()->get('SubsiteID');
+    }
+
+    /**
      * @param string $ID
+     * @param bool $flush
      * @return void
      */
-    public static function changeSubsite($ID)
+    public static function changeSubsite($ID, $flush = null)
     {
-        if (!self::UsesSubsite()) {
+        if (!self::usesSubsite()) {
             return;
         }
+        self::$previousSubsite = self::currentSubsiteID();
         Subsite::changeSubsite($ID);
+        // This can help avoiding getting static objects like SiteConfig
+        if ($flush !== null) {
+            DataObject::flushCache();
+        }
+    }
+
+    /**
+     * @return void
+     */
+    public static function restoreSubsite()
+    {
+        if (!self::usesSubsite()) {
+            return;
+        }
+        Subsite::changeSubsite(self::$previousSubsite);
     }
 
     /**
@@ -124,7 +155,7 @@ class SubsiteHelper
      */
     public static function withSubsites($cb, $includeMainSite = true)
     {
-        if (!self::UsesSubsite()) {
+        if (!self::usesSubsite()) {
             $cb();
             return;
         }
