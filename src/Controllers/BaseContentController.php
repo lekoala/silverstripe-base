@@ -31,6 +31,7 @@ class BaseContentController extends ContentController
     use ImprovedActions;
     use Messaging;
     use PageGetters;
+    use TimeHelpers;
 
     /**
      * Inject public dependencies into the controller
