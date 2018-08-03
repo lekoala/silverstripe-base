@@ -538,13 +538,13 @@ class FlatpickrField extends TextField
             Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/flatpickr/$version/l10n/$lang.js");
         }
         foreach ($plugins as $plugin) {
-            Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.5.0/plugins/$plugin.js");
+            Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/flatpickr/$version/plugins/$plugin.js");
             if (isset(self::PLUGINS_WITH_CSS[$plugin])) {
-                Requirements::css("https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.5.0/plugins/$plugin.css");
+                Requirements::css("https://cdnjs.cloudflare.com/ajax/libs/flatpickr/$version/plugins/$plugin.css");
             }
         }
         if ($theme) {
-            Requirements::css("https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.5.0/themes/$theme.css");
+            Requirements::css("https://cdnjs.cloudflare.com/ajax/libs/flatpickr/$version/themes/$theme.css");
         }
         Requirements::javascript('base/javascript/ModularBehaviour.js');
         Requirements::javascript('base/javascript/fields/FlatpickrField.js');
