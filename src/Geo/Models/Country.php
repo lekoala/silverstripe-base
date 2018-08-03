@@ -4,60 +4,81 @@ namespace LeKoala\Base\Geo\Models;
 
 class Country
 {
+    /**
+     * @var string
+     */
     protected $code;
+
+    /**
+     * @var string
+     */
     protected $name;
 
     public function __construct($code = null, $name = null)
     {
+        if ($code) {
+            $code = strtoupper($code);
+        }
         $this->code = $code;
         $this->name = $name;
     }
 
-    public static function create($source)
+    /**
+     * Create from a given source (array, pairs)
+     *
+     * Country::create('be,Belgium')
+     * Country::create('be','Belgium')
+     * Country::create(['be','Belgium'])
+     *
+     * @param mixed $source
+     * @return $this
+     */
+    public static function create($source, ...$more)
     {
         if (!is_array($source)) {
             $source = explode(',', $source);
+        }
+        if (!empty($more)) {
+            $source = array_merge($source, $more);
         }
         return new self($source[0], $source[1]);
     }
 
     /**
-     * Get the value of code
+     * Get the uppercased country code
      */
-    public function getCode()
+    public function getCode() : ? string
     {
         return $this->code;
     }
 
     /**
-     * Set the value of code
+     * sSet the country code
      *
-     * @return  self
+     * @return $this
      */
     public function setCode($code)
     {
-        $this->code = $code;
-
+        $this->code = strtoupper($code);
         return $this;
     }
 
     /**
-     * Get the value of name
+     * Get the name of the country
      */
-    public function getName()
+    public function getName() : ? string
     {
         return $this->name;
     }
 
     /**
-     * Set the value of name
+     * Set the name of the country
      *
-     * @return  self
+     * @return $this
      */
     public function setName($name)
     {
         $this->name = $name;
-
         return $this;
     }
 }

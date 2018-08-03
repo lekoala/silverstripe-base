@@ -2,12 +2,11 @@
 namespace LeKoala\Base\Extensions;
 
 use SilverStripe\Forms\FieldList;
-use LeKoala\Base\Services\Graphloc;
-use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\ORM\DataExtension;
 use LeKoala\Base\Geo\Models\Address;
 use SilverStripe\Control\Controller;
-use LeKoala\Base\ORM\FieldType\IPAddress;
+use SilverStripe\Core\Injector\Injector;
+use LeKoala\Base\Geo\Services\Geolocator;
 
 /**
  * Class \LeKoala\Base\Extensions\IPExtension
@@ -34,10 +33,10 @@ class IPExtension extends DataExtension
      */
     public function getIpLocationDetails()
     {
-        $graphloc = new Graphloc;
+        $graphloc = Injector::inst()->get(Geolocator::class);
         if (!$this->owner->IP) {
             return false;
         }
-        return $graphloc->get($this->owner->IP);
+        return $graphloc->geolocate($this->owner->IP);
     }
 }

@@ -1,0 +1,10 @@
+---
+Name: base-geo
+---
+SilverStripe\Core\Injector\Injector:
+  LeKoala\Base\Geo\Services\Geocoder:
+    type: singleton
+    class: LeKoala\Base\Geo\Services\GeocodeXyz
+  LeKoala\Base\Geo\Services\Geolocator:
+    type: singleton
+    class: LeKoala\Base\Geo\Services\Graphloc
