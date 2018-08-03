@@ -62,6 +62,9 @@ class GeoTest extends SapphireTest
         $this->assertEquals(round($result->getCoordinates()->getLatitude(), 3), 41.319);
         $this->assertEquals($result->getPostalCode(), '8820');
 
+        // No hammering
+        sleep(1);
+
         $result = $service->geocode("71, avenue des Champs Élysées, Paris, France");
         $this->assertNotEmpty($result);
         $this->assertEquals($result->getCountry()->getCode(), 'FR');
@@ -83,6 +86,9 @@ class GeoTest extends SapphireTest
         $this->assertEquals(round($result->getCoordinates()->getLatitude(), 3), 41.319);
         $this->assertEquals($result->getPostalCode(), '8820');
 
+        // No hammering
+        sleep(1);
+
         $result = $service->geocode("71, avenue des Champs Élysées, Paris, France");
         $this->assertNotEmpty($result);
         $this->assertEquals($result->getCountry()->getCode(), 'FR');
@@ -94,11 +100,14 @@ class GeoTest extends SapphireTest
     {
         $service = new Nominatim;
 
-        // $result = $service->reverseGeocode('41.31900', '2.07465');
-        // $this->assertNotEmpty($result);
-        // $this->assertEquals($result->getCountry()->getCode(), 'ES');
-        // $this->assertEquals(round($result->getCoordinates()->getLatitude(), 3), 41.319);
-        // $this->assertEquals($result->getPostalCode(), '8820');
+        $result = $service->reverseGeocode('41.31900', '2.07465');
+        $this->assertNotEmpty($result);
+        $this->assertEquals($result->getCountry()->getCode(), 'ES');
+        $this->assertEquals(round($result->getCoordinates()->getLatitude(), 3), 41.319);
+        $this->assertEquals($result->getPostalCode(), '8820');
+
+        // No hammering
+        sleep(1);
 
         $result = $service->geocode("71, avenue des Champs Élysées, Paris, France");
         $this->assertNotEmpty($result);

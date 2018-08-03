@@ -9,12 +9,12 @@ interface Geocoder
 {
     /**
      * @param string $lat
-     * @param string $lng
+     * @param string $lon
      * @param array $params
      * @return Address
      * @throws Exception
      */
-    public function reverseGeocode($lat, $lng, $params = []);
+    public function reverseGeocode($lat, $lon, $params = []);
 
     /**
      * @param string $address

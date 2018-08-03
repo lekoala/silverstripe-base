@@ -119,9 +119,9 @@ class MapBox implements Geocoder
     /**
      * @inheritDoc
      */
-    public function reverseGeocode($lat, $lng, $params = [])
+    public function reverseGeocode($lat, $lon, $params = [])
     {
-        return $this->query("$lng,$lat", $params);
+        return $this->query("$lon,$lat", $params);
     }
 
     /**

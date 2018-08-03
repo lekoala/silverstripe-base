@@ -27,16 +27,26 @@ class Nominatim implements Geocoder
      */
     protected function query($query, $params = [])
     {
+        $service = self::SEARCH_SERVICE;
+        if (isset($params['service'])) {
+            $service = $params['service'];
+            unset($params['service']);
+        }
+
+        if ($query) {
+            $params['q'] = $query;
+        }
+
         $url = self::API_URL;
-        $url = str_replace('{service}', self::SEARCH_SERVICE, $url);
+        $url = str_replace('{service}', $service, $url);
 
         $defaultParams = [
-            'q' => $query,
             'email' => Email::config()->admin_email,
             'limit' => 1,
             'format' => 'jsonv2',
             'addressdetails' => 1
         ];
+
         $params = array_merge($defaultParams, $params);
 
         $url .= '?' . http_build_query($params);
@@ -56,8 +66,15 @@ class Nominatim implements Geocoder
         $countryCode = $countryName = null;
         $lat = $lon = null;
 
-        if (isset($data[0]['address'])) {
-            $address = $data[0]['address'];
+        // in reverse geocoding, it's only one result
+        if (isset($data['place_id'])) {
+            $row = $data;
+        } else {
+            $row = $data[0];
+        }
+
+        if (isset($row['address'])) {
+            $address = $row['address'];
             $location = [
                 'streetName' => $address['road'] ?? $address['building'] ?? null,
                 'streetNumber' => $address['house_number'] ?? null,
@@ -67,9 +84,9 @@ class Nominatim implements Geocoder
             $countryCode = $address['country_code'] ?? null;
             $countryName = $address['country'] ?? null;
         }
-        if (!empty($data[0]['lat'])) {
-            $lat = $data[0]['lat'];
-            $lon = $data[0]['lon'];
+        if (!empty($row['lat'])) {
+            $lat = $row['lat'];
+            $lon = $row['lon'];
         }
 
         $country = new Country($countryCode, $countryName);
@@ -79,19 +96,14 @@ class Nominatim implements Geocoder
     }
 
     /**
-     * @return array
-     */
-    public static function listRegions()
-    {
-        return explode(', ', 'AF, AX, AL, DZ, AS, AD, AO, AI, AQ, AG, AR, AM, AW, AU, AT, AZ, BS, BH, BD, BB, BY, BE, BZ, BJ, BM, BT, BO, BQ, BA, BW, BR, IO, VG, BN, BG, BF, BI, KH, CM, CA, CV, KY, CF, TD, CL, CN, CX, CC, CO, KM, CG, CK, CR, HR, CU, CW, CY, CZ, CI, DK, DJ, DM, DO, EC, EG, SV, GQ, ER, EE, ET, FK, FO, FJ, FI, FR, GF, PF, TF, GA, GM, GE, DE, GH, GI, GR, GL, GD, GP, GU, GT, GG, GN, GW, GY, HT, HN, HK, HU, IS, IN, ID, IR, IQ, IE, IM, IL, IT, JM, JP, JE, JO, KZ, KE, KI, KS, KW, KG, LA, LV, LB, LS, LR, LY, LI, LT, LU, MO, MK, MG, MW, MY, MV, ML, MT, MH, MQ, MR, MU, YT, MX, FM, MD, MC, MN, ME, MS, MA, MZ, MM, NA, NR, NP, NL, AN, NC, NZ, NI, NE, NG, NU, NF, KP, MP, NO, OM, PK, PW, PS, PA, PG, PY, PE, PH, PN, PL, PT, PR, QA, RO, RU, RW, RE, GS, SH, KN, LC, PM, VC, BL, SX, MF, WS, SM, ST, SA, SN, RS, SC, SL, SG, SK, SI, SB, SO, ZA, KR, SS, ES, LK, SD, SR, SJ, SZ, SE, CH, SY, TW, TJ, TZ, TH, TL, TG, TK, TO, TT, TN, TR, TM, TC, TV, UM, UG, UA, AE, UK, US, UY, UZ, VU, VA, VE, VN, VI, WF, EH, YE, CD, ZM, ZW');
-    }
-
-    /**
      * @inheritDoc
      */
-    public function reverseGeocode($lat, $lng, $params = [])
+    public function reverseGeocode($lat, $lon, $params = [])
     {
-        return $this->query("$lat,$lng", $params);
+        $params['service'] = self::REVERSE_SERVICE;
+        $params['lat'] = $lat;
+        $params['lon'] = $lon;
+        return $this->query(null, $params);
     }
 
     /**

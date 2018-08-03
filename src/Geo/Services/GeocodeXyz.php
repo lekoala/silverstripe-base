@@ -10,7 +10,7 @@ use LeKoala\Base\Geo\Models\Coordinates;
 /**
  * @link https://geocode.xyz
  */
-class GeocodeXyz implements Geocoder
+class GeocodeXyz implements Geocoder, Geolocator
 {
     const API_URL = 'https://geocode.xyz/';
 
@@ -90,9 +90,9 @@ class GeocodeXyz implements Geocoder
     /**
      * @inheritDoc
      */
-    public function reverseGeocode($lat, $lng, $params = [])
+    public function reverseGeocode($lat, $lon, $params = [])
     {
-        return $this->query("$lat,$lng", $params);
+        return $this->query("$lat,$lon", $params);
     }
 
     /**
@@ -101,5 +101,13 @@ class GeocodeXyz implements Geocoder
     public function geocode($address, $params = [])
     {
         return $this->query($address, $params);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function geolocate($ip, $params = [])
+    {
+        return $this->query($ip, $params);
     }
 }
