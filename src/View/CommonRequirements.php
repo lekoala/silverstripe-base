@@ -39,12 +39,6 @@ class CommonRequirements
      * @config
      * @var string
      */
-    private static $countdown_version = '2.2.0';
-
-    /**
-     * @config
-     * @var string
-     */
     private static $fa4_version = '4.7.0';
 
     /**
@@ -149,16 +143,6 @@ class CommonRequirements
     {
         $version = self::config()->datefns_version;
         Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/date-fns/$version/date_fns.min.js");
-    }
-
-    /**
-     * @link http://hilios.github.io/jQuery.countdown/
-     * @return void
-     */
-    public static function countdown()
-    {
-        $version = self::config()->countdown_version;
-        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/jquery.countdown/$version/jquery.countdown.min.js");
     }
 
     /**

@@ -29,6 +29,7 @@ class BaseContentController extends ContentController
 {
     use SubsiteController;
     use ImprovedActions;
+    use WithJsonResponse;
     use Messaging;
     use PageGetters;
     use TimeHelpers;

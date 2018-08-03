@@ -1,0 +1,7 @@
+---
+Name: base-controllers
+After: '#rootroutes'
+---
+SilverStripe\Control\Director:
+  rules:
+    '__time': 'LeKoala\Base\Controllers\TimeController'
