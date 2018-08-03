@@ -15,8 +15,7 @@
                     days: 'd',
                     hours: 'h',
                     minutes: 'm',
-                    seconds: 's',
-                    finished: 'now'
+                    seconds: 's'
                 },
                 // in ms
                 interval: 1000,
@@ -56,7 +55,7 @@
                         if (settings.onComplete) {
                             settings.onComplete.call();
                         }
-                        $this.text(settings.labels.finished);
+                        $this.text("0 " + settings.labels.seconds);
                         return;
                     }
 
@@ -69,15 +68,9 @@
                     if (data.days) {
                         parts.push(data.days + settings.labels.days);
                     }
-                    if (data.hours) {
-                        parts.push(data.hours.toString().padStart(2, "0") + settings.labels.hours);
-                    }
-                    if (data.minutes) {
-                        parts.push(data.minutes.toString().padStart(2, "0") + settings.labels.minutes);
-                    }
-                    if (data.seconds) {
-                        parts.push(data.seconds.toString().padStart(2, "0") + settings.labels.seconds);
-                    }
+                    parts.push(data.hours.toString().padStart(2, "0") + settings.labels.hours);
+                    parts.push(data.minutes.toString().padStart(2, "0") + settings.labels.minutes);
+                    parts.push(data.seconds.toString().padStart(2, "0") + settings.labels.seconds);
 
                     data.msg = parts.join(' ');
                     $this.text(data.msg);
