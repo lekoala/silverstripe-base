@@ -29,4 +29,12 @@ class PrivacyNoticePage extends Page
             ]);
         }
     }
+
+    /**
+     * @return string
+     */
+    public static function getNotice()
+    {
+        return static::get()->first()->Content;
+    }
 }

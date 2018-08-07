@@ -29,4 +29,12 @@ class TermsAndConditionsPage extends Page
             ]);
         }
     }
+
+    /**
+     * @return string
+     */
+    public static function getTerms()
+    {
+        return static::get()->first()->Content;
+    }
 }
