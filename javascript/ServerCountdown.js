@@ -1,16 +1,17 @@
-/* global jquery, moment */
+/* global jquery, moment, window */
 
 /**
  * A server side countdown
  */
 ;
-(function ($, moment) {
+(function ($, moment, window) {
     $.fn.extend({
         ServerCountdown: function (options) {
             this.defaultOptions = {
                 onInit: null,
                 onTick: null,
                 onComplete: null,
+                reloadOnComplete: false,
                 labels: {
                     days: 'd',
                     hours: 'h',
@@ -31,6 +32,7 @@
 
                 var start = $this.data('start');
                 var end = $this.data('end');
+                var url = $this.data('url');
 
                 if (!start || !end) {
                     console.log("Must define data-start and data-end");
@@ -56,6 +58,11 @@
                             settings.onComplete.call();
                         }
                         $this.text("0 " + settings.labels.seconds);
+                        if (settings.reloadOnComplete) {
+                            window.location.reload();
+                        } else if (url) {
+                            window.location.replace(url);
+                        }
                         return;
                     }
 
@@ -81,9 +88,9 @@
 
                     data.diff -= settings.interval;
 
-                    // Check if needs polling
+                    // Check if needs polling (no within last 3 seconds)
                     poll--;
-                    if (poll <= 0) {
+                    if (poll <= 0 && data.diff > 3000) {
                         poll = settings.serverPoll;
 
                         $.getJSON(settings.serverSyncUrl, function (result) {
@@ -99,4 +106,4 @@
             });
         }
     });
-})(jQuery, moment);
+})(jQuery, moment, window);

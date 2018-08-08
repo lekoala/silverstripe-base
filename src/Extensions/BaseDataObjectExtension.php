@@ -67,7 +67,7 @@ class BaseDataObjectExtension extends DataExtension
     }
 
     /**
-     * Quickly apply update to the modal without using the ORM
+     * Quickly apply update to the model without using the ORM or changed LastEdited fields
      *
      * @param array $data
      * @return Query
