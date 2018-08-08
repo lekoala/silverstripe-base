@@ -44,7 +44,7 @@ $btn-focus-width: $btn-focus-width/2;
     &:not(:disabled):not(.disabled):active,
     &:not(:disabled):not(.disabled).active,
     .show>&.dropdown-toggle {
-        color: var(--#{$color}-contrast);
+        color: var(--#{$color}-highlight-contrast);
         background-color: var(--#{$color}-highlight);
         @if $enable-gradients {
             background-image: none;
@@ -85,7 +85,7 @@ $btn-focus-width: $btn-focus-width/2;
     &:not(:disabled):not(.disabled):active,
     &:not(:disabled):not(.disabled).active,
     .show>&.dropdown-toggle {
-        color: var(--#{$color});
+        color: var(--#{$color}-highlight-contrast);
         background-color: var(--#{$color}-highlight);
         border-color: var(--#{$color}-highlight);
         &:focus {
