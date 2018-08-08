@@ -57,7 +57,7 @@
                         if (settings.onComplete) {
                             settings.onComplete.call();
                         }
-                        $this.text("0 " + settings.labels.seconds);
+                        $this.text("00" + settings.labels.seconds);
                         if (settings.reloadOnComplete) {
                             window.location.reload();
                         } else if (url) {
