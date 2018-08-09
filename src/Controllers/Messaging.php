@@ -65,6 +65,10 @@ trait Messaging
         if (Director::is_ajax()) {
             return $this->applicationResponse($message, $linkOrManipulations, [], true);
         }
+        // No point in sending too large message
+        if (strlen($message) > 500) {
+            $message = substr($message, 0, 500) . '...';
+        }
         $this->sessionMessage($message, $alert);
         return $this->redirectTo($linkOrManipulations);
     }
