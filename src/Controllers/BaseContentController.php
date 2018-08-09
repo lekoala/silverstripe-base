@@ -13,6 +13,7 @@ use SilverStripe\ORM\DatabaseAdmin;
 use SilverStripe\Security\Security;
 use SilverStripe\View\Requirements;
 use LeKoala\Base\View\CookieConsent;
+use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\Connect\DatabaseException;
@@ -112,6 +113,17 @@ class BaseContentController extends ContentController
 
         // Switch channel for clearer logs
         $this->logger = $this->logger->withName('app');
+    }
+
+    /**
+     * @return Controller
+     */
+    public static function safeCurr()
+    {
+        if (static::has_curr()) {
+            return static::curr();
+        }
+        return null;
     }
 
     /**
