@@ -2,6 +2,7 @@
 
 namespace LeKoala\Base\Controllers;
 
+use SilverStripe\Control\Session;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Injector\Injector;
 
@@ -14,7 +15,7 @@ use SilverStripe\Core\Injector\Injector;
 trait HasSession
 {
     /**
-     * @return LoggerInterface
+     * @return Session
      */
     public static function getSession()
     {
