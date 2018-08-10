@@ -14,6 +14,7 @@ use SilverStripe\Versioned\Versioned;
 use SilverStripe\ORM\DataObjectSchema;
 use SilverStripe\ORM\Queries\SQLUpdate;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\ORM\ManyManyThroughList;
 use SilverStripe\ORM\UnsavedRelationList;
 use LeKoala\Base\Forms\BuildableFieldList;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
@@ -327,6 +328,10 @@ class BaseDataObjectExtension extends DataExtension
         $many_many = $this->owner->manyMany();
         foreach ($many_many as $relation => $type) {
             $manyManyComponents = $this->owner->getManyManyComponents($relation);
+            // Cannot cleanup many many through
+            if ($manyManyComponents instanceof ManyManyThroughList) {
+                continue;
+            }
             $table = $manyManyComponents->getJoinTable();
             $key = $manyManyComponents->getForeignKey();
             $id = $this->owner->ID;
