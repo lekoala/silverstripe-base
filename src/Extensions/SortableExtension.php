@@ -39,6 +39,6 @@ class SortableExtension extends DataExtension
     }
     public function NextInList($list)
     {
-        return $list->where('Sort < ' . $this->Sort)->sort('Sort ASC')->first();
+        return $list->where('Sort < ' . $this->owner->Sort)->sort('Sort ASC')->first();
     }
 }
