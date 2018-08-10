@@ -2,7 +2,6 @@
 
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Environment;
-use LeKoala\Base\Controllers\BaseContentController;
 
 // Add a benchmark helper
 if (!function_exists('bm')) {
@@ -28,24 +27,12 @@ if (!function_exists('d')) {
                 break;
             }
         }
-        // Excepts JSON
-        $ctrl = BaseContentController::safeCurr();
-        $isJSON = false;
-        if (in_array('application/json', $ctrl->getRequest()->getAcceptMimetypes(false))) {
-            $isJSON = true;
-        }
         // Show args
         $i = 0;
         $output = [];
         foreach ($args as $val) {
-            $output[] = $debugView->debugVariable($val, \SilverStripe\Dev\Debug::caller(), true, $i);
+            echo $debugView->debugVariable($val, \SilverStripe\Dev\Debug::caller(), true, $i);
             $i++;
-        }
-        //TODO: should use applicationResponse protocol
-        if ($isJSON) {
-            echo json_encode($output, JSON_PRETTY_PRINT);
-        } else {
-            echo implode("\n", $output);
         }
         exit();
     }

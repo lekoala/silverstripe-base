@@ -116,6 +116,18 @@ class BaseContentController extends ContentController
     }
 
     /**
+     * Does current request expects json?
+     * @return boolean
+     */
+    public function isJson()
+    {
+        if (Director::is_ajax() && in_array('application/json', $this->getRequest()->getAcceptMimetypes(false))) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * @return Controller
      */
     public static function safeCurr()
