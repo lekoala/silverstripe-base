@@ -152,7 +152,7 @@ SQL;
             $module = ClassHelper::findModuleForClass($class);
 
             $moduleName = $module->getName();
-            if ($moduleName != 'mysite') {
+            if ($moduleName != 'mysite' && $moduleName != 'app') {
                 continue;
             }
 

@@ -227,7 +227,7 @@ class TextCollector extends i18nTextCollector
             $processedEntities = $this->processModule($module);
 
             // in mysite, collect theme as well
-            if ($moduleName == 'mysite') {
+            if ($moduleName == 'mysite' || $moduleName == 'app') {
                 $themeEntities = $this->collectFromTheme();
                 $processedEntities = array_merge($processedEntities, $themeEntities);
                 ksort($processedEntities);
