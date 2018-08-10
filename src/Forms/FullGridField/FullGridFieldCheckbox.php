@@ -41,10 +41,22 @@ class FullGridFieldCheckbox implements GridField_SaveHandler, GridField_ColumnPr
      * @var array
      */
     protected $ids = null;
+
+    /**
+     * Toggle if removing items should be prevented
+     * @var bool
+     */
     protected $preventRemove;
 
     /**
+     * Toggle if we should handle empty post (may be dangerous!)
+     * @var bool
+     */
+    protected $noEmpty = true;
+
+    /**
      * Get the value of preventRemove
+     * @return bool
      */
     public function getPreventRemove()
     {
@@ -60,6 +72,27 @@ class FullGridFieldCheckbox implements GridField_SaveHandler, GridField_ColumnPr
     {
         $this->preventRemove = $preventRemove;
 
+        return $this;
+    }
+
+    /**
+     * Get toggle if we should handle empty post (may be dangerous!)
+     * @return bool
+     */
+    public function getNoEmpty()
+    {
+        return $this->noEmpty;
+    }
+
+    /**
+     * Set toggle if we should handle empty post (may be dangerous!)
+     *
+     * @param bool $noEmpty Toggle if we should handle empty post (may be dangerous!)
+     * @return $this
+     */
+    public function setNoEmpty($noEmpty)
+    {
+        $this->noEmpty = $noEmpty;
         return $this;
     }
 
@@ -82,18 +115,18 @@ class FullGridFieldCheckbox implements GridField_SaveHandler, GridField_ColumnPr
 
     public function handleSave(GridField $grid, DataObjectInterface $record)
     {
-//    l('Handling grid ' . $grid->getName());
         $post = isset($_POST['FullGridSelect'][$grid->getName()]) ? array_keys($_POST['FullGridSelect'][$grid->getName()]) : [];
 
-        if (empty($post)) {
-//      l('Grid is empty');
+        // It's empty, handle only if chosen (it will remove everything!)
+        if (empty($post) && $this->noEmpty) {
+            return;
         }
 
         $name = $grid->getName();
 
         $rel = $this->saveToRelation ? $this->saveToRelation : $name;
 
-    /* @var $list ManyManyList */
+        /* @var $list ManyManyList */
         $list = $record->$rel();
 
         $currentIds = $list->getIDList();
@@ -102,13 +135,12 @@ class FullGridFieldCheckbox implements GridField_SaveHandler, GridField_ColumnPr
         $toRemove = array_diff($currentIds, $post);
 
         foreach ($toAdd as $k => $id) {
-//      l('Add company ' . $id);
             $list->add($id);
         }
-        if ($grid->hasMethod('getPreventRemove') && $grid->getPreventRemove()) {
+        if ($this->preventRemove) {
+            // Do nothing
         } else {
             foreach ($toRemove as $k => $id) {
-        //      l('Remove company ' . $id);
                 $list->removeByID($id);
             }
         }
@@ -168,7 +200,7 @@ class FullGridFieldCheckbox implements GridField_SaveHandler, GridField_ColumnPr
             $this->ids = $gridField->getList()->column('ID');
         }
 
-    // Is checked?
+        // Is checked?
         if (in_array($record->ID, $this->ids)) {
             $cb->setValue(1);
         }

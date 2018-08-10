@@ -8,16 +8,10 @@
             },
             onunmatch: function () {
             },
-            onmouseover: function () {
-                //disable default row click behaviour -> avoid navigation to edit form when clicking the checkbox
-                $(this).parents('.ss-gridfield-item').find('.edit-link').removeClass('edit-link').addClass('tempDisabledEditLink');
-            },
-            onmouseout: function () {
-                //re-enable default row click behaviour
-                $(this).parents('.ss-gridfield-item').find('.tempDisabledEditLink').addClass('edit-link').removeClass('tempDisabledEditLink');
-            },
             onclick: function (e) {
-                //check/uncheck checkbox when clicking cell
+                // Prevent row click
+                e.stopPropagation();
+                // Check/uncheck checkbox when clicking cell
                 var cb = $(e.target).find('input');
                 if (!$(cb).prop('checked'))
                     $(cb).prop('checked', true);
