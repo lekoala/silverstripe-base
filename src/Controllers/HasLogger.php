@@ -7,26 +7,15 @@ use LeKoala\Base\Helpers\ClassHelper;
 use SilverStripe\Core\Injector\Injector;
 
 /**
- * A trait that adds two methods
- * - a getLogger method that gets a Logger with a name based on the current class
- * - a staticLogger method to use in a static context
+ * A trait that adds a static getLogger. We use static because we don't now if we have a context
+ * and we don't use instance anyway
  */
 trait HasLogger
 {
-
     /**
      * @return LoggerInterface
      */
-    public function getLogger()
-    {
-        return self::staticLogger();
-    }
-
-    /**
-     * a static proxy
-     * @return LoggerInterface
-     */
-    public static function staticLogger()
+    public static function getLogger()
     {
         return Injector::inst()->get(LoggerInterface::class)->withName(ClassHelper::getClassWithoutNamespace(get_called_class()));
     }
