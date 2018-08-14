@@ -16,6 +16,7 @@ class CustomAction extends FormAction
     use CustomButton;
 
     public $useButtonTag = true;
+    protected $shouldRefresh = false;
 
     public function __construct($name, $title, $form = null)
     {
@@ -47,5 +48,26 @@ class CustomAction extends FormAction
         // Note: type should stay "action" to properly submit
         $this->addExtraClass('custom-action');
         return parent::Field($properties);
+    }
+
+    /**
+     * Get the value of shouldRefresh
+     * @return mixed
+     */
+    public function getShouldRefresh()
+    {
+        return $this->shouldRefresh;
+    }
+
+    /**
+     * Set the value of shouldRefresh
+     *
+     * @param mixed $shouldRefresh
+     * @return $this
+     */
+    public function setShouldRefresh($shouldRefresh)
+    {
+        $this->shouldRefresh = $shouldRefresh;
+        return $this;
     }
 }

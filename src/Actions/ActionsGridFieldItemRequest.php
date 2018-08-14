@@ -129,6 +129,9 @@ class ActionsGridFieldItemRequest extends DataExtension
         if (Director::is_ajax()) {
             $controller = $this->getToplevelController();
             $controller->getResponse()->addHeader('X-Status', rawurlencode($message));
+            if (method_exists($clickedAction, 'getShouldRefresh') && $clickedAction->getShouldRefresh()) {
+                $controller->getResponse()->addHeader('X-Reload', true);
+            }
         } else {
             $form->sessionMessage($message, $status, ValidationResult::CAST_HTML);
         }
