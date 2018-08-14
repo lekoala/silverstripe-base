@@ -38,6 +38,7 @@ trait MasqueradeMember
         $session->set("loggedInAs", $this->getOwner()->ID);
         $session->set('Masquerade.Old', $sessionData);
         $session->set('Masquerade.BackURL', $controller->getReferer());
+        $this->owner->extend('onMasquerade', $session);
     }
 
     /**
