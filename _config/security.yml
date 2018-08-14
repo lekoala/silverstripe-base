@@ -4,6 +4,8 @@ Name: base-security
 # Global settings
 SilverStripe\Security\Security:
   login_recording: true
+  extensions:
+    - LeKoala\Base\Security\BaseSecurityExtension
 # Extensions
 SilverStripe\Admin\SecurityAdmin:
   extensions:
