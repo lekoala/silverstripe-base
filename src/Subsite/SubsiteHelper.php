@@ -115,8 +115,8 @@ class SubsiteHelper
         self::$previousSubsite = self::currentSubsiteID();
         Subsite::changeSubsite($ID);
         // This can help avoiding getting static objects like SiteConfig
-        if ($flush !== null) {
-            DataObject::flushCache();
+        if ($flush !== null && $flush) {
+            DataObject::reset();
         }
     }
 
