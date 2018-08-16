@@ -20,6 +20,11 @@ trait HasSession
     public static function getSession()
     {
         $request = Injector::inst()->get(HTTPRequest::class);
-        return $request->getSession();
+        try {
+            $session = $request->getSession();
+        } catch (Exception $ex) {
+            $session = new Session($_SESSION);
+        }
+        return $session;
     }
 }

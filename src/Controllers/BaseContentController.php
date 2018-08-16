@@ -18,6 +18,7 @@ use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\Connect\DatabaseException;
 use SilverStripe\CMS\Controllers\ContentController;
+use SilverStripe\Control\Session;
 
 /**
  * A more opiniated base controller for your app
@@ -216,7 +217,12 @@ class BaseContentController extends ContentController
      */
     public function getSession()
     {
-        return $this->getRequest()->getSession();
+        try {
+            $session = $this->getRequest()->getSession();
+        } catch (Exception $ex) {
+            $session = new Session($_SESSION);
+        }
+        return $session;
     }
 
     /**
