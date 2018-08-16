@@ -7,4 +7,9 @@ namespace LeKoala\Base\Forms;
 class AllCheckboxSetField extends BetterCheckboxSetField
 {
 
+    public function __construct($name, $title = null, $source = array(), $value = null)
+    {
+        parent::__construct($name, $title, $source, $value);
+        $this->addExtraItemClass('form-check-inline');
+    }
 }
