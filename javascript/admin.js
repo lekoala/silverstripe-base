@@ -82,6 +82,15 @@
                 e.stopPropagation();
             }
         });
+        // Let input work properly in grids
+        $('.ss-gridfield-items td select, .ss-gridfield-items td input').entwine({
+            onmatch: function () {},
+            onunmatch: function () {},
+            onclick: function (e) {
+                // Prevent row click
+                e.stopPropagation();
+            }
+        });
     });
 
 })(jQuery);
