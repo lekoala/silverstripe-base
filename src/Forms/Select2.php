@@ -89,7 +89,8 @@ trait Select2
             $record = DataObject::get_by_id($class, $value);
             $this->addRecordToSource($record);
         }
-        return parent::setValue($value, $data);
+        $result = parent::setValue($value, $data);
+        return $result;
     }
 
     /**

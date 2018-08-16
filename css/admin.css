@@ -283,7 +283,16 @@ fieldset.grid-field {
 /* inputs and select in a grid field */
 
 .cms .ss-gridfield-editable select.dropdown {
-    height:auto;
+    height: auto;
+}
+
+/* select 2 */
+
+.cms .select2-container--default .select2-selection {
+    line-height: 34px;
+    color: #43536d;
+    border: 1px solid #c1cad9;
+    border-radius: .23rem;
 }
 
 /* ag grid */

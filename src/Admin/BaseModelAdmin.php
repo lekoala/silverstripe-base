@@ -118,7 +118,7 @@ abstract class BaseModelAdmin extends ModelAdmin
         if (empty($customFields['Content'])) {
             $customFields['Content'] = '';
         }
-        return $this->renderWith('Silverstripe\\Admin\\CMSDialog', $customFields);
+        return $this->renderWith('SilverStripe\\Admin\\CMSDialog', $customFields);
     }
 
     /**
