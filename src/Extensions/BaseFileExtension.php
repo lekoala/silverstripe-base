@@ -120,6 +120,11 @@ class BaseFileExtension extends DataExtension
         return $this->owner->ThumbnailIcon($smallWidth, $smallHeight);
     }
 
+    /**
+     * Cleanup object class fields
+     *
+     * @return void
+     */
     public static function ensureNullForEmptyRecordRelation()
     {
         DB::query("UPDATE File SET ObjectClass = null WHERE ObjectID = 0 AND ObjectClass IS NOT NULL");
@@ -167,11 +172,24 @@ class BaseFileExtension extends DataExtension
         return $filesDeleted;
     }
 
+    /**
+     * Returns the full path of the file on the system
+     *
+     * Only works with local assets
+     *
+     * @return string
+     */
     public function getFullPath()
     {
+        // TODO: support custom path
         return Director::publicFolder() . '/assets/' . $this->getRelativePath();
     }
 
+    /**
+     * Get the path relative to the asset folder
+     *
+     * @return string
+     */
     public function getRelativePath()
     {
         $Filename = $this->owner->FileFilename;
