@@ -2,6 +2,10 @@
 
 namespace LeKoala\Base\Forms;
 
+/**
+ * If you want to have a default_config, it's up to you to set
+ * it in the constructor of your classes (by calling mergeDefaultConfig)
+ */
 trait ConfigurableField
 {
     /**
@@ -47,6 +51,15 @@ trait ConfigurableField
     public function readConfig()
     {
         return $this->config;
+    }
+
+    /**
+     * Merge default_config into config
+     * @return void
+     */
+    public function mergeDefaultConfig()
+    {
+        $this->config = array_merge(self::config()->default_config, $this->config);
     }
 
     /**

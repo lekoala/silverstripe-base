@@ -57,8 +57,15 @@ class AgGridField extends JsonFormField
     private static $default_config = [
         'rowSelection' => 'multiple',
         'editType' => 'fullRow',
-        'singleClickEdit' => 'true',
+        'singleClickEdit' => true,
+        'gridAutoHeight' => true,
     ];
+
+    public function __construct($name, $title = null, $value = null)
+    {
+        parent::__construct($name, $title, $value);
+        $this->mergeDefaultConfig();
+    }
 
     public static function requirements()
     {
@@ -70,6 +77,20 @@ class AgGridField extends JsonFormField
 
         Requirements::javascript('base/javascript/ModularBehaviour.js');
         Requirements::javascript('base/javascript/fields/AgGridField.js');
+    }
+
+    /**
+     * Styles depend on config
+     *
+     * @link https://www.ag-grid.com/javascript-grid-width-and-height/
+     * @return string
+     */
+    public function DefaultStyles()
+    {
+        if ($this->getGridAutoHeight()) {
+            return 'width:100%;margin-bottom:.5rem';
+        }
+        return 'width:100%;height:300px;margin-bottom:.5rem';
     }
 
     protected function getEditorForType($type)
