@@ -2,6 +2,7 @@
 namespace LeKoala\Base\Forms;
 
 use SilverStripe\ORM\DB;
+use SilverStripe\Dev\Debug;
 use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\ArrayLib;
 use LeKoala\Base\View\Bootstrap;
@@ -83,6 +84,7 @@ trait Select2
 
     public function setValue($value, $data = null)
     {
+        l($value, Debug::caller());
         // For ajax, we need to add the option to the list
         if ($value && $this->getAjaxClass()) {
             $class = $this->getAjaxClass();
@@ -93,10 +95,15 @@ trait Select2
         return $result;
     }
 
+    public function setSubmittedValue($value, $data = null)
+    {
+        return $this->setValue($value, $data);
+    }
+
     /**
      * Add a record to the source
      *
-     * Useful for ajax scenarios where the list is not prepulated but still needs to display
+     * Useful for ajax scenarios where the list is not prepopulated but still needs to display
      * something on first load
      *
      * @param DataObject $record
@@ -108,10 +115,17 @@ trait Select2
             return false;
         }
         $source = $this->getSource();
+        // It's already in the source
         if (isset($source[$record->ID])) {
             return false;
         }
-        $source = array_merge([$record->ID => $record->getTitle()], $source);
+        $row = [$record->ID => $record->getTitle()];
+        // If source is empty, it's not going to be merged properly
+        if (!empty($source)) {
+            $source = array_merge($row, $source);
+        } else {
+            $source = $row;
+        }
         $this->setSource($source);
         return true;
     }
