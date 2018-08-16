@@ -280,6 +280,12 @@ fieldset.grid-field {
     white-space: normal;
 }
 
+/* inputs and select in a grid field */
+
+.cms .ss-gridfield-editable select.dropdown {
+    height:auto;
+}
+
 /* ag grid */
 
 .ag-cell-edit-input {

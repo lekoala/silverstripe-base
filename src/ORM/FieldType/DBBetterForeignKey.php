@@ -10,7 +10,6 @@ use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FileHandleField;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\FieldType\DBForeignKey;
-use LeKoala\Base\Forms\PickerField\HasOnePickerField;
 use LeKoala\Base\Forms\Select2SingleField;
 
 /**

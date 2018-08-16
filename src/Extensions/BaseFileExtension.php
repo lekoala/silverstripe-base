@@ -166,4 +166,28 @@ class BaseFileExtension extends DataExtension
         }
         return $filesDeleted;
     }
+
+    public function getFullPath()
+    {
+        return Director::publicFolder() . '/assets/' . $this->getRelativePath();
+    }
+
+    public function getRelativePath()
+    {
+        $Filename = $this->owner->FileFilename;
+        $Dir = dirname($Filename);
+        $Name = basename($Filename);
+
+        $Hash = substr($this->owner->FileHash, 0, 10);
+
+        $Path = '';
+        // Is it protected?
+        // TODO: support custom path
+        if (!$this->owner->isPublished()) {
+            $Path = '.protected/';
+        }
+        // TODO: legacy mode may be enabled
+        $Path .= $Dir . '/' . $Hash . '/' . $Name;
+        return $Path;
+    }
 }
