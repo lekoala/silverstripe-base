@@ -84,7 +84,6 @@ trait Select2
 
     public function setValue($value, $data = null)
     {
-        l($value, Debug::caller());
         // For ajax, we need to add the option to the list
         if ($value && $this->getAjaxClass()) {
             $class = $this->getAjaxClass();
