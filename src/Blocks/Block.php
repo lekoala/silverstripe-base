@@ -464,14 +464,14 @@ final class Block extends DataObject
         if (Director::isDev() && isset($_GET['debug'])) {
             $json = '';
             if ($this->AuditData) {
-                $json = \json_encode(json_decode($this->AuditData), \JSON_PRETTY_PRINT);
+                $json = json_encode(json_decode($this->AuditData), JSON_PRETTY_PRINT);
                 $debugData = new LiteralField('JsonData', '<pre>Data: <code>' . $json . '</code></pre>');
             } else {
                 $debugData = new LiteralField('JsonData', '<div class="message info">Does not contain any data</div>');
             }
             $fields->addFieldsToTab('Root.Debug', $debugData);
             if ($this->Settings) {
-                $json = \json_encode(json_decode($this->Settings), \JSON_PRETTY_PRINT);
+                $json = json_encode(json_decode($this->Settings), JSON_PRETTY_PRINT);
                 $debugSettings = new LiteralField('JsonSettings', '<pre>Settings: <code>' . $json . '</code></pre>');
             } else {
                 $debugSettings = new LiteralField('JsonSettings', '<div class="message info">Does not contain any settings</div>');
