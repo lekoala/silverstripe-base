@@ -78,9 +78,8 @@ class FilePondField extends BaseFileUploadField
 
     protected $inputType = 'file';
 
-    protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_CUSTOM;
-
-    protected $schemaComponent = 'FilePond';
+    protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_HIDDEN;
+    protected $schemaComponent = null;
 
     /**
      * @var bool|null
@@ -274,7 +273,7 @@ class FilePondField extends BaseFileUploadField
         return $existingUploads;
     }
 
-    public function Field($properties = array())
+    public function FieldHolder($properties = array())
     {
         $name = $this->getName();
         $multiple = $this->getIsMultiUpload();
@@ -316,6 +315,11 @@ class FilePondField extends BaseFileUploadField
         Requirements::javascript('base/javascript/ModularBehaviour.js');
         Requirements::javascript('base/javascript/fields/FilePondField.js');
 
+        return parent::FieldHolder($properties);
+    }
+
+    public function Field($properties = array())
+    {
         return parent::Field($properties);
     }
 

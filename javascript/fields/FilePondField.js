@@ -15,4 +15,7 @@
         // imagePreviewMaxFileSize: '2MB'
     };
     $.fn.filepond.setDefaults(defaults);
+
+    // Ensure it is run
+    $('[data-module="filepond"]').ModularBehaviour();
 })(jQuery);
