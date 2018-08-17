@@ -26,6 +26,7 @@
                 return;
             }
             var isJqueryModule = false;
+            var initFailed = false;
             var module = e.data(config.moduleKey);
             var moduleConfig = e.data(config.configKey);
 
@@ -60,12 +61,16 @@
             } else {
                 console.log(module + " is not defined");
                 e.addClass(config.failedClass);
+                initFailed = true;
             }
-
-            e.addClass(config.initClass);
 
             if (typeof $.fn.ModularBehaviour.afterHooks[module] !== 'undefined') {
                 $.fn.ModularBehaviour.afterHooks[module].call(e, moduleConfig);
+            }
+
+            // If init failed, we may need to try again later (ajax requirements can be delayed...)
+            if (!initFailed) {
+                e.addClass(config.initClass);
             }
         }
 
@@ -93,7 +98,7 @@
         $('[data-module]').ModularBehaviour();
     });
 
-    // after each successfull ajax request
+    // after each successfull ajax request, try to init modules again after requirements are loaded
     var decodePath = function (str) {
         return str.replace(/%2C/g, ',').replace(/\&amp;/g, '&').replace(/^\s+|\s+$/g, '');
     };
