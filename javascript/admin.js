@@ -91,6 +91,30 @@
                 e.stopPropagation();
             }
         });
+        // Clickable icons
+        $('.uploadfield-item__thumbnail').entwine({
+            onclick: function () {
+                var id = this.parent().find('input').val();
+                this.css('opacity', '0.8');
+                var self = this;
+                // now we display the data in a modal by hijacking asset api
+                $.ajax({
+                    async: false,
+                    url: '/admin/assets/schema/fileEditForm/' + id,
+                    headers: {
+                        'X-FormSchema-Request': 'auto,schema,state,errors'
+                    },
+                    dataType: 'json',
+                    success: function (result) {
+                        self.css('opacity', '1');
+                        var previewImage = result.state.fields[2];
+                        var url = previewImage.data.url;
+                        window.open(url);
+                    }
+                });
+
+            }
+        });
     });
 
 })(jQuery);

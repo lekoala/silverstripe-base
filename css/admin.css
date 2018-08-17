@@ -286,6 +286,12 @@ fieldset.grid-field {
     height: auto;
 }
 
+/* upload field clickable icons */
+
+.uploadfield-item__thumbnail {
+    cursor: pointer !important;
+}
+
 /* select 2 */
 
 .cms .select2-container--default .select2-selection {

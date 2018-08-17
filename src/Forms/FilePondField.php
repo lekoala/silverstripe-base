@@ -78,6 +78,8 @@ class FilePondField extends BaseFileUploadField
 
     protected $inputType = 'file';
 
+    // Schema needs to be something else than custom otherwise it fails on ajax load because
+    // we don't have a proper react component
     protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_HIDDEN;
     protected $schemaComponent = null;
 
