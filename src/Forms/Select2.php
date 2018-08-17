@@ -13,7 +13,12 @@ use SilverStripe\View\Requirements;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
+use LeKoala\Base\Forms\Select2LookupField;
 
+/**
+ * Require trait ConfigurableField
+ * Require trait Select2Source
+ */
 trait Select2
 {
     /**
@@ -44,13 +49,6 @@ trait Select2
      * @var Callable
      */
     protected $onNewTag = null;
-
-    /**
-     * Config array
-     *
-     * @var array
-     */
-    protected $config = [];
 
     /**
      * Ajax class
@@ -129,35 +127,15 @@ trait Select2
         return true;
     }
 
-    /**
-     * Get a config key value
-     *
-     * @see https://select2.org/configuration/options-api
-     * @param string $key
-     * @return string
-     */
-    public function getConfig($key)
+    public function performReadonlyTransformation()
     {
-        if (isset($this->config[$key])) {
-            return $this->config[$key];
-        }
-    }
-
-    /**
-     * Set a config value
-     *
-     * @param string $key
-     * @param string $value
-     * @return string
-     */
-    public function setConfig($key, $value)
-    {
-        if ($value !== null) {
-            $this->config[$key] = $value;
-        } else {
-            unset($this->config[$key]);
-        }
-        return $this;
+        /** @var Select2SingleField $field */
+        $field = $this->castedCopy(Select2SingleField::class);
+        $field->setSource($this->getSource());
+        $field->setReadonly(true);
+        // Required to properly set value if no source set
+        $field->setAjaxClass($this->getAjaxClass());
+        return $field;
     }
 
     public function getTags()

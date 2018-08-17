@@ -11,6 +11,7 @@ use SilverStripe\Forms\ListboxField;
 class Select2MultiField extends ListboxField
 {
     use Select2;
+    use ConfigurableField;
 
     /**
      * @param DataObject|DataObjectInterface $record The record to save into

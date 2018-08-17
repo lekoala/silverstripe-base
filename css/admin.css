@@ -297,11 +297,26 @@ fieldset.grid-field {
 
 .cms .select2-container--default .select2-selection--single .select2-selection__arrow {
     height: 34px;
-    right:6px;
+    right: 6px;
 }
 
 .cms .select2-container--default .select2-selection--single .select2-selection__rendered {
     line-height: 34px;
+}
+
+select[readonly].select2+.select2-container {
+    pointer-events: none;
+    touch-action: none;
+}
+
+select[readonly].select2+.select2-container .select2-selection {
+    background: #eee;
+    box-shadow: none;
+}
+
+select[readonly].select2+.select2-container .select2-selection__arrow,
+select[readonly].select2+.select2-container .select2-selection__clear {
+    display: none;
 }
 
 /* ag grid */

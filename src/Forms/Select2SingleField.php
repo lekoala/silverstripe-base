@@ -10,6 +10,7 @@ use SilverStripe\ORM\DataObjectInterface;
 class Select2SingleField extends DropdownField
 {
     use Select2;
+    use ConfigurableField;
 
     /**
      * @param DataObject|DataObjectInterface $record The record to save into
