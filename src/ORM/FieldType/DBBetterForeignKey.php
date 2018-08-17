@@ -30,8 +30,8 @@ class DBBetterForeignKey extends DBForeignKey
         }
         $hasOneSingleton = singleton($hasOneClass);
         if ($hasOneSingleton instanceof File) {
-            // $field = Injector::inst()->create(FileHandleField::class, $relationName, $title);
-            $field = new FilePondField($relationName, $title);
+            $field = Injector::inst()->create(FileHandleField::class, $relationName, $title);
+            // $field = new FilePondField($relationName, $title);
             if ($hasOneSingleton instanceof Image) {
                 $field->setAllowedFileCategories('image/supported');
             }
