@@ -17,11 +17,12 @@ use SilverStripe\Control\HTTPResponse;
 use SilverStripe\ORM\DataObjectInterface;
 use LeKoala\Base\Extensions\BaseFileExtension;
 use SilverStripe\Assets\Image;
+use SilverStripe\Security\Member;
+use SilverStripe\ORM\ValidationException;
+use SilverStripe\ORM\ArrayList;
 
 /**
- * A file pond field
- *
- * TODO: Support all plugins
+ * A FilePond field
  */
 class FilePondField extends BaseFileUploadField
 {
@@ -105,6 +106,20 @@ class FilePondField extends BaseFileUploadField
             $value = ['Files' => [$value]];
         } elseif (is_array($value) && empty($value['Files'])) {
             $value = ['Files' => $value];
+        }
+        // Track existing record data
+        if ($record) {
+            $name = $this->name;
+            if ($record instanceof DataObject && $record->hasMethod($name)) {
+                $data = $record->$name();
+                // Wrap
+                if ($data instanceof DataObject) {
+                    $data = new ArrayList([$data]);
+                }
+                foreach ($data as $uploadedItem) {
+                    $this->trackFileID($uploadedItem->ID);
+                }
+            }
         }
         return parent::setValue($value, $record);
     }
@@ -353,7 +368,9 @@ class FilePondField extends BaseFileUploadField
 
         $this->getUpload()->clearErrors();
         $fileId = $file->ID;
+        $this->trackFileID($fileId);
 
+        // Prepare response
         $response = new HTTPResponse($fileId);
         $response->addHeader('Content-Type', 'text/plain');
 
@@ -364,21 +381,70 @@ class FilePondField extends BaseFileUploadField
         return $response;
     }
 
+    /**
+     * Allows tracking uploaded ids to prevent unauthorized attachements
+     *
+     * @param int $fileId
+     * @return void
+     */
+    public function trackFileID($fileId)
+    {
+        $session = $this->getRequest()->getSession();
+        $uploadedIDs = $this->getTrackedIDs();
+        if (!in_array($fileId, $uploadedIDs)) {
+            $uploadedIDs[] = $fileId;
+        }
+        $session->set('FilePond', $uploadedIDs);
+    }
+
+    /**
+     * Get all authorized tracked ids
+     * @return array
+     */
+    public function getTrackedIDs()
+    {
+        $session = $this->getRequest()->getSession();
+        $uploadedIDs = $session->get('FilePond');
+        if ($uploadedIDs) {
+            return $uploadedIDs;
+        }
+        return [];
+    }
+
     public function saveInto(DataObjectInterface $record)
     {
-        // Move files out of temporary folder
+        // Note that the list of IDs is based on the value sent by the user
+        // It can be spoofed because checks are minimal (by default, canView = true and only check if isInDB)
         $IDs = $this->getItemIDs();
+
+        $MemberID = Member::currentUserID();
+
+        // Ensure the files saved into the DataObject have been tracked (either because already on the DataObject or uploaded by the user)
+        $trackedIDs = $this->getTrackedIDs();
+        foreach ($IDs as $ID) {
+            if (!in_array($ID, $trackedIDs)) {
+                throw new ValidationException("Invalid file ID : $ID");
+            }
+        }
+
+        // Move files out of temporary folder
         foreach ($IDs as $ID) {
             $file = $this->getFileByID($ID);
-            if ($file) {
+            if ($file && $file->IsTemporary) {
                 // The record does not have an ID which is a bad idea to attach the file to it
                 if (!$record->ID) {
                     $record->write();
+                }
+                // Check if the member is owner
+                if ($MemberID && $MemberID != $file->OwnerID) {
+                    throw new ValidationException("Failed to authenticate owner");
                 }
                 $file->IsTemporary = false;
                 $file->ObjectID = $record->ID;
                 $file->ObjectClass = get_class($record);
                 $file->write();
+            } else {
+                // File was uploaded earlier, no need to do anything
             }
         }
         // Proceed

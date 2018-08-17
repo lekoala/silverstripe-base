@@ -8,6 +8,8 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\FileHandleField;
 use SilverStripe\Forms\FileUploadReceiver;
+use SilverStripe\Control\NullHTTPRequest;
+use SilverStripe\Control\Controller;
 
 /**
  * A base class that use file upload receiver
@@ -34,6 +36,11 @@ abstract class BaseFileUploadField extends FormField implements FileHandleField
         parent::__construct($name, $title);
         if ($items) {
             $this->setItems($items);
+        }
+
+        // Fix null request
+        if ($this->request instanceof NullHTTPRequest) {
+            $this->request = Controller::curr()->getRequest();
         }
     }
 
@@ -89,7 +96,7 @@ abstract class BaseFileUploadField extends FormField implements FileHandleField
     {
         $state = parent::getSchemaStateDefaults();
         $state['data']['files'] = $this->getItemIDs();
-        $state['value'] = $this->Value() ?: ['Files' => []];
+        $state['value'] = $this->Value() ? : ['Files' => []];
         return $state;
     }
 
