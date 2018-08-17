@@ -12,6 +12,8 @@ use SilverStripe\AssetAdmin\Forms\UploadField;
 /**
  * A fine upload field
  *
+ * DEPRECATED : use FilePond instead if you can
+ *
  * @link https://fineuploader.com/
  * @link https://github.com/FineUploader/php-traditional-server/blob/master/handler.php
  */

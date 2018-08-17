@@ -16,6 +16,7 @@ use SilverStripe\Versioned\Versioned;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\ORM\DataObjectInterface;
 use LeKoala\Base\Extensions\BaseFileExtension;
+use SilverStripe\Assets\Image;
 
 /**
  * A file pond field
@@ -145,7 +146,7 @@ class FilePondField extends BaseFileUploadField
      * Configure our endpoint
      *
      * @link https://pqina.nl/filepond/docs/patterns/api/server/
-     * @return void
+     * @return array
      */
     public function getServerOptions()
     {
@@ -201,12 +202,61 @@ class FilePondField extends BaseFileUploadField
      * Return a link to this field.
      *
      * @param string $action
-     *
      * @return string
      */
     public function SafeLink($action = null)
     {
         return Controller::join_links($this->form->FormAction(), 'field/' . $this->getSafeName(), $action);
+    }
+
+    /**
+     * Set initial values to FilePondField
+     * See: https://pqina.nl/filepond/docs/patterns/api/filepond-object/#setting-initial-files
+     *
+     * @return array
+     */
+    public function getExistingUploadsData()
+    {
+        // Both Value() & dataValue() seem to return an array eg: ['Files' => [258, 259, 257]]
+        $fileIDarray = $this->Value() ? : ['Files' => []];
+        if (!isset($fileIDarray['Files']) || !count($fileIDarray['Files'])) {
+            return [];
+        }
+
+        $existingUploads = [];
+        foreach ($fileIDarray['Files'] as $fileID) {
+            /* @var $file File */
+            $file = File::get()->byID($fileID);
+            if (!$file) {
+                continue;
+            }
+            // $poster = null;
+            // if ($file instanceof Image) {
+            //     $w = self::config()->get('thumbnail_width');
+            //     $h = self::config()->get('thumbnail_height');
+            //     $poster = $file->Fill($w, $h)->getAbsoluteURL();
+            // }
+            $existingUploads[] = [
+                // the server file reference
+                'source' => (int)$fileID,
+                // set type to local to indicate an already uploaded file
+                'options' => [
+                    'type' => 'local',
+                    // file information
+                    'file' => [
+                        'name' => $file->Name,
+                        'size' => (int)$file->getAbsoluteSize(),
+                        'type' => $file->getMimeType(),
+                    ],
+                    // poster
+                    // 'metadata' => [
+                    //     'poster' => $poster
+                    // ]
+                ],
+
+            ];
+        }
+        return $existingUploads;
     }
 
     public function Field($properties = array())
@@ -225,29 +275,29 @@ class FilePondField extends BaseFileUploadField
             'maxFiles' => $this->getAllowedMaxFileNumber(),
             'maxFileSize' => $this->getMaxFileSize(),
             'server' => $this->getServerOptions(),
+            'files' => $this->getExistingUploadsData(),
         ];
         $this->setAttribute('data-module', 'filepond');
         $this->setAttribute('data-config', json_encode($config));
 
-        Requirements::css("https://unpkg.com/filepond/dist/filepond.min.css");
-        // Requirements::javascript("https://unpkg.com/filepond-plugin-file-rename/dist/filepond-plugin-file-rename.min.js");
-        Requirements::javascript("https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.min.js");
-        Requirements::javascript("https://unpkg.com/filepond-plugin-file-validate-size/dist/filepond-plugin-file-validate-size.min.js");
-        Requirements::javascript("https://unpkg.com/filepond/dist/filepond.min.js");
-        Requirements::javascript("https://unpkg.com/jquery-filepond/filepond.jquery.js");
-        // if (Director::isDev()) {
-        //     Requirements::css('https://rawgit.com/pqina/filepond/master/dist/filepond.css');
-        //     Requirements::javascript('https://rawgit.com/pqina/filepond/master/dist/filepond.min.js');
-        //     Requirements::javascript('https://rawgit.com/pqina/filepond-plugin-file-validate-type/master/dist/filepond-plugin-file-validate-type.min.js');
-        //     Requirements::javascript('https://rawgit.com/pqina/filepond-plugin-image-validate-size/master/dist/filepond-plugin-image-validate-size.min.js');
-        //     Requirements::javascript('https://rawgit.com/pqina/jquery-filepond/master/filepond.jquery.js');
-        // } else {
-        //     Requirements::css('https://cdn.rawgit.com/pqina/filepond/52be702f/dist/filepond.css');
-        //     Requirements::javascript('https://cdn.rawgit.com/pqina/filepond/52be702f/dist/filepond.min.js');
-        //     Requirements::javascript('https://cdn.rawgit.com/pqina/filepond-plugin-file-validate-type/8e05c20f/dist/filepond-plugin-file-validate-type.min.js');
-        //     Requirements::javascript('https://cdn.rawgit.com/pqina/filepond-plugin-image-validate-size/ab2f4e80/dist/filepond-plugin-image-validate-size.min.js');
-        //     Requirements::javascript('https://cdn.rawgit.com/pqina/jquery-filepond/59286607/filepond.jquery.js');
-        // }
+        // Polyfill to ensure max compatibility
+        Requirements::javascript("https://unpkg.com/filepond-polyfill@1.0.2/dist/filepond-polyfill.min.js");
+        // File validation plugins
+        Requirements::javascript("https://unpkg.com/filepond-plugin-file-validate-type@1.1.0/dist/filepond-plugin-file-validate-type.min.js");
+        Requirements::javascript("https://unpkg.com/filepond-plugin-file-validate-size@1.0.4/dist/filepond-plugin-file-validate-size.min.js");
+        // Poster plugins
+        // Requirements::javascript("https://unpkg.com/filepond-plugin-file-metadata@1.0.2/dist/filepond-plugin-file-metadata.min.js");
+        // Requirements::css("https://unpkg.com/filepond-plugin-file-poster@1.0.0/dist/filepond-plugin-file-poster.min.css");
+        // Requirements::javascript("https://unpkg.com/filepond-plugin-file-poster@1.0.0/dist/filepond-plugin-file-poster.min.js");
+        // Image plugins
+        // Requirements::javascript("https://unpkg.com/filepond-plugin-image-exif-orientation@1.0.2/dist/filepond-plugin-image-exif-orientation.js");
+        // Requirements::css("https://unpkg.com/filepond-plugin-image-preview@2.0.1/dist/filepond-plugin-image-preview.min.css");
+        // Requirements::javascript("https://unpkg.com/filepond-plugin-image-preview@2.0.1/dist/filepond-plugin-image-preview.min.js");
+        // Base elements
+        Requirements::css("https://unpkg.com/filepond@2.0.1/dist/filepond.min.css");
+        Requirements::javascript("https://unpkg.com/filepond@2.0.1/dist/filepond.min.js");
+        Requirements::javascript("https://unpkg.com/jquery-filepond@1.0.0/filepond.jquery.js");
+        // Our custom init
         Requirements::javascript('base/javascript/ModularBehaviour.js');
         Requirements::javascript('base/javascript/fields/FilePondField.js');
 

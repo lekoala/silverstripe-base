@@ -1,8 +1,8 @@
-(function($) {
+(function ($) {
     var selector = ".field.fineupload .fineupload";
 
     var behaviour = {
-        onadd: function() {
+        onadd: function () {
             // This can be called twice
             if (this.hasClass("fineupload-init")) {
                 return;
@@ -43,10 +43,10 @@
     // We need to rely on this pattern because:
     // - entwine may not be loaded
     // - on first load, the "onadd" method may never be called due to load order
-    $(function() {
+    $(function () {
         var list = $(selector);
         if (list.length) {
-            list.each(function() {
+            list.each(function () {
                 behaviour.onadd.call($(this));
             });
         } else {

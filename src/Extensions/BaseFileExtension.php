@@ -108,16 +108,16 @@ class BaseFileExtension extends DataExtension
 
     public function SmallAssetThumbnail()
     {
-        $smallWidth = UploadField::config()->uninherited('thumbnail_width');
-        $smallHeight = UploadField::config()->uninherited('thumbnail_height');
-        return $this->owner->ThumbnailIcon($smallWidth, $smallHeight);
+        $w = UploadField::config()->uninherited('thumbnail_width');
+        $h = UploadField::config()->uninherited('thumbnail_height');
+        return $this->owner->ThumbnailIcon($w, $h);
     }
 
     public function LargeAssetThumbnail()
     {
-        $smallWidth = AssetAdmin::config()->uninherited('thumbnail_width');
-        $smallHeight = AssetAdmin::config()->uninherited('thumbnail_height');
-        return $this->owner->ThumbnailIcon($smallWidth, $smallHeight);
+        $w = AssetAdmin::config()->uninherited('thumbnail_width');
+        $h = AssetAdmin::config()->uninherited('thumbnail_height');
+        return $this->owner->ThumbnailIcon($w, $h);
     }
 
     /**
