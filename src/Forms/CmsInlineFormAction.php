@@ -8,9 +8,9 @@ use SilverStripe\Forms\LiteralField;
 use LeKoala\Base\Actions\DefaultLink;
 
 /**
- * CmsInlineFormAction
+ * A simple button that links to a given action or url
  *
- * This is not the most robust implementation, but it does the job
+ * This is meant to be used inside getCMSFields or getCMSUtils
  *
  * Action must be implemented on the controller (ModelAdmin for instance)
  * The data passed in the content of the form
@@ -42,9 +42,10 @@ class CmsInlineFormAction extends LiteralField
      * @param title The label on the button
      * @param extraClass A CSS class to apply to the button in addition to 'action'
      */
-    public function __construct($action, $title = "", $extraClass = '')
+    public function __construct($action, $title = "", $extraClass = 'btn-primary')
     {
-        parent::__construct($action, $title, null);
+        parent::__construct($action, $title);
+        $this->addExtraClass($extraClass);
     }
     public function performReadonlyTransformation()
     {
@@ -70,7 +71,7 @@ class CmsInlineFormAction extends LiteralField
         if ($this->newWindow) {
             $attrs .= ' target="_blank"';
         }
-        $content = '<a href="' . $link . '" class="btn btn-primary action inline-action no-ajax"' . $attrs . '>';
+        $content = '<a href="' . $link . '" class="btn ' . $this->extraClass() . ' action inline-action no-ajax"' . $attrs . '>';
         $content .= $this->content;
         $content .= '</a>';
         $this->content = $content;
