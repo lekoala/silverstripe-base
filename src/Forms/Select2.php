@@ -127,6 +127,9 @@ trait Select2
         return true;
     }
 
+    /**
+     * @link https://github.com/select2/select2/issues/3387
+     */
     public function performReadonlyTransformation()
     {
         /** @var Select2SingleField $field */
@@ -135,6 +138,7 @@ trait Select2
         $field->setReadonly(true);
         // Required to properly set value if no source set
         $field->setAjaxClass($this->getAjaxClass());
+        // This rely on styles in admin.css
         return $field;
     }
 
