@@ -64,7 +64,9 @@ abstract class BaseModelAdmin extends ModelAdmin
     {
         $response = parent::handleRequest($request);
         // Force reload since sometimes pjax does not refresh properly everything :-(
-        $response->addHeader('X-Reload', true);
+        if ($response->getHeader('X-Reload') === null) {
+            $response->addHeader('X-Reload', true);
+        }
         return $response;
     }
 
