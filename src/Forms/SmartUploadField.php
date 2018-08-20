@@ -28,17 +28,6 @@ class SmartUploadField extends UploadField
         parent::__construct($name, $title, $items);
     }
 
-    public function getSchemaStateDefaults()
-    {
-        $state = parent::getSchemaStateDefaults();
-        $urls = [];
-        foreach ($this->getEncodedItems() as $item) {
-            $urls[$item->ID] = $item->getAbsoluteURL();
-        }
-        $state['data']['urls'] = $urls;
-        return $state;
-    }
-
     public function Field($properties = array())
     {
         $record = $this->getRecord();
