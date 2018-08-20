@@ -6,6 +6,7 @@ use SilverStripe\Forms\Form;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Admin\ModelAdmin;
 use LeKoala\Base\Helpers\ClassHelper;
+use SilverStripe\Control\HTTPRequest;
 use LeKoala\Base\Subsite\SubsiteHelper;
 use SilverStripe\Admin\AdminRootController;
 use SilverStripe\Forms\GridField\GridField;
@@ -57,6 +58,14 @@ abstract class BaseModelAdmin extends ModelAdmin
             return DataObject::get_by_id($ModelClass, $ID);
         }
         return false;
+    }
+
+    public function handleRequest(HTTPRequest $request)
+    {
+        $response = parent::handleRequest($request);
+        // Force reload since sometimes pjax does not refresh properly everything :-(
+        $response->addHeader('X-Reload', true);
+        return $response;
     }
 
     public function getList()
