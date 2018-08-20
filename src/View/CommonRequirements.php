@@ -60,6 +60,12 @@ class CommonRequirements
     private static $plyr_version = '3.3.22';
 
     /**
+     * @config
+     * @var string
+     */
+    private static $cleave_version = '1.4.3';
+
+    /**
      * Include all files in a given path
      *
      * @param string $path
@@ -173,5 +179,15 @@ class CommonRequirements
     {
         $version = self::config()->boxicons_version;
         Requirements::css("https://cdn.jsdelivr.net/npm/boxicons@$version/css/boxicons.min.css");
+    }
+
+    /**
+     * @link https://nosir.github.io/cleave.js/
+     * @return void
+     */
+    public static function cleave()
+    {
+        $version = self::config()->cleave_version;
+        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/cleave.js/$version/cleave.min.js");
     }
 }
