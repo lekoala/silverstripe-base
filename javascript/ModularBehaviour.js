@@ -19,6 +19,8 @@
             failedClass: 'module-failed'
         }, opts);
 
+        var timeout;
+
         // main function
         function init(e) {
             // prevent multiple inits
@@ -71,6 +73,15 @@
             // If init failed, we may need to try again later (ajax requirements can be delayed...)
             if (!initFailed) {
                 e.addClass(config.initClass);
+                e.removeClass(config.failedClass);
+            } else {
+                // This is a bit of a hack
+                if (timeout) {
+                    clearTimeout(timeout);
+                }
+                timeout = setTimeout(function () {
+                    $('[data-module]').ModularBehaviour();
+                }, 250);
             }
         }
 
@@ -114,9 +125,7 @@
                 }
             }
         }
-        // Only fire if no new js include
-        if (!newJsIncludes.length) {
-            $('[data-module]').ModularBehaviour();
-        }
+        // Always try to init everything
+        $('[data-module]').ModularBehaviour();
     });
 })(jQuery);
