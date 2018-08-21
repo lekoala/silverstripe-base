@@ -159,7 +159,7 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
 .cms-login-status .cms-login-status__profile-link:focus, .cms-login-status .cms-login-status__profile-link:hover {background-color: $border}
 .cms-login-status .cms-login-status__logout-link:focus, .cms-login-status .cms-login-status__logout-link:hover {background-color: $border}
 CSS;
-        Requirements::customCSS($styles);
+        Requirements::customCSS($styles, 'AdminMenuStyles');
     }
 
     /**
