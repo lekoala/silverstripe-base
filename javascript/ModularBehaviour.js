@@ -20,6 +20,7 @@
         }, opts);
 
         var timeout;
+        var retries = 0;
 
         // main function
         function init(e) {
@@ -61,7 +62,7 @@
                 // It's a global var
                 window[module].call('#' + e.attr('id'), moduleConfig);
             } else {
-                console.log(module + " is not defined");
+                // console.log(module + " is not defined");
                 e.addClass(config.failedClass);
                 initFailed = true;
             }
@@ -79,9 +80,12 @@
                 if (timeout) {
                     clearTimeout(timeout);
                 }
-                timeout = setTimeout(function () {
-                    $('[data-module]').ModularBehaviour();
-                }, 250);
+                retries++;
+                if (retries > 4) {
+                    timeout = setTimeout(function () {
+                        $('[data-module]').ModularBehaviour();
+                    }, 250);
+                }
             }
         }
 
@@ -126,6 +130,7 @@
             }
         }
         // Always try to init everything
+        retries = 0;
         $('[data-module]').ModularBehaviour();
     });
 })(jQuery);
