@@ -147,10 +147,13 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
         $PrimaryColor = $SiteConfig->dbObject('PrimaryColor');
 
         $bg = $PrimaryColor->Color();
+        // Black is too harsh so we use a softer shadow
+        $color = $PrimaryColor->ContrastColor('#333');
         $border = $PrimaryColor->HighlightColor();
 
         $styles = <<<CSS
-.cms-menu__header {background: $bg}
+.cms-menu__header {background: $bg; color: $color}
+.cms-menu__header a, .cms-menu__header span {color: $color !important}
 .cms-sitename {border-color: $border}
 .cms-sitename:focus, .cms-sitename:hover {background-color: $border}
 .cms-login-status .cms-login-status__profile-link:focus, .cms-login-status .cms-login-status__profile-link:hover {background-color: $border}
