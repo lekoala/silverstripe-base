@@ -14,8 +14,8 @@
     }],
     "require": {
         "php": ">=7",
-        "silverstripe/framework": "^4.2",
-        "silverstripe/siteconfig": "^4.2",
+        "silverstripe/framework": "^4.1",
+        "silverstripe/siteconfig": "^4.1",
         "axllent/silverstripe-minifier": "^1.0",
         "symbiote/silverstripe-gridfieldextensions": "^3.1",
         "bummzack/sortablefile": "^2.0",
@@ -25,7 +25,6 @@
         "phpunit/phpunit": "^5.7",
         "squizlabs/php_codesniffer": "^3.0",
         "silverstripe/sqlite3": "^2.1",
-        "lekoala/silverstripe-debugbar": "*",
         "silverleague/ideannotator": "3.x-dev"
     },
     "suggest": {

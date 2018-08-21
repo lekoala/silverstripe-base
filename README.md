@@ -7,7 +7,8 @@ This module is under heavy work in progress, things breaks and will change. Use 
 
 ## Requirements
 
-* SilverStripe ^4.2
+* SilverStripe ^4.1
+* Use public folder
 
 ## Installation
 
