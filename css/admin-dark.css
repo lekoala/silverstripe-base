@@ -1,3 +1,10 @@
+/*
+Enable this by setting :
+
+LeKoala\Base\Admin\BaseLeftAndMainExtension:
+  dark_theme: true
+
+*/
 .cms-menu {
     -webkit-box-shadow: inset -1px 0 0 #373E42;
     box-shadow: inset -1px 0 0 #373E42;

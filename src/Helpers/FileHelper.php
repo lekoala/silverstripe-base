@@ -87,6 +87,25 @@ class FileHelper
     }
 
     /**
+     * Check if a directory contains children
+     *
+     * @link https://stackoverflow.com/questions/6786014/php-fastest-way-to-find-if-directory-has-children
+     * @param string $dir
+     * @return bool
+     */
+    public static function dirContainsChildren($dir)
+    {
+        $result = false;
+        if ($dh = opendir($dir)) {
+            while (!$result && ($file = readdir($dh)) !== false) {
+                $result = $file !== "." && $file !== "..";
+            }
+            closedir($dh);
+        }
+        return $result;
+    }
+
+    /**
      * @link https://www.digitalocean.com/community/questions/proper-permissions-for-web-server-s-directory
      * @param string $dir
      * @return bool
@@ -98,7 +117,6 @@ class FileHelper
         }
         return true;
     }
-
 
     /**
      * @param int $bytes

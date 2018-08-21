@@ -2,16 +2,20 @@
 
 namespace LeKoala\Base\Dev\Extensions;
 
+use Exception;
 use SilverStripe\ORM\DB;
+use RecursiveIteratorIterator;
+use RecursiveDirectoryIterator;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Extension;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Control\Director;
+use LeKoala\Base\Helpers\FileHelper;
 use SilverStripe\Core\Config\Config;
 use LeKoala\Base\Helpers\ClassHelper;
+use LeKoala\Base\Subsite\SubsiteHelper;
 use LeKoala\Base\Extensions\BaseFileExtension;
 use LeKoala\ExcelImportExport\ExcelBulkLoader;
-use LeKoala\Base\Subsite\SubsiteHelper;
 
 /**
  * Allow the following functions before dev build
@@ -21,6 +25,8 @@ use LeKoala\Base\Subsite\SubsiteHelper;
  * Allow the following functions after dev build:
  * - generateRepository
  * - generateQueryTraits
+ * - clearCache
+ * - clearEmptyFolders
  *
  * Preserve current subsite
  *
@@ -115,29 +121,77 @@ SQL;
 
     public function afterCallActionHandler()
     {
+        // Other helpers
+        $clearCache = $this->owner->getRequest()->getVar('clearCache');
+        $clearEmptyFolders = $this->owner->getRequest()->getVar('clearEmptyFolders');
+
+        if ($clearCache) {
+            $this->clearCache();
+        }
+        if ($clearEmptyFolders) {
+            $this->clearEmptyFolders();
+        }
+
+        // Dev helpers - only accessible in dev mode
         $envIsAllowed = Director::isDev();
         $generateRepository = $this->owner->getRequest()->getVar('generateRepository');
         $generateQueryTraits = $this->owner->getRequest()->getVar('generateQueryTraits');
 
         if ($generateQueryTraits || $generateRepository) {
             $this->displayMessage("<div class='build'><p><b>Generating ide helpers</b></p><ul>\n\n");
+            if (!$envIsAllowed) {
+                $this->displayMessage("<strong>Env is not allowed</strong>\n");
+            }
         }
-        if (!$envIsAllowed) {
-            $this->displayMessage("<li>Env is not allowed</li>");
-        } else {
-            if ($generateQueryTraits) {
-                $this->generateQueryTraits();
-            }
-            if ($generateRepository) {
-                $this->generateRepository();
-            }
+        if ($generateQueryTraits) {
+            $this->generateQueryTraits();
+        }
+        if ($generateRepository) {
+            $this->generateRepository();
         }
         if ($generateQueryTraits || $generateRepository) {
             $this->displayMessage("</ul>\n<p><b>Generating ide helpers finished!</b></p></div>");
         }
 
+        // Restore subsite
         if ($this->currentSubsite) {
             SubsiteHelper::changeSubsite($this->currentSubsite);
+        }
+    }
+
+    protected function clearCache()
+    {
+        $folder = Director::baseFolder() . '/silverstripe-cache';
+        if (!is_dir($folder)) {
+            $this->displayMessage("silverstripe-cache does not exist in base folder\n");
+            return;
+        }
+        FileHelper::rmDir($folder);
+        mkdir($folder, 0755);
+        $this->displayMessage("Cleared silverstripe-cache folder\n");
+    }
+
+    protected function clearEmptyFolders()
+    {
+        $folder = Director::publicFolder() . '/assets';
+        if (!is_dir($folder)) {
+            $this->displayMessage("assets folder does not exist in public folder\n");
+            return;
+        }
+
+        $objects = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($folder), RecursiveIteratorIterator::SELF_FIRST);
+        foreach ($objects as $name => $object) {
+            if ($object->isDir()) {
+                $path = $object->getPath();
+                if (!is_readable($path)) {
+                    $this->displayMessage("$path is not readable\n");
+                    continue;
+                }
+                if (!FileHelper::dirContainsChildren($path)) {
+                    rmdir($path);
+                    $this->displayMessage("Removed $path\n");
+                }
+            }
         }
     }
 
