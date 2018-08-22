@@ -146,4 +146,16 @@ abstract class BaseModelAdmin extends ModelAdmin
         $AdminURL = trim(AdminRootController::admin_url(), '/');
         return "/$AdminURL/$URLSegment/$sanitisedClass/EditForm/field/$sanitisedClass/item/$ID/edit";
     }
+
+    /**
+     * @param string $class
+     * @return string
+     */
+    public static function getBaseLink($class, $link = null)
+    {
+        $URLSegment = static::config()->url_segment;
+        $sanitisedClass = ClassHelper::sanitiseClassName($class);
+        $AdminURL = trim(AdminRootController::admin_url(), '/');
+        return self::join_links("/$AdminURL/$URLSegment/$sanitisedClass", $link);
+    }
 }

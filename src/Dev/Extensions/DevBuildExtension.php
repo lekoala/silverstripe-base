@@ -125,12 +125,14 @@ SQL;
         $clearCache = $this->owner->getRequest()->getVar('clearCache');
         $clearEmptyFolders = $this->owner->getRequest()->getVar('clearEmptyFolders');
 
+        $this->displayMessage("<div class='build'>");
         if ($clearCache) {
             $this->clearCache();
         }
         if ($clearEmptyFolders) {
             $this->clearEmptyFolders();
         }
+        $this->displayMessage("</div>");
 
         // Dev helpers - only accessible in dev mode
         $envIsAllowed = Director::isDev();
@@ -161,6 +163,7 @@ SQL;
 
     protected function clearCache()
     {
+        $this->displayMessage("<strong>Clearing cache folder</strong>");
         $folder = Director::baseFolder() . '/silverstripe-cache';
         if (!is_dir($folder)) {
             $this->displayMessage("silverstripe-cache does not exist in base folder\n");
@@ -173,6 +176,7 @@ SQL;
 
     protected function clearEmptyFolders()
     {
+        $this->displayMessage("<strong>Clearing empty folders in assets</strong>");
         $folder = Director::publicFolder() . '/assets';
         if (!is_dir($folder)) {
             $this->displayMessage("assets folder does not exist in public folder\n");
@@ -409,6 +413,6 @@ CODE;
      */
     protected function displayMessage($message)
     {
-        echo Director::is_cli() ? "\n" . $message . "\n\n" : "$message";
+        echo Director::is_cli() ? strip_tags($message) : nl2br($message);
     }
 }
