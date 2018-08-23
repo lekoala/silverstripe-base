@@ -6,6 +6,8 @@
 
 // Auto columns (apply on parent, have child div without adding extra classes)
 // @link https://css-tricks.com/snippets/css/a-guide-to-flexbox/
+// Flex basis is tricky in IE11
+// @link https://stackoverflow.com/questions/47163676/fixed-flex-basis-does-not-expand-with-content-in-ie11
 .grid-auto,
 .grid-2,
 .grid-3,
@@ -35,6 +37,7 @@
             flex-basis: 50%;
             flex-grow: 0;
             flex-shrink: 0;
+            max-width: 50%; // IE11
         }
     }
 }
@@ -45,6 +48,7 @@
             flex-basis: 33.33%;
             flex-grow: 0;
             flex-shrink: 0;
+            max-width: 33.33%; // IE11
         }
     }
 }
@@ -52,7 +56,10 @@
 .grid-4 {
     @include media-breakpoint-up(md) {
         >div {
-            width: 25%;
+            flex-basis: 25%;
+            flex-grow: 0;
+            flex-shrink: 0;
+            max-width: 25%; // IE11
         }
     }
 }
