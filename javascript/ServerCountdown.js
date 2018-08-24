@@ -31,6 +31,7 @@
                 onTick: null,
                 onComplete: null,
                 reloadOnComplete: false,
+                selectors: null,
                 labels: {
                     days: 'd',
                     hours: 'h',
@@ -52,6 +53,8 @@
                 var start = $this.data('start');
                 var end = $this.data('end');
                 var url = $this.data('url');
+
+                console.log("Timer started at " + start);
 
                 if (!start || !end) {
                     console.log("Must define data-start and data-end");
@@ -76,7 +79,11 @@
                         if (settings.onComplete) {
                             settings.onComplete.call();
                         }
-                        $this.text("00" + settings.labels.seconds);
+                        if (settings.selectors && settings.selectors.seconds) {
+                            $(settings.selectors.seconds).text('00');
+                        } else {
+                            $this.text("00" + settings.labels.seconds);
+                        }
                         if (settings.reloadOnComplete) {
                             window.location.reload();
                         } else if (url) {
@@ -90,16 +97,31 @@
                     data.minutes = Math.floor((data.diff % (1000 * 60 * 60)) / (1000 * 60));
                     data.seconds = Math.floor((data.diff % (1000 * 60)) / 1000);
 
-                    var parts = [];
-                    if (data.days) {
-                        parts.push(data.days + settings.labels.days);
-                    }
-                    parts.push(data.hours.toString().padStart(2, "0") + settings.labels.hours);
-                    parts.push(data.minutes.toString().padStart(2, "0") + settings.labels.minutes);
-                    parts.push(data.seconds.toString().padStart(2, "0") + settings.labels.seconds);
+                    if (settings.selectors) {
+                        if (settings.selectors.days) {
+                            $(settings.selectors.days).text(data.days);
+                        }
+                        if (settings.selectors.hours) {
+                            $(settings.selectors.hours).text(data.hours.toString().padStart(2, "0"));
+                        }
+                        if (settings.selectors.minutes) {
+                            $(settings.selectors.minutes).text(data.minutes.toString().padStart(2, "0"));
+                        }
+                        if (settings.selectors.seconds) {
+                            $(settings.selectors.seconds).text(data.seconds.toString().padStart(2, "0"));
+                        }
+                    } else {
+                        var parts = [];
+                        if (data.days) {
+                            parts.push(data.days + settings.labels.days);
+                        }
+                        parts.push(data.hours.toString().padStart(2, "0") + settings.labels.hours);
+                        parts.push(data.minutes.toString().padStart(2, "0") + settings.labels.minutes);
+                        parts.push(data.seconds.toString().padStart(2, "0") + settings.labels.seconds);
 
-                    data.msg = parts.join(' ');
-                    $this.text(data.msg);
+                        data.msg = parts.join(' ');
+                        $this.text(data.msg);
+                    }
 
                     if (settings.onTick) {
                         settings.onTick.call($this, data);
