@@ -4,13 +4,15 @@ namespace LeKoala\Base\Admin;
 use SilverStripe\i18n\i18n;
 use Psr\Log\LoggerInterface;
 use SilverStripe\Admin\CMSMenu;
+use SilverStripe\View\SSViewer;
 use SilverStripe\Control\Director;
 use SilverStripe\View\Requirements;
 use SilverStripe\SiteConfig\SiteConfig;
 use SilverStripe\Core\Injector\Injector;
+use LeKoala\Base\View\CommonRequirements;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Admin\LeftAndMainExtension;
-use LeKoala\Base\View\CommonRequirements;
+use SilverStripe\Core\Config\Config;
 
 /**
  * Class \LeKoala\Base\LeftAndMainExtension
@@ -46,6 +48,9 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
         if ($SiteConfig->ForceSSL) {
             Director::forceSSL();
         }
+
+        // Never have comments as it can break ajax requests
+        SSViewer::config()->set('source_file_comments', false);
 
         $this->removeMenuItems();
         $this->reorderMenuItems();

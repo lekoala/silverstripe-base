@@ -9,3 +9,5 @@ SilverStripe\Admin\LeftAndMain:
   extensions:
     - LeKoala\Base\Admin\BaseLeftAndMainExtension
     - LeKoala\Base\Blocks\BlocksLeftAndMainExtension
+SilverStripe\View\SSViewer:
+  source_file_comments: false
