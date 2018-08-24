@@ -107,9 +107,9 @@
 
                     data.diff -= settings.interval;
 
-                    // Check if needs polling (no within last 3 seconds)
+                    // Check if needs polling (no within last 2 seconds or above 5 minutes)
                     poll--;
-                    if (poll <= 0 && data.diff > 3000) {
+                    if (poll <= 0 && data.diff > 3000 && data.diff < (5 * 60 * 1000)) {
                         poll = settings.serverPoll;
 
                         $.getJSON(settings.serverSyncUrl, function (result) {
