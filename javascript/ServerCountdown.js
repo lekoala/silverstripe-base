@@ -54,7 +54,7 @@
                 var end = $this.data('end');
                 var url = $this.data('url');
 
-                console.log("Timer started at " + start);
+                // console.log("Timer started at " + start);
 
                 if (!start || !end) {
                     console.log("Must define data-start and data-end");
