@@ -23,7 +23,8 @@ trait HasSession
         try {
             $session = $request->getSession();
         } catch (Exception $ex) {
-            $session = new Session($_SESSION);
+            $data = isset($_SESSION) ? $_SESSION : [];
+            $session = new Session($data);
         }
         return $session;
     }
