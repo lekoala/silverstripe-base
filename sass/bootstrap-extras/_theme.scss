@@ -5,11 +5,13 @@
 // Vars
 $btn-focus-blur: $btn-focus-width*2;
 $btn-focus-width: $btn-focus-width/2;
+
 // Mixins
 @mixin css3-gradient-bg($color) {
     @if $enable-gradients {
         background: var(--#{$color}) linear-gradient(180deg, var(--#{$color}-highlight), var(--#{$color})) repeat-x;
     }
+
     @else {
         background-color: var(--#{$color});
     }
@@ -20,42 +22,52 @@ $btn-focus-width: $btn-focus-width/2;
     background-color: var(--#{$color});
     border-color: var(--#{$color});
     @include box-shadow($btn-box-shadow);
+
     &:hover {
         color: var(--#{$color}-highlight-contrast);
         background-color: var(--#{$color}-highlight);
         border-color: var(--#{$color}-highlight);
     }
+
     &:focus,
     &.focus {
         @if $enable-shadows {
             box-shadow: $btn-box-shadow,
             0 0 $btn-focus-blur $btn-focus-width var(--#{$color}-muted);
         }
+
         @else {
             box-shadow: 0 0 $btn-focus-blur $btn-focus-width var(--#{$color}-muted);
         }
     }
+
     &.disabled,
     &:disabled {
         color: var(--#{$color}-contrast);
         background-color: var(--#{$color});
         border-color: var(--#{$color});
     }
+
     &:not(:disabled):not(.disabled):active,
     &:not(:disabled):not(.disabled).active,
     .show>&.dropdown-toggle {
         color: var(--#{$color}-highlight-contrast);
         background-color: var(--#{$color}-highlight);
+
         @if $enable-gradients {
             background-image: none;
         }
+
         border-color: var(--#{$color}-highlight);
+
         &:focus {
+
             // Avoid using mixin so we can pass custom focus shadow properly
             @if $enable-shadows {
                 box-shadow: $btn-active-box-shadow,
                 0 0 $btn-focus-blur $btn-focus-width var(--#{$color}-muted);
             }
+
             @else {
                 box-shadow: 0 0 $btn-focus-blur $btn-focus-width var(--#{$color}-muted);
             }
@@ -68,32 +80,39 @@ $btn-focus-width: $btn-focus-width/2;
     background-color: transparent;
     background-image: none;
     border-color: var(--#{$color});
+
     &:hover {
         color: var(--#{$color}-contrast);
         background-color: var(--#{$color});
         border-color: var(--#{$color});
     }
+
     &:focus,
     &.focus {
         box-shadow: 0 0 $btn-focus-blur $btn-focus-width var(--#{$color}-muted);
     }
+
     &.disabled,
     &:disabled {
         color: var(--#{$color});
         background-color: transparent;
     }
+
     &:not(:disabled):not(.disabled):active,
     &:not(:disabled):not(.disabled).active,
     .show>&.dropdown-toggle {
         color: var(--#{$color}-highlight-contrast);
         background-color: var(--#{$color}-highlight);
         border-color: var(--#{$color}-highlight);
+
         &:focus {
+
             // Avoid using mixin so we can pass custom focus shadow properly
             @if $enable-shadows and $btn-active-box-shadow !=none {
                 box-shadow: $btn-active-box-shadow,
                 0 0 $btn-focus-blur $btn-focus-width var(--#{$color}-muted);
             }
+
             @else {
                 box-shadow: 0 0 $btn-focus-blur $btn-focus-width var(--#{$color}-muted);
             }
@@ -104,9 +123,11 @@ $btn-focus-width: $btn-focus-width/2;
 @mixin css3-form-control-focus($color) {
     &:focus {
         border-color: var(--#{$color});
+
         @if $enable-shadows {
             box-shadow: 0 0 $btn-focus-blur $btn-focus-width var(--#{$color}-muted);
         }
+
         @else {
             box-shadow: none;
         }
@@ -128,6 +149,7 @@ $btn-focus-width: $btn-focus-width/2;
 .bg-primary {
     background: var(--primary-color) !important;
     color: var(--primary-color-contrast);
+
     a,
     a:hover {
         color: var(--primary-color-contrast);
@@ -137,6 +159,7 @@ $btn-focus-width: $btn-focus-width/2;
 .bg-secondary {
     background: var(--secondary-color) !important;
     color: var(--secondary-color-contrast);
+
     a,
     a:hover {
         color: var(--secondary-color-contrast);
@@ -155,9 +178,11 @@ $btn-focus-width: $btn-focus-width/2;
 // Links
 a {
     color: var(--primary-color);
+
     @include hover {
         color: var(--primary-color-highlight);
     }
+
     &.active,
     &:active {
         color: $dropdown-link-active-color;
@@ -169,6 +194,7 @@ a {
     @include hover-focus {
         color: var(--primary-color-highlight);
     }
+
     &.active,
     &:active {
         color: var(--primary-color-contrast);
@@ -197,12 +223,15 @@ ul.checkboxset {
             border-color: var(--primary-color);
         }
     }
+
     input[type="checkbox"]:focus+label::before {
         border-color: var(--primary-color);
     }
+
     input[type="checkbox"]:disabled+label::before {
         border-color: var(--primary-color-muted);
     }
+
     input[type="checkbox"]:disabled+label::after {
         border-color: var(--primary-color-muted);
     }
@@ -215,12 +244,15 @@ ul.optionset:not(.checkboxset) {
             background: var(--primary-color);
         }
     }
+
     input[type="radio"]:focus+label::before {
         border-color: var(--primary-color);
     }
+
     input[type="radio"]:disabled+label::before {
         border-color: var(--primary-color-muted);
     }
+
     input[type="radio"]:disabled+label::after {
         border-color: var(--primary-color-muted);
     }
@@ -232,15 +264,19 @@ ul.optionset:not(.checkboxset) {
             background: var(--primary-color);
         }
     }
+
     input[type="checkbox"]:checked+label::before {
         background: var(--primary-color);
     }
+
     input[type="checkbox"]:focus+label::before {
         border-color: var(--primary-color);
     }
+
     input[type="checkbox"]:disabled+label::before {
         border-color: var(--primary-color-muted);
     }
+
     input[type="checkbox"]:disabled+label::after {
         border-color: var(--primary-color-muted);
     }
@@ -252,11 +288,14 @@ form {
         .action {
             @include css3-button-variant(primary-color);
         }
+
         a {
             color: var(--primary-color);
         }
     }
+
     .field {
+
         input,
         select,
         textarea {
@@ -272,21 +311,25 @@ form {
             background-color: var(--primary-color-highlight);
             color: var(--primary-color-contrast);
         }
+
         &--highlighted[aria-selected] {
             background-color: var(--primary-color);
             color: var(--primary-color-contrast);
         }
     }
+
     &.select2-container--focus,
     &.select2-container--open {
         .select2-selection {
             border-color: var(--primary-color);
         }
     }
+
     .select2-selection--multiple .select2-selection__choice {
         background-color: var(--primary-color);
         color: var(--primary-color-contrast);
         border: 0;
+
         .select2-selection__choice__remove {
             color: var(--primary-color-contrast);
         }
@@ -308,4 +351,76 @@ form {
 
 .btn-outline-secondary {
     @include css3-button-outline-variant(secondary-color);
+}
+
+// DataTables (for default styles)
+table.dataTable thead .sorting,
+table.dataTable thead .sorting_asc,
+table.dataTable thead .sorting_desc {
+    background: none;
+    position: relative;
+
+    &::before {
+        content: '';
+        position: absolute;
+        bottom: 20px;
+        right: 0;
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 0 4px 8px 4px;
+        border-color: transparent transparent #ccc transparent;
+    }
+
+    &::after {
+        content: '';
+        position: absolute;
+        bottom: 10px;
+        right: 0;
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 8px 4px 0 4px;
+        border-color: #ccc transparent  transparent transparent;
+    }
+}
+
+table.dataTable thead .sorting_asc::before {
+    border-color: transparent transparent var(--primary-color) transparent;
+}
+
+table.dataTable thead .sorting_desc::after {
+    border-color: var(--primary-color) transparent transparent transparent;
+}
+
+div.dataTables_wrapper {
+    .dataTables_paginate {
+        .paginate_button {
+            background: linear-gradient(to bottom, #fff 0%, #dcdcdc 100%);
+            border-color: #ccc;
+            color: #000 !important;
+
+            &:hover {
+                color: #000 !important;
+                border-color: var(--primary-color);
+                background: #dcdcdc;
+            }
+
+            &.disabled, &.disabled:hover, &.disabled:active {
+                color: #999 !important;
+                background: #eee;
+                border-color: #ccc;
+            }
+
+            &.current {
+                background: var(--primary-color) !important;
+                color: var(--primary-color-contrast) !important;
+                border-color: var(--primary-color);
+
+                &:hover {
+                    color: var(--primary-color-contrast) !important;
+                }
+            }
+        }
+    }
 }
