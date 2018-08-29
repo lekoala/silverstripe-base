@@ -62,6 +62,10 @@ body.cms {
     margin: 0;
 }
 
+.cms-menu .cms-subsites .dropdown span {
+    color:#000 !important;
+}
+
 .cms-subsites .field .chosen-container-single .chosen-single {
     border-radius: 0;
 }
