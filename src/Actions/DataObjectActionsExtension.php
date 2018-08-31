@@ -9,6 +9,7 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Admin\CMSProfileController;
 use SilverStripe\SiteConfig\SiteConfig;
 use SilverStripe\Control\Director;
+use LeKoala\Base\Helpers\SilverStripeIcons;
 
 /**
  * Class \LeKoala\Base\Actions\DataObjectActionsExtension
@@ -47,10 +48,25 @@ class DataObjectActionsExtension extends DataExtension
         }
         $saveAndClose = new FormAction('doSaveAndClose', $label);
         $saveAndClose->addExtraClass('btn-primary');
-        // Full reference here: vendor\silverstripe\admin\client\src\font\icons-reference.html
-        $saveAndClose->addExtraClass('font-icon-level-up');
+        $saveAndClose->addExtraClass('font-icon-' . SilverStripeIcons::ICON_LEVEL_UP);
         $saveAndClose->setUseButtonTag(true);
         $actions->push($saveAndClose);
+
+        // Next/prev
+        if ($this->owner->hasMethod('NextRecord') && $this->owner->NextRecord()) {
+            $doSaveAndNext = new FormAction('doSaveAndNext', 'Save and Next');
+            $doSaveAndNext->addExtraClass('btn-primary');
+            $doSaveAndNext->addExtraClass('font-icon-' . SilverStripeIcons::ICON_ANGLE_DOUBLE_RIGHT);
+            $doSaveAndNext->setUseButtonTag(true);
+            $actions->push($doSaveAndNext);
+        }
+        if ($this->owner->hasMethod('PrevRecord') && $this->owner->PrevRecord()) {
+            $doSaveAndPrev = new FormAction('doSaveAndPrev', 'Save and Previous');
+            $doSaveAndPrev->addExtraClass('btn-primary');
+            $doSaveAndPrev->addExtraClass('font-icon-' . SilverStripeIcons::ICON_ANGLE_DOUBLE_LEFT);
+            $doSaveAndPrev->setUseButtonTag(true);
+            $actions->push($doSaveAndPrev);
+        }
     }
 
     public function getCMSUtils()

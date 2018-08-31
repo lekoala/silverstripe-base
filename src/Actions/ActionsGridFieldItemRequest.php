@@ -29,6 +29,8 @@ class ActionsGridFieldItemRequest extends DataExtension
      */
     private static $allowed_actions = array(
         'doSaveAndClose',
+        'doSaveAndNext',
+        'doSaveAndPrev',
         'doCustomAction',
         'doCustomLink',
     );
@@ -39,7 +41,9 @@ class ActionsGridFieldItemRequest extends DataExtension
      */
     public function updateItemEditForm($form)
     {
-        $CMSActions = $this->owner->record->getCMSActions();
+        $itemRequest = $this->owner;
+        $record = $itemRequest->record;
+        $CMSActions = $record->getCMSActions();
         /* @var $actions FieldList */
         $actions = $form->Actions();
         foreach ($CMSActions as $action) {
@@ -181,6 +185,36 @@ class ActionsGridFieldItemRequest extends DataExtension
         $controller = $this->getToplevelController();
         $controller->getResponse()->addHeader("X-Pjax", "Content");
         return $controller->redirect($this->getBackLink());
+    }
+
+    public function doSaveAndNext($data, $form)
+    {
+        $record = $this->owner->record;
+        $result = $this->owner->doSave($data, $form);
+        // Redirect after save
+        $controller = $this->getToplevelController();
+        $controller->getResponse()->addHeader("X-Pjax", "Content");
+        $next = $record->NextRecord();
+        $link = $next ? $next->EditLink() : $this->getBackLink();
+        if ($next && !empty($data['_activetab'])) {
+            $link .= '#' . $data['_activetab'];
+        }
+        return $controller->redirect($link);
+    }
+
+    public function doSaveAndPrev($data, $form)
+    {
+        $record = $this->owner->record;
+        $result = $this->owner->doSave($data, $form);
+        // Redirect after save
+        $controller = $this->getToplevelController();
+        $controller->getResponse()->addHeader("X-Pjax", "Content");
+        $prev = $record->PrevRecord();
+        $link = $prev ? $prev->EditLink() : $this->getBackLink();
+        if ($prev && !empty($data['_activetab'])) {
+            $link .= '#' . $data['_activetab'];
+        }
+        return $controller->redirect($link);
     }
 
     /**

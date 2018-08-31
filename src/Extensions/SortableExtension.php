@@ -40,6 +40,7 @@ class SortableExtension extends DataExtension
         $max = (int)$class::get()->max('Sort');
         return $max + 1;
     }
+
     /**
      * @param DataList $list
      * @return DataObject
@@ -48,6 +49,7 @@ class SortableExtension extends DataExtension
     {
         return $list->where('Sort < ' . $this->owner->Sort)->sort('Sort DESC')->first();
     }
+
     /**
      * @param DataList $list
      * @return DataObject

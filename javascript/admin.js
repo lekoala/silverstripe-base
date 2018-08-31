@@ -2,9 +2,9 @@
  * Tweaks for the CMS
  * TODO: how to avoid attaching everything to document (use entwine?)
  */
-(function ($) {
+(function($) {
     // Allow select with a data map attribute to update other selects
-    $(document).on('change', 'select[data-map]', function (event) {
+    $(document).on('change', 'select[data-map]', function(event) {
         var el = $(this);
         var data = el.data('map');
         var target = el.data('target');
@@ -20,19 +20,19 @@
     });
 
     // Allow button that copy stuff to clipboard
-    $(document).on('click', 'button[data-clipboard]', function (event) {
+    $(document).on('click', 'button[data-clipboard]', function(event) {
         // Otherwise in a gridfield the row might be clicked
         event.stopPropagation();
         copyTextToClipboard($(this).data('value'));
     });
 
     // Confirmable stuff
-    $(document).on('click', 'button[data-confirm],a[data-confirm]', function (event) {
+    $(document).on('click', 'button[data-confirm],a[data-confirm]', function(event) {
         return confirm($(this).data('confirm'));
     });
 
     // Promptable stuff
-    $(document).on('click', 'button[data-prompt]', function (event) {
+    $(document).on('click', 'button[data-prompt]', function(event) {
         var result = prompt($(this).data('prompt'), $(this).data('promptDefault'));
         if (result) {
             $.cookie('prompt_result', result);
@@ -42,7 +42,7 @@
     });
 
     // Prevent submit with enter
-    $(document).on("keypress", ":input:not(textarea)", function (event) {
+    $(document).on("keypress", ":input:not(textarea)", function(event) {
         if (event.keyCode == 13) {
             event.preventDefault();
             // This is just lazy excel like tab
@@ -51,11 +51,11 @@
         return true;
     });
 
-    $.entwine('ss', function ($) {
+    $.entwine('ss', function($) {
         // Load tab if set in url
         var tabLoaded = false;
         $('ul.ui-tabs-nav a').entwine({
-            onmatch: function () {
+            onmatch: function() {
                 this._super();
 
                 if (tabLoaded) {
@@ -72,28 +72,40 @@
                         tabLoaded = true;
                     }
                 }
+            },
+            onclick: function() {
+                // Track active tab on submit
+                var input = $('#js-form-active-tab');
+                if (!input.length) {
+                    input = $('<input type="hidden" name="_activetab" id="js-form-active-tab" />');
+                    $('#Form_ItemEditForm').append(input);
+                }
+                var url = this.attr('href'),
+                    hash = url.split('#')[1];
+
+                input.val(hash);
             }
         });
         // Prevent navigation for no ajax
         $('.grid-field__icon-action.no-ajax').entwine({
-            onmatch: function () {},
-            onunmatch: function () {},
-            onclick: function (e) {
+            onmatch: function() {},
+            onunmatch: function() {},
+            onclick: function(e) {
                 e.stopPropagation();
             }
         });
         // Let input work properly in grids
         $('.ss-gridfield-items td select, .ss-gridfield-items td input').entwine({
-            onmatch: function () {},
-            onunmatch: function () {},
-            onclick: function (e) {
+            onmatch: function() {},
+            onunmatch: function() {},
+            onclick: function(e) {
                 // Prevent row click
                 e.stopPropagation();
             }
         });
         // Clickable icons
         $('.uploadfield-item__thumbnail').entwine({
-            onclick: function () {
+            onclick: function() {
                 var id = this.parent().find('input').val();
                 var uploadfield = this.parents('div.entwine-uploadfield').find('input.entwine-uploadfield');
                 var state = uploadfield.data('state');
