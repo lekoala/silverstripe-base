@@ -1,0 +1,13 @@
+---
+Name: base-bulk
+Only:
+  moduleexists:
+    - 'colymba/gridfield-bulk-editing-tools'
+---
+# Fix this issue https://github.com/colymba/GridFieldBulkEditingTools/issues/176
+SilverStripe\Admin\LeftAndMain:
+  extra_requirements_javascript:
+    - 'colymba/gridfield-bulk-editing-tools:client/dist/js/main.js'
+    - 'colymba/gridfield-bulk-editing-tools:client/lang/en.js'
+  extra_requirements_css:
+    - 'colymba/gridfield-bulk-editing-tools:client/dist/styles/main.css'
