@@ -353,7 +353,7 @@ form {
     @include css3-button-outline-variant(secondary-color);
 }
 
-// DataTables (for default styles)
+// DataTables (for bs4 styles)
 table.dataTable thead .sorting,
 table.dataTable thead .sorting_asc,
 table.dataTable thead .sorting_desc {
@@ -364,7 +364,7 @@ table.dataTable thead .sorting_desc {
         content: '';
         position: absolute;
         bottom: 20px;
-        right: 0;
+        right: 5px;
         width: 0;
         height: 0;
         border-style: solid;
@@ -376,12 +376,12 @@ table.dataTable thead .sorting_desc {
         content: '';
         position: absolute;
         bottom: 10px;
-        right: 0;
+        right: 5px;
         width: 0;
         height: 0;
         border-style: solid;
         border-width: 8px 4px 0 4px;
-        border-color: #ccc transparent  transparent transparent;
+        border-color: #ccc transparent transparent transparent;
     }
 }
 
@@ -396,23 +396,32 @@ table.dataTable thead .sorting_desc::after {
 div.dataTables_wrapper {
     .dataTables_paginate {
         .paginate_button {
-            background: linear-gradient(to bottom, #fff 0%, #dcdcdc 100%);
-            border-color: #ccc;
-            color: #000 !important;
-
-            &:hover {
+            a {
+                height: 41px;
+                line-height: 41px;
+                padding: 0 1em;
+                background: linear-gradient(to bottom, #fff 0%, #dcdcdc 100%);
+                border-color: #ccc;
                 color: #000 !important;
-                border-color: var(--primary-color);
-                background: #dcdcdc;
+
+                &:focus, &:active {
+                    outline: 0;
+                }
+
+                &:hover {
+                    color: #000 !important;
+                    border-color: var(--primary-color);
+                    background: #dcdcdc !important;
+                }
             }
 
-            &.disabled, &.disabled:hover, &.disabled:active {
+            &.disabled a, &.disabled a:hover, &.disabled a:active {
                 color: #999 !important;
                 background: #eee;
                 border-color: #ccc;
             }
 
-            &.current {
+            &.active a {
                 background: var(--primary-color) !important;
                 color: var(--primary-color-contrast) !important;
                 border-color: var(--primary-color);
