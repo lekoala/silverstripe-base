@@ -53,14 +53,14 @@ class DataObjectActionsExtension extends DataExtension
         $actions->push($saveAndClose);
 
         // Next/prev
-        if ($this->owner->hasMethod('NextRecord') && $this->owner->NextRecord()) {
+        if ($this->owner->ID && $this->owner->hasMethod('NextRecord') && $this->owner->NextRecord()) {
             $doSaveAndNext = new FormAction('doSaveAndNext', 'Save and Next');
             $doSaveAndNext->addExtraClass('btn-primary');
             $doSaveAndNext->addExtraClass('font-icon-' . SilverStripeIcons::ICON_ANGLE_DOUBLE_RIGHT);
             $doSaveAndNext->setUseButtonTag(true);
             $actions->push($doSaveAndNext);
         }
-        if ($this->owner->hasMethod('PrevRecord') && $this->owner->PrevRecord()) {
+        if ($this->owner->ID && $this->owner->hasMethod('PrevRecord') && $this->owner->PrevRecord()) {
             $doSaveAndPrev = new FormAction('doSaveAndPrev', 'Save and Previous');
             $doSaveAndPrev->addExtraClass('btn-primary');
             $doSaveAndPrev->addExtraClass('font-icon-' . SilverStripeIcons::ICON_ANGLE_DOUBLE_LEFT);
