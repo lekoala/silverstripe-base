@@ -11,6 +11,8 @@ use SilverStripe\View\Requirements;
  */
 class ColorField extends TextField
 {
+    use ConfigurableField;
+
     /**
      * Override locale. If empty will default to current locale
      *
@@ -45,8 +47,7 @@ class ColorField extends TextField
     public function __construct($name, $title = null, $value = '', $maxLength = null, $form = null)
     {
         parent::__construct($name, $title, $value, $maxLength, $form);
-
-        $this->config = self::config()->default_config;
+        $this->mergeDefaultConfig();
     }
 
     public function getInputType()
@@ -62,23 +63,6 @@ class ColorField extends TextField
         return 'spectrum';
     }
 
-    public function getConfig($key)
-    {
-        if (isset($this->config)) {
-            return $this->config[$key];
-        }
-    }
-
-    public function setConfig($key, $value)
-    {
-        if ($value) {
-            $this->config[$key] = $value;
-        } else {
-            unset($this->config[$key]);
-        }
-        return $this;
-    }
-
     public function getList()
     {
         return $this->getConfig('list');
@@ -88,7 +72,6 @@ class ColorField extends TextField
     {
         $this->setConfig('list', $values);
     }
-
 
     /**
      * Get locale to use for this field

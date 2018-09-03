@@ -9,12 +9,7 @@ use SilverStripe\View\Requirements;
  */
 class RangeField extends TextField
 {
-    /**
-     * Config array
-     *
-     * @var array
-     */
-    protected $config = [];
+    use ConfigurableField;
 
     /**
      * @config
@@ -33,7 +28,7 @@ class RangeField extends TextField
     public function __construct($name, $title = null, $value = '', $maxLength = null, $form = null)
     {
         parent::__construct($name, $title, $value, $maxLength, $form);
-        $this->config = self::config()->default_config;
+        $this->mergeDefaultConfig();
     }
 
     public function getInputType()
@@ -44,38 +39,6 @@ class RangeField extends TextField
     public function Type()
     {
         return 'range';
-    }
-
-
-    /**
-     * Get a config key value
-     *
-     * @see https://flatpickr.js.org/options/
-     * @param string $key
-     * @return string
-     */
-    public function getConfig($key)
-    {
-        if (isset($this->config[$key])) {
-            return $this->config[$key];
-        }
-    }
-
-    /**
-     * Set a config value
-     *
-     * @param string $key
-     * @param string $value
-     * @return string
-     */
-    public function setConfig($key, $value)
-    {
-        if ($value !== null) {
-            $this->config[$key] = $value;
-        } else {
-            unset($this->config[$key]);
-        }
-        return $this;
     }
 
     public function Field($properties = array())
