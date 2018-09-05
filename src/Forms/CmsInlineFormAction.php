@@ -51,6 +51,10 @@ class CmsInlineFormAction extends LiteralField
     {
         return $this->castedCopy(self::class);
     }
+
+    /**
+     * @return string
+     */
     public function getUrl()
     {
         if (!$this->url) {
@@ -59,9 +63,38 @@ class CmsInlineFormAction extends LiteralField
         return $this->url;
     }
 
+    /**
+     * @param string $url
+     * @return void
+     */
     public function setUrl($url)
     {
         $this->url = $url;
+    }
+
+
+    /**
+     * Get an icon for this button
+     *
+     * @return string
+     */
+    public function getButtonIcon()
+    {
+        return $this->buttonIcon;
+    }
+
+    /**
+     * Set an icon for this button
+     *
+     * Feel free to use SilverStripeIcons constants
+     *
+     * @param string $buttonIcon An icon for this button
+     * @return $this
+     */
+    public function setButtonIcon(string $buttonIcon)
+    {
+        $this->buttonIcon = $buttonIcon;
+        return $this;
     }
 
     public function FieldHolder($properties = array())
@@ -72,7 +105,11 @@ class CmsInlineFormAction extends LiteralField
             $attrs .= ' target="_blank"';
         }
         $content = '<a href="' . $link . '" class="btn ' . $this->extraClass() . ' action inline-action no-ajax"' . $attrs . '>';
-        $content .= $this->content;
+        $title = $this->content;
+        if ($this->buttonIcon) {
+            $title = '<span class="font-icon-' . $this->buttonIcon . '"></span> ' . $title;
+        }
+        $content .= $title;
         $content .= '</a>';
         $this->content = $content;
 
