@@ -1,11 +1,9 @@
 /* Prevent double scroll in 4.2 */
-
 body.cms {
     overflow: hidden;
 }
 
 /* HTMLEditor should be full width ! */
-
 .cms-edit-form .form-group.htmleditor.stacked .form__field-holder {
     -webkit-box-flex: 0;
     -webkit-flex: 0 0 100%;
@@ -14,7 +12,6 @@ body.cms {
 }
 
 /* Warning is too big */
-
 .btn-toolbar .btn.actions-warning {
     display: none;
     position: absolute;
@@ -29,7 +26,6 @@ body.cms {
 }
 
 /* Somehow checkboxes are misaligned */
-
 @media (min-width: 992px) {
     .cms-edit-form .form-group.checkbox>.form__field-holder {
         padding-left: 42px;
@@ -37,7 +33,6 @@ body.cms {
 }
 
 /* Cosmetic changes */
-
 .cms-sitename a {
     color: #fff;
     display: block;
@@ -51,9 +46,7 @@ body.cms {
 }
 
 /* More compact dropdown + visible if collapsed */
-
 /* Maybe not necessary some day https://github.com/silverstripe/silverstripe-subsites/issues/380#issuecomment-409434462 */
-
 .cms .cms-menu .cms-subsites {
     padding: 0;
 }
@@ -63,7 +56,7 @@ body.cms {
 }
 
 .cms-menu .cms-subsites .dropdown span {
-    color:#000 !important;
+    color: #000 !important;
 }
 
 .cms-subsites .field .chosen-container-single .chosen-single {
@@ -94,7 +87,6 @@ body.cms {
 }
 
 /* Icons in menu */
-
 .menu__icon.fa {
     font-size: 17px !important
 }
@@ -116,6 +108,7 @@ body.cms {
         /* box width 60px, icon width = 22px 60-22/2 = 19 */
         left: 19px;
     }
+
     .collapsed .menu__icon.icon-16 {
         /* box width 60px, icon width = 16px 60-16/2 = 22 */
         left: 22px;
@@ -123,7 +116,6 @@ body.cms {
 }
 
 /* Row classes */
-
 .cms table.ss-gridfield-table tr.green.odd {
     background-color: #daf2da;
 }
@@ -157,7 +149,6 @@ body.cms {
 }
 
 /* Image gallery */
-
 .grid-field.gridfield-gallery thead .col-LargeAssetThumbnail {
     display: none;
 }
@@ -212,7 +203,6 @@ body.cms {
 }
 
 /* Actions */
-
 #Form_ItemEditForm_action_doDelete {
     position: absolute;
     right: 1.5385rem;
@@ -220,6 +210,12 @@ body.cms {
 
 .cms-content-header-utils {
     padding-right: 1.5385rem;
+}
+
+#action_doSaveAndNext:before, .btn-icon-end:before {
+    float: right;
+    margin-right:0;
+    margin-left:6px;
 }
 
 .btn-toolbar .bb-align {
@@ -239,35 +235,29 @@ table .btn-link {
 }
 
 /* UI fixes */
-
 /* Looks broken otherwise */
-
 .cms .grid-field .add-existing-autocompleter button.action_gridfield_relationadd span {
     float: none;
 }
 
 /* select height can be weirdly inconsistent
    size=1 select have no height, some select have a bigger height, chosen has 36px .. */
-
 .cms .field select,
 .field .chosen-container-single .chosen-single {
     height: 35px;
 }
 
 /* the margin top prevents label alignment and looks strange */
-
 .form__fieldgroup>.form__fieldgroup-item {
     margin-top: 0;
 }
 
 /* grid field without a footer have no margin bottom */
-
 fieldset.grid-field {
     margin-bottom: 1.2308rem;
 }
 
 /* pagination looks awful in thead */
-
 .grid-field thead .grid-field__title-row th {
     position: relative;
 }
@@ -279,25 +269,21 @@ fieldset.grid-field {
 }
 
 /* large table can extend the screen width */
-
 .cms .grid-field__table tr th.main>span {
     white-space: normal;
 }
 
 /* inputs and select in a grid field */
-
 .cms .ss-gridfield-editable select.dropdown {
     height: auto;
 }
 
 /* upload field clickable icons */
-
 .uploadfield-item__thumbnail {
     cursor: pointer !important;
 }
 
 /* select 2 */
-
 .cms .select2-container--default .select2-selection {
     color: #43536d;
     border: 1px solid #c1cad9;
@@ -330,7 +316,6 @@ select[readonly].select2+.select2-container .select2-selection__clear {
 }
 
 /* ag grid */
-
 .ag-cell-edit-input {
     height: 100% !important;
     border: 0 !important;
@@ -343,7 +328,6 @@ select.ag-cell-edit-input {
 }
 
 /* bulk checkboxes are misaligned and ui is ugly */
-
 .col-bulkSelect,
 .bulkManagerOptions th:last-child {
     position: relative;
