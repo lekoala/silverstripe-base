@@ -357,7 +357,7 @@ form {
 table.dataTable thead .sorting,
 table.dataTable thead .sorting_asc,
 table.dataTable thead .sorting_desc {
-    background: none;
+    background-image: none;
     position: relative;
 
     &::before {
