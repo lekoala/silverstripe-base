@@ -37,6 +37,11 @@ class CmsInlineFormAction extends LiteralField
     protected $newWindow = false;
 
     /**
+     * @var string
+     */
+    protected $buttonIcon = null;
+
+    /**
      * Create a new action button.
      * @param action The method to call when the button is clicked
      * @param title The label on the button
