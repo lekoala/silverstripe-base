@@ -1,14 +1,12 @@
-<div $AttributesHTML>
+<ul $AttributesHTML>
 	<% if $Options.Count %>
 		<% loop $Options %>
-			<div class="checkbox form-check $Class $Up.extraItemClass">
-				<label class="form-check-label">
-					<input id="$ID" class="checkbox form-check-input" name="$Name" type="checkbox" value="$Value"<% if $isChecked %> checked="checked"<% end_if %><% if $isDisabled %> disabled="disabled"<% end_if %> />
-					$Title
-				</label>
-			</div>
+			<li class="$Class $Up.extraItemClass">
+				<input id="$ID" class="checkbox" name="$Name" type="checkbox" value="$Value.ATT"<% if $isChecked %> checked="checked"<% end_if %><% if $isDisabled %> disabled="disabled"<% end_if %> />
+				<label for="$ID">$Title</label>
+			</li>
 		<% end_loop %>
 	<% else %>
-		<p>No options available</p>
+		<li>No options available</li>
 	<% end_if %>
-</div>
+</ul>

@@ -2,6 +2,9 @@
 namespace LeKoala\Base\Forms;
 
 use SilverStripe\Forms\CheckboxSetField;
+use SilverStripe\Control\Controller;
+use SilverStripe\Admin\LeftAndMain;
+use SilverStripe\ORM\DataObject;
 
 /**
  * Allows setting a custom class on child elements
@@ -17,7 +20,22 @@ class BetterCheckboxSetField extends CheckboxSetField
 {
     const LEGACY_SEPARATOR = ',';
 
+    /**
+     * @var array
+     */
     protected $extraItemClass = [];
+
+    public function __construct($name, $title = null, $source = array(), $value = null)
+    {
+        parent::__construct($name, $title, $source, $value);
+
+        $isCMS = Controller::curr() instanceof LeftAndMain;
+        if ($isCMS) {
+            $this->template = 'LeKoala\\Base\\Forms\\CMSBetterCheckboxSetField';
+        } else {
+            $this->template = 'LeKoala\\Base\\Forms\\BetterCheckboxSetField';
+        }
+    }
 
     public function Type()
     {
@@ -58,6 +76,15 @@ class BetterCheckboxSetField extends CheckboxSetField
         }
 
         return $this;
+    }
+
+    public function setValue($value, $obj = null)
+    {
+        // We have an array for instance, we still need proper decoding
+        if ($obj && !$obj instanceof DataObject) {
+            $value = $this->stringDecode($value);
+        }
+        return parent::setValue($value, $obj);
     }
 
     /**
