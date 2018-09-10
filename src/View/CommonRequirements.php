@@ -63,7 +63,7 @@ class CommonRequirements
      * @config
      * @var string
      */
-    private static $cleave_version = '1.4.3';
+    private static $cleave_version = '1.4.4';
 
     /**
      * Include all files in a given path
