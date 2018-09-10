@@ -99,6 +99,10 @@ class BetterCheckboxSetField extends CheckboxSetField
         if (empty($value)) {
             return array();
         }
+        // Already converted
+        if (is_array($value)) {
+            return $value;
+        }
 
         // We have a json encoded array
         if (strpos($value, '[') === 0) {
