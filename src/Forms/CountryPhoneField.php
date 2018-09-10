@@ -82,6 +82,9 @@ class CountryPhoneField extends FieldGroup
         if (!$phoneValue) {
             return '';
         }
+        if (!$countryValue && strpos($phoneValue, '+') !== 0) {
+            return $phoneValue;
+        }
 
         $util = $this->getPhoneNumberUtil();
         $number = $util->parse($phoneValue, $countryValue);
