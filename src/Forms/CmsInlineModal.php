@@ -30,6 +30,11 @@ class CmsInlineModal extends LiteralField
      */
     protected $iframe;
 
+    /**
+     * @var bool
+     */
+    protected $iframeTop;
+
     public function __construct($name, $title, $content)
     {
         parent::__construct($name, $content);
@@ -55,9 +60,13 @@ class CmsInlineModal extends LiteralField
         $content .= '<div class="pure-modal-wrap">';
         // Close icon
         $content .= '<label for="' . $modalID . '" class="close">&#10006;</label>';
+        // Iframe if set
+        if ($this->iframe && $this->iframeTop) {
+            $content .= '<iframe src="' . $this->iframe . '" width="100%%" style="max-height:400px" frameBorder="0" scrolling="auto" onload="resizeIframe(this);"></iframe>';
+        }
         $content .= $this->content;
         // Iframe if set
-        if ($this->iframe) {
+        if ($this->iframe && !$this->iframeTop) {
             $content .= '<iframe src="' . $this->iframe . '" width="100%%" style="max-height:400px" frameBorder="0" scrolling="auto" onload="resizeIframe(this);"></iframe>';
         }
         $content .= '</div>';
@@ -119,5 +128,26 @@ class CmsInlineModal extends LiteralField
     public function setIframeAction($action)
     {
         return $this->setIframe($this->getControllerLink($action));
+    }
+
+    /**
+     * Get the value of iframeTop
+     * @return bool
+     */
+    public function getIframeTop()
+    {
+        return $this->iframeTop;
+    }
+
+    /**
+     * Set the value of iframeTop
+     *
+     * @param bool $iframeTop
+     * @return $this
+     */
+    public function setIframeTop($iframeTop)
+    {
+        $this->iframeTop = $iframeTop;
+        return $this;
     }
 }
