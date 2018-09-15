@@ -21,9 +21,9 @@ class EnvironmentChecker
         $this->controller = $controller;
 
         // Properly protect in test mode
-        if (Director::isTest()) {
-            BasicAuth::protect();
-        }
+        // if (Director::isTest()) {
+        //     BasicAuth::protect();
+        // }
 
         $this->warnIfWrongCacheIsUsed();
 
