@@ -48,10 +48,11 @@ class BaseUpload extends Upload
 
         // Save changes to underlying record (if it's a DataObject)
         $this->storeTempFile($tmpFile, $filename, $this->file);
-        if ($this->file instanceof DataObject) {
-            $this->file->IsTemporary = true;
-            $this->file->write();
-        }
+
+        // if ($this->file instanceof DataObject) {
+        //     $this->file->IsTemporary = true;
+        //     $this->file->write();
+        // }
 
         //to allow extensions to e.g. create a version after an upload
         $this->file->extend('onAfterUpload');

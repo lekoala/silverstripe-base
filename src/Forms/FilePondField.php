@@ -360,6 +360,9 @@ class FilePondField extends BaseFileUploadField
         /** @var File $file */
         $file = $this->saveTemporaryFile($tmpFile, $error);
 
+        $file->IsTemporary = true;
+        $file->write();
+
         // Prepare result
         if ($error) {
             $this->getUpload()->clearErrors();
