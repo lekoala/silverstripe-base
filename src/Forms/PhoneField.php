@@ -4,6 +4,7 @@ namespace LeKoala\Base\Forms;
 use SilverStripe\Forms\TextField;
 use libphonenumber\PhoneNumberUtil;
 use libphonenumber\PhoneNumberFormat;
+use libphonenumber\NumberParseException;
 
 /**
  * A simple phone field
@@ -30,8 +31,14 @@ class PhoneField extends TextField
         // without knowing the country
         if (strpos($value, '+') === 0) {
             $util = $this->getPhoneNumberUtil();
-            $number = $util->parse($value);
-            $value = $util->format($number, PhoneNumberFormat::INTERNATIONAL);
+            try {
+                $number = $util->parse($value);
+                $newValue = $util->format($number, PhoneNumberFormat::INTERNATIONAL);
+            } catch (NumberParseException $ex) {
+                $newValue = $value;
+            }
+            $value = $newValue;
+
         }
         return parent::setValue($value, $data);
     }
@@ -46,8 +53,13 @@ class PhoneField extends TextField
         $value = $this->Value();
         if (strpos($value, '+') === 0) {
             $util = $this->getPhoneNumberUtil();
-            $number = $util->parse($value);
-            return $util->format($number, PhoneNumberFormat::E164);
+            try {
+                $number = $util->parse($value);
+                $formatted = $util->format($number, PhoneNumberFormat::E164);
+            } catch (NumberParseException $ex) {
+                $formatted = $value;
+            }
+            return $formatted;
         }
         return $value;
     }
