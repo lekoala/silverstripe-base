@@ -38,7 +38,6 @@ class PhoneField extends TextField
                 $newValue = $value;
             }
             $value = $newValue;
-
         }
         return parent::setValue($value, $data);
     }
