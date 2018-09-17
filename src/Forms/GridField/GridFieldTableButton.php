@@ -54,6 +54,11 @@ abstract class GridFieldTableButton implements GridField_HTMLProvider, GridField
     protected $promptDefault;
 
     /**
+     * @var array
+     */
+    protected $attributes = [];
+
+    /**
      * @param string $targetFragment The HTML fragment to write the button into
      * @param string $buttonLabel
      */
@@ -105,10 +110,36 @@ abstract class GridFieldTableButton implements GridField_HTMLProvider, GridField
                 $button->setAttribute('data-prompt-default', $promptDefault);
             }
         }
+        foreach ($this->attributes as $attributeName => $attributeValue) {
+            $button->setAttribute($attributeName, $attributeValue);
+        }
         $button->setForm($gridField->getForm());
         return array(
             $this->targetFragment => $button->Field()
         );
+    }
+
+    /**
+     * @param string $name
+     * @param string $value
+     * @return $this
+     */
+    public function setAttribute($name, $value)
+    {
+        $this->attributes[$name] = $value;
+        return $this;
+    }
+
+    /**
+     * @param string $name
+     * @return string
+     */
+    public function getAttribute($name)
+    {
+        if (isset($this->attributes[$name])) {
+            return $this->attributes[$name];
+        }
+        return null;
     }
 
     public function getActions($gridField)
