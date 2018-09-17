@@ -45,7 +45,7 @@ trait BaseLeftAndMainSubsite
 
         $currentSubsiteID = SubsiteHelper::currentSubsiteID();
 
-        Requirements::javascript('silverstripe/subsites:javascript/LeftAndMain_Subsites.js');
+        Requirements::javascript('base/javascript/LeftAndMain_Subsites.js');
 
         $output = ArrayList::create();
 
