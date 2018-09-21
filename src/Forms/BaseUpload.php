@@ -71,10 +71,11 @@ class BaseUpload extends Upload
      *
      * @param string $filename
      * @param string $pattern
-     * @return string
+     * @return string The filename
      */
     protected function changeFilenameWithPattern($filename, $pattern)
     {
+        $folder = dirname($filename);
         $name = pathinfo($filename, PATHINFO_BASENAME);
         $basename = pathinfo($filename, PATHINFO_FILENAME);
         $extension = pathinfo($filename, PATHINFO_EXTENSION);
@@ -93,6 +94,10 @@ class BaseUpload extends Upload
         // Ensure end result is valid
         $filter = new FileNameFilter;
         $filename = $filter->filter($filename);
+
+        if ($folder) {
+            $filename = $folder . '/' . $filename;
+        }
 
         return $filename;
     }
