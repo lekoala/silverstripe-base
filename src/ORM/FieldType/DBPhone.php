@@ -1,14 +1,15 @@
 <?php
 namespace LeKoala\Base\ORM\FieldType;
 
+use libphonenumber\PhoneNumber;
 use LeKoala\Base\Forms\PhoneField;
 use libphonenumber\PhoneNumberUtil;
+use libphonenumber\PhoneNumberFormat;
+use libphonenumber\NumberParseException;
 use LeKoala\Base\Forms\CountryPhoneField;
 use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\ORM\FieldType\DBVarchar;
 use Prophecy\Exception\InvalidArgumentException;
-use libphonenumber\PhoneNumberFormat;
-use libphonenumber\PhoneNumber;
 
 /**
  * Phone field type
@@ -60,13 +61,13 @@ class DBPhone extends DBVarchar
     }
 
     /**
-    * If the number is passed in an international format (e.g. +44 117 496 0123), then the region code is not needed, and can be null.
-    * Failing that, the library will use the region code to work out the phone number based on rules loaded for that region.
-    *
-    * @param mixed $value
-    * @param string $country
-    * @return string|null|false Formatted number, null if empty but valid, or false if invalid
-    */
+     * If the number is passed in an international format (e.g. +44 117 496 0123), then the region code is not needed, and can be null.
+     * Failing that, the library will use the region code to work out the phone number based on rules loaded for that region.
+     *
+     * @param mixed $value
+     * @param string $country
+     * @return string|null|false Formatted number, null if empty but valid, or false if invalid
+     */
     protected function parseNumber($value, $country = null)
     {
         // Skip empty values
@@ -85,8 +86,12 @@ class DBPhone extends DBVarchar
             $country = strtoupper($country);
         }
         $phoneUtil = $this->getPhoneNumberUtil();
-        $number = $phoneUtil->parse($value, $country);
-        $formattedValue = $phoneUtil->format($number, PhoneNumberFormat::E164);
+        try {
+            $number = $phoneUtil->parse($value, $country);
+            $formattedValue = $phoneUtil->format($number, PhoneNumberFormat::E164);
+        } catch (NumberParseException $ex) {
+            $formattedValue = $value;
+        }
         return $formattedValue;
     }
 
@@ -106,9 +111,9 @@ class DBPhone extends DBVarchar
     }
 
     /**
-    *
-    * @return string The number in request format
-    */
+     *
+     * @return string The number in request format
+     */
     public function Format($format = null)
     {
         if (!$this->value) {
@@ -184,11 +189,11 @@ class DBPhone extends DBVarchar
     }
 
     /**
-      * @param string $value
-      * @param string $country
-      * @param string $format
-      * @return bool
-      */
+     * @param string $value
+     * @param string $country
+     * @param string $format
+     * @return bool
+     */
     public static function validatePhoneNumber($value, $country = null)
     {
         $phoneUtil = $this->getPhoneNumberUtil();
