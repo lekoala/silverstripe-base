@@ -86,7 +86,7 @@ final class Block extends DataObject
         'Image', 'Images', 'Files'
     ];
     private static $owns = [
-        'Image'
+        'Image', "Images", "Files",
     ];
     private static $summary_fields = [
         'BlockType' => 'Block Type',
