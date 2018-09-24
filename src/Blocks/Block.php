@@ -30,17 +30,19 @@ use SilverStripe\Forms\TabSet;
 use SilverStripe\Forms\Tab;
 use SilverStripe\Forms\TextField;
 use SilverStripe\View\Parsers\URLSegmentFilter;
+use SilverStripe\Control\Controller;
+use SilverStripe\Admin\LeftAndMain;
 
 /**
  * The block dataobject is used to actually store the data
  *
+ * @property int $Sort
  * @property string $Type
  * @property string $MenuTitle
  * @property string $HTMLID
  * @property string $Content
  * @property string $BlockData
  * @property string $Settings
- * @property int $Sort
  * @property int $ImageID
  * @property int $PageID
  * @method \SilverStripe\Assets\Image Image()
@@ -53,10 +55,19 @@ use SilverStripe\View\Parsers\URLSegmentFilter;
  */
 final class Block extends DataObject
 {
+    // constants
     const ITEMS_KEY = 'Items';
     const DATA_KEY = 'BlockData';
     const SETTINGS_KEY = 'Settings';
-    private static $table_name = 'Block'; // When using namespace, specify table name
+
+    // When using namespace, specify table name
+    private static $table_name = 'Block';
+
+    /**
+     * Data field is reserved
+     *
+     * @var array
+     */
     public static $rename_columns = [
         'Data' => 'BlockData'
     ];
@@ -65,7 +76,7 @@ final class Block extends DataObject
         'MenuTitle' => 'Varchar(191)',
         'HTMLID' => 'Varchar(59)',
         'Content' => 'HTMLText',
-        // Localized data (do not use Data field)
+        // Localized data
         'BlockData' => DBJson::class,
         // Unlocalized data
         'Settings' => DBJson::class,
@@ -98,6 +109,13 @@ final class Block extends DataObject
     private static $defaults = [
         'Type' => ContentBlock::class,
     ];
+    /**
+     * Should we update the page after block update
+     * Turn this off when updating all blocks of a page
+     * otherwise it's really slow
+     *
+     * @var boolean
+     */
     public static $auto_update_page = true;
     public function forTemplate()
     {
@@ -246,6 +264,8 @@ final class Block extends DataObject
         return $list;
     }
     /**
+     * Make sure the image is published for the block
+     *
      * @param int $ID
      * @return Image
      */
@@ -261,6 +281,18 @@ final class Block extends DataObject
     public function onBeforeWrite()
     {
         parent::onBeforeWrite();
+
+        $ctrl = Controller::curr();
+        // Somehow SilverStripe doesn't save the data anymore if sent as array
+        if ($ctrl instanceof LeftAndMain && $this->canEdit()) {
+            if (isset($_POST['BlockData'])) {
+                $this->BlockData = $_POST['BlockData'];
+            }
+            if (isset($_POST['Settings'])) {
+                $this->Settings = $_POST['Settings'];
+            }
+        }
+
         if (!$this->HTMLID && $this->MenuTitle) {
             $filter = new URLSegmentFilter;
             $this->HTMLID = $filter->filter($this->MenuTitle);
@@ -380,10 +412,7 @@ final class Block extends DataObject
      */
     public function DataArray()
     {
-        if ($this->BlockData) {
-            return json_decode($this->BlockData, JSON_OBJECT_AS_ARRAY);
-        }
-        return [];
+        return $this->dbObject('BlockData')->decodeArray();
     }
     /**
      * Consistently returns an array regardless of what is in Settings
@@ -392,10 +421,7 @@ final class Block extends DataObject
      */
     public function SettingsArray()
     {
-        if ($this->Settings) {
-            return json_decode($this->Settings, JSON_OBJECT_AS_ARRAY);
-        }
-        return [];
+        return $this->dbObject('Settings')->decodeArray();
     }
     /**
      * When looping in template, wrap the blocks content is wrapped in a
@@ -465,14 +491,14 @@ final class Block extends DataObject
         if (Director::isDev() && isset($_GET['debug'])) {
             $json = '';
             if ($this->AuditData) {
-                $json = json_encode(json_decode($this->AuditData), JSON_PRETTY_PRINT);
+                $json = $this->dbObject('AuditData')->pretty();
                 $debugData = new LiteralField('JsonData', '<pre>Data: <code>' . $json . '</code></pre>');
             } else {
                 $debugData = new LiteralField('JsonData', '<div class="message info">Does not contain any data</div>');
             }
             $fields->addFieldsToTab('Root.Debug', $debugData);
             if ($this->Settings) {
-                $json = json_encode(json_decode($this->Settings), JSON_PRETTY_PRINT);
+                $json = $this->dbObject('Settings')->pretty();
                 $debugSettings = new LiteralField('JsonSettings', '<pre>Settings: <code>' . $json . '</code></pre>');
             } else {
                 $debugSettings = new LiteralField('JsonSettings', '<div class="message info">Does not contain any settings</div>');

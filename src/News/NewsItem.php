@@ -19,12 +19,12 @@ use LeKoala\Base\VideoEmbed\VideoEmbed;
 /**
  * Class \LeKoala\Base\News\NewsItem
  *
+ * @property string $EmbedURL
+ * @property string $URLSegment
  * @property string $Title
  * @property string $Content
  * @property string $Published
  * @property int $ViewCount
- * @property string $URLSegment
- * @property string $EmbedURL
  * @property int $ImageID
  * @property int $FileID
  * @property int $PageID
@@ -33,8 +33,8 @@ use LeKoala\Base\VideoEmbed\VideoEmbed;
  * @method \SilverStripe\Assets\File File()
  * @method \LeKoala\Base\News\NewsPage Page()
  * @method \LeKoala\Base\News\NewsCategory Category()
- * @method \SilverStripe\ORM\ManyManyList|\SilverStripe\Assets\Image[] Images()
  * @method \SilverStripe\ORM\ManyManyList|\LeKoala\Base\Tags\Tag[] Tags()
+ * @method \SilverStripe\ORM\ManyManyList|\SilverStripe\Assets\Image[] Images()
  * @mixin \LeKoala\Base\Extensions\URLSegmentExtension
  * @mixin \LeKoala\Base\Extensions\SmartDataObjectExtension
  * @mixin \LeKoala\Base\Tags\TaggableExtension

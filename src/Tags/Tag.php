@@ -6,8 +6,8 @@ use SilverStripe\ORM\DataObject;
 /**
  * Class \LeKoala\Base\Tags\Tag
  *
- * @property string $Title
  * @property string $URLSegment
+ * @property string $Title
  * @mixin \LeKoala\Base\Extensions\URLSegmentExtension
  */
 class Tag extends DataObject

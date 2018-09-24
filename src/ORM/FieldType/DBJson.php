@@ -26,8 +26,8 @@ class DBJson extends DBString
 
         $parts = [
             'datatype' => 'mediumtext',
-            'character set'=> $charset,
-            'collate'=> $collation,
+            'character set' => $charset,
+            'collate' => $collation,
             'arrayValue' => $this->arrayValue
         ];
 
@@ -80,6 +80,14 @@ class DBJson extends DBString
     }
 
     /**
+     * @return array
+     */
+    public function toArray()
+    {
+        return $this->decodeArray();
+    }
+
+    /**
      * @return string
      */
     public function pretty()
@@ -95,6 +103,14 @@ class DBJson extends DBString
         parent::saveInto($dataObject);
     }
 
+    /**
+     * Internally, the value is always a json string
+     *
+     * @param mixed $value
+     * @param DataObject $record
+     * @param boolean $markChanged
+     * @return $this
+     */
     public function setValue($value, $record = null, $markChanged = true)
     {
         if (is_array($value)) {
