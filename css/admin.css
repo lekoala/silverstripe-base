@@ -116,35 +116,35 @@ body.cms {
 }
 
 /* Row classes */
-.cms table.ss-gridfield-table tr.green.odd {
+.cms table.grid-field__table tr.green.odd {
     background-color: #daf2da;
 }
 
-.cms table.ss-gridfield-table tr.green.even {
+.cms table.grid-field__table tr.green.even {
     background-color: #c2f2c1;
 }
 
-.cms table.ss-gridfield-table tr.blue.odd {
+.cms table.grid-field__table tr.blue.odd {
     background-color: #d9edf7;
 }
 
-.cms table.ss-gridfield-table tr.blue.even {
+.cms table.grid-field__table tr.blue.even {
     background-color: #bce8f1;
 }
 
-.cms table.ss-gridfield-table tr.amber.odd {
+.cms table.grid-field__table tr.amber.odd {
     background-color: #faebcc;
 }
 
-.cms table.ss-gridfield-table tr.amber.even {
+.cms table.grid-field__table tr.amber.even {
     background-color: #fcf8e3;
 }
 
-.cms table.ss-gridfield-table tr.red.odd {
+.cms table.grid-field__table tr.red.odd {
     background-color: #f2dede;
 }
 
-.cms table.ss-gridfield-table tr.red.even {
+.cms table.grid-field__table tr.red.even {
     background-color: #ebccd1;
 }
 
