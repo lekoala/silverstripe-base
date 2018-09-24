@@ -20,6 +20,8 @@ use LeKoala\Base\Security\MemberAudit;
  *
  * @link https://docs.silverstripe.org/en/4/developer_guides/extending/how_tos/track_member_logins/
  * @property \SilverStripe\Security\Member|\LeKoala\Base\Security\BaseMemberExtension $owner
+ * @property string $LastVisited
+ * @property int $NumVisit
  */
 class BaseMemberExtension extends DataExtension
 {

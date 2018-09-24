@@ -360,13 +360,15 @@ class FilePondField extends BaseFileUploadField
         /** @var File $file */
         $file = $this->saveTemporaryFile($tmpFile, $error);
 
-        $file->IsTemporary = true;
-        $file->write();
-
         // Prepare result
         if ($error) {
             $this->getUpload()->clearErrors();
             return $this->httpError(400, json_encode($error));
+        }
+
+        if ($file instanceof DataObject && $file->hasExtension(BaseFileExtension::class)) {
+            $file->IsTemporary = true;
+            $file->write();
         }
 
         // Because the file is not linked to anything, it's public by default

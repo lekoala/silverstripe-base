@@ -20,7 +20,7 @@ use SilverStripe\Control\Director;
  *
  * @link https://github.com/unclecheese/silverstripe-gridfield-betterbuttons
  * @link https://github.com/unclecheese/silverstripe-gridfield-betterbuttons/blob/master/src/Extensions/GridFieldBetterButtonsItemRequest.php
- * @property \SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest|\LeKoala\Base\Actions\ActionsGridFieldItemRequest $owner
+ * @property \SilverStripe\Versioned\VersionedGridFieldItemRequest|\SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest|\LeKoala\Base\Actions\ActionsGridFieldItemRequest $owner
  */
 class ActionsGridFieldItemRequest extends DataExtension
 {

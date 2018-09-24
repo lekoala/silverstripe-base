@@ -11,6 +11,7 @@ use LeKoala\Base\Extensions\URLSegmentExtension;
  * The ID is passed first so that
  *
  * The viewer template for the default action is _read
+ *
  */
 class RecordController extends BaseContentController
 {

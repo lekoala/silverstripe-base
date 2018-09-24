@@ -10,7 +10,7 @@ use SilverStripe\Subsites\Model\SubsiteDomain;
 /**
  * Improve subsites
  *
- * @property \SilverStripe\Subsites\Model\Subsite|\LeKoala\Base\Subsite\SubsiteExtension $owner
+ * @property \LeKoala\Base\Subsite\SubsiteExtension $owner
  */
 class SubsiteExtension extends DataExtension
 {

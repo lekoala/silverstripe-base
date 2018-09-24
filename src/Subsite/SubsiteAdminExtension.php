@@ -3,6 +3,11 @@ namespace LeKoala\Base\Subsite;
 
 use SilverStripe\Core\Extension;
 
+/**
+ * Class \LeKoala\Base\Subsite\SubsiteAdminExtension
+ *
+ * @property \LeKoala\Base\Subsite\SubsiteAdminExtension $owner
+ */
 class SubsiteAdminExtension extends Extension
 {
     /**

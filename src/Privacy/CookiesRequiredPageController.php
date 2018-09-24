@@ -11,7 +11,7 @@ use SilverStripe\Control\HTTPRequest;
  *
  * @property \LeKoala\Base\Privacy\CookiesRequiredPage dataRecord
  * @method \LeKoala\Base\Privacy\CookiesRequiredPage data()
- * @mixin \LeKoala\Base\Privacy\CookiesRequiredPage
+ * @mixin \LeKoala\Base\Privacy\CookiesRequiredPage dataRecord
  */
 class CookiesRequiredPageController extends PageController
 {

@@ -4,6 +4,10 @@ namespace LeKoala\Base\Controllers;
 
 use SilverStripe\Control\Controller;
 
+/**
+ * Class \LeKoala\Base\Controllers\TimeController
+ *
+ */
 class TimeController extends Controller
 {
     use WithJsonResponse;

@@ -16,6 +16,7 @@ use SilverStripe\Forms\GridField\GridFieldDeleteAction;
  * Improved ModelAdmin
  * - Built in subsite support
  * - Helpers
+ *
  */
 abstract class BaseModelAdmin extends ModelAdmin
 {

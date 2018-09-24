@@ -10,6 +10,7 @@ use SilverStripe\Control\Controller;
  * Sigh...
  *
  * @link https://github.com/colymba/GridFieldBulkEditingTools/issues/174
+ * @property \SilverStripe\Versioned\VersionedGridFieldItemRequest|\LeKoala\Base\Forms\GridField\VersionedGridFieldItemRequestExtension $owner
  */
 class VersionedGridFieldItemRequestExtension extends Extension
 {

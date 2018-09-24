@@ -7,7 +7,7 @@ use SilverStripe\ORM\DB;
 /**
  * Class \LeKoala\Base\LeftAndMainExtension
  *
- * @property \SilverStripe\Admin\ModelAdmin|\SilverStripe\Admin\SecurityAdmin|\SilverStripe\SiteConfig\SiteConfigLeftAndMain|\SilverStripe\AssetAdmin\Controller\AssetAdmin|\SilverStripe\CMS\Controllers\CMSMain|\SilverStripe\CMS\Controllers\CMSPageAddController|\SilverStripe\CMS\Controllers\CMSPagesController|\SilverStripe\Subsites\Admin\SubsiteAdmin|\LeKoala\Base\Blocks\BlocksLeftAndMainExtension $owner
+ * @property \SilverStripe\Admin\SecurityAdmin|\SilverStripe\CMS\Controllers\CMSMain|\LeKoala\Base\Blocks\BlocksLeftAndMainExtension $owner
  */
 class BlocksLeftAndMainExtension extends LeftAndMainExtension
 {

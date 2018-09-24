@@ -40,6 +40,7 @@ use LeKoala\Base\VideoEmbed\VideoEmbed;
  * @mixin \LeKoala\Base\Tags\TaggableExtension
  * @mixin \LeKoala\Base\Extensions\SocialShareExtension
  * @mixin \LeKoala\Base\Extensions\EmbeddableExtension
+ * @mixin \TractorCow\Fluent\Extension\FluentExtension
  */
 class NewsItem extends DataObject
 {
