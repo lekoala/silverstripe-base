@@ -268,6 +268,37 @@ class ThemeSiteConfigExtension extends DataExtension
             }
         }
 
+        // Clear content if disallow options
+        $themeOptions = $this->currentThemeOptions();
+        if (!$themeOptions['allowFonts']) {
+            if ($this->owner->HeaderFontFamily) {
+                $this->owner->HeaderFontFamily = null;
+            }
+            if ($this->owner->HeaderFontWeight) {
+                $this->owner->HeaderFontWeight = 0;
+            }
+            if ($this->owner->BodyFontFamily) {
+                $this->owner->BodyFontFamily = null;
+            }
+            if ($this->owner->BodyFontWeight) {
+                $this->owner->BodyFontWeight = 0;
+            }
+        }
+        if (!$themeOptions['allowColors']) {
+            if ($this->owner->PrimaryColor) {
+                $this->owner->PrimaryColor = null;
+            }
+            if ($this->owner->SecondaryColor) {
+                $this->owner->SecondaryColor = null;
+            }
+            if ($this->owner->ThemeColor) {
+                $this->owner->ThemeColor = null;
+            }
+            if ($this->owner->MaskColor) {
+                $this->owner->MaskColor = null;
+            }
+        }
+
         // Generate palette if necessary
         if ($this->owner->PrimaryColor && !$this->owner->SecondaryColor) {
             $this->owner->SecondaryColor = $this->owner->dbObject('PrimaryColor')->ComplementaryColor();
