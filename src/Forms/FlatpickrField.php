@@ -96,7 +96,7 @@ class FlatpickrField extends TextField
      * @config
      * @var string
      */
-    private static $version = '4.5.1';
+    private static $version = '4.5.2';
 
     /**
      * @config
@@ -532,19 +532,21 @@ class FlatpickrField extends TextField
             $lang = substr(i18n::get_locale(), 0, 2);
         }
         $version = self::config()->version;
-        Requirements::css("https://cdnjs.cloudflare.com/ajax/libs/flatpickr/$version/flatpickr.min.css");
-        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/flatpickr/$version/flatpickr.js");
+        // $cdnBase = "https://cdnjs.cloudflare.com/ajax/libs/flatpickr/$version";
+        $cdnBase = "https://cdn.jsdelivr.net/npm/flatpickr@$version/dist";
+        Requirements::css("$cdnBase/flatpickr.min.css");
+        Requirements::javascript("$cdnBase/flatpickr.js");
         if ($lang != 'en') {
-            Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/flatpickr/$version/l10n/$lang.js");
+            Requirements::javascript("$cdnBase/l10n/$lang.js");
         }
         foreach ($plugins as $plugin) {
-            Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/flatpickr/$version/plugins/$plugin.js");
+            Requirements::javascript("$cdnBase/plugins/$plugin.js");
             if (isset(self::PLUGINS_WITH_CSS[$plugin])) {
-                Requirements::css("https://cdnjs.cloudflare.com/ajax/libs/flatpickr/$version/plugins/$plugin.css");
+                Requirements::css("h$cdnBase/plugins/$plugin.css");
             }
         }
         if ($theme) {
-            Requirements::css("https://cdnjs.cloudflare.com/ajax/libs/flatpickr/$version/themes/$theme.css");
+            Requirements::css("$cdnBase/themes/$theme.css");
         }
         Requirements::javascript('base/javascript/ModularBehaviour.js');
         Requirements::javascript('base/javascript/fields/FlatpickrField.js');
