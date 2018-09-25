@@ -77,7 +77,7 @@
                 // Track active tab on submit
                 var input = $('#js-form-active-tab');
                 if (!input.length) {
-                    input = $('<input type="hidden" name="_activetab" id="js-form-active-tab" />');
+                    input = $('<input type="hidden" name="_activetab" class="no-change-track" id="js-form-active-tab" />');
                     $('#Form_ItemEditForm').append(input);
                 }
                 var url = this.attr('href'),
