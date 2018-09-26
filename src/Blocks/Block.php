@@ -104,7 +104,7 @@ final class Block extends DataObject
         'Summary' => 'Summary',
     ];
     private static $translate = [
-        "MenuTitle", "Content", "AuditData"
+        "MenuTitle", "Content", "AuditData", "BlockData"
     ];
     private static $defaults = [
         'Type' => ContentBlock::class,
@@ -281,26 +281,12 @@ final class Block extends DataObject
     public function onBeforeWrite()
     {
         parent::onBeforeWrite();
-
-        $ctrl = Controller::curr();
-        // Somehow SilverStripe doesn't save the data anymore if sent as array
-        if ($ctrl instanceof LeftAndMain && $this->canEdit()) {
-            if (isset($_POST['BlockData'])) {
-                $this->BlockData = $_POST['BlockData'];
-            }
-            if (isset($_POST['Settings'])) {
-                $this->Settings = $_POST['Settings'];
-            }
-        }
-
         if (!$this->HTMLID && $this->MenuTitle) {
             $filter = new URLSegmentFilter;
             $this->HTMLID = $filter->filter($this->MenuTitle);
         }
         $Content = $this->renderWithTemplate();
-        if ($Content) {
-            $this->Content = $Content;
-        }
+        $this->Content = $Content;
     }
     public function onAfterWrite()
     {
@@ -404,6 +390,29 @@ final class Block extends DataObject
             }
         }
         return $val;
+    }
+    /**
+     * Hijack setCastedField to ensure form saving works properly
+     *
+     * @param string $fieldName
+     * @param string $value
+     * @return $this
+     */
+    public function setCastedField($fieldName, $value)
+    {
+         // A Data field
+        if (strpos($fieldName, self::DATA_KEY . '[') === 0) {
+            $obj = $this->dbObject(self::DATA_KEY)->addValue(self::extractNameParts($fieldName), $value);
+            $obj->saveInto($this);
+            return $this;
+        }
+        // A Settings field
+        if (strpos($fieldName, self::SETTINGS_KEY . '[') === 0) {
+            $obj = $this->dbObject(self::SETTINGS_KEY)->addValue(self::extractNameParts($fieldName), $value);
+            $obj->saveInto($this);
+            return $this;
+        }
+        return parent::setCastedField($fieldName, $value);
     }
     /**
      * Consistently returns an array regardless of what is in BlockData

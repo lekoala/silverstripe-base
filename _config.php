@@ -44,6 +44,9 @@ if (!function_exists('l')) {
         $priority = 100;
         $extras = func_get_args();
         $message = array_shift($extras);
+        if (!is_string($message)) {
+            $message = json_encode($message);
+        }
         \SilverStripe\Core\Injector\Injector::inst()->get(\Psr\Log\LoggerInterface::class)->log($priority, $message, $extras);
     }
 }

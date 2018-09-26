@@ -10,6 +10,9 @@ use SilverStripe\ORM\Connect\MySQLDatabase;
 /**
  * Json storage
  *
+ * Internally, the value is represented as a string (for consistency since we extend DBString)
+ * TODO: investigate if it's worth it to use an array for internal state
+ *
  * @link https://github.com/phptek/silverstripe-jsontext/blob/master/code/ORM/FieldType/JSONText.php
  * @link https://mariadb.com/resources/blog/json-mariadb-102
  */
@@ -101,6 +104,32 @@ class DBJson extends DBString
             $this->value = json_encode($this->value);
         }
         parent::saveInto($dataObject);
+    }
+
+    /**
+     * Add a value
+     *
+     * @link https://stackoverflow.com/questions/7851590/array-set-value-using-dot-notation
+     * @param string|array $key
+     * @param string $value
+     * @return $this
+     */
+    public function addValue($key, $value)
+    {
+        $currentValue = $this->decodeArray();
+
+        if (!is_array($key)) {
+            $key = [$key];
+        }
+        $arr = &$currentValue;
+        foreach ($key as $idx) {
+            if (!isset($arr[$idx])) {
+                $arr[$idx] = [];
+            }
+            $arr = &$arr[$idx];
+        }
+        $arr = $value;
+        return $this->setValue($currentValue);
     }
 
     /**
