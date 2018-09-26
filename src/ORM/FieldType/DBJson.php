@@ -109,6 +109,7 @@ class DBJson extends DBString
     /**
      * Add a value
      *
+     * @link https://stackoverflow.com/questions/7851590/array-set-value-using-dot-notation
      * @param string|array $key
      * @param string $value
      * @return $this
@@ -120,12 +121,14 @@ class DBJson extends DBString
         if (!is_array($key)) {
             $key = [$key];
         }
-        while (count($key) > 1) {
-            $idx = array_shift($key);
-            $currentValue = $currentValue[$idx];
+        $arr = &$currentValue;
+        foreach ($key as $idx) {
+            if (!isset($arr[$idx])) {
+                $arr[$idx] = [];
+            }
+            $arr = &$arr[$idx];
         }
-        $idx = array_shift($key);
-        $currentValue[$idx] = $value;
+        $arr = $value;
         return $this->setValue($currentValue);
     }
 
