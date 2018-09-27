@@ -110,7 +110,11 @@ SCSS;
         }
         $this->message("Creating block $name", "created");
 
-        $mysite = Director::baseFolder() . DIRECTORY_SEPARATOR . project() . '/src/Blocks';
+        $baseFolder = 'mysite/code';
+        if (project() == 'app') {
+            $baseFolder = 'app/src';
+        }
+        $mysite = Director::baseFolder() . DIRECTORY_SEPARATOR . $baseFolder . '/Blocks';
         if (!is_dir($mysite)) {
             mkdir($mysite);
         }
