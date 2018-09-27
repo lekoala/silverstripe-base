@@ -47,6 +47,11 @@ class BuildableFieldList extends FieldList
     protected $i18nEntity = 'Global';
 
     /**
+     * @var boolean
+     */
+    protected $placeholderAsLabel = false;
+
+    /**
      * Returns an instance of BuildableFieldList from a FieldList
      *
      * @param FieldList $fields
@@ -102,6 +107,10 @@ class BuildableFieldList extends FieldList
             } else {
                 $object->setAttribute($k, $v);
             }
+        }
+        if ($this->placeholderAsLabel) {
+            $object->setAttribute('placeholder', $object->Title());
+            $object->setTitle('');
         }
         return $object;
     }
@@ -369,6 +378,27 @@ class BuildableFieldList extends FieldList
     public function setDefaultTab($defaultTab)
     {
         $this->defaultTab = $defaultTab;
+        return $this;
+    }
+
+    /**
+     * Get the value of placeholderAsLabel
+     * @return boolean
+     */
+    public function getPlaceholderAsLabel()
+    {
+        return $this->placeholderAsLabel;
+    }
+
+    /**
+     * Set the value of placeholderAsLabel
+     *
+     * @param boolean $placeholderAsLabel
+     * @return $this
+     */
+    public function setPlaceholderAsLabel($placeholderAsLabel)
+    {
+        $this->placeholderAsLabel = $placeholderAsLabel;
         return $this;
     }
 }

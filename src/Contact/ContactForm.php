@@ -11,6 +11,7 @@ class ContactForm extends BaseForm
 
     protected function buildFields(BuildableFieldList $fields)
     {
+        $fields->setPlaceholderAsLabel(true);
         $fields->group(function (BuildableFieldList $fields) {
             $fields->addText('Name');
             $fields->addText('Company');
