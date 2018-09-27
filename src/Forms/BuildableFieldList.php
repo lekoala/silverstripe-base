@@ -203,7 +203,7 @@ class BuildableFieldList extends FieldList
      * @param array $attributes
      * @return UploadField
      */
-    public function addUpload($name = "ImageID", $title = null, $attributes = [])
+    public function addUpload($name = "ImageID", $title = "Image", $attributes = [])
     {
         return $this->addField(UploadField::class, $name, $title, $attributes);
     }
@@ -333,25 +333,6 @@ class BuildableFieldList extends FieldList
     public function setDefaultTab($defaultTab)
     {
         $this->defaultTab = $defaultTab;
-        return $this;
-    }
-
-    /**
-     * Get the value of defaultKey
-     */
-    public function getDefaultKey()
-    {
-        return $this->defaultKey;
-    }
-
-    /**
-     * Set the value of defaultKey
-     *
-     * @return  self
-     */
-    public function setDefaultKey($defaultKey)
-    {
-        $this->defaultKey = $defaultKey;
         return $this;
     }
 }

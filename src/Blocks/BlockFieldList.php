@@ -31,8 +31,8 @@ class BlockFieldList extends BuildableFieldList
      * Automatically expand the given name to match the default key
      * and items if necessary
      *
-     * @param string $name
-     * @param string $baseKey Will use defaultKey if not provided
+     * @param string|array $name The key or a composite key like [2, "FieldName"]
+     * @param string $baseKey Will use defaultKey if not provided. Use '' for no key.
      * @return string
      */
     protected function normalizeName($name, $baseKey = null)
@@ -46,7 +46,9 @@ class BlockFieldList extends BuildableFieldList
             $key = $name[1];
             $name = $baseKey . '[' . $itemsKey . '][' . $idx . '][' . $key . ']';
         } else {
-            $name = $baseKey . '[' . $name . ']';
+            if ($baseKey) {
+                $name = $baseKey . '[' . $name . ']';
+            }
         }
         return $name;
     }
@@ -99,5 +101,38 @@ class BlockFieldList extends BuildableFieldList
     public function addButton($name = "Button", $title = null)
     {
         return $this->addField(BlockButtonField::class, $name, $title);
+    }
+
+    /**
+     * Get the value of defaultKey
+     */
+    public function getDefaultKey()
+    {
+        return $this->defaultKey;
+    }
+
+    /**
+     * Set the value of defaultKey
+     *
+     * @return $this
+     */
+    public function setDefaultKey($defaultKey)
+    {
+        $this->defaultKey = $defaultKey;
+        return $this;
+    }
+
+    /**
+     * @param string $key
+     * @param callable $callable
+     * @return $this
+     */
+    public function withKey($key, $callable)
+    {
+        $defaultKey = $this->getDefaultKey();
+        $this->setDefaultKey($key);
+        $callable($this);
+        $this->setDefaultKey($defaultKey);
+        return $this;
     }
 }
