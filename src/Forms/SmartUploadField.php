@@ -5,7 +5,9 @@ use SilverStripe\Assets\File;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\Assets\Image;
 use LeKoala\Base\Helpers\ClassHelper;
+use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\AssetAdmin\Forms\UploadField;
+use LeKoala\Base\Blocks\Block;
 
 /**
  * Improves the default uploader by uploading to a consistent default location
@@ -26,6 +28,21 @@ class SmartUploadField extends UploadField
     public function __construct($name, $title = null, SS_List $items = null)
     {
         parent::__construct($name, $title, $items);
+    }
+
+    public function saveInto(DataObjectInterface $record)
+    {
+        if ($record instanceof Block) {
+            $fieldname = $this->getName();
+
+            // Get details to save
+            $idList = $this->getItemIDs();
+
+            // Use array notation to allow loadDataFrom to work properly
+            $record->setCastedField($fieldname, ['Files' => $idList]);
+            return $this;
+        }
+        return parent::saveInto($record);
     }
 
     public function Field($properties = array())

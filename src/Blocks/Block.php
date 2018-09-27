@@ -244,7 +244,7 @@ final class Block extends DataObject
             $item['Counter'] = $counter;
             $item['FirstLast'] = $FirstLast;
             $item['EvenOdd'] = $i % 2 ? 'even' : 'odd';
-            // Handle files
+            // Handle files (stored in json as ["Files" => [ID]])
             foreach ($item as $k => $v) {
                 if (is_array($v) && !empty($v['Files'])) {
                     $files = $v['Files'];
@@ -273,7 +273,7 @@ final class Block extends DataObject
     {
         $image = Image::get()->byID($ID);
         // This is just annoying
-        if (!$image->isPublished()) {
+        if ($image && !$image->isPublished()) {
             $image->doPublish();
         }
         return $image;
