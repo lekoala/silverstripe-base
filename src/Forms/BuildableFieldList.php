@@ -204,7 +204,7 @@ class BuildableFieldList extends FieldList
      * @param array $attributes
      * @return UploadField
      */
-    public function addUpload($name = "ImageID", $title = "Image", $attributes = [])
+    public function addUpload($name = "ImageID", $title = null, $attributes = [])
     {
         return $this->addField(UploadField::class, $name, $title, $attributes);
     }
