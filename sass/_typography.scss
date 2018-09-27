@@ -1,11 +1,16 @@
 @import "variables";
-@import "fonts";
+@import "vendor/bootstrap/functions";
+@import "vendor/bootstrap/variables";
+@import "vendor/bootstrap/mixins";
+@import "vendor/bootstrap/root";
+@import "vendor/bootstrap/reboot";
+@import "vendor/bootstrap/type";
 
 // @link https://docs.silverstripe.org/en/4/developer_guides/customising_the_admin_interface/typography/
 // In SS4, typography is not needed anymore for the website
 // But it is used in the admin on the tinymce areas
 body {
-    font-family: $body-font;
+    font-family: $font-family-base;
 }
 
 h1,
@@ -14,7 +19,7 @@ h3,
 h4,
 h5,
 h6 {
-    font-family: $header-font;
+    font-family: $headings-font-family;
 }
 
 .text-primary {

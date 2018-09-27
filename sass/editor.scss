@@ -1,7 +1,11 @@
 // Define custom styles for tinymce editor
+// Make sure this exists in your themes/css folder to allow tinymce to load styles
+// Share _typography accross editor field and your common styles to avoid repetition
 #tinymce {}
 
-.mce-content-body {}
+.mce-content-body {
+    margin: 1em
+}
 
 // Import our styles
 @import "typography";
