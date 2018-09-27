@@ -86,6 +86,10 @@ body.cms {
     background: #ccc;
 }
 
+.cms-subsites .chosen-container .chosen-results {
+    max-height: 400px;
+}
+
 /* Icons in menu */
 .menu__icon.fa {
     font-size: 17px !important
@@ -214,8 +218,8 @@ body.cms {
 
 #action_doSaveAndNext:before, .btn-icon-end:before {
     float: right;
-    margin-right:0;
-    margin-left:6px;
+    margin-right: 0;
+    margin-left: 6px;
 }
 
 .btn-toolbar .bb-align {
