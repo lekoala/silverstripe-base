@@ -32,9 +32,10 @@ class SmartUploadField extends UploadField
 
     public function saveInto(DataObjectInterface $record)
     {
-        if ($record instanceof Block) {
-            $fieldname = $this->getName();
+        $fieldname = $this->getName();
 
+        // If we store into json
+        if ($record instanceof Block && strpos($fieldname, '[') !== false) {
             // Get details to save
             $idList = $this->getItemIDs();
 
@@ -42,6 +43,7 @@ class SmartUploadField extends UploadField
             $record->setCastedField($fieldname, ['Files' => $idList]);
             return $this;
         }
+
         return parent::saveInto($record);
     }
 
