@@ -86,6 +86,52 @@
                 input.val(hash);
             }
         });
+
+        // Bulk manager shortcuts
+        $('.col-bulkSelect').entwine({
+            oncontextmenu: function(e) {
+                var fieldset = this.closest('fieldset');
+                var bulkSelect = fieldset.find('select.bulkActionName');
+                var bulkContextMenu = fieldset.find('.bulkContextMenu');
+                var goButton = fieldset.find('.doBulkActionButton ');
+                var html = '';
+                if (!bulkContextMenu.length) {
+                    html += '<div class="bulkContextMenu contextMenu">';
+                    bulkSelect.find('option').each(function(idx, item) {
+                        if (idx == 0) {
+                            return;
+                        }
+                        var $t = $(item);
+                        html += '<a href="#" data-value="' + $t.attr('value') + '">' + $t.text() + '</a>';
+                    });
+                    html += '</div>';
+                    var bulkContextMenu = $(html);
+                    fieldset.append(bulkContextMenu);
+                }
+                var styles = {
+                    "width": "180px",
+                    "left": e.pageX - 300,
+                    "top": e.pageY - 20,
+                };
+                bulkContextMenu.show();
+                bulkContextMenu.css(styles);
+                bulkContextMenu.find('a').on('click', function(e) {
+                    e.preventDefault();
+                    if ($(this).hasClass('disabled')) {
+                        return;
+                    }
+                    var val = $(this).data('value');
+                    bulkSelect.val(val).trigger('change').trigger("chosen:updated").trigger("liszt:updated");
+                    goButton.trigger('click');
+                    $(this).text("Please wait...").addClass('disabled');
+                });
+                bulkContextMenu.one('mouseleave', function() {
+                    $(this).hide();
+                });
+                e.preventDefault();
+            }
+        });
+
         // Prevent navigation for no ajax
         $('.grid-field__icon-action.no-ajax').entwine({
             onmatch: function() {},
@@ -94,6 +140,7 @@
                 e.stopPropagation();
             }
         });
+
         // Let input work properly in grids
         $('.ss-gridfield-items td select, .ss-gridfield-items td input').entwine({
             onmatch: function() {},
@@ -103,6 +150,7 @@
                 e.stopPropagation();
             }
         });
+
         // Clickable icons
         $('.uploadfield-item__thumbnail').entwine({
             onclick: function() {

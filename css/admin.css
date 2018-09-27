@@ -11,6 +11,27 @@ body.cms {
     max-width: 100%;
 }
 
+/* Context menu */
+.contextMenu {
+    position: absolute;
+    border: 1px solid #eee;
+    background: #fff;
+    z-index: 500;
+    -webkit-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.5);
+    -moz-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.5);
+    box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.5);
+}
+
+.contextMenu a {
+    display: block;
+    padding: 6px 12px;
+    border-bottom: 1px solid #eee;
+}
+
+.contextMenu a:last-child {
+    border-bottom: 0;
+}
+
 /* Warning is too big */
 .btn-toolbar .btn.actions-warning {
     display: none;
