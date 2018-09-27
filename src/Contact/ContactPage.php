@@ -3,31 +3,40 @@ namespace LeKoala\Base\Contact;
 
 use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\LiteralField;
+use SilverStripe\Forms\CheckboxField;
+use SilverStripe\Forms\TextareaField;
 use SilverStripe\SiteConfig\SiteConfig;
 use LeKoala\Base\Contact\ContactSubmission;
-use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
 use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
+use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
 
 /**
  * Class \LeKoala\Base\Contact\ContactPage
  *
  * @property string $Address
+ * @property string $Infos
+ * @property boolean $ShowInfosOnly
  * @property string $Phone
  * @property string $Email
  * @property float $Latitude
  * @property float $Longitude
+ * @property string $MapEmbed
  * @method \SilverStripe\ORM\DataList|\LeKoala\Base\Contact\ContactSubmission[] Submissions()
  */
 class ContactPage extends \Page
 {
     private static $table_name = 'ContactPage'; // When using namespace, specify table name
     private static $db = [
-        "Address" => "Varchar(191)",
+        "Address" => "Varchar(199)", // A geocodable address
+        "Infos" => "HTMLText", // Additionnal infos with map, links etc
+        "ShowInfosOnly" => "Boolean", // Instead of address if you have custom stuff
         "Phone" => "Varchar(51)",
-        "Email" => "Varchar(191)",
-        //
+        "Email" => "Varchar(199)",
+        // TODO: refactor into GeoExtension
         "Latitude" => "Float(10,6)",
         "Longitude" => "Float(10,6)",
+        "MapEmbed" => "HTMLText",
     ];
     private static $has_many = [
         "Submissions" => ContactSubmission::class
@@ -36,11 +45,24 @@ class ContactPage extends \Page
     {
         $fields = parent::getCMSFields();
         $fields->addFieldsToTab('Root.Details', new TextField('Address'));
+        $fields->addFieldsToTab('Root.Details', $Infos = new HTMLEditorField('Infos'));
+        $Infos->setRows(5);
+        $fields->addFieldsToTab('Root.Details', new CheckboxField('ShowInfosOnly'));
         $fields->addFieldsToTab('Root.Details', new TextField('Phone'));
         $fields->addFieldsToTab('Root.Details', new TextField('Email'));
+        //
         $fields->addFieldsToTab('Root.Map', new TextField('Latitude'));
         $fields->addFieldsToTab('Root.Map', new TextField('Longitude'));
-        $fields->addFieldsToTab('Root.Map', new LiteralField('LatLonHelper', 'You can use a website like <a href="https://www.latlong.net/" target="_blank">LatLong.net</a> to find your coordinates'));
+        $fields->addFieldsToTab('Root.Map', new LiteralField(
+            'LatLonHelper',
+            'You can use a website like <a href="https://www.latlong.net/" target="_blank">LatLong.net</a> to find your coordinates<br/><br/>'
+        ));
+        $fields->addFieldsToTab('Root.Map', new TextareaField("MapEmbed"));
+        $fields->addFieldsToTab('Root.Map', new LiteralField(
+            'MapEmbedHelper',
+            'You can use a website like <a href="https://www.google.be/maps" target="_blank">Google Map</a> to create a map<br/><br/>'
+        ));
+        //
         $SubmissionsConfig = GridFieldConfig_RecordEditor::create();
         $Submissions = new GridField('Submissions', $this->fieldLabel('Submission'), $this->Submissions(), $SubmissionsConfig);
         $fields->addFieldsToTab('Root.Submissions', $Submissions);
@@ -53,11 +75,18 @@ class ContactPage extends \Page
         if (!$this->Address) {
             $this->Address = $SiteConfig->ContactAddress;
         }
+        if (!$this->Infos) {
+            $this->Infos = $SiteConfig->ContactInfos;
+        }
         if (!$this->Phone) {
             $this->Phone = $SiteConfig->ContactPhone;
         }
         if (!$this->Email) {
             $this->Email = $SiteConfig->ContactEmail;
+        }
+        // Ensure responsiveness
+        if ($this->MapEmbed && strpos($this->MapEmbed, "max-width") === false) {
+            $this->MapEmbed = str_replace('style="', 'style="max-width:100%;', $this->MapEmbed);
         }
     }
     public function GoogleMapsLink()

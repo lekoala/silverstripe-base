@@ -18,13 +18,20 @@ class ContactPageController extends \PageController
         "index",
         "doSend",
     ];
+
     public function index(HTTPRequest $request)
     {
         // $this->sendDummyEmail();
         $this->SiteConfig()->requireGoogleMaps();
-        // Use non namespaced name
-        return $this->renderWith(['ContactPage', 'Page']);
+        return $this;
     }
+
+    public function ContactForm()
+    {
+        $form = ContactForm::create($this);
+        return $form;
+    }
+
     protected function sendDummyEmail()
     {
         l('sending dummy email');
@@ -35,6 +42,12 @@ class ContactPageController extends \PageController
         $emailInst->setBody("Dummy body, <strong>with html!</strong>");
         $emailInst->send();
     }
+
+    /**
+     * This handler is for plain html forms (eg if using a template instead of a Form object)
+     *
+     * @return void
+     */
     public function doSend()
     {
         $request = $this->getRequest();

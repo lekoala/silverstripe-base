@@ -13,6 +13,7 @@ use SilverStripe\Control\Email\Email;
  * @property string $Message
  * @property string $Email
  * @property string $Phone
+ * @property string $Company
  * @property string $EmailResults
  * @property int $PageID
  * @method \LeKoala\Base\Contact\ContactPage Page()
@@ -26,6 +27,7 @@ class ContactSubmission extends DataObject
         "Message" => "Text",
         "Email" => "Varchar",
         "Phone" => "Varchar",
+        "Company" => "Varchar",
         "EmailResults" => "Text",
     ];
     private static $has_one = [

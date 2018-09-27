@@ -35,6 +35,10 @@ class BaseForm extends Form
      * @var string
      */
     protected $recordType;
+    /**
+     * @var boolean
+     */
+    protected $jsValidationEnabled = false;
 
     /**
      * @param RequestHandler $controller
@@ -51,6 +55,9 @@ class BaseForm extends Form
         Validator $validator = null
     ) {
         $this->addExtraClass($this->Type());
+        if ($this->jsValidationEnabled) {
+            $this->enableJsValidation();
+        }
         // We hack the name argument to pass parameters
         // Either an array or a DataObject
         // This allows us to inject parameters and not call the controller from the form

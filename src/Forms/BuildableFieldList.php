@@ -8,11 +8,13 @@ use SilverStripe\Forms\EmailField;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\HiddenField;
+use LeKoala\Base\Forms\ColumnsField;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\PasswordField;
 use SilverStripe\Forms\TextareaField;
+use SilverStripe\Forms\CompositeField;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Forms\GridField\GridFieldConfig;
@@ -32,6 +34,11 @@ class BuildableFieldList extends FieldList
      * @var string
      */
     protected $currentTab = null;
+
+    /**
+     * @var FieldGroup
+     */
+    protected $currentGroup = null;
 
     /**
      * The entity scope that will be used to attempt translation
@@ -106,6 +113,8 @@ class BuildableFieldList extends FieldList
         }
         if ($this->currentTab) {
             $this->addFieldToTab('Root.' . $this->currentTab, $field);
+        } elseif ($this->currentGroup) {
+            $this->currentGroup->push($field);
         } else {
             $this->push($field);
         }
@@ -309,6 +318,21 @@ class BuildableFieldList extends FieldList
         return $this->addField(HTMLEditorField::class, $name, $title, $attributes);
     }
 
+    /**
+     * Group fields into a column field
+     *
+     * @param callable $callable
+     * @return $this
+     */
+    public function group($callable)
+    {
+        $group = new ColumnsField();
+        $this->pushOrAddToTab($group);
+        $this->currentGroup = $group;
+        $callable($this);
+        $this->currentGroup = null;
+        return $this;
+    }
 
     /**
      * Get the value of i18nEntity
