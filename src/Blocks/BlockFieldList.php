@@ -11,6 +11,7 @@ use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\CheckboxField;
 use LeKoala\Base\Forms\BuildableFieldList;
+use LeKoala\Base\Blocks\Fields\BlockHTMLEditorField;
 
 /**
  * Easily add fields to your blocks
@@ -102,6 +103,18 @@ class BlockFieldList extends BuildableFieldList
     {
         return $this->addField(BlockButtonField::class, $name, $title);
     }
+
+    /**
+     * @param string $name
+     * @param string $title
+     * @param array $attributes
+     * @return BlockHTMLEditorField
+     */
+    public function addEditor($name = "Description", $title = null, $attributes = [])
+    {
+        return $this->addField(BlockHTMLEditorField::class, $name, $title, $attributes);
+    }
+
 
     /**
      * Get the value of defaultKey

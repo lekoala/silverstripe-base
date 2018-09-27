@@ -16,6 +16,7 @@ use SilverStripe\Forms\TextareaField;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Forms\GridField\GridFieldConfig;
+use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
 
 /**
  * A field list that can create it its fields
@@ -295,6 +296,17 @@ class BuildableFieldList extends FieldList
     public function addTextarea($name = "Description", $title = null, $attributes = [])
     {
         return $this->addField(TextareaField::class, $name, $title, $attributes);
+    }
+
+    /**
+     * @param string $name
+     * @param string $title
+     * @param array $attributes
+     * @return HTMLEditorField
+     */
+    public function addEditor($name = "Description", $title = null, $attributes = [])
+    {
+        return $this->addField(HTMLEditorField::class, $name, $title, $attributes);
     }
 
 
