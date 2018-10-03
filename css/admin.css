@@ -3,6 +3,11 @@ body.cms {
     overflow: hidden;
 }
 
+/* Large panels need this for small screens */
+.panel {
+    overflow-x: scroll;
+}
+
 /* HTMLEditor should be full width ! */
 .cms-edit-form .form-group.htmleditor.stacked .form__field-holder {
     -webkit-box-flex: 0;
