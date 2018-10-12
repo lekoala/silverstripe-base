@@ -5,7 +5,7 @@ body.cms {
 
 /* Large panels need this for small screens */
 .panel {
-    overflow-x: scroll;
+    overflow-x: auto;
 }
 
 /* HTMLEditor should be full width ! */
