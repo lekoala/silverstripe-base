@@ -86,7 +86,7 @@ class BaseForm extends Form
         }
         $fields = $this->buildFields(BuildableFieldList::fromFieldList($fields));
         if (!$fields) {
-            throw new Exception("buildFields must return the FieldList instance");
+            throw new Exception("buildFields must return the FieldList instance in " . static::class);
         }
         // Attach record as hidden fields, these can be used by the controller
         // To properly restore the record on POST if it was depending on url params or query string
@@ -96,7 +96,7 @@ class BaseForm extends Form
         }
         $actions = $this->buildActions(BuildableFieldList::fromFieldList($actions));
         if (!$actions) {
-            throw new Exception("buildActions must return the FieldList instance");
+            throw new Exception("buildActions must return the FieldList instance " . static::class);
         }
         if ($validator === null) {
             $validator = $this->buildValidator($fields);

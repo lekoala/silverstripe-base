@@ -9,7 +9,7 @@ use SilverStripe\ORM\DataExtension;
 /**
  * Make a DataObject sortable with GridFieldOrderableRows
  *
- * @property \LeKoala\Base\Blocks\Block|\LeKoala\Base\Extensions\SortableExtension $owner
+ * @property \LeKoala\Base\Blocks\Block|\PortfolioItem|\LeKoala\Base\Extensions\SortableExtension $owner
  * @property int $Sort
  */
 class SortableExtension extends DataExtension
