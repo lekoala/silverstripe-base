@@ -36,6 +36,8 @@ SilverStripe\Core\Injector\Injector:
     class: LeKoala\Base\ORM\FieldType\DBBetterDecimal
   Percentage:
     class: LeKoala\Base\ORM\FieldType\DBBetterPercentage
+  Date:
+    class: LeKoala\Base\ORM\FieldType\DBBetterDate
   DBNullableClassName:
     class: LeKoala\Base\ORM\FieldType\DBNullableClassName
   # See DataObjectSchema:492
