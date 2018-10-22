@@ -6,13 +6,13 @@ namespace LeKoala\Base\Forms;
  *
  * Locale conversion cannot be done by InputMask and should be provided by a third party service
  */
-class InputMaskDateField extends InputMaskField
+class InputMaskDateField extends InputMaskDateTimeField
 {
     public function __construct($name, $title = null, $value = null)
     {
         parent::__construct($name, $title, $value);
 
-        $this->setAlias('yyyy-mm-dd');
+        $this->setInputFormat('yyyy-mm-dd');
         // use ISO date format when unmasking to ensure proper data storage in the db
         $this->setDataFormat('yyyy-mm-dd');
     }

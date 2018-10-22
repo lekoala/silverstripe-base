@@ -24,14 +24,7 @@ class InputMaskField extends TextField
     const ALIAS_URL = 'url';
     const ALIAS_IP = 'ip';
     const ALIAS_EMAIL = 'email';
-    const ALIAS_DATE = 'date'; // alias of dd/mm/yyyy
-    const ALIAS_DATE_DDMMYYYY = 'dd/mm/yyyy';
-    const ALIAS_DATE_MMDDYYYY = 'mm/dd/yyyy';
-    const ALIAS_DATE_YYYYMMDD = 'yyyy/mm/dd';
-    const ALIAS_DATE_ISO = 'yyyy-mm-dd';
-    const ALIAS_DATETIME = 'datetime'; // dd/mm/yyyy hh:mm
-    const ALIAS_TIME = 'hh:mm:ss';
-    const ALIAS_TIME_SHORT = 'hh:mm';
+    const ALIAS_DATETIME = 'datetime';
     const ALIAS_NUMERIC = 'numeric';
     const ALIAS_CURRENCY = 'currency';
     const ALIAS_DECIMAL = 'decimal';
