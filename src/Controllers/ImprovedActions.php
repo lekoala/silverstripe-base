@@ -38,7 +38,7 @@ trait ImprovedActions
             if ($ID == 'field') {
                 throw new ValidationException("Attempt to post on a FormField often result in loosing request params. No record class could be found");
             }
-            throw new ValidationException("No class");
+            throw new ValidationException("No class in request");
         }
         if (!ClassHelper::isValidDataObject($class)) {
             throw new ValidationException("$class is not valid");

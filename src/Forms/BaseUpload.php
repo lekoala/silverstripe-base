@@ -64,7 +64,7 @@ class BaseUpload extends Upload
      * - {date}
      * - {datetime}
      *
-     * @param string $filename
+     * @param string $filename The filename, including the folder path
      * @param string $pattern
      * @return string The filename
      */

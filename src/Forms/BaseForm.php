@@ -42,7 +42,7 @@ class BaseForm extends Form
 
     /**
      * @param RequestHandler $controller
-     * @param mixed $name Extended to allow passing
+     * @param mixed $name Extended to allow passing objects directly
      * @param FieldList $fields
      * @param FieldList $actions
      * @param Validator $validator

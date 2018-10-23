@@ -368,7 +368,13 @@ class FilePondField extends BaseFileUploadField
 
         if ($file instanceof DataObject && $file->hasExtension(BaseFileExtension::class)) {
             $file->IsTemporary = true;
-            $file->write();
+            // If possible, prevent creating a version for no reason
+            // @link https://docs.silverstripe.org/en/4/developer_guides/model/versioning/#writing-changes-to-a-versioned-dataobject
+            if ($file->hasExtension(Versioned::class)) {
+                $file->writeWithoutVersion();
+            } else {
+                $file->write();
+            }
         }
 
         // Because the file is not linked to anything, it's public by default

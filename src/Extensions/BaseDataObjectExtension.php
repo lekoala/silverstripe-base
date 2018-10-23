@@ -68,6 +68,19 @@ class BaseDataObjectExtension extends DataExtension
     }
 
     /**
+     * Helper to write without version even for non versioned objects
+     *
+     * @return int The ID of the record
+     */
+    public function writeWithoutVersionIfPossible()
+    {
+        if ($this->owner->hasExtension(Versioned::class)) {
+            $this->owner->writeWithoutVersion();
+        }
+        return $this->owner->write();
+    }
+
+    /**
      * Quickly apply update to the model without using the ORM or changed LastEdited fields
      *
      * @param array $data
