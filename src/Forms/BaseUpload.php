@@ -7,8 +7,11 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\Assets\FileNameFilter;
 
 /**
- * Class \LeKoala\Base\Forms\BaseUpload
+ * This extension of the Upload class allow setting a rename pattern for the file
  *
+ * This is done through the Upload class to allow setting the pattern from the controller
+ *
+ * ? maybe this should be more convention based and use the BaseFileExtension instead
  */
 class BaseUpload extends Upload
 {
