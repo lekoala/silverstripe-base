@@ -38,3 +38,14 @@ LeKoala\Base\Tags\Tag:
 SilverStripe\Security\Member:
   extensions:
     - LeKoala\Base\Privacy\PrivacyMemberExtension
+---
+Name: base-extensions-versioned
+After:
+  - 'silverstripe/versioned'
+Only:
+  moduleexists:
+    - 'silverstripe/versioned'
+---
+SilverStripe\Core\Injector\Injector:
+  SilverStripe\Versioned\RecursivePublishable:
+    class: LeKoala\Base\Extensions\RecursivePublishable

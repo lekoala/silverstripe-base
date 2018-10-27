@@ -4,6 +4,8 @@ Name: base-forms
 SilverStripe\Core\Injector\Injector:
   SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor:
     class: LeKoala\Base\Forms\GridField\GridFieldRecordConfig
+  #SilverStripe\AssetAdmin\Forms\UploadField:
+  #  class: LeKoala\Base\Forms\SmartUploadField
   SilverStripe\Assets\Upload:
     class: LeKoala\Base\Forms\BaseUpload
   SilverStripe\Forms\DateField:
