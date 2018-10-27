@@ -5,6 +5,10 @@ namespace LeKoala\Base\Extensions;
 use SilverStripe\Versioned\RecursivePublishable as BaseRecursivePublishable;
 
 /**
+ * This is if your upload fails
+ * @link https://github.com/silverstripe/silverstripe-asset-admin/pull/842
+ * It's much better to fix asset-admin than RecursivePublishable anyway
+ *
  * Until merged in stable
  * @link https://github.com/silverstripe/silverstripe-versioned/pull/184
  */
