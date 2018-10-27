@@ -46,6 +46,6 @@ Only:
   moduleexists:
     - 'silverstripe/versioned'
 ---
-SilverStripe\Core\Injector\Injector:
-  SilverStripe\Versioned\RecursivePublishable:
-    class: LeKoala\Base\Extensions\RecursivePublishable
+#SilverStripe\Core\Injector\Injector:
+#  SilverStripe\Versioned\RecursivePublishable:
+#    class: LeKoala\Base\Extensions\RecursivePublishable
