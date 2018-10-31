@@ -317,7 +317,7 @@ class FilePondField extends BaseFileUploadField
         // Requirements::css("https://unpkg.com/filepond-plugin-file-poster@1.0.0/dist/filepond-plugin-file-poster.min.css");
         // Requirements::javascript("https://unpkg.com/filepond-plugin-file-poster@1.0.0/dist/filepond-plugin-file-poster.min.js");
         // Image plugins
-        // Requirements::javascript("https://unpkg.com/filepond-plugin-image-exif-orientation@1.0.2/dist/filepond-plugin-image-exif-orientation.js");
+        Requirements::javascript("https://unpkg.com/filepond-plugin-image-exif-orientation@1.0.3/dist/filepond-plugin-image-exif-orientation.js");
         // Requirements::css("https://unpkg.com/filepond-plugin-image-preview@2.0.1/dist/filepond-plugin-image-preview.min.css");
         // Requirements::javascript("https://unpkg.com/filepond-plugin-image-preview@2.0.1/dist/filepond-plugin-image-preview.min.js");
         // Base elements
