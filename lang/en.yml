@@ -7,13 +7,24 @@ en:
     MAXSIZE: 'Max file size: {size}'
   BaseForm:
     DOSUBMIT: Submit
+  BaseMemberExtension:
+    MEMBER_UNLOCKED: 'Member unlocked'
   BaseSecurityAdminExtension:
     LockedMembers: 'Locked Members'
+    LogAlert: 'Last updated on {updated}'
+    LogSize: 'Total size is {size}'
+    Logs: Logs
     MembersOnlyGroups: 'Only group members are shown. To add a user to a group, link it from an existing group.'
     RecentPasswordFailures: 'Recent Password Failures'
     SecurityAudit: 'Security Audit'
+    doClearLogs: 'Clear Logs'
+    doRotateLogs: 'Rotate Logs'
   BootstrapModal:
     Close: Close
+  ContactPage:
+    Address: ADDRESS
+    Email: E-MAIL
+    Phone: PHONE
   ContactPageController:
     ERR_ENTER_EMAIL: 'Enter your e-mail'
     ERR_ENTER_MESSAGE: 'Enter your message'
@@ -32,8 +43,31 @@ en:
     COOKIES_ARE_REQUIRED: 'Cookies are required to use this website'
   CountryDropdownField:
     TITLE: Country
+  DataObjectActionsExtension:
+    CREATEANDCLOSE: 'Create and Close'
+    SAVEANDCLOSE: 'Save and Close'
+  FilePondField:
+    labelFileProcessing: Uploading
+    labelFileProcessingAborted: 'Upload cancelled'
+    labelFileProcessingComplete: 'Upload complete'
+    labelIdle: 'Drag & Drop your files or <span class="filepond--label-action"> Browse </span>'
+    labelTapToCancel: 'tap to undo'
   FlatpickrField:
+    NO_DATE_SELECTED: 'No date'
+    NO_TIME_SELECTED: 'No time'
     SELECT_A_DATE: 'Select a date...'
+  FullGridFieldQuickFilter:
+    QUICKLY_FILTER: 'Quickly filter this list by keywords'
+  Global:
+    Address: Address
+    ContactInfos: 'Contact details'
+    ContactsSettings: 'Contacts settings'
+    DefaultFromEmail: 'Default From Email'
+    Email: Email
+    EmailFooter: 'Email Footer'
+    EmailSettings: 'Email settings'
+    LegalName: 'Legal Name'
+    Phone: Phone
   NewsItem:
     READ_MORE: 'Read more'
   NewsPage:
@@ -46,6 +80,8 @@ en:
   PrivacyForm:
     IAGREE: 'I read and I agree with the'
     PLEASEREVIEW: 'Please review the following agreements to continue'
+  SilverStripe\Admin\LeftAndMain:
+    PreviewButton: Preview
   SimpleSearchControllerExtension:
     GO: Go
     SEARCH: Search
@@ -53,3 +89,5 @@ en:
   SocialExtension:
     DISCOVER: 'I discovered '
     SEE: 'You can see it here :'
+  URLSegmentExtension:
+    URLSEGMENT: 'URL Segment'

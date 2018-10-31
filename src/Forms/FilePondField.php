@@ -284,6 +284,15 @@ class FilePondField extends BaseFileUploadField
             $this->setName($name);
         }
 
+        $i18nConfig = [
+            'labelIdle' => _t('FilePondField.labelIdle', 'Drag & Drop your files or <span class="filepond--label-action"> Browse </span>'),
+            'labelFileProcessing' => _t('FilePondField.labelFileProcessing', 'Uploading'),
+            'labelFileProcessingComplete' => _t('FilePondField.labelFileProcessingComplete', 'Upload complete'),
+            'labelFileProcessingAborted' => _t('FilePondField.labelFileProcessingAborted', 'Upload cancelled'),
+            'labelTapToCancel' => _t('FilePondField.labelTapToCancel', 'tap to cancel'),
+            'labelTapToRetry' => _t('FilePondField.labelTapToCancel', 'tap to retry'),
+            'labelTapToUndo' => _t('FilePondField.labelTapToCancel', 'tap to undo'),
+        ];
         $config = [
             'name' => $name, // This will also apply to the hidden fields
             'allowMultiple' => $multiple,
@@ -293,6 +302,8 @@ class FilePondField extends BaseFileUploadField
             'server' => $this->getServerOptions(),
             'files' => $this->getExistingUploadsData(),
         ];
+        $config = array_merge($config, $i18nConfig);
+
         $this->setAttribute('data-module', 'filepond');
         $this->setAttribute('data-config', json_encode($config));
 
