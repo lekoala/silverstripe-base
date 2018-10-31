@@ -68,6 +68,7 @@ nl:
     EmailSettings: 'Email settings'
     LegalName: 'Legal Name'
     Phone: Phone
+    View: 'Bekijken'
   NewsItem:
     READ_MORE: 'Meer weten'
   NewsPage:

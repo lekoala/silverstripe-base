@@ -68,6 +68,7 @@ en:
     EmailSettings: 'Email settings'
     LegalName: 'Legal Name'
     Phone: Phone
+    View: 'View'
   NewsItem:
     READ_MORE: 'Read more'
   NewsPage:
