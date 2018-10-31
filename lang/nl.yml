@@ -69,6 +69,7 @@ nl:
     LegalName: 'Legal Name'
     Phone: Phone
     View: 'Bekijken'
+    Back: 'Terug'
   NewsItem:
     READ_MORE: 'Meer weten'
   NewsPage:
