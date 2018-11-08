@@ -65,6 +65,7 @@ body.cms {
     margin: 10px;
     text-overflow: ellipsis;
     overflow: hidden;
+    justify-content: left;
 }
 
 .ui-tabs-anchor.nav-link.active {

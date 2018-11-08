@@ -7,13 +7,24 @@ fr:
     MAXSIZE: 'Format max fichier: {size}'
   BaseForm:
     DOSUBMIT: Envoyer
+  BaseMemberExtension:
+    MEMBER_UNLOCKED: 'Member unlocked'
   BaseSecurityAdminExtension:
     LockedMembers: 'Locked Members'
+    LogAlert: 'Last updated on {updated}'
+    LogSize: 'Total size is {size}'
+    Logs: Logs
     MembersOnlyGroups: 'Only group members are shown. To add a user to a group, link it from an existing group.'
     RecentPasswordFailures: 'Recent Password Failures'
     SecurityAudit: 'Security Audit'
+    doClearLogs: 'Clear Logs'
+    doRotateLogs: 'Rotate Logs'
   BootstrapModal:
     Close: Fermer
+  ContactPage:
+    Address: ADDRESS
+    Email: E-MAIL
+    Phone: PHONE
   ContactPageController:
     ERR_ENTER_EMAIL: 'Entrez votre email'
     ERR_ENTER_MESSAGE: 'Entrez votre message'
@@ -32,8 +43,33 @@ fr:
     COOKIES_ARE_REQUIRED: 'Ce site utilise des cookies.'
   CountryDropdownField:
     TITLE: Pays
+  DataObjectActionsExtension:
+    CREATEANDCLOSE: 'Create and Close'
+    SAVEANDCLOSE: 'Save and Close'
+  FilePondField:
+    labelFileProcessing: Uploading
+    labelFileProcessingAborted: 'Upload cancelled'
+    labelFileProcessingComplete: 'Upload complete'
+    labelIdle: 'Glisser et déposer ou <span class="filepond--label-action"> Parcourir </span>'
+    labelTapToCancel: 'tap to undo'
   FlatpickrField:
+    NO_DATE_SELECTED: 'No date'
+    NO_TIME_SELECTED: 'No time'
     SELECT_A_DATE: 'Sélectionnez une date...'
+  FullGridFieldQuickFilter:
+    QUICKLY_FILTER: 'Quickly filter this list by keywords'
+  Global:
+    Address: Address
+    ContactInfos: 'Contact details'
+    ContactsSettings: 'Contacts settings'
+    DefaultFromEmail: 'Default From Email'
+    Email: Email
+    EmailFooter: 'Email Footer'
+    EmailSettings: 'Email settings'
+    LegalName: 'Legal Name'
+    Phone: Phone
+    View: 'Voir'
+    Back: 'Retour'
   NewsItem:
     READ_MORE: 'Savoir plus'
   NewsPage:
@@ -46,6 +82,8 @@ fr:
   PrivacyForm:
     IAGREE: 'Je confirme avoir lu et accepté… '
     PLEASEREVIEW: 'Veuillez lire les documents suivants afin de continuer'
+  SilverStripe\Admin\LeftAndMain:
+    PreviewButton: Preview
   SimpleSearchControllerExtension:
     GO: Go
     SEARCH: Chercher
@@ -53,3 +91,5 @@ fr:
   SocialExtension:
     DISCOVER: 'J''ai découvert '
     SEE: 'Un aperçu :'
+  URLSegmentExtension:
+    URLSEGMENT: 'URL Segment'

@@ -1,0 +1,37 @@
+// Centered logo
+// <ul class="navbar-nav navbar-centered-$Menu(1).count text-center">
+$navbar-logo-width: $spacer*8;
+$navbar-height: 56px;
+
+.navbar-centered .navbar-brand {
+    margin-bottom:$spacer;
+
+    img {
+        height:$navbar-height;
+    }
+}
+
+@include media-breakpoint-up(md) {
+	.position-md-absolute {
+		position: absolute;
+	}
+	.navbar-centered .navbar-centered-2 .nav-item:nth-child(1) {
+		margin-right: $navbar-logo-width + $spacer*2;
+	}
+	.navbar-centered .navbar-centered-4 .nav-item:nth-child(2) {
+		margin-right: $navbar-logo-width + $spacer*2;
+	}
+	.navbar-centered .navbar-centered-6 .nav-item:nth-child(3) {
+		margin-right: $navbar-logo-width + $spacer*2;
+	}
+	.navbar-centered .navbar-centered-8 .nav-item:nth-child(4) {
+		margin-right: $navbar-logo-width + $spacer*2;
+    }
+    .navbar-centered .navbar-brand {
+        width: $navbar-logo-width;
+        text-align:center;
+    }
+    .navbar-centered .navbar-nav {
+        height:$navbar-height;
+    }
+}

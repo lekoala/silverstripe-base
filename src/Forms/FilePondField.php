@@ -284,6 +284,15 @@ class FilePondField extends BaseFileUploadField
             $this->setName($name);
         }
 
+        $i18nConfig = [
+            'labelIdle' => _t('FilePondField.labelIdle', 'Drag & Drop your files or <span class="filepond--label-action"> Browse </span>'),
+            'labelFileProcessing' => _t('FilePondField.labelFileProcessing', 'Uploading'),
+            'labelFileProcessingComplete' => _t('FilePondField.labelFileProcessingComplete', 'Upload complete'),
+            'labelFileProcessingAborted' => _t('FilePondField.labelFileProcessingAborted', 'Upload cancelled'),
+            'labelTapToCancel' => _t('FilePondField.labelTapToCancel', 'tap to cancel'),
+            'labelTapToRetry' => _t('FilePondField.labelTapToCancel', 'tap to retry'),
+            'labelTapToUndo' => _t('FilePondField.labelTapToCancel', 'tap to undo'),
+        ];
         $config = [
             'name' => $name, // This will also apply to the hidden fields
             'allowMultiple' => $multiple,
@@ -293,25 +302,27 @@ class FilePondField extends BaseFileUploadField
             'server' => $this->getServerOptions(),
             'files' => $this->getExistingUploadsData(),
         ];
+        $config = array_merge($config, $i18nConfig);
+
         $this->setAttribute('data-module', 'filepond');
         $this->setAttribute('data-config', json_encode($config));
 
         // Polyfill to ensure max compatibility
         Requirements::javascript("https://unpkg.com/filepond-polyfill@1.0.2/dist/filepond-polyfill.min.js");
         // File validation plugins
-        Requirements::javascript("https://unpkg.com/filepond-plugin-file-validate-type@1.1.0/dist/filepond-plugin-file-validate-type.min.js");
-        Requirements::javascript("https://unpkg.com/filepond-plugin-file-validate-size@1.0.4/dist/filepond-plugin-file-validate-size.min.js");
+        Requirements::javascript("https://unpkg.com/filepond-plugin-file-validate-type@1.2.0/dist/filepond-plugin-file-validate-type.min.js");
+        Requirements::javascript("https://unpkg.com/filepond-plugin-file-validate-size@2.0.0/dist/filepond-plugin-file-validate-size.min.js");
         // Poster plugins
         // Requirements::javascript("https://unpkg.com/filepond-plugin-file-metadata@1.0.2/dist/filepond-plugin-file-metadata.min.js");
         // Requirements::css("https://unpkg.com/filepond-plugin-file-poster@1.0.0/dist/filepond-plugin-file-poster.min.css");
         // Requirements::javascript("https://unpkg.com/filepond-plugin-file-poster@1.0.0/dist/filepond-plugin-file-poster.min.js");
         // Image plugins
-        // Requirements::javascript("https://unpkg.com/filepond-plugin-image-exif-orientation@1.0.2/dist/filepond-plugin-image-exif-orientation.js");
+        Requirements::javascript("https://unpkg.com/filepond-plugin-image-exif-orientation@1.0.3/dist/filepond-plugin-image-exif-orientation.js");
         // Requirements::css("https://unpkg.com/filepond-plugin-image-preview@2.0.1/dist/filepond-plugin-image-preview.min.css");
         // Requirements::javascript("https://unpkg.com/filepond-plugin-image-preview@2.0.1/dist/filepond-plugin-image-preview.min.js");
         // Base elements
-        Requirements::css("https://unpkg.com/filepond@2.0.1/dist/filepond.min.css");
-        Requirements::javascript("https://unpkg.com/filepond@2.0.1/dist/filepond.min.js");
+        Requirements::css("https://unpkg.com/filepond@3.2.5/dist/filepond.css");
+        Requirements::javascript("https://unpkg.com/filepond@3.2.5/dist/filepond.js");
         Requirements::javascript("https://unpkg.com/jquery-filepond@1.0.0/filepond.jquery.js");
         // Our custom init
         Requirements::javascript('base/javascript/ModularBehaviour.js');
