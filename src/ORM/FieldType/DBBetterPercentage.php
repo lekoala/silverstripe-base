@@ -25,4 +25,12 @@ class DBBetterPercentage extends DBPercentage
         //TODO : handle % over 100 with a given condition
         return $field;
     }
+
+    /**
+     * Returns the number, expressed as a percentage. For example, “36.30”
+     */
+    public function NiceValue()
+    {
+        return number_format($this->value * 100, $this->decimalSize - 2);
+    }
 }

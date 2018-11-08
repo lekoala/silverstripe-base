@@ -52,7 +52,7 @@ class InputMaskField extends TextField
      * @config
      * @var string
      */
-    private static $version = '4.0.2';
+    private static $version = '4.0.3';
 
     public function Type()
     {
