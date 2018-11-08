@@ -153,7 +153,6 @@ class ThemeSiteConfigExtension extends DataExtension
     }
     public function updateCMSFields(FieldList $fields)
     {
-        $fields->removeByName('Theme');
         $themeTab = new Tab("Theme");
         $fields->addFieldToTab('Root', $themeTab);
         // If we have themes, allow to configure some css variables in them

@@ -70,10 +70,10 @@ class SubsiteExtension extends DataExtension
         array_pop($parts);
         array_push($parts, 'local');
         $subsiteDomain = implode('.', $parts);
-        // Add port if used
-        if (!empty($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] != 80) {
-            $subsiteDomain .= ':' . $_SERVER['SERVER_PORT'];
-        }
+        // Port are ignored in newest versions
+        // if (!empty($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] != 80) {
+        //     $subsiteDomain .= ':' . $_SERVER['SERVER_PORT'];
+        // }
 
         $domain = new SubsiteDomain();
         $domain->IsPrimary = 0;
