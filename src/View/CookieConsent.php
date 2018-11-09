@@ -101,17 +101,15 @@ class CookieConsent
             ]
         ];
         if ($PrimaryColor->getValue()) {
-            $paletteOpts = [
-                'palette' => [
-                    'popup' => [
-                        'background' => $ThemeColor->Color(),
-                        'text' => $ThemeColor->ContrastColor(),
-                    ],
-                    'button' => [
-                        'background' => $PrimaryColor->HighlightColor(),
-                        'text' => $PrimaryColor->HighlightContrastColor(),
-                    ]
-                ]
+            $paletteOpts['palette']['button'] = [
+                'background' => $PrimaryColor->HighlightColor(),
+                'text' => $PrimaryColor->HighlightContrastColor(),
+            ];
+        }
+        if ($ThemeColor->getValue()) {
+            $paletteOpts['palette']['popup'] = [
+                'background' => $ThemeColor->Color(),
+                'text' => $ThemeColor->ContrastColor(),
             ];
         }
         $contentOpts = [
