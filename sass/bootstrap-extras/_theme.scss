@@ -150,9 +150,11 @@ $btn-focus-width: $btn-focus-width/2;
     background: var(--primary-color) !important;
     color: var(--primary-color-contrast);
 
-    a,
-    a:hover {
+    a {
         color: var(--primary-color-contrast);
+    }
+    a:hover {
+        color: var(--primary-highlight-contrast);
     }
 }
 
@@ -160,9 +162,11 @@ $btn-focus-width: $btn-focus-width/2;
     background: var(--secondary-color) !important;
     color: var(--secondary-color-contrast);
 
-    a,
-    a:hover {
+    a {
         color: var(--secondary-color-contrast);
+    }
+    a:hover {
+        color: var(--secondary-highlight-contrast);
     }
 }
 

@@ -190,4 +190,12 @@ class CommonRequirements
         $version = self::config()->cleave_version;
         Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/cleave.js/$version/cleave.min.js");
     }
+
+    /**
+     * @return void
+     */
+    public static function utils()
+    {
+        Requirements::javascript("base/javascript/utils.js");
+    }
 }

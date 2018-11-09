@@ -1,3 +1,5 @@
+/* global $, window, jQuery */
+
 /**
  * Tweaks for the CMS
  * TODO: how to avoid attaching everything to document (use entwine?)
