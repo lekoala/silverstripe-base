@@ -3,11 +3,19 @@
     margin: 0;
     padding: 0;
 
+    &.SocialLinks-right {
+        float: right;
+    }
+
     li {
         float: left;
         margin: 0;
         padding: 0;
         margin-right: 1em;
+
+        &:last-child {
+            margin-right: 0;
+        }
     }
 
     a {
@@ -38,6 +46,7 @@
             color: $color;
         }
     }
+
     @each $brand, $color in $social-brands-colors {
         .SocialLinks-#{$brand} a:hover {
             border-color: $color;
