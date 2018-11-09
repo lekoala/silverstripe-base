@@ -8,10 +8,16 @@ var utils = {
                 scrollTop: $(dest).offset().top
             }, 'slow');
         });
+    },
+    canvi: function() {
+        var canvi = new Canvi({
+            openButton: '.canvi-open-button'
+        });
     }
 };
 
-// Init
+// Init automatically
+// Sample usage: <body class="$BodyClass" data-utils="smoothScrolling,canvi">
 (function($) {
     var dataUtils = $('body').data('utils');
     var list = dataUtils.split(',');
