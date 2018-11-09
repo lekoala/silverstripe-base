@@ -63,6 +63,7 @@ class ThemeSiteConfigExtension extends DataExtension
         "Logo",
         "Icon",
     ];
+
     public function onAfterWrite()
     {
         if ($this->owner->LogoID) {
@@ -78,6 +79,7 @@ class ThemeSiteConfigExtension extends DataExtension
             }
         }
     }
+
     /**
      * Get all font weight with a human readable value
      *
@@ -97,6 +99,7 @@ class ThemeSiteConfigExtension extends DataExtension
             900 => 'black',
         ];
     }
+
     /**
      * List all *-theme.css files in current theme
      *
@@ -113,6 +116,7 @@ class ThemeSiteConfigExtension extends DataExtension
         }
         return $arr;
     }
+
     /**
      * Get where your css files are stored
      *
@@ -123,6 +127,7 @@ class ThemeSiteConfigExtension extends DataExtension
         $themeDir = $this->getThemeDir();
         return Director::baseFolder() . '/' . $themeDir . '/css';
     }
+
     /**
      * List options defined in current css theme if any
      *
@@ -151,6 +156,7 @@ class ThemeSiteConfigExtension extends DataExtension
         }
         return $values;
     }
+
     public function updateCMSFields(FieldList $fields)
     {
         $themeTab = new Tab("Theme");
@@ -214,6 +220,7 @@ class ThemeSiteConfigExtension extends DataExtension
         $Favicon->setDescription("Upload the zip file generated with <a href=\"https://realfavicongenerator.net/\" target=\"_blank\">Real Favicon Generator</a>. Theme Color will be used as background for your icon.");
         $themeTab->push($Favicon);
     }
+
     /**
      * Render your favicons with proper markup
      *
@@ -235,14 +242,20 @@ class ThemeSiteConfigExtension extends DataExtension
             )
         )->renderWith('Favicons');
     }
+
     /**
+     * Public url for theme assets
+     * We use a _ to make the folder invisible to FileManager
+     *
      * @return string
      */
     public function getThemeAssetURL()
     {
         return '/assets/_theme/' . $this->owner->ID;
     }
+
     /**
+     * Get the actual directory in the filesystem (in the public folder)
      * @return string
      */
     public function getThemeAssetsFolder()
@@ -253,10 +266,12 @@ class ThemeSiteConfigExtension extends DataExtension
         }
         return $dir;
     }
+
     public function onBeforeWrite()
     {
         $changedFields = $this->owner->getChangedFields(true, 2);
-        if (isset($changedFields['FaviconID'])) {
+        $needsFavicon = $this->owner->FaviconID && !is_dir($this->getThemeAssetsFolder());
+        if (isset($changedFields['FaviconID']) || $needsFavicon) {
             try {
                 $this->unpackFaviconArchive();
                 $dir = $this->getThemeAssetsFolder();
@@ -265,6 +280,7 @@ class ThemeSiteConfigExtension extends DataExtension
                     $this->parseWebManifest($webmanifest);
                 }
             } catch (Exception $ex) {
+                l($ex);
             }
         }
 
@@ -305,6 +321,7 @@ class ThemeSiteConfigExtension extends DataExtension
         }
         // TODO: generate mask and theme based on color contrast
     }
+
     /**
      * Assign theme color from webmanifest
      *
@@ -317,6 +334,7 @@ class ThemeSiteConfigExtension extends DataExtension
         $arr = json_decode($data);
         $this->owner->ThemeColor = $arr['theme_color'];
     }
+
     /**
      * Unpack a favicon archive into theme asset folder
      *

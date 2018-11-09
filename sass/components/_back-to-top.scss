@@ -1,3 +1,7 @@
+// Usage:
+// <a id="top"></a>
+// $Layout
+// <div class="back-to-top"><a href="#top"></a></div>
 .back-to-top {
     position:fixed;
     bottom:$spacer;
