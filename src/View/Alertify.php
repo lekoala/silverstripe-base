@@ -3,6 +3,7 @@
 namespace LeKoala\Base\View;
 
 use SilverStripe\i18n\i18n;
+use SilverStripe\Control\Cookie;
 use SilverStripe\Control\Session;
 use SilverStripe\View\Requirements;
 use SilverStripe\Core\Config\Configurable;
@@ -54,6 +55,26 @@ class Alertify
             $settings .= "alertify.defaults.$k = '$v';\n";
         }
         Requirements::customScript($settings, 'AlertifySettings');
+    }
+
+    /**
+     * Display an alert only once (check is cookie based)
+     *
+     * @param string $name The name of the notification (name will be stored in a cookie)
+     * @param string $message
+     * @param string $type
+     * @return bool Has the notification been displayed?
+     */
+    public static function notifyOnce($name, $message, $type)
+    {
+        $check = Cookie::get($name);
+        if ($check) {
+            return false;
+        }
+        self::requirements();
+        self::show($message, $type);
+        Cookie::set($name, 1);
+        return true;
     }
 
     public static function show($message, $type)
