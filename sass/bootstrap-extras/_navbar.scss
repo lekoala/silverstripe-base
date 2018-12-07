@@ -57,3 +57,11 @@ $navbar-height: 56px;
         white-space: normal;
     }
 }
+
+.modal-open .canvi-content {
+    z-index: initial;
+}
+
+.modal-open .canvi-navbar {
+    display: none !important;
+}

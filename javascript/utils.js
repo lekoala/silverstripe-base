@@ -2,6 +2,9 @@
 var utils = {
     smoothScrolling: function() {
         $("a[href^='#']").click(function(e) {
+            if ($(this).data('toggle')) {
+                return true;
+            }
             e.preventDefault();
             var dest = $(this).attr('href');
             $('html,body').animate({

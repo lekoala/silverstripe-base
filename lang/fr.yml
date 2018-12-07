@@ -32,6 +32,8 @@ fr:
     ERR_ENTER_VALIDEMAIL: 'Entrez un email valide'
     MESSAGE_ERROR: 'Votre message n''a pas été envoyé.'
     MESSAGE_SENT: 'Votre message a bien été envoyé.'
+  ContactForm:
+    SEND: 'Envoyez votre message'
   CookieConsent:
     ALLOWCOOKIES: 'Accepter cookies'
     DECLINE: Refuser
@@ -67,7 +69,10 @@ fr:
     EmailFooter: 'Email Footer'
     EmailSettings: 'Email settings'
     LegalName: 'Legal Name'
-    Phone: Phone
+    Phone: Téléphone
+    Name: Nom
+    Subject: Sujet
+    Company: Société
     View: 'Voir'
     Back: 'Retour'
   NewsItem:

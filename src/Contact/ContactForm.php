@@ -28,7 +28,7 @@ class ContactForm extends BaseForm
 
     protected function buildActions(BuildableFieldList $actions)
     {
-        $doSend = $actions->addAction("doSend", "Send your message");
+        $doSend = $actions->addAction("doSend", _t('ContactForm.SEND', 'Send your message'));
         $doSend->addExtraClass('d-block w-100');
         return $actions;
     }

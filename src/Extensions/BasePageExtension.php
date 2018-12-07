@@ -3,13 +3,15 @@ namespace LeKoala\Base\Extensions;
 
 use SilverStripe\ORM\DB;
 use SilverStripe\Core\Convert;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\ErrorPage\ErrorPage;
 use SilverStripe\Versioned\Versioned;
 use LeKoala\Base\Subsite\SubsiteHelper;
 use SilverStripe\SiteConfig\SiteConfig;
-use SilverStripe\ORM\DataObject;
+use LeKoala\Base\Privacy\PrivacyNoticePage;
+use LeKoala\Base\Privacy\TermsAndConditionsPage;
 
 /**
  * Useful utilities for pages
@@ -160,5 +162,15 @@ class BasePageExtension extends DataExtension
             $cardType = 'summary_large_image';
         }
         $tags .= $this->createMetaTag('twitter:card', $cardType);
+    }
+
+    public function PrivacyNoticePage()
+    {
+        return DataObject::get_one(PrivacyNoticePage::class);
+    }
+
+    public function TermsAndConditionsPage()
+    {
+        return DataObject::get_one(TermsAndConditionsPage::class);
     }
 }
