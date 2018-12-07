@@ -26,7 +26,7 @@ class PrivacyNoticePage extends Page
                 'Content' => 'Please go to  https://termsandconditionstemplate.com/privacy-policy-generator/ to generate your privacy policy or copy your own',
                 'Sort' => 49,
                 'ShowInMenus' => 0
-            ]);
+            ], true);
         }
     }
 

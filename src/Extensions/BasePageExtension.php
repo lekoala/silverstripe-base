@@ -9,6 +9,7 @@ use SilverStripe\ErrorPage\ErrorPage;
 use SilverStripe\Versioned\Versioned;
 use LeKoala\Base\Subsite\SubsiteHelper;
 use SilverStripe\SiteConfig\SiteConfig;
+use SilverStripe\ORM\DataObject;
 
 /**
  * Useful utilities for pages
@@ -25,11 +26,23 @@ class BasePageExtension extends DataExtension
      * @param string $segment Default url segment for the page
      * @param string $class The page class
      * @param array $data Data to inject in the page
+     * @param bool $checkType Check page type instead of segment
      */
-    public function requirePageForSegment($segment, $class, $data = [])
+    public function requirePageForSegment($segment, $class, $data = [], $checkType = null)
     {
-        SubsiteHelper::withSubsites(function ($SubsiteID = 0) use ($segment, $class, $data) {
-            $page = SiteTree::get_by_link($segment);
+        if ($checkType === null) {
+            $checkType = true;
+            // only check segment by default if our website is in english
+            if (i18n::get_locale() == 'en_US') {
+                $checkType = false;
+            }
+        }
+        SubsiteHelper::withSubsites(function ($SubsiteID = 0) use ($segment, $class, $data, $checkType) {
+            if ($checkType) {
+                $page = DataObject::get_one($class);
+            } else {
+                $page = SiteTree::get_by_link($segment);
+            }
             if ($page) {
                 // We have a page but the class does not match
                 if ($page->ClassName != $class) {

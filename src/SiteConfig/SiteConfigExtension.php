@@ -43,6 +43,8 @@ class SiteConfigExtension extends DataExtension
         "ContactAddress" => "Varchar(199)", // A geocodable address
         "ContactInfos" => "HTMLText", // Additionnal infos with map, links etc
         "LegalName" => "Varchar(199)", // The legal name of the company, for copyright use
+        "CompanyRegistrationNumber" => "Varchar(59)", // The legal number
+        "LegalCourt" => "Varchar(59)", // The legal court
         // Emails
         "DefaultFromEmail" => "Varchar(199)",
         "EmailFooter" => "Text",
@@ -50,10 +52,10 @@ class SiteConfigExtension extends DataExtension
         "FooterText" => "HTMLText",
         "Copyright" => "HTMLText", // A custom copyright text, otherwise defaults to (year) - Legal Name
         // External Services
-        "GoogleAnalyticsCode" => "Varchar(59)",
-        "GoogleMapsApiKey" => "Varchar(59)",
+        "GoogleAnalyticsCode" => "Varchar(59)",  // TODO: to deprecate
+        "GoogleMapsApiKey" => "Varchar(59)",  // TODO: to deprecate
         // Site config
-        "ForceSSL" => "Boolean",
+        "ForceSSL" => "Boolean", // TODO: to deprecate
     ];
 
     public function updateCMSFields(FieldList $fields)
@@ -71,8 +73,13 @@ class SiteConfigExtension extends DataExtension
         // See https://docs.silverstripe.org/en/4/developer_guides/forms/field_types/htmleditorfield/
         $ContactInfos->setRows(7);
         $fields->addFieldToTab('Root.Main', $ContactInfos);
+        // Privacy and legal stuff
         $LegalName = new TextField('LegalName', _t('Global.LegalName', 'Legal Name'));
-        $fields->addFieldToTab('Root.Main', $LegalName);
+        $fields->addFieldToTab('Root.Legal', $LegalName);
+        $CompanyRegistrationNumber = new TextField('CompanyRegistrationNumber', _t('Global.CompanyRegistrationNumber', 'Company Registration Number'));
+        $fields->addFieldToTab('Root.Legal', $CompanyRegistrationNumber);
+        $LegalCourt = new TextField('LegalCourt', _t('Global.LegalCourt', 'Legal Court'));
+        $fields->addFieldToTab('Root.Legal', $LegalCourt);
         // Emails
         $EmailsHeader = new HeaderField('EmailsHeader', _t('Global.EmailSettings', 'Email settings'));
         $fields->addFieldToTab('Root.Main', $EmailsHeader);

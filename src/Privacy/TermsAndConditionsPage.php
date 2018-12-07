@@ -26,7 +26,7 @@ class TermsAndConditionsPage extends Page
                 'Content' => 'Please go to https://termsandconditionstemplate.com/generate/ to generate your terms and conditions or copy your own',
                 'Sort' => 50,
                 'ShowInMenus' => 0
-            ]);
+            ], true);
         }
     }
 

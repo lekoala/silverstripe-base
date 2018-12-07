@@ -27,7 +27,7 @@ class CookiesRequiredPage extends Page
                 'Content' => _t('CookiesRequiredPage.COOKIES_ARE_REQUIRED', 'Cookies are required to use this website'),
                 'Sort' => 49,
                 'ShowInMenus' => 0
-            ]);
+            ], true);
         }
     }
 }
