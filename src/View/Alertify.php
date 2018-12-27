@@ -6,6 +6,8 @@ use SilverStripe\i18n\i18n;
 use SilverStripe\Control\Cookie;
 use SilverStripe\Control\Session;
 use SilverStripe\View\Requirements;
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Config\Configurable;
 
 /**
@@ -67,13 +69,23 @@ class Alertify
      */
     public static function notifyOnce($name, $message, $type)
     {
-        $check = Cookie::get($name);
+        $request = Injector::inst()->get(HTTPRequest::class);
+        $session = $request->getSession();
+        if ($session) {
+            $check = $session->get($name);
+        } else {
+            $check = Cookie::get($name);
+        }
         if ($check) {
             return false;
         }
         self::requirements();
         self::show($message, $type);
-        Cookie::set($name, 1);
+        if ($session) {
+            $session->set($name, 1);
+        } else {
+            Cookie::set($name, 1);
+        }
         return true;
     }
 
