@@ -2,6 +2,7 @@
 namespace LeKoala\Base\Extensions;
 
 use SilverStripe\ORM\DB;
+use SilverStripe\i18n\i18n;
 use SilverStripe\Core\Convert;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataExtension;
