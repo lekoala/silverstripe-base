@@ -33,6 +33,10 @@ class DeferBackend extends Requirements_Backend
         if (strpos($script, 'window.addEventListener') === false) {
             $script = "window.addEventListener('DOMContentLoaded', function() { $script });";
         }
+
+        // Remove comments if any
+        $script = preg_replace('/(?:(?:\/\*(?:[^*]|(?:\*+[^*\/]))*\*+\/)|(?:(?<!\:|\\\|\'|\")\/\/.*))/', '', $script);
+
         return parent::customScript($script, $uniquenessID);
     }
 

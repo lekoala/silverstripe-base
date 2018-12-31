@@ -66,6 +66,18 @@ class CommonRequirements
     private static $cleave_version = '1.4.4';
 
     /**
+     * @config
+     * @var string
+     */
+    private static $lazyload_ie_version = '8.17.0';
+
+    /**
+     * @config
+     * @var string
+     */
+    private static $lazyload_version = '10.19.0';
+
+    /**
      * Include all files in a given path
      *
      * @param string $path
@@ -207,5 +219,52 @@ class CommonRequirements
     {
         Requirements::css("base/javascript/vendor/canvi/canvi.css");
         Requirements::javascript("base/javascript/vendor/canvi/canvi.js");
+    }
+
+    /**
+     * @link https://github.com/verlok/lazyload
+     * @return void
+     */
+    public static function lazyload()
+    {
+        $version = self::config()->lazyload_version;
+        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/vanilla-lazyload/$version/lazyload.min.js");
+        // Requirements::javascript("https://cdn.jsdelivr.net/npm/vanilla-lazyload@$version/dist/lazyload.min.js");
+    }
+
+    /**
+     * @link https://github.com/verlok/lazyload
+     * @return void
+     */
+    public static function lazyload_ie()
+    {
+        $version = self::config()->lazyload_ie_version;
+        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/vanilla-lazyload/$version/lazyload.min.js");
+        // Requirements::javascript("https://cdn.jsdelivr.net/npm/vanilla-lazyload@$version/dist/lazyload.min.js");
+    }
+
+    /**
+     * @link https://github.com/verlok/lazyload
+     * @return void
+     */
+    public static function lazyload_auto()
+    {
+        $version = self::config()->lazyload_version;
+        $ie_version = self::config()->lazyload_ie_version;
+
+        $js = <<<JS
+(function(w, d){
+    var b = d.getElementsByTagName('body')[0];
+    var s = d.createElement("script");
+    var v = !("IntersectionObserver" in w) ? "$ie_version" : "$version";
+    s.async = true;
+    s.src = "https://cdnjs.cloudflare.com/ajax/libs/vanilla-lazyload/" + v + "/lazyload.min.js";
+    w.lazyLoadOptions = {
+        elements_selector: ".lazy"
+    };
+    b.appendChild(s);
+}(window, document));
+JS;
+        Requirements::customScript($js, 'LazyloadAuto');
     }
 }
