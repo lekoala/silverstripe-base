@@ -15,6 +15,11 @@ use LeKoala\Base\Privacy\PrivacyNoticePage;
  *
  * When consent is given, global onConsentReceived() will be called. As an helper, you can use CookieConsent::addScript to do that for you.
  *
+ * For performance, remember to use this config and include the relevant sass file in base/sass/vendor
+ *
+ *   LeKoala\Base\View\CookieConsent:
+ *     inline_css: true
+ *
  * @link https://cookieconsent.insites.com
  * @link https://cookieconsent.insites.com/documentation/disabling-cookies/
  * @link https://cookiesandyou.com/
@@ -45,6 +50,12 @@ class CookieConsent
      * @var boolean
      */
     private static $cookies_required = false;
+
+    /**
+     * @config
+     * @var boolean
+     */
+    private static $inline_css = false;
 
     /**
      * @config
@@ -127,7 +138,9 @@ class CookieConsent
 
         // Include script
         $version = self::config()->version;
-        Requirements::css("//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/$version/cookieconsent.min.css");
+        if (!self::config()->inline_css) {
+            Requirements::css("//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/$version/cookieconsent.min.css");
+        }
         Requirements::javascript("//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/$version/cookieconsent.min.js");
 
         // Create url to redirect to if cookies are dismissed
