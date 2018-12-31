@@ -34,13 +34,13 @@ class Bootstrap
      * @config
      * @var string
      */
-    private static $bootstrap_version = '4.1.3';
+    private static $bootstrap_version = '4.2.1';
 
     /**
      * @config
      * @var string
      */
-    private static $bootstrap_native_version = '2.0.15';
+    private static $bootstrap_native_version = '2.0.24';
 
     /**
      * @config
