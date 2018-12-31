@@ -148,7 +148,7 @@ class ThemeSiteConfigExtension extends DataExtension
         }
         $themeFile = $this->getThemeCssPath() . '/' . $this->owner->CssTheme;
         $contents = file_get_contents($themeFile);
-        if (strpos($contents, '@disallowFonts') !== false) {
+        if (strpos($contents, '@disallowFonts') !== false || strpos($contents, 'fonts.googleapis.com/css') !== false) {
             $values['allowFonts'] = false;
         }
         if (strpos($contents, '@disallowColors') !== false) {
@@ -298,6 +298,9 @@ class ThemeSiteConfigExtension extends DataExtension
             }
             if ($this->owner->BodyFontWeight) {
                 $this->owner->BodyFontWeight = 0;
+            }
+            if ($this->owner->GoogleFonts) {
+                $this->owner->GoogleFonts = null;
             }
         }
         if (!$themeOptions['allowColors']) {
