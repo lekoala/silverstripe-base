@@ -97,27 +97,30 @@ class BaseFileExtension extends DataExtension
     /**
      * Simply use MyImage.Lazy in your templates
      *
-     * Pass MyImage.Lazy(0) if you don't want to include size attributes
-     * Useful if image is resized through css
-     * Typically, it's better to do MyImage.ScaleWidth(200).Lazy if you resize images
+     * Pass MyImage.Lazy(200) if you don't want to limit width to a specific size
      *
      * Currently, boolean arguments are not supported in a template
      * @link https://github.com/silverstripe/silverstripe-framework/issues/8690
      *
-     * @param bool $includeSize
+     * @param int $limitWidth
      * @return string
      */
-    public function Lazy($includeSize = true)
+    public function Lazy($limitWidth = null)
     {
-        $url = Convert::raw2att($this->owner->getURL());
-        $title = Convert::raw2att($this->owner->getTitle());
-        if ($includeSize == false) {
+        $img = $this->owner;
+        if ($limitWidth) {
+            $img = $this->owner->ScaleWidth($limitWidth);
+        }
+        $url = Convert::raw2att($img->getURL());
+        $title = Convert::raw2att($img->getTitle());
+        if (!$limitWidth) {
             return '<img data-src="' . $url . '" class="lazy" alt="' . $title . '" />';
         }
         // this reports original width if resized from template
+        // so we have to pass width as an argument
         // @link https://github.com/silverstripe/silverstripe-assets/issues/201
-        $w = $this->owner->getWidth();
-        $h = $this->owner->getHeight();
+        $w = $img->getWidth();
+        $h = $img->getHeight();
         return '<img data-src="' . $url . '" class="lazy" alt="' . $title . '" width="' . $w . '" height="' . $h . '" />';
     }
 
