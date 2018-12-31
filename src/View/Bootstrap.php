@@ -61,7 +61,7 @@ class Bootstrap
 
         Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/jquery/$jquery_version/jquery.min.js");
         // with Popper JS but no jQuery
-        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/$bootstrap_version/js/bootstrap.bundle.js");
+        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/$bootstrap_version/js/bootstrap.bundle.min.js");
         // Helpers
         Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/js-cookie/$js_cookie_version/js.cookie.min.js");
         Requirements::javascript("base/javascript/BootstrapHelpers.js");

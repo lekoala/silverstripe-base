@@ -6,6 +6,7 @@ $ei-generate-classes: false !default;
 @include elegant-icons-font-face();
 %common-icon-properties {
     font-family: $ei-font-family;
+    font-display: auto;
     font-style: normal;
     font-variant: normal;
     font-weight: normal;
