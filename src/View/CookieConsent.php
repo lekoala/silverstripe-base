@@ -115,7 +115,7 @@ class CookieConsent
         $contentOpts = [
             'content' => [
                 'message' => $message,
-                'dismiss' => _t('CookieConsent.DECLINE', 'Decline'),
+                'deny' => _t('CookieConsent.DECLINE', 'Decline'),
                 'allow' => _t('CookieConsent.ALLOWCOOKIES', 'Allow cookies'),
                 'link' => _t('CookieConsent.LINK', 'Learn more'),
                 'href' => $privacyLink,

@@ -318,6 +318,8 @@ class FlatpickrField extends TextField
     /**
      * Set id of the second element
      *
+     * eg: #Form_ItemEditForm_EndDate
+     *
      * @param string $range Id of the second element
      * @param bool $confirm
      * @return $this

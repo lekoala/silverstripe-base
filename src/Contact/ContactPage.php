@@ -46,7 +46,8 @@ class ContactPage extends \Page
         $fields = parent::getCMSFields();
         $fields->addFieldsToTab('Root.Details', new TextField('Address'));
         $fields->addFieldsToTab('Root.Details', $Infos = new HTMLEditorField('Infos'));
-        $Infos->setRows(5);
+        $Infos->setRows(10);
+        $Infos->addExtraClass('stacked');
         $fields->addFieldsToTab('Root.Details', new CheckboxField('ShowInfosOnly'));
         $fields->addFieldsToTab('Root.Details', new TextField('Phone'));
         $fields->addFieldsToTab('Root.Details', new TextField('Email'));

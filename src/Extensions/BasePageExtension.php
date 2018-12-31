@@ -6,6 +6,7 @@ use SilverStripe\Core\Convert;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\CMS\Model\SiteTree;
+use LeKoala\Base\Contact\ContactPage;
 use SilverStripe\ErrorPage\ErrorPage;
 use SilverStripe\Versioned\Versioned;
 use LeKoala\Base\Subsite\SubsiteHelper;
@@ -162,15 +163,5 @@ class BasePageExtension extends DataExtension
             $cardType = 'summary_large_image';
         }
         $tags .= $this->createMetaTag('twitter:card', $cardType);
-    }
-
-    public function PrivacyNoticePage()
-    {
-        return DataObject::get_one(PrivacyNoticePage::class);
-    }
-
-    public function TermsAndConditionsPage()
-    {
-        return DataObject::get_one(TermsAndConditionsPage::class);
     }
 }
