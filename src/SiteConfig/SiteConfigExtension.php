@@ -88,13 +88,6 @@ class SiteConfigExtension extends DataExtension
         $Copyright = new HTMLEditorField('Copyright');
         $Copyright->setRows(2);
         $fields->addFieldToTab('Root.Footer', $Copyright);
-        // External Services
-        $externalServicesTab = new Tab("ExternalServices");
-        $fields->addFieldToTab('Root', $externalServicesTab);
-        $GoogleAnalyticsCode = new TextField('GoogleAnalyticsCode');
-        $externalServicesTab->push($GoogleAnalyticsCode);
-        $GoogleMapsApiKey = new TextField('GoogleMapsApiKey');
-        $externalServicesTab->push($GoogleMapsApiKey);
     }
 
     /**
@@ -105,48 +98,6 @@ class SiteConfigExtension extends DataExtension
     public function ContactAddressMapLink()
     {
         return 'https://www.google.com/maps/search/?api=1&query=' . urlencode($this->owner->ContactAddress);
-    }
-
-    /**
-     * Call this in your controller manually
-     * @return void
-     */
-    public function requireGoogleMaps()
-    {
-        if (!$this->owner->GoogleMapsApiKey) {
-            return false;
-        }
-        Requirements::javascript('https://maps.googleapis.com/maps/api/js?key=' . $this->owner->GoogleMapsApiKey);
-        return true;
-    }
-
-    /**
-     * Called automatically by BaseContentController
-     * @return void
-     */
-    public function requireGoogleAnalytics()
-    {
-        if (!Director::isLive()) {
-            return false;
-        }
-        if (!$this->owner->GoogleAnalyticsCode) {
-            return false;
-        }
-        $script = <<<JS
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-ga('create', '{$this->owner->GoogleAnalyticsCode}', 'auto');
-ga('send', 'pageview');
-JS;
-        if (CookieConsent::IsEnabled()) {
-            CookieConsent::addScript($script, "GoogleAnalytics");
-        } else {
-            Requirements::customScript($script, "GoogleAnalytics");
-        }
-
-        return true;
     }
 
     /**

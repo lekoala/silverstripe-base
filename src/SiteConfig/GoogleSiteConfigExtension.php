@@ -7,6 +7,7 @@ use SilverStripe\Control\Director;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\View\Requirements;
 use LeKoala\Base\View\CookieConsent;
+use LeKoala\Base\Forms\Bootstrap\Tab;
 
 /**
  * Google SiteConfig stuff
@@ -23,7 +24,11 @@ class GoogleSiteConfigExtension extends DataExtension
 
     public function updateCMSFields(FieldList $fields)
     {
-        $tab = $fields->findOrMakeTab(SiteConfigExtension::EXTERNAL_SERVICES_TAB);
+        $tab = $fields->fieldByName(SiteConfigExtension::EXTERNAL_SERVICES_TAB);
+        if (!$tab) {
+            $tab = new Tab(SiteConfigExtension::EXTERNAL_SERVICES_TAB);
+            $fields->addFieldToTab('Root', $tab);
+        }
         $GoogleAnalyticsCode = new TextField('GoogleAnalyticsCode');
         $tab->push($GoogleAnalyticsCode);
         $GoogleMapsApiKey = new TextField('GoogleMapsApiKey');
