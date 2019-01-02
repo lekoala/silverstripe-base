@@ -45,9 +45,6 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
     public function init()
     {
         $SiteConfig = SiteConfig::current_site_config();
-        if ($SiteConfig->ForceSSL) {
-            Director::forceSSL();
-        }
 
         // Never have comments as it can break ajax requests
         SSViewer::config()->set('source_file_comments', false);

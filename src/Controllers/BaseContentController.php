@@ -87,9 +87,6 @@ class BaseContentController extends ContentController
         // Force SSL from client config
         // You should really do this with your webserver config instead
         $SiteConfig = $this->SiteConfig();
-        if ($SiteConfig->ForceSSL) {
-            Director::forceSSL();
-        }
 
         // Third party scripts (google analytics, etc)
         $SiteConfig->requireGoogleAnalytics();

@@ -30,12 +30,11 @@ use LeKoala\Base\View\CookieConsent;
  * @property string $EmailFooter
  * @property string $FooterText
  * @property string $Copyright
- * @property string $GoogleAnalyticsCode
- * @property string $GoogleMapsApiKey
- * @property boolean $ForceSSL
  */
 class SiteConfigExtension extends DataExtension
 {
+    const EXTERNAL_SERVICES_TAB = 'ExternalServices';
+
     private static $db = [
         // Contact Details
         "ContactEmail" => "Varchar(199)",
@@ -51,11 +50,6 @@ class SiteConfigExtension extends DataExtension
         // Footer
         "FooterText" => "HTMLText",
         "Copyright" => "HTMLText", // A custom copyright text, otherwise defaults to (year) - Legal Name
-        // External Services
-        "GoogleAnalyticsCode" => "Varchar(59)",  // TODO: to deprecate
-        "GoogleMapsApiKey" => "Varchar(59)",  // TODO: to deprecate
-        // Site config
-        "ForceSSL" => "Boolean", // TODO: to deprecate
     ];
 
     public function updateCMSFields(FieldList $fields)
@@ -101,8 +95,6 @@ class SiteConfigExtension extends DataExtension
         $externalServicesTab->push($GoogleAnalyticsCode);
         $GoogleMapsApiKey = new TextField('GoogleMapsApiKey');
         $externalServicesTab->push($GoogleMapsApiKey);
-        // Config
-        $fields->addFieldsToTab('Root.Access', new CheckboxField('ForceSSL'));
     }
 
     /**

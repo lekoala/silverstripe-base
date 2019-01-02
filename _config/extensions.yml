@@ -14,6 +14,7 @@ SilverStripe\CMS\Model\SiteTree:
 SilverStripe\SiteConfig\SiteConfig:
   extensions:
     - LeKoala\Base\SiteConfig\SiteConfigExtension
+    - LeKoala\Base\SiteConfig\GoogleSiteConfigExtension
     - LeKoala\Base\Extensions\SocialExtension
 SilverStripe\CMS\Controllers\ContentController:
   extensions:

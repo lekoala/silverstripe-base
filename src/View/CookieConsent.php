@@ -9,6 +9,7 @@ use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Control\Cookie;
 use SilverStripe\ORM\DataObject;
 use LeKoala\Base\Privacy\PrivacyNoticePage;
+use LeKoala\Base\Privacy\CookiesRequiredPage;
 
 /**
  * Add cookie consent to your website
@@ -147,8 +148,8 @@ class CookieConsent
         $cookiesRequired = self::config()->cookies_required ? 'true' : 'false';
         $cookiesLink = '/';
         if (self::config()->cookies_required) {
-            //TODO: make url configurable
-            $cookiesLink = '/cookies-required';
+            $page = DataObject::get_one(CookiesRequiredPage::class);
+            $cookiesLink = '/' . $page->Link();
         }
 
         $js = '';
