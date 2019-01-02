@@ -1,6 +1,7 @@
 <?php
 namespace LeKoala\Base\SiteConfig;
 
+use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\TextField;
 use SilverStripe\Control\Director;
 use SilverStripe\ORM\DataExtension;
