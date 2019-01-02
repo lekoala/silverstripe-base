@@ -10,6 +10,7 @@ use SilverStripe\Admin\AdminRootController;
 use SilverStripe\Admin\LeftAndMain;
 use LeKoala\Base\ORM\FieldType\DBColor;
 use SilverStripe\ORM\FieldType\DBClassName;
+use SilverStripe\SiteConfig\SiteConfig;
 
 /**
  * Class \LeKoala\Base\Theme\ThemeControllerExtension
@@ -38,22 +39,25 @@ class ThemeControllerExtension extends Extension
     {
         $themeDir = $this->getThemeDir();
         $cssPath = Director::baseFolder() . '/' . $themeDir . '/css';
-        $files = glob($cssPath . '/*.css');
         $SiteConfig = $this->owner->SiteConfig();
-        // Files are included in order, please name them accordingly
-        foreach ($files as $file) {
-            // Skip theme files, they should be included through SiteConfig
-            if (strpos($file, '-theme.css') !== false) {
-                continue;
+        if (SiteConfig::config()->auto_include_css) {
+            $files = glob($cssPath . '/*.css');
+
+            // Files are included in order, please name them accordingly
+            foreach ($files as $file) {
+                // Skip theme files, they should be included through SiteConfig
+                if (strpos($file, '-theme.css') !== false) {
+                    continue;
+                }
+                $name = basename($file);
+                // Skip editor.css
+                if ($name == 'editor.css') {
+                    continue;
+                }
+                // themedCSS use filename without extension
+                $name = rtrim($name, '.css');
+                Requirements::themedCSS($name);
             }
-            $name = basename($file);
-            // Skip editor.css
-            if ($name == 'editor.css') {
-                continue;
-            }
-            // themedCSS use filename without extension
-            $name = rtrim($name, '.css');
-            Requirements::themedCSS($name);
         }
         if ($SiteConfig->CssTheme) {
             $themedFile = $cssPath . '/' . $SiteConfig->CssTheme;

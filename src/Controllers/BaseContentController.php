@@ -7,14 +7,12 @@ use LeKoala\Base\View\Alertify;
 use SilverStripe\View\SSViewer;
 use SilverStripe\Control\Cookie;
 use SilverStripe\Control\Director;
-use SilverStripe\Core\Environment;
 use LeKoala\Base\View\DeferBackend;
 use SilverStripe\ORM\DatabaseAdmin;
 use SilverStripe\Security\Security;
 use SilverStripe\View\Requirements;
 use LeKoala\Base\View\CookieConsent;
 use SilverStripe\Control\Controller;
-use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\Connect\DatabaseException;
 use SilverStripe\CMS\Controllers\ContentController;
@@ -111,18 +109,6 @@ class BaseContentController extends ContentController
 
         // Switch channel for clearer logs
         $this->logger = $this->logger->withName('app');
-    }
-
-    /**
-     * Does current request expects json?
-     * @return boolean
-     */
-    public function isJson()
-    {
-        if (Director::is_ajax() && in_array('application/json', $this->getRequest()->getAcceptMimetypes(false))) {
-            return true;
-        }
-        return false;
     }
 
     /**
