@@ -158,7 +158,7 @@ class CookieConsent
             foreach (self::$scripts as $name => $script) {
                 $js .= "\n//$name\n$script";
             }
-            $js .= "\n}";
+            $js .= "\n}\n";
         }
 
         // Include custom init
