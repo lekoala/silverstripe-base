@@ -250,6 +250,8 @@ final class Block extends DataObject
                 if (is_array($v) && !empty($v['Files'])) {
                     $files = $v['Files'];
                     if (count($files) == 1) {
+                        // Remove ID from end of string
+                        // eg: if you added [$k, 'ImageID'] it should be accessible using "Image", not "ImageID"
                         $lastChars = substr($k, strlen($k)-2, 2);
                         if ($lastChars == 'ID') {
                             $k = substr($k, 0, -2);
