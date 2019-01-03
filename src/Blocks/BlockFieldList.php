@@ -32,7 +32,7 @@ class BlockFieldList extends BuildableFieldList
      * Automatically expand the given name to match the default key
      * and items if necessary
      *
-     * @param string|array $name The key or a composite key like [2, "FieldName"]
+     * @param string|array $name The key or a composite key like [2, "FieldName"].
      * @param string $baseKey Will use defaultKey if not provided. Use '' for no key.
      * @return string
      */

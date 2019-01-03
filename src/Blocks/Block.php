@@ -117,6 +117,7 @@ final class Block extends DataObject
      * @var boolean
      */
     public static $auto_update_page = true;
+
     public function forTemplate()
     {
         return $this->Content;
@@ -193,9 +194,6 @@ final class Block extends DataObject
             // We have items to normalize
             if (isset($data[self::ITEMS_KEY])) {
                 $data[self::ITEMS_KEY] = self::normalizeIndexedList($data[self::ITEMS_KEY]);
-                // if($this->BlockClass()) {
-                //     d($data, $this->BlockClass());
-                // }
             }
             // Somehow, data is not nested properly if not wrapped beforehand with ArrayData
             $arrayData = new ArrayData($data);
@@ -252,6 +250,10 @@ final class Block extends DataObject
                 if (is_array($v) && !empty($v['Files'])) {
                     $files = $v['Files'];
                     if (count($files) == 1) {
+                        $lastChars = substr($k, strlen($k)-2, 2);
+                        if ($lastChars == 'ID') {
+                            $k = substr($k, 0, -2);
+                        }
                         $item[$k] = self::getPublishedImageByID($files[0]);
                     } else {
                         $imageList = new ArrayList();
@@ -287,11 +289,15 @@ final class Block extends DataObject
      */
     public function isInAdmin()
     {
+        if (isset($_GET['live']) && Director::isDev()) {
+            return true;
+        }
         if (Controller::has_curr()) {
             return Controller::curr() instanceof LeftAndMain;
         }
         return false;
     }
+
     public function onBeforeWrite()
     {
         parent::onBeforeWrite();
@@ -323,8 +329,8 @@ final class Block extends DataObject
                 $this->Settings = $PostedSettings;
             }
         }
-
     }
+
     public function onAfterWrite()
     {
         parent::onAfterWrite();
