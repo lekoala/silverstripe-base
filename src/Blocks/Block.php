@@ -193,6 +193,9 @@ final class Block extends DataObject
             // We have items to normalize
             if (isset($data[self::ITEMS_KEY])) {
                 $data[self::ITEMS_KEY] = self::normalizeIndexedList($data[self::ITEMS_KEY]);
+                // if($this->BlockClass()) {
+                //     d($data, $this->BlockClass());
+                // }
             }
             // Somehow, data is not nested properly if not wrapped beforehand with ArrayData
             $arrayData = new ArrayData($data);
@@ -278,19 +281,56 @@ final class Block extends DataObject
         }
         return $image;
     }
+
+    /**
+     * @return boolean
+     */
+    public function isInAdmin()
+    {
+        if (Controller::has_curr()) {
+            return Controller::curr() instanceof LeftAndMain;
+        }
+        return false;
+    }
     public function onBeforeWrite()
     {
         parent::onBeforeWrite();
+        if (!$this->isInAdmin()) {
+            return;
+        }
+
+        // If we have a menu title (for anchors) we need an HTML ID
         if (!$this->HTMLID && $this->MenuTitle) {
             $filter = new URLSegmentFilter;
             $this->HTMLID = $filter->filter($this->MenuTitle);
         }
+
+        // Render template to content
         $Content = $this->renderWithTemplate();
         $this->Content = $Content;
+
+        // Clear unused data fields (see if we can remove setCastedField hijack altogether)
+        $ID = $_POST['ID'] ?? 0;
+
+        // Make sure we only assign data on currently edited block (not on other due to cascade update)
+        if ($ID == $this->ID) {
+            $PostedData = $_POST[self::DATA_KEY] ?? null;
+            $PostedSettings = $_POST[self::SETTINGS_KEY] ?? null;
+            if ($PostedData !== null) {
+                $this->BlockData = $PostedData;
+            }
+            if ($PostedSettings !== null) {
+                $this->Settings = $PostedSettings;
+            }
+        }
+
     }
     public function onAfterWrite()
     {
         parent::onAfterWrite();
+        if (!$this->isInAdmin()) {
+            return;
+        }
         if (self::$auto_update_page) {
             // Update Page Content to reflect updated block content
             $this->Page()->write();
@@ -364,7 +404,7 @@ final class Block extends DataObject
     {
         if (strpos($name, '[') !== false) {
             $matches = null;
-            \preg_match_all('/\[([a-zA-Z0-9_]+)\]/', $name, $matches);
+            preg_match_all('/\[([a-zA-Z0-9_]+)\]/', $name, $matches);
             $matches = $matches[1];
         } else {
             $matches = [$name];
@@ -393,6 +433,8 @@ final class Block extends DataObject
     }
     /**
      * Hijack setCastedField to ensure form saving works properly
+     *
+     * Add value on a per field basis
      *
      * @param string $fieldName
      * @param string $value

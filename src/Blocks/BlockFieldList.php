@@ -82,8 +82,13 @@ class BlockFieldList extends BuildableFieldList
     /**
      * Add a field to the list
      *
+     * Supports adding items from lists which will be available
+     * under the "Items" list
+     *
+     * see : $data[self::ITEMS_KEY] = self::normalizeIndexedList($data[self::ITEMS_KEY]);
+     *
      * @param string $class
-     * @param string $name
+     * @param string|array $name Pass an array as [$idx, $name] to specify an item from a list
      * @param string $title
      * @param array $attributes
      * @return FormField
