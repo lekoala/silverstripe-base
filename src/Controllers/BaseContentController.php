@@ -157,7 +157,9 @@ class BaseContentController extends ContentController
         $class = end($parts);
 
         // Append action
-        $class .= ' ' . ucfirst($this->action) . 'Action';
+        if ($this->action) {
+            $class .= ' ' . ucfirst($this->action) . 'Action';
+        }
 
         // Allow custom extension point
         if ($page->hasMethod('updateBodyClass')) {
