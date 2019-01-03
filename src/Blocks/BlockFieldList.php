@@ -91,7 +91,7 @@ class BlockFieldList extends BuildableFieldList
     public function addField($class, $name, $title = "", $attributes = [])
     {
         $name = $this->normalizeName($name);
-        return parent::addField($class, $name, $title);
+        return parent::addField($class, $name, $title, $attributes);
     }
 
     /**
