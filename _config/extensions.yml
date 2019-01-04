@@ -11,6 +11,7 @@ SilverStripe\CMS\Model\SiteTree:
   extensions:
     - LeKoala\Base\Extensions\SocialShareExtension
     - LeKoala\Base\Extensions\BasePageExtension
+    #- LeKoala\Base\Extensions\BootstrapPageExtension
 SilverStripe\SiteConfig\SiteConfig:
   extensions:
     - LeKoala\Base\SiteConfig\SiteConfigExtension

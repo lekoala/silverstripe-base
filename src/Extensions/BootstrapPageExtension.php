@@ -8,7 +8,11 @@ use SilverStripe\View\ArrayData;
 use SilverStripe\ORM\DataExtension;
 
 /**
- * Class \LeKoala\Base\Extensions\BootstrapPageExtension
+ * Not enabled by default please use the following config
+ *
+ * SilverStripe\CMS\Model\SiteTree:
+ *   extensions:
+ *     - LeKoala\Base\Extensions\BootstrapPageExtension
  *
  * @property \LeKoala\Base\Extensions\BootstrapPageExtension $owner
  */
@@ -40,7 +44,6 @@ class BootstrapPageExtension extends DataExtension
      */
     public function BootstrapLinkingMode()
     {
-        d($this->owner);
         if ($this->owner->isCurrent()) {
             return 'active';
         } elseif ($this->owner->isSection()) {
