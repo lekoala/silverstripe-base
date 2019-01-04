@@ -4,14 +4,9 @@ namespace LeKoala\Base\Blocks;
 use Page;
 use LeKoala\Base\Blocks\Block;
 use SilverStripe\ORM\ArrayList;
-use SilverStripe\Forms\TextField;
 use SilverStripe\Control\Director;
 use SilverStripe\Forms\FormAction;
-use SilverStripe\Forms\LiteralField;
-use SilverStripe\Security\Permission;
 use SilverStripe\SiteConfig\SiteConfig;
-use LeKoala\Base\ORM\FieldType\DBJson;
-use LeKoala\Base\Contact\ContactSubmission;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldPageCount;
 use SilverStripe\Forms\GridField\GridFieldPaginator;
@@ -41,14 +36,24 @@ class BlocksPage extends Page
     private static $cascade_deletes = [
         "Blocks"
     ];
+    /**
+     * Track writing to prevent infinite loop
+     *
+     * @var boolean
+     */
     protected static $is_writing = false;
+
     public function updateBodyClass(&$class)
     {
+        if (is_callable('parent::updateBodyClass')) {
+            parent::updateBodyClass($class);
+        }
         $arr = $this->getBlocksListArray();
         if (!empty($arr)) {
             $class .= ' Starts-' . $arr[0];
         }
     }
+
     /**
      * This helper methods helps you to generate anchorable menu for your blocks
      *
@@ -71,6 +76,7 @@ class BlocksPage extends Page
         }
         return $list;
     }
+
     /**
      * @return array
      */
@@ -78,19 +84,23 @@ class BlocksPage extends Page
     {
         return array_unique($this->Blocks()->column('Type'));
     }
+
     public function getContent()
     {
+        // If you pass live, content of the block will always be fully rendered and written to the database
         if (isset($_GET['live']) && Director::isDev()) {
             return $this->renderContent(true);
         }
         return $this->getField('Content');
     }
+
     public function getCMSActions()
     {
         $fields = parent::getCMSActions();
         $fields->addFieldToTab('ActionMenus.MoreOptions', FormAction::create('doPublishBlocks', 'Publish all blocks'));
         return $fields;
     }
+
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
@@ -103,6 +113,7 @@ class BlocksPage extends Page
         $fields->replaceField('Content', $Blocks);
         return $fields;
     }
+
     protected function onBeforeWrite()
     {
         parent::onBeforeWrite();
@@ -152,6 +163,7 @@ class BlocksPage extends Page
         Block::$auto_update_page = true;
         return $Content;
     }
+
     public function addBlock($content, $type = null)
     {
         $block = new Block();

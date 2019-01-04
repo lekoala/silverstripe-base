@@ -19,6 +19,9 @@ use LeKoala\Base\Blocks\BlockFieldList;
  */
 class BaseBlock extends ViewableData
 {
+    /**
+     * @var Block
+     */
     protected $_block;
 
     public function __construct(Block $block)

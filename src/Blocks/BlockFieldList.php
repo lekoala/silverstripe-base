@@ -32,7 +32,7 @@ class BlockFieldList extends BuildableFieldList
      * Automatically expand the given name to match the default key
      * and items if necessary
      *
-     * @param string|array $name The key or a composite key like [2, "FieldName"]
+     * @param string|array $name The key or a composite key like [2, "FieldName"].
      * @param string $baseKey Will use defaultKey if not provided. Use '' for no key.
      * @return string
      */
@@ -82,8 +82,13 @@ class BlockFieldList extends BuildableFieldList
     /**
      * Add a field to the list
      *
+     * Supports adding items from lists which will be available
+     * under the "Items" list
+     *
+     * see : $data[self::ITEMS_KEY] = self::normalizeIndexedList($data[self::ITEMS_KEY]);
+     *
      * @param string $class
-     * @param string $name
+     * @param string|array $name Pass an array as [$idx, $name] to specify an item from a list
      * @param string $title
      * @param array $attributes
      * @return FormField
@@ -91,7 +96,7 @@ class BlockFieldList extends BuildableFieldList
     public function addField($class, $name, $title = "", $attributes = [])
     {
         $name = $this->normalizeName($name);
-        return parent::addField($class, $name, $title);
+        return parent::addField($class, $name, $title, $attributes);
     }
 
     /**

@@ -2,6 +2,7 @@
 Name: base-theme
 ---
 SilverStripe\SiteConfig\SiteConfig:
+  auto_include_css: true
   extensions:
     - LeKoala\Base\Theme\ThemeSiteConfigExtension
 LeKoala\Base\Controllers\BaseContentController:
