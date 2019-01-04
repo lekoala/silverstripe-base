@@ -191,6 +191,15 @@ a {
 
     &.active,
     &:active {
+        color: var(--primary-color-highlight);
+    }
+}
+
+// Ensure dropdowns get the right color
+.dropdown a {
+
+    &.active,
+    &:active {
         color: $dropdown-link-active-color;
     }
 }
