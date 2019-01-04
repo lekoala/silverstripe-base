@@ -212,13 +212,14 @@ class CommonRequirements
     }
 
     /**
+     * With added custom event polyfill
      * @link https://github.com/thepinecode/canvi
      * @return void
      */
     public static function canvi()
     {
         Requirements::css("base/javascript/vendor/canvi/canvi.css");
-        Requirements::javascript("base/javascript/vendor/canvi/canvi.js");
+        Requirements::javascript("base/javascript/vendor/canvi/canvi.min.js");
     }
 
     /**

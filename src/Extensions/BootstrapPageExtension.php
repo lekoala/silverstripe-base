@@ -40,10 +40,11 @@ class BootstrapPageExtension extends DataExtension
      */
     public function BootstrapLinkingMode()
     {
+        d($this->owner);
         if ($this->owner->isCurrent()) {
             return 'active';
         } elseif ($this->owner->isSection()) {
-            return 'section';
+            return 'active section';
         }
         return '';
     }
