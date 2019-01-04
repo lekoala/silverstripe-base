@@ -202,6 +202,11 @@ a {
     &:active {
         color: $dropdown-link-active-color;
     }
+
+    &.nav-link.active,
+    &.nav-link:active {
+        color: var(--primary-color-highlight);
+    }
 }
 
 // Dropdowns
