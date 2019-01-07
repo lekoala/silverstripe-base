@@ -78,6 +78,12 @@ class CommonRequirements
     private static $lazyload_version = '10.19.0';
 
     /**
+     * @config
+     * @var string
+     */
+    private static $fingerprintjs_version = '0.5.3';
+
+    /**
      * Include all files in a given path
      *
      * @param string $path
@@ -201,6 +207,16 @@ class CommonRequirements
     {
         $version = self::config()->cleave_version;
         Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/cleave.js/$version/cleave.min.js");
+    }
+
+    /**
+     * @link https://github.com/valve/fingerprintjs/
+     * @return void
+     */
+    public static function fingerprintjs()
+    {
+        $version = self::config()->fingerprintjs_version;
+        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/fingerprintjs/$version/fingerprint.min.js");
     }
 
     /**
