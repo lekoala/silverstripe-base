@@ -8,6 +8,7 @@ use SilverStripe\ORM\DataExtension;
 use SilverStripe\View\Requirements;
 use LeKoala\Base\View\CookieConsent;
 use LeKoala\Base\Forms\Bootstrap\Tab;
+use SilverStripe\Forms\CheckboxField;
 use LeKoala\Base\View\CommonRequirements;
 
 /**
@@ -33,6 +34,8 @@ class GoogleSiteConfigExtension extends DataExtension
         }
         $GoogleAnalyticsCode = new TextField('GoogleAnalyticsCode');
         $tab->push($GoogleAnalyticsCode);
+        $GoogleAnalyticsWithoutCookies = new CheckboxField('GoogleAnalyticsWithoutCookies');
+        $tab->push($GoogleAnalyticsWithoutCookies);
         $GoogleMapsApiKey = new TextField('GoogleMapsApiKey');
         $tab->push($GoogleMapsApiKey);
     }
