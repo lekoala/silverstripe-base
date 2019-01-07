@@ -21,19 +21,19 @@ class CommonRequirements
      * @config
      * @var string
      */
-    private static $moment_version = '2.22.2';
+    private static $moment_version = '2.23.0';
 
     /**
      * @config
      * @var string
      */
-    private static $moment_timezone_version = '0.5.20';
+    private static $moment_timezone_version = '0.5.23';
 
     /**
      * @config
      * @var string
      */
-    private static $datefns_version = '1.29.0';
+    private static $datefns_version = '1.30.1';
 
     /**
      * @config
@@ -45,25 +45,25 @@ class CommonRequirements
      * @config
      * @var string
      */
-    private static $fa5_version = '5.1.0';
+    private static $fa5_version = '5.6.3';
 
     /**
      * @config
      * @var string
      */
-    private static $boxicons_version = '1.7.1';
+    private static $boxicons_version = '1.8.1';
 
     /**
      * @config
      * @var string
      */
-    private static $plyr_version = '3.3.22';
+    private static $plyr_version = '3.4.5';
 
     /**
      * @config
      * @var string
      */
-    private static $cleave_version = '1.4.4';
+    private static $cleave_version = '1.4.7';
 
     /**
      * @config
