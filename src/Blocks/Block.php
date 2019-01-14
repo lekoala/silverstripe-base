@@ -680,6 +680,6 @@ final class Block extends DataObject
     protected static function getBlockName($class)
     {
         $class = ClassHelper::getClassWithoutNamespace($class);
-        return str_replace('Block', '', $class);
+        return preg_replace('/Block$/', '', $class);
     }
 }

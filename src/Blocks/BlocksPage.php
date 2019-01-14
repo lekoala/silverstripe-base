@@ -37,6 +37,11 @@ class BlocksPage extends Page
         "Blocks"
     ];
     /**
+     * @config
+     * @var boolean
+     */
+    private static $wrap_blocks = true;
+    /**
      * Track writing to prevent infinite loop
      *
      * @var boolean
@@ -143,22 +148,28 @@ class BlocksPage extends Page
     {
         $Content = '';
         Block::$auto_update_page = false;
+        $wrap = self::config()->wrap_blocks;
         foreach ($this->Blocks() as $Block) {
-            $Content .= '<section';
-            $htmlid = $Block->HTMLID;
-            if ($htmlid) {
-                $Content .= ' id="' . $htmlid . '"';
+            if ($wrap) {
+                $Content .= '<section';
+                $htmlid = $Block->HTMLID;
+                if ($htmlid) {
+                    $Content .= ' id="' . $htmlid . '"';
+                }
+                $class = $Block->getClass();
+                if ($class) {
+                    $Content .= ' class="' . $class . '"';
+                }
+                $Content .= '>';
             }
-            $class = $Block->getClass();
-            if ($class) {
-                $Content .= ' class="' . $class . '"';
-            }
-            $Content .= '>';
+
             if ($refreshBlocks) {
                 $Block->write();
             }
             $Content .= (string)$Block->forTemplate();
-            $Content .= '</section>';
+            if ($wrap) {
+                $Content .= '</section>';
+            }
         }
         Block::$auto_update_page = true;
         return $Content;
