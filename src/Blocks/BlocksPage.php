@@ -50,7 +50,7 @@ class BlocksPage extends Page
 
     public function updateBodyClass(&$class)
     {
-        if (is_callable('parent::updateBodyClass')) {
+        if (method_exists(get_parent_class($this), 'updateBodyClass')) {
             parent::updateBodyClass($class);
         }
         $arr = $this->getBlocksListArray();

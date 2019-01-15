@@ -14,7 +14,9 @@ use LeKoala\Base\View\CommonRequirements;
 /**
  * Google SiteConfig stuff
  *
+ * @property \SilverStripe\SiteConfig\SiteConfig|\LeKoala\Base\SiteConfig\GoogleSiteConfigExtension $owner
  * @property string $GoogleAnalyticsCode
+ * @property boolean $GoogleAnalyticsWithoutCookies
  * @property string $GoogleMapsApiKey
  */
 class GoogleSiteConfigExtension extends DataExtension

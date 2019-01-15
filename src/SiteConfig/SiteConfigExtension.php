@@ -26,6 +26,8 @@ use LeKoala\Base\View\CookieConsent;
  * @property string $ContactAddress
  * @property string $ContactInfos
  * @property string $LegalName
+ * @property string $CompanyRegistrationNumber
+ * @property string $LegalCourt
  * @property string $DefaultFromEmail
  * @property string $EmailFooter
  * @property string $FooterText
