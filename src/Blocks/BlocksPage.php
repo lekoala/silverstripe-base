@@ -48,17 +48,6 @@ class BlocksPage extends Page
      */
     protected static $is_writing = false;
 
-    public function updateBodyClass(&$class)
-    {
-        if (method_exists(get_parent_class($this), 'updateBodyClass')) {
-            parent::updateBodyClass($class);
-        }
-        $arr = $this->getBlocksListArray();
-        if (!empty($arr)) {
-            $class .= ' Starts-' . $arr[0];
-        }
-    }
-
     /**
      * This helper methods helps you to generate anchorable menu for your blocks
      *
