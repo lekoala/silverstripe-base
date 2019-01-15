@@ -136,7 +136,7 @@ class CmsInlineFormAction extends LiteralField
      *
      * @param  array  $params
      *
-     * @return  self
+     * @return $this
      */
     public function setParams(array $params)
     {
@@ -160,7 +160,7 @@ class CmsInlineFormAction extends LiteralField
      *
      * @param  boolean  $newWindow
      *
-     * @return  self
+     * @return $this
      */
     public function setNewWindow($newWindow)
     {

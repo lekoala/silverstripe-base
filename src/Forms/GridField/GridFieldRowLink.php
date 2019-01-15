@@ -233,7 +233,7 @@ class GridFieldRowLink implements GridField_ColumnProvider
     /**
      * Set the value of newWindow
      *
-     * @return  self
+     * @return $this
      */
     public function setNewWindow($newWindow)
     {

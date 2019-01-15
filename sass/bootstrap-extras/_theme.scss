@@ -177,8 +177,16 @@ $btn-focus-width: $btn-focus-width/2;
     color: var(--primary-color) !important;
 }
 
+.text-primary-contrast {
+    color: var(--primary-color-contrast) !important;
+}
+
 .text-secondary {
     color: var(--secondary-color) !important;
+}
+
+.text-secondary-contrast {
+    color: var(--secondary-color-contrast) !important;
 }
 
 // Links

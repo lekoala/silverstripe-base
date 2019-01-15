@@ -75,7 +75,7 @@ class FullGridField extends GridField
     /**
      * Prevent removing records even if checkboxes are unticked
      *
-     * @return  self
+     * @return $this
      */
     public function setPreventRemove($preventRemove)
     {
