@@ -4,6 +4,8 @@ namespace LeKoala\Base\Contact;
 use SilverStripe\ORM\DataObject;
 use LeKoala\Base\Contact\ContactPage;
 use SilverStripe\Control\Email\Email;
+use SilverStripe\SiteConfig\SiteConfig;
+use LeKoala\Base\Controllers\HasLogger;
 
 /**
  * Class \LeKoala\Base\Contact\ContactSubmission
@@ -20,6 +22,8 @@ use SilverStripe\Control\Email\Email;
  */
 class ContactSubmission extends DataObject
 {
+    use HasLogger;
+
     private static $table_name = 'ContactSubmission'; // When using namespace, specify table name
     private static $db = [
         "Name" => "Varchar(191)",
@@ -67,9 +71,10 @@ class ContactSubmission extends DataObject
         } catch (\Exception $e) {
             $result = null;
             $ex = $e;
-            $this->getLogger()->info($e);
+            self::getLogger()->info($e);
+            return false;
         }
         $this->EmailResults = json_encode($result);
-        $this->write();
+        return $this->write();
     }
 }
