@@ -35,33 +35,36 @@ class FullGridField extends GridField
      * Filters to apply to the list if no sql select is provided
      *
      * @param array $filters
-     * @return void
+     * @return $this
      */
     public function setFilters($filters)
     {
         $this->getConfig()->getComponentByType(FullGridFieldCheckbox::class)->setFilters($filters);
+        return $this;
     }
 
     /**
      * Shorthand for setting relation to target instead of current name
      *
      * @param string $relation
-     * @return void
+     * @return $this
      */
     public function setSaveToRelation($relation)
     {
         $this->getConfig()->getComponentByType(FullGridFieldCheckbox::class)->setSaveToRelation($relation);
+        return $this;
     }
 
     /**
      * Shorthand for setting sql select
      *
      * @param SQLSelect $select
-     * @return void
+     * @return $this
      */
     public function setSqlSelect($select)
     {
         $this->getConfig()->getComponentByType(FullGridFieldCheckbox::class)->setSqlSelect($select);
+        return $this;
     }
 
     /**
@@ -74,15 +77,34 @@ class FullGridField extends GridField
 
     /**
      * Prevent removing records even if checkboxes are unticked
-     *
      * @return $this
      */
     public function setPreventRemove($preventRemove)
     {
         $this->getConfig()->getComponentByType(FullGridFieldCheckbox::class)->setPreventRemove($preventRemove);
+        return $this;
     }
 
+    /**
+     * Get the value of cannotBeRemovedIDs
+     * @return array
+     */
+    public function getCannotBeRemovedIDs()
+    {
+        return $this->getConfig()->getComponentByType(FullGridFieldCheckbox::class)->getCannotBeRemovedIDs();
+    }
 
+    /**
+     * Set the value of cannotBeRemovedIDs
+     *
+     * @param array $cannotBeRemovedIDs
+     * @return $this
+     */
+    public function setCannotBeRemovedIDs($cannotBeRemovedIDs)
+    {
+        $this->getConfig()->getComponentByType(FullGridFieldCheckbox::class)->setCannotBeRemovedIDs($cannotBeRemovedIDs);
+        return $this;
+    }
 
     public function createDefaultConfig()
     {

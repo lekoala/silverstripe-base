@@ -12,6 +12,7 @@ use SilverStripe\Forms\GridField\GridField_SaveHandler;
 use SilverStripe\Forms\GridField\GridField_HTMLProvider;
 use SilverStripe\Forms\GridField\GridField_ColumnProvider;
 use SilverStripe\Forms\GridField\GridField_DataManipulator;
+use SilverStripe\Forms\LiteralField;
 
 /**
  * The checkbox handles adding or removing the record to the relation
@@ -53,6 +54,11 @@ class FullGridFieldCheckbox implements GridField_SaveHandler, GridField_ColumnPr
      * @var bool
      */
     protected $noEmpty = true;
+
+    /**
+     * @var array
+     */
+    protected $cannotBeRemovedIDs = [];
 
     /**
      * Get the value of preventRemove
@@ -141,7 +147,11 @@ class FullGridFieldCheckbox implements GridField_SaveHandler, GridField_ColumnPr
             // Do nothing
         } else {
             foreach ($toRemove as $k => $id) {
-                $list->removeByID($id);
+                if (in_array($id, $this->cannotBeRemovedIDs)) {
+                    // Do nothing
+                } else {
+                    $list->removeByID($id);
+                }
             }
         }
     }
@@ -193,6 +203,10 @@ class FullGridFieldCheckbox implements GridField_SaveHandler, GridField_ColumnPr
      */
     public function getColumnContent($gridField, $record, $columnName)
     {
+        if (in_array($record->ID, $this->cannotBeRemovedIDs)) {
+            return '';
+        }
+
         $cb = CheckboxField::create('FullGridSelect[' . $gridField->getName() . '][' . $record->ID . ']', '')
             ->addExtraClass('FullGridSelect no-change-track');
 
@@ -202,6 +216,7 @@ class FullGridFieldCheckbox implements GridField_SaveHandler, GridField_ColumnPr
 
         // Is checked?
         if (in_array($record->ID, $this->ids)) {
+            // Can be removed?
             $cb->setValue(1);
         }
 
@@ -305,6 +320,27 @@ class FullGridFieldCheckbox implements GridField_SaveHandler, GridField_ColumnPr
     {
         $this->sqlSelect = $sqlSelect;
 
+        return $this;
+    }
+
+    /**
+     * Get the value of cannotBeRemovedIDs
+     * @return array
+     */
+    public function getCannotBeRemovedIDs()
+    {
+        return $this->cannotBeRemovedIDs;
+    }
+
+    /**
+     * Set the value of cannotBeRemovedIDs
+     *
+     * @param array $cannotBeRemovedIDs
+     * @return $this
+     */
+    public function setCannotBeRemovedIDs($cannotBeRemovedIDs)
+    {
+        $this->cannotBeRemovedIDs = $cannotBeRemovedIDs;
         return $this;
     }
 }
