@@ -60,14 +60,19 @@ class ContactSubmission extends DataObject
         $phone = $this->Phone;
         $message = $this->Message;
         $email = $this->Email;
-        $e_subject = 'You\'ve been contacted by ' . $name . '.';
+
+        $e_subject = 'You\'ve been contacted by ' . $name . ' [' . $SiteConfig->Title . ']';
         if ($subject) {
             $e_subject = $subject . ' [' . $SiteConfig->Title . ']';
         }
-        $e_body = "You have been contacted by: $name" . PHP_EOL . PHP_EOL;
-        $e_reply = "E-mail: $email\r\nPhone: $phone";
-        $e_content = "Message:\r\n$message" . PHP_EOL . PHP_EOL;
-        $msg = wordwrap($e_body . $e_content . $e_reply, 70);
+
+        $e_body = "You have been contacted by: $name<br/>";
+        $e_body .= "E-mail: $email<br/>";
+        if ($phone) {
+            $e_body .= "Phone: $phone<br/>";
+        }
+        $e_content = "<br/><hr/>Message:<br/>$message<hr/>";
+        $msg = wordwrap($e_body . $e_content, 70);
         $ex = null;
         try {
             $emailInst = new Email();
@@ -82,7 +87,7 @@ class ContactSubmission extends DataObject
             self::getLogger()->info($e);
             return false;
         }
-        $this->EmailResults = is_string($result) ? $result :  json_encode($result);
+        $this->EmailResults = is_string($result) ? $result : json_encode($result);
         return $this->write();
     }
 }
