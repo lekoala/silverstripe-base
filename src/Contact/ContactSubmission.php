@@ -38,6 +38,14 @@ class ContactSubmission extends DataObject
         "Page" => ContactPage::class
     ];
     private static $default_sort = 'Created DESC';
+    private static $summary_fields = [
+        "Name", "Email", "Created"
+    ];
+
+    /**
+     * @param string $address
+     * @return bool
+     */
     public function sendByEmail($address = null)
     {
         $SiteConfig = SiteConfig::current_site_config();
@@ -69,12 +77,12 @@ class ContactSubmission extends DataObject
             $emailInst->setReplyTo($email);
             $result = $emailInst->send();
         } catch (\Exception $e) {
-            $result = null;
+            $result = $e->getMessage();
             $ex = $e;
             self::getLogger()->info($e);
             return false;
         }
-        $this->EmailResults = json_encode($result);
+        $this->EmailResults = is_string($result) ? $result :  json_encode($result);
         return $this->write();
     }
 }
