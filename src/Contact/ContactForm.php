@@ -59,7 +59,6 @@ class ContactForm extends BaseForm
             $this->sessionMessage(_t("ContactPageController.MESSAGE_SENT", "Votre message a bien été envoyé"), "good");
         } else {
             $this->sessionMessage(_t("ContactPageController.MESSAGE_ERROR", "Votre message n'a pas été envoyé"), "bad");
-            $this->getLogger()->info("Failed recipients: " . implode(',', $emailInst->getFailedRecipients()));
         }
         return $this->getController()->redirectBack();
     }
