@@ -18,6 +18,7 @@ class ContactPageController extends \PageController
     private static $allowed_actions = [
         "index",
         "doSend",
+        'ContactForm',
     ];
 
     public function index(HTTPRequest $request)
