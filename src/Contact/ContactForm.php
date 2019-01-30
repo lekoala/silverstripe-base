@@ -18,7 +18,7 @@ class ContactForm extends BaseForm
         });
         $fields->group(function (BuildableFieldList $fields) {
             $fields->addEmail('Email');
-            $fields->addEmail('Phone');
+            $fields->addText('Phone');
         });
         $fields->addText('Subject');
         $fields->addTextarea('Message');
