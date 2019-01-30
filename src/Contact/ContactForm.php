@@ -18,7 +18,7 @@ class ContactForm extends BaseForm
         });
         $fields->group(function (BuildableFieldList $fields) {
             $fields->addEmail('Email');
-            $fields->addEmail('Phone');
+            $fields->addText('Phone');
         });
         $fields->addText('Subject');
         $fields->addTextarea('Message');
@@ -28,7 +28,8 @@ class ContactForm extends BaseForm
 
     protected function buildActions(BuildableFieldList $actions)
     {
-        $doSend = $actions->addAction("doSend", _t('ContactForm.SEND', 'Send your message'));
+        // This cannot be doSend since we have it on the controller and may cause confusion onSubmit
+        $doSend = $actions->addAction("doSubmit", _t('ContactForm.SEND', 'Send your message'));
         $doSend->addExtraClass('d-block w-100');
         return $actions;
     }
@@ -43,7 +44,7 @@ class ContactForm extends BaseForm
         return $validator;
     }
 
-    public function doSend()
+    public function doSubmit()
     {
         $controller = $this->getController();
         // Register submission
@@ -58,8 +59,7 @@ class ContactForm extends BaseForm
             $this->sessionMessage(_t("ContactPageController.MESSAGE_SENT", "Votre message a bien été envoyé"), "good");
         } else {
             $this->sessionMessage(_t("ContactPageController.MESSAGE_ERROR", "Votre message n'a pas été envoyé"), "bad");
-            $this->getLogger()->info("Failed recipients: " . implode(',', $emailInst->getFailedRecipients()));
         }
-        return $this->redirectBack();
+        return $this->getController()->redirectBack();
     }
 }

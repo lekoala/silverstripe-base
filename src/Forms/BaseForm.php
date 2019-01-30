@@ -96,12 +96,12 @@ class BaseForm extends Form
         }
         $actions = $this->buildActions(BuildableFieldList::fromFieldList($actions));
         if (!$actions) {
-            throw new Exception("buildActions must return the FieldList instance " . static::class);
+            throw new Exception("buildActions must return the FieldList instance in " . static::class);
         }
         if ($validator === null) {
             $validator = $this->buildValidator($fields);
             if (!$validator) {
-                throw new Exception("buildValidator must return a validator");
+                throw new Exception("buildValidator must return a validator in " . static::class);
             }
         }
         parent::__construct($controller, $name, $fields, $actions, $validator);
@@ -138,6 +138,7 @@ class BaseForm extends Form
      */
     protected function buildActions(BuildableFieldList $actions)
     {
+        // If we have a doSubmit method, add the action automatically
         if (method_exists($this, 'doSubmit')) {
             $actions->addAction("doSubmit", _t('BaseForm.DOSUBMIT', "Submit"));
         }
