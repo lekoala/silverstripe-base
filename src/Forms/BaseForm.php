@@ -8,6 +8,7 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Validator;
 use SilverStripe\View\Requirements;
 use LeKoala\Base\Helpers\ClassHelper;
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Control\RequestHandler;
 
@@ -167,7 +168,7 @@ class BaseForm extends Form
     }
 
     /**
-     * @return \LeKoala\Base\BaseContentController
+     * @return \LeKoala\Base\Controllers\BaseContentController
      */
     public function getController()
     {
@@ -180,5 +181,28 @@ class BaseForm extends Form
     public function getLogger()
     {
         return $this->getController()->getLogger()->withName($this->getName());
+    }
+
+    /**
+     * @param string $message
+     * @return HTTPResponse
+     */
+    public function success($message)
+    {
+        $this->sessionMessage($message, "good");
+        return $this->getController()->redirectBack();
+    }
+
+    /**
+     * @param string $message
+     * @return HTTPResponse
+     */
+    public function error($message = null)
+    {
+        if ($message === null) {
+            $message = _t('Global.UNDEFINED_ERROR', "Something wrong happened");
+        }
+        $this->sessionError($message, "bad");
+        return $this->getController()->redirectBack();
     }
 }

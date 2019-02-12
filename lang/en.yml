@@ -69,6 +69,7 @@ en:
     LegalName: 'Legal Name'
     Phone: Phone
     View: 'View'
+    UNDEFINED_ERROR: 'Something wrong happened'
   NewsItem:
     READ_MORE: 'Read more'
   NewsPage:
