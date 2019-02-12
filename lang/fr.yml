@@ -75,6 +75,7 @@ fr:
     Company: Société
     View: 'Voir'
     Back: 'Retour'
+    UNDEFINED_ERROR: 'Une erreur s''est produite'
   NewsItem:
     READ_MORE: 'Savoir plus'
   NewsPage:
