@@ -11,6 +11,8 @@ use SilverStripe\View\Requirements_Backend;
 /**
  * A backend that defers everything by default
  *
+ * Also insert custom head tags first because order may matter
+ *
  * @link https://flaviocopes.com/javascript-async-defer/
  */
 class DeferBackend extends Requirements_Backend
