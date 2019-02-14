@@ -32,6 +32,8 @@ class ThemeControllerExtension extends Extension
     {
         $SiteConfig = $this->owner->SiteConfig();
         if ($SiteConfig->GoogleFonts) {
+            //@link https://www.cdnplanet.com/blog/faster-google-webfonts-preconnect/
+            Requirements::insertHeadTags('<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />');
             Requirements::css('https://fonts.googleapis.com/css?family=' . $SiteConfig->GoogleFonts);
         }
     }
