@@ -139,15 +139,22 @@ class ThemeSiteConfigExtension extends DataExtension
      */
     public function currentThemeOptions()
     {
+        // If we don't have a css theme, our options won't be used anyway
         $values = [
-            'allowFonts' => true,
-            'allowColors' => true,
+            'allowFonts' => false,
+            'allowColors' => false,
         ];
         if (!$this->owner->CssTheme) {
             return $values;
         }
+        // If we have a css theme, allow everything by default
+        $values = [
+            'allowFonts' => true,
+            'allowColors' => true,
+        ];
         $themeFile = $this->getThemeCssPath() . '/' . $this->owner->CssTheme;
         $contents = file_get_contents($themeFile);
+        // If we disallow fonts or have imported styles
         if (strpos($contents, '@disallowFonts') !== false || strpos($contents, 'fonts.googleapis.com/css') !== false) {
             $values['allowFonts'] = false;
         }
