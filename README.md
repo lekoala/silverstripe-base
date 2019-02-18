@@ -48,6 +48,14 @@ Also you may need to adjust your default app/_config/mysite.yml to make sure bas
         extensions:
             - LeKoala\Base\Extensions\BootstrapPageExtension
 
+This also applies to your theme.yml
+
+    ---
+    Name: mytheme
+    After:
+    - '#base-theme'
+    ---
+
 ---
 
 ## Features
