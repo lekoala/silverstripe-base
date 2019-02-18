@@ -352,7 +352,7 @@ JS;
      * @param bool $css
      * @return void
      */
-    public static function owlCarousel2($css = true)
+    public static function aos($css = true)
     {
         $version = self::config()->aos_version;
         Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/aos/$version/aos.css");
