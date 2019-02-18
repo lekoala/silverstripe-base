@@ -18,6 +18,20 @@ You can install this module with Composer:
 composer require lekoala/silverstripe-base
 ```
 
+If you install this as a git submodule don't forget to adjust your autoloader
+
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/src/",
+            "LeKoala\\Base\\": "src/",
+            "LeKoala\\Base\\Test\\": "tests/"
+        },
+        "classmap": [
+            "app/src/Page.php",
+            "app/src/PageController.php"
+        ]
+    },
+
 ---
 
 ## Features
