@@ -14,8 +14,52 @@
 :root {
     --primary-color: #007bff;
     --secondary-color: #6610f2;
+    --body-font-family: "Roboto", serif;
+    --body-font-weight: 300;
+    --header-font-family: "Roboto", serif;
+    --header-font-weight: 400;
+}
+
+// If you allow fonts, uncomment this
+
+// body {
+//     font-family: var(--body-font-family);
+//     font-weight: var(--body-font-weight);
+// }
+
+// h1, h2, h3, h4, h5, h6 {
+//     font-family: var(--header-font-family);
+//     font-weight: var(--header-font-weight);
+// }
+
+.text-primary {
+    color: var(--primary-color);
+}
+
+.text-secondary {
+    color: var(--secondary-color);
+}
+
+.bg-primary {
+    background: var(--primary-color);
+    color: var(--primary-color-contrast);
+}
+
+.bg-secondary {
+    background: var(--secondary-color);
+    color: var(--secondary-color-contrast);
+}
+
+a {
+    color: var(--primary-color);
+
+    &:hover {
+        color: var(--primary-color-highlight);
+    }
 }
 
 
+// This adds custom theming for bootstrap 4 using css vars (no need to recompile the whole thing!)
 @import "bootstrap-extras/theme";
+// Other custom styles components
 @import "silverstripe/theme";

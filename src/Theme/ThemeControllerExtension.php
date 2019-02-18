@@ -70,7 +70,7 @@ class ThemeControllerExtension extends Extension
      * This allows to use CSS3 variable as configurable variables in your themes
      *
      * :root {
-     * --header-font: "Roboto", serif;
+     * --header-font-family: "Roboto", serif;
      * }
      *
      * Will look for the HeaderFont property and be replaced accordingly
