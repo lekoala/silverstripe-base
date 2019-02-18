@@ -32,6 +32,22 @@ If you install this as a git submodule don't forget to adjust your autoloader
         ]
     },
 
+Also you may need to adjust your default app/_config/mysite.yml to make sure base module is loaded first
+
+    ---
+    Name: myproject
+    After:
+    - '#base-extensions'
+    ---
+    SilverStripe\Core\Manifest\ModuleManifest:
+        project: app
+    SilverStripe\Control\Email\Email:
+        admin_email: noreply@mydomain.com
+    # If you use bootstrap 4
+    SilverStripe\CMS\Model\SiteTree:
+        extensions:
+            - LeKoala\Base\Extensions\BootstrapPageExtension
+
 ---
 
 ## Features
