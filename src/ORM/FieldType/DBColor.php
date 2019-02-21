@@ -322,6 +322,30 @@ class DBColor extends DBVarchar
     }
 
     /**
+     * Get a lowlight color (a blend with a dark or white color based on contrast)
+     *
+     * @param float $opacity
+     * @return string
+     */
+    public function LowlightColor($opacity = 0.8)
+    {
+        $background = self::HEX_CONTRAST($this->Color(), self::LIGHT, self::DARK);
+        return $this->Blend($opacity, $background);
+    }
+
+    /**
+     * Get a contrast color for lowlight
+     *
+     * @param string $dark
+     * @param string $light
+     * @return string
+     */
+    public function LowlightColorContrastColor($dark = null, $light = null)
+    {
+        return self::HEX_CONTRAST($this->LowlightColor(), $dark, $light);
+    }
+
+    /**
      * Get a higlight color (a blend with a dark or white color based on contrast)
      *
      * @param float $opacity

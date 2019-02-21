@@ -108,6 +108,12 @@ class CommonRequirements
     private static $aos_version = '2.3.4';
 
     /**
+     * @config
+     * @var string
+     */
+    private static $imagesLoaded_version = '4.1.4';
+
+    /**
      * Include all files in a given path
      *
      * @param string $path
@@ -359,5 +365,15 @@ JS;
         if ($css) {
             Requirements::css("https://cdnjs.cloudflare.com/ajax/libs/aos/$version/aos.css");
         }
+    }
+
+    /**
+     * @link https://imagesloaded.desandro.com/
+     * @return void
+     */
+    public static function imagesLoaded()
+    {
+        $version = self::config()->imagesLoaded_version;
+        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/$version/imagesloaded.min.js");
     }
 }

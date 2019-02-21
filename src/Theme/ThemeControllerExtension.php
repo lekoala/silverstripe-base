@@ -146,6 +146,14 @@ class ThemeControllerExtension extends Extension
                 $val = $dbObject->HighlightContrastColor();
                 $regex = "/var\s?\(--{$declarationName}-highlight-contrast\)/";
                 $cssFileContent = preg_replace($regex, $val, $cssFileContent, -1, $replaceCount);
+                // Add lowlight
+                $val = $dbObject->LowlightColor();
+                $regex = "/var\s?\(--{$declarationName}-lowlight\)/";
+                $cssFileContent = preg_replace($regex, $val, $cssFileContent, -1, $replaceCount);
+                // Add lowlight contrast
+                $val = $dbObject->LowlightColorContrastColor();
+                $regex = "/var\s?\(--{$declarationName}-lowlight-contrast\)/";
+                $cssFileContent = preg_replace($regex, $val, $cssFileContent, -1, $replaceCount);
                 // Add muted
                 $val = $dbObject->HighlightColor(0.5);
                 $regex = "/var\s?\(--{$declarationName}-muted\)/";
