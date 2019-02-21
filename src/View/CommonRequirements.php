@@ -355,9 +355,9 @@ JS;
     public static function aos($css = true)
     {
         $version = self::config()->aos_version;
-        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/aos/$version/aos.css");
+        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/aos/$version/aos.js");
         if ($css) {
-            Requirements::css("https://cdnjs.cloudflare.com/ajax/libs/aos/$version/aos.js");
+            Requirements::css("https://cdnjs.cloudflare.com/ajax/libs/aos/$version/aos.css");
         }
     }
 }
