@@ -22,9 +22,9 @@ fr:
   BootstrapModal:
     Close: Fermer
   ContactPage:
-    Address: ADDRESS
+    Address: ADDRESSE
     Email: E-MAIL
-    Phone: PHONE
+    Phone: TELEPHONE
   ContactPageController:
     ERR_ENTER_EMAIL: 'Entrez votre email'
     ERR_ENTER_MESSAGE: 'Entrez votre message'
@@ -82,7 +82,7 @@ fr:
     NO_ARTICLES: 'Pas d''articles'
   NewsSidebar:
     ARCHIVES: Archives
-    POPULAR_POSTS: 'Posts populaires'
+    POPULAR_POSTS: 'Articles populaires'
     SEARCH: Chercher
     TAGS: Tags
   PrivacyForm:

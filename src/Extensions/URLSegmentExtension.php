@@ -42,6 +42,11 @@ class URLSegmentExtension extends DataExtension
         $URLSegment = $fields->dataFieldByName('URLSegment');
         if ($URLSegment) {
             $URLSegment->setTitle(_t('URLSegmentExtension.URLSEGMENT', 'URL Segment'));
+
+            $Title = $fields->dataFieldByName('Title');
+            if ($Title) {
+                $fields->insertAfter('Title', $URLSegment);
+            }
         }
     }
 

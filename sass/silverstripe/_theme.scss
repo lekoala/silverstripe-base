@@ -2,3 +2,10 @@
 .rangeslider__fill {
     background: var(--primary-color);
 }
+
+// back to top
+.back-to-top.back-to-top-caret a {
+    &:before, &:after {
+        background: var(--primary-color);
+    }
+}

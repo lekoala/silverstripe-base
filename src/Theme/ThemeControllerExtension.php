@@ -70,7 +70,7 @@ class ThemeControllerExtension extends Extension
      * This allows to use CSS3 variable as configurable variables in your themes
      *
      * :root {
-     * --header-font: "Roboto", serif;
+     * --header-font-family: "Roboto", serif;
      * }
      *
      * Will look for the HeaderFont property and be replaced accordingly
@@ -145,6 +145,14 @@ class ThemeControllerExtension extends Extension
                 // Add highlight contrast
                 $val = $dbObject->HighlightContrastColor();
                 $regex = "/var\s?\(--{$declarationName}-highlight-contrast\)/";
+                $cssFileContent = preg_replace($regex, $val, $cssFileContent, -1, $replaceCount);
+                // Add lowlight
+                $val = $dbObject->LowlightColor();
+                $regex = "/var\s?\(--{$declarationName}-lowlight\)/";
+                $cssFileContent = preg_replace($regex, $val, $cssFileContent, -1, $replaceCount);
+                // Add lowlight contrast
+                $val = $dbObject->LowlightColorContrastColor();
+                $regex = "/var\s?\(--{$declarationName}-lowlight-contrast\)/";
                 $cssFileContent = preg_replace($regex, $val, $cssFileContent, -1, $replaceCount);
                 // Add muted
                 $val = $dbObject->HighlightColor(0.5);

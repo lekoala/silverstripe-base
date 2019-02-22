@@ -84,6 +84,36 @@ class CommonRequirements
     private static $fingerprintjs_version = '0.5.3';
 
     /**
+     * @config
+     * @var string
+     */
+    private static $counterup2_version = '1.0.4';
+
+    /**
+     * @config
+     * @var string
+     */
+    private static $magnific_popup_version = '1.1.0';
+
+    /**
+     * @config
+     * @var string
+     */
+    private static $owl_carousel2_version = '2.3.4';
+
+    /**
+     * @config
+     * @var string
+     */
+    private static $aos_version = '2.3.4';
+
+    /**
+     * @config
+     * @var string
+     */
+    private static $imagesLoaded_version = '4.1.4';
+
+    /**
      * Include all files in a given path
      *
      * @param string $path
@@ -283,5 +313,67 @@ class CommonRequirements
 }(window, document));
 JS;
         Requirements::customScript($js, 'LazyloadAuto');
+    }
+
+    /**
+     * @link https://github.com/bfintal/Counter-Up2
+     * @return void
+     */
+    public static function counterup2()
+    {
+        $version = self::config()->counterup2_version;
+        Requirements::javascript("https://cdn.jsdelivr.net/npm/counterup2@$version/dist/index.min.js");
+    }
+
+    /**
+     * @link https://dimsemenov.com/plugins/magnific-popup/
+     * @param bool $css
+     * @return void
+     */
+    public static function magnificPopup($css = true)
+    {
+        $version = self::config()->magnific_popup_version;
+        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/$version/jquery.magnific-popup.min.js");
+        if ($css) {
+            Requirements::css("https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/$version/magnific-popup.min.css");
+        }
+    }
+
+    /**
+     * @link https://github.com/OwlCarousel2/OwlCarousel2
+     * @param bool $css
+     * @return void
+     */
+    public static function owlCarousel2($css = true)
+    {
+        $version = self::config()->owl_carousel2_version;
+        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/$version/owl.carousel.min.js");
+        if ($css) {
+            Requirements::css("https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/$version/assets/owl.carousel.min.css");
+        }
+    }
+
+    /**
+     * @link https://michalsnik.github.io/aos/
+     * @param bool $css
+     * @return void
+     */
+    public static function aos($css = true)
+    {
+        $version = self::config()->aos_version;
+        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/aos/$version/aos.js");
+        if ($css) {
+            Requirements::css("https://cdnjs.cloudflare.com/ajax/libs/aos/$version/aos.css");
+        }
+    }
+
+    /**
+     * @link https://imagesloaded.desandro.com/
+     * @return void
+     */
+    public static function imagesLoaded()
+    {
+        $version = self::config()->imagesLoaded_version;
+        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/$version/imagesloaded.min.js");
     }
 }
