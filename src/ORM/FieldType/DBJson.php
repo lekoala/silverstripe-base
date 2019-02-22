@@ -157,6 +157,15 @@ class DBJson extends DBString
     }
 
     /**
+     * We return false because we can accept array and convert it to string
+     * @return boolean
+     */
+    public function scalarValueOnly()
+    {
+        return false;
+    }
+
+    /**
      * Search multiple values in an array like store
      *
      * TODO: support proper json function if they are supported
