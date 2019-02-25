@@ -342,14 +342,18 @@ JS;
     /**
      * @link https://github.com/OwlCarousel2/OwlCarousel2
      * @param bool $css
+     * @param bool $theme
      * @return void
      */
-    public static function owlCarousel2($css = true)
+    public static function owlCarousel2($css = true, $theme = 'default')
     {
         $version = self::config()->owl_carousel2_version;
         Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/$version/owl.carousel.min.js");
         if ($css) {
             Requirements::css("https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/$version/assets/owl.carousel.min.css");
+        }
+        if ($theme) {
+            Requirements::css("https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/$version/assets/owl.theme.$theme.min.css");
         }
     }
 
