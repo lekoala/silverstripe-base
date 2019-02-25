@@ -2,8 +2,11 @@
 
 namespace LeKoala\Base\Dev;
 
+use LeKoala\Base\Controllers\HasLogger;
+
 class Benchmark
 {
+    use HasLogger;
 
     /**
      * A dead simple benchmark function
@@ -16,6 +19,21 @@ class Benchmark
      */
     public static function run($cb = null)
     {
+        $data = self::benchmark($cb);
+        if (!$data) {
+            return;
+        }
+
+        printf("It took %s seconds and used %s memory", $data['time'], $data['memory']);
+        die();
+    }
+
+    /**
+     * @param callable $cb
+     * @return bool|array
+     */
+    protected static function benchmark($cb = null)
+    {
         static $data = null;
 
         // No callback scenario
@@ -26,7 +44,7 @@ class Benchmark
                     'startMemory' => memory_get_usage(),
                 ];
                 // Allow another call
-                return;
+                return false;
             } else {
                 $startTime = $data['startTime'];
                 $startMemory = $data['startMemory'];
@@ -41,15 +59,32 @@ class Benchmark
         $endTime = microtime(true);
         $endMemory = memory_get_usage();
 
-        $time = sprintf("%.6f seconds", $endTime - $startTime);
+        $time = sprintf("%.6f", $endTime - $startTime);
+        $memory = self::bytesToHuman($endMemory - $startMemory);
 
-        $bytes = $endMemory - $startMemory;
-        $decimals = 2;
+        return [
+            'time' => $time,
+            'memory' => $memory,
+        ];
+    }
+
+    protected static function bytesToHuman($bytes, $decimals = 2)
+    {
         $sz = 'BKMGTP';
         $factor = floor((strlen($bytes) - 1) / 3);
-        $memory = sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$sz[$factor];
+        return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$sz[$factor];
+    }
 
-        printf("It took %s seconds and used %s memory", $time, $memory);
-        die();
+    public static function log($name, $cb = null)
+    {
+        $data = self::benchmark($cb);
+        if (!$data) {
+            return;
+        }
+
+        $time = $data['time'];
+        $memory = $data['memory'];
+
+        self::getLogger("$name : $time seconds and $memory memory.");
     }
 }
