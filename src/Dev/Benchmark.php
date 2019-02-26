@@ -70,9 +70,10 @@ class Benchmark
 
     protected static function bytesToHuman($bytes, $decimals = 2)
     {
-        $sz = 'BKMGTP';
+        $size   = array('B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB');
         $factor = floor((strlen($bytes) - 1) / 3);
-        return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$sz[$factor];
+
+        return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$size[$factor];
     }
 
     public static function log($name, $cb = null)
