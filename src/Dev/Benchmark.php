@@ -85,6 +85,6 @@ class Benchmark
         $time = $data['time'];
         $memory = $data['memory'];
 
-        self::getLogger("$name : $time seconds and $memory memory.");
+        self::getLogger()->debug("$name : $time seconds and $memory memory.");
     }
 }
