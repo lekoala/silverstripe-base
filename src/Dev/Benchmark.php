@@ -48,6 +48,9 @@ class Benchmark
             } else {
                 $startTime = $data['startTime'];
                 $startMemory = $data['startMemory'];
+
+                // Clear for future calls
+                $data = null;
             }
         } else {
             $startTime = microtime(true);
