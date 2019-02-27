@@ -4,6 +4,7 @@ use SilverStripe\Control\Director;
 use SilverStripe\Core\Environment;
 
 // Add a benchmark helper
+
 if (!function_exists('bm')) {
     function bm($cb = null)
     {
@@ -72,8 +73,10 @@ if (Director::isDev()) {
     ini_set('display_errors', true);
 
     // Enable IDEAnnotator
-    if (!empty($_SERVER['SERVER_NAME']) &&
-        in_array(substr($_SERVER['SERVER_NAME'], strrpos($_SERVER['SERVER_NAME'], '.') + 1), ['dev', 'local', 'localhost'])) {
+    if (
+        !empty($_SERVER['SERVER_NAME']) &&
+        in_array(substr($_SERVER['SERVER_NAME'], strrpos($_SERVER['SERVER_NAME'], '.') + 1), ['dev', 'local', 'localhost'])
+    ) {
         \SilverStripe\Core\Config\Config::modify()->set('SilverLeague\IDEAnnotator\DataObjectAnnotator', 'enabled', true);
     }
 }
@@ -114,3 +117,10 @@ if (!isset($_SERVER['PHP_AUTH_USER'])) {
     ->addButtonsToLine(1, 'styleselect')
     ->setOption('statusbar', false)
     ->setOption('importcss_append', true);
+
+// GraphQL performance
+// See _config/controllers.yml
+// @link https://github.com/silverstripe/silverstripe-graphql/issues/192
+// if (Director::isLive()) {
+//     \SilverStripe\GraphQL\Controller::remove_extension(\SilverStripe\GraphQL\Extensions\IntrospectionProvider::class);
+// }
