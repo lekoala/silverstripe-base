@@ -72,7 +72,7 @@ class ContactSubmission extends DataObject
             $e_body .= "Phone: $phone<br/>";
         }
         $e_content = "<br/><hr/>Message:<br/>$message<hr/>";
-        $msg = wordwrap($e_body . $e_content, 70);
+        $msg = $e_body . $e_content;
         $ex = null;
         try {
             $emailInst = new Email();
