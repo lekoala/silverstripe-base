@@ -78,7 +78,8 @@ class ContactSubmission extends DataObject
             $emailInst = new Email();
             $emailInst->setTo($address);
             $emailInst->setSubject($e_subject);
-            $emailInst->setBody($msg);
+            // $emailInst->setBody($msg);
+            $emailInst->addData(['EmailContent' => $msg]);
             $emailInst->setReplyTo($email);
             $result = $emailInst->send();
         } catch (\Exception $e) {
