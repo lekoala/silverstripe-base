@@ -158,6 +158,8 @@ class BaseForm extends Form
     /**
      * Manually enable RequiredFields javascript validation
      *
+     * You can also use JsRequiredFields class
+     *
      * @return void
      */
     protected function enableJsValidation()
