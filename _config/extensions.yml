@@ -40,6 +40,9 @@ LeKoala\Base\Tags\Tag:
 SilverStripe\Security\Member:
   extensions:
     - LeKoala\Base\Privacy\PrivacyMemberExtension
+SilverStripe\Control\Email\Email:
+  extensions:
+    - LeKoala\Base\Email\BaseEmailExtension
 ---
 Name: base-extensions-versioned
 After:
