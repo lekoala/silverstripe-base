@@ -287,8 +287,18 @@ trait Select2
             if (ArrayLib::is_associative($where)) {
                 $newWhere = [];
                 foreach ($where as $col => $param) {
-                    $params[] = $param;
-                    $newWhere[] = "$col = ?";
+                    // For array, we need a IN statement with a ? for each value
+                    if (is_array($param)) {
+                        $prepValue = [];
+                        foreach ($param as $paramValue) {
+                            $params[] = $paramValue;
+                            $prepValue[] = "?";
+                        }
+                        $newWhere[] = "$col IN (" . implode(',', $prepValue) . ")";
+                    } else {
+                        $params[] = $param;
+                        $newWhere[] = "$col = ?";
+                    }
                 }
                 $where = $newWhere;
             }
@@ -332,7 +342,7 @@ trait Select2
      */
     public function getLocale()
     {
-        return $this->locale ? : i18n::get_locale();
+        return $this->locale ?: i18n::get_locale();
     }
 
     /**
