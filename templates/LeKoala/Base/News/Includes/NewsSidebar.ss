@@ -10,6 +10,18 @@
         </form>
     </div>
 
+    <!-- Categories -->
+    <div class="NewsSidebar-Widget NewsSidebar-Categories">
+        <div class="NewsSidebar-Title"><h2><%t NewsSidebar.CATEGORIES "Categories" %></h2></div>
+
+        <ul>
+            <% loop Categories %>
+            <li><a href="$Link">$Title</a></li>
+            <% end_loop %>
+        </ul>
+
+    </div>
+
     <!-- Popular Posts -->
     <div class="NewsSidebar-Widget NewsSidebar-PopularPosts">
         <div class="NewsSidebar-Title"><h2><%t NewsSidebar.POPULAR_POSTS "Popular posts" %></h2></div>

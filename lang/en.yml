@@ -76,6 +76,7 @@ en:
     NO_ARTICLES: 'No articles'
   NewsSidebar:
     ARCHIVES: Archives
+    CATEGORIES: Categories
     POPULAR_POSTS: 'Popular posts'
     SEARCH: Search
     TAGS: Tags
