@@ -171,4 +171,21 @@ CSS;
     {
         return Injector::inst()->get(LoggerInterface::class)->withName('Admin');
     }
+
+    /**
+     * Get the currently edited id from the url
+     *
+     * @param int $idx The level (0 first level, 1 first sublevel...)
+     * @return int The id or 0 if not found
+     */
+    public function getCurrentRecordID($idx = 0)
+    {
+        $url = $this->owner->getRequest()->getURL();
+        $matches = null;
+        preg_match_all('/\/item\/(\d+)/', $url, $matches);
+        if (isset($matches[1][$idx])) {
+            return $matches[1][$idx];
+        }
+        return 0;
+    }
 }
