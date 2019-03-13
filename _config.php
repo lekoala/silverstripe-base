@@ -68,16 +68,17 @@ if ($SS_TIMEZONE) {
     date_default_timezone_set($SS_TIMEZONE);
 }
 
+$SS_SERVERNAME = $_SERVER['SERVER_NAME'] ?? 'localhost';
 if (Director::isDev()) {
     error_reporting(-1);
     ini_set('display_errors', true);
 
     // Enable IDEAnnotator
-    if (
-        !empty($_SERVER['SERVER_NAME']) &&
-        in_array(substr($_SERVER['SERVER_NAME'], strrpos($_SERVER['SERVER_NAME'], '.') + 1), ['dev', 'local', 'localhost'])
-    ) {
+    if (in_array(substr($SS_SERVERNAME, strrpos($SS_SERVERNAME, '.') + 1), ['dev', 'local', 'localhost'])) {
         \SilverStripe\Core\Config\Config::modify()->set('SilverLeague\IDEAnnotator\DataObjectAnnotator', 'enabled', true);
+        \SilverStripe\Core\Config\Config::modify()->merge('SilverLeague\IDEAnnotator\DataObjectAnnotator', 'enabled_modules', [
+            'app'
+        ]);
     }
 }
 
