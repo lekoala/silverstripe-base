@@ -5,13 +5,14 @@ use SilverStripe\Assets\File;
 use SilverStripe\Assets\Image;
 use SilverStripe\Assets\Folder;
 use SilverStripe\Forms\FieldList;
+use SilverStripe\Assets\Filesystem;
 use SilverStripe\ORM\DataExtension;
 use LeKoala\Base\Helpers\ClassHelper;
 use SilverStripe\Versioned\Versioned;
 use LeKoala\Base\Forms\SmartUploadField;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\AssetAdmin\Forms\UploadField;
-use SilverStripe\Assets\Filesystem;
+use LeKoala\Base\Forms\SmartSortableUploadField;
 
 /**
  * Automatically publish files and images related to this data object
@@ -149,8 +150,11 @@ class SmartDataObjectExtension extends DataExtension
     }
     public function updateCMSFields(FieldList $fields)
     {
+        $config = $this->owner->config();
         $dataFields = $fields->dataFields();
         $manyManyFiles = $this->getManyManyFileRelations();
+        $manyManyFilesExtraFields = $config->many_many_extraFields ?? [];
+
         foreach ($dataFields as $dataField) {
             $class = get_class($dataField);
             // Let's replace all base UploadFields with SmartUploadFields
@@ -162,8 +166,14 @@ class SmartDataObjectExtension extends DataExtension
             if ($class === GridField::class) {
                 // Let's replace many_many files grids with proper UploadFields
                 if (in_array($dataField->getName(), $manyManyFiles)) {
-                    $newField = new SmartUploadField($dataField->getName(), $dataField->Title(), $dataField->getList());
-                    $fields->replaceField($dataField->getName(), $newField);
+                    $extraFields = $manyManyFilesExtraFields[$dataField->getName()] ?? [];
+                    if (isset($extraFields['SortOrder'])) {
+                        $newField = new SmartSortableUploadField($dataField->getName(), $dataField->Title(), $dataField->getList());
+                        $fields->replaceField($dataField->getName(), $newField);
+                    } else {
+                        $newField = new SmartUploadField($dataField->getName(), $dataField->Title(), $dataField->getList());
+                        $fields->replaceField($dataField->getName(), $newField);
+                    }
                 }
             }
         }

@@ -4,24 +4,17 @@ namespace LeKoala\Base\Forms;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\Assets\Image;
 use SilverStripe\ORM\DataObjectInterface;
-use SilverStripe\AssetAdmin\Forms\UploadField;
 use LeKoala\Base\Blocks\Block;
+use Bummzack\SortableFile\Forms\SortableUploadField;
 
 /**
  * Improves the default uploader by uploading to a consistent default location
  * Records should really have an ID before uploading to ensure we know where to place the file
  * Otherwise, files might be uploaded and attached to nothing
  */
-class SmartUploadField extends UploadField
+class SmartSortableUploadField extends SortableUploadField
 {
     use BaseFileUploadReceiver;
-
-    /**
-     * Because who really use gifs and bmp?
-     * @config
-     * @var array
-     */
-    private static $default_image_ext = ['jpg', 'jpeg', 'png'];
 
     public function __construct($name, $title = null, SS_List $items = null)
     {
@@ -56,7 +49,7 @@ class SmartUploadField extends UploadField
                 // Because who wants bmp and gif files?
                 $allowedExtensions = $this->getAllowedExtensions();
                 if (in_array('zip', $allowedExtensions)) {
-                    $this->setAllowedExtensions(self::config()->default_image_ext);
+                    $this->setAllowedExtensions(SmartUploadField::config()->default_image_ext);
                 }
             }
 
