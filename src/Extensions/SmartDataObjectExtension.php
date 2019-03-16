@@ -22,6 +22,10 @@ use LeKoala\Base\Forms\SmartSortableUploadField;
  */
 class SmartDataObjectExtension extends DataExtension
 {
+    /**
+     * Class names to consider for our getFiles* functions
+     * @return array
+     */
     protected function listFileTypes()
     {
         return [
@@ -29,6 +33,12 @@ class SmartDataObjectExtension extends DataExtension
             File::class,
         ];
     }
+
+    /**
+     * Get all file relations
+     *
+     * @return array with three keys : has_one, has_many, many_many
+     */
     protected function getAllFileRelations()
     {
         return [
@@ -37,24 +47,39 @@ class SmartDataObjectExtension extends DataExtension
             'many_many' => $this->getManyManyFileRelations(),
         ];
     }
+    /**
+     * Files in hasOne
+     *
+     * @return array
+     */
     protected function getHasOneFileRelations()
     {
-        $config = $this->owner->config();
-        $rel = $config->has_one;
-        return $this->findFileRelations($rel);
+        return $this->findFileRelations($this->owner->hasOne());
     }
+    /**
+     * Files in hasMany
+     *
+     * @return array
+     */
     protected function getHasManyFileRelations()
     {
-        $config = $this->owner->config();
-        $rel = $config->has_many;
-        return $this->findFileRelations($rel);
+        return $this->findFileRelations($this->owner->hasMany());
     }
+    /**
+     * Files in manyMany
+     *
+     * @return array
+     */
     protected function getManyManyFileRelations()
     {
-        $config = $this->owner->config();
-        $rel = $config->many_many;
-        return $this->findFileRelations($rel);
+        return $this->findFileRelations($this->owner->manyMany());
     }
+    /**
+     * Find file relations in a relation list
+     *
+     * @param array $arr list of relations
+     * @return array
+     */
     protected function findFileRelations($arr)
     {
         if (!$arr) {
@@ -158,28 +183,36 @@ class SmartDataObjectExtension extends DataExtension
     {
         $config = $this->owner->config();
         $dataFields = $fields->dataFields();
+        $manyManyFiles = $this->getManyManyFileRelations();
         $manyManyFilesExtraFields = $this->owner->manyManyExtraFields();
 
         foreach ($dataFields as $dataField) {
             $class = get_class($dataField);
+            $fieldName = $dataField->getName();
+            $newField = null;
             // Let's replace all base UploadFields with SmartUploadFields
             if ($class === UploadField::class) {
-                $newField = new SmartUploadField($dataField->getName(), $dataField->Title(), $dataField->getItems());
-                $fields->replaceField($dataField->getName(), $newField);
+                $newField = new SmartUploadField($fieldName, $dataField->Title(), $dataField->getItems());
             }
             // Adjust GridFields
             if ($class === GridField::class) {
                 // Let's replace many_many files grids with proper UploadFields
-                if (in_array($dataField->getName(), $manyManyFiles)) {
-                    $extraFields = $manyManyFilesExtraFields[$dataField->getName()] ?? [];
+                if (in_array($fieldName, $manyManyFiles)) {
+                    $extraFields = $manyManyFilesExtraFields[$fieldName] ?? [];
                     if (isset($extraFields['SortOrder'])) {
-                        $newField = new SmartSortableUploadField($dataField->getName(), $dataField->Title(), $dataField->getList());
-                        $fields->replaceField($dataField->getName(), $newField);
+                        $newField = new SmartSortableUploadField($fieldName, $dataField->Title(), $dataField->getList());
                     } else {
-                        $newField = new SmartUploadField($dataField->getName(), $dataField->Title(), $dataField->getList());
-                        $fields->replaceField($dataField->getName(), $newField);
+                        $newField = new SmartUploadField($fieldName, $dataField->Title(), $dataField->getList());
                     }
                 }
+            }
+            if ($newField) {
+                // We should hide uploaders until we have an ID
+                // if ($this->owner->ID) {
+                    $fields->replaceField($fieldName, $newField);
+                // } else {
+                    // $fields->removeByName($fieldName);
+                // }
             }
         }
     }

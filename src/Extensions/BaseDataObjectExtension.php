@@ -144,6 +144,14 @@ class BaseDataObjectExtension extends DataExtension
     }
 
     /**
+     * @return bool
+     */
+    protected function isSmart()
+    {
+        return $this->owner->hasExtension(SmartDataObjectExtension::class);
+    }
+
+    /**
      * @param string $class
      * @return bool
      */
@@ -333,10 +341,35 @@ class BaseDataObjectExtension extends DataExtension
         if ($this->isVersioned()) {
             return;
         }
-        $has_one = $this->owner->hasOne();
+        if (!$this->isSmart()) {
+            return;
+        }
+        $rel = $this->getAllFileRelations();
+        $owns =  $this->owner->owns;
 
-        // TODO: loop over stuff and remove them
-        // foreach ($has_one as $name => $class) { }
+        foreach ($rel as $relType => $list) {
+            switch ($relType) {
+                case 'has_one':
+                    foreach ($list as $name => $class) {
+                        if (!in_array($name, $owns)) {
+                            continue;
+                        }
+                        $this->$name->delete();
+                    }
+                    break;
+                case 'has_many':
+                case 'many_many':
+                    foreach ($list as $name => $class) {
+                        if (!in_array($name, $owns)) {
+                            continue;
+                        }
+                        foreach ($this->$name as $rec) {
+                            $rec->delete();
+                        }
+                    }
+                    break;
+            }
+        }
     }
 
     /**
