@@ -63,7 +63,7 @@ class CommonRequirements
      * @config
      * @var string
      */
-    private static $cleave_version = '1.4.7';
+    private static $cleave_version = '1.4.10';
 
     /**
      * @config
