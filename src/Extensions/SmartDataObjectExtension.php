@@ -22,78 +22,6 @@ use LeKoala\Base\Forms\SmartSortableUploadField;
  */
 class SmartDataObjectExtension extends DataExtension
 {
-    /**
-     * Class names to consider for our getFiles* functions
-     * @return array
-     */
-    protected function listFileTypes()
-    {
-        return [
-            Image::class,
-            File::class,
-        ];
-    }
-
-    /**
-     * Get all file relations
-     *
-     * @return array with three keys : has_one, has_many, many_many
-     */
-    protected function getAllFileRelations()
-    {
-        return [
-            'has_one' => $this->getHasOneFileRelations(),
-            'has_many' => $this->getHasManyFileRelations(),
-            'many_many' => $this->getManyManyFileRelations(),
-        ];
-    }
-    /**
-     * Files in hasOne
-     *
-     * @return array
-     */
-    protected function getHasOneFileRelations()
-    {
-        return $this->findFileRelations($this->owner->hasOne());
-    }
-    /**
-     * Files in hasMany
-     *
-     * @return array
-     */
-    protected function getHasManyFileRelations()
-    {
-        return $this->findFileRelations($this->owner->hasMany());
-    }
-    /**
-     * Files in manyMany
-     *
-     * @return array
-     */
-    protected function getManyManyFileRelations()
-    {
-        return $this->findFileRelations($this->owner->manyMany());
-    }
-    /**
-     * Find file relations in a relation list
-     *
-     * @param array $arr list of relations
-     * @return array
-     */
-    protected function findFileRelations($arr)
-    {
-        if (!$arr) {
-            return [];
-        }
-        $fileTypes = $this->listFileTypes();
-        $res = [];
-        foreach ($arr as $name => $type) {
-            if (\in_array($type, $fileTypes)) {
-                $res[] = $name;
-            }
-        }
-        return $res;
-    }
     public function onAfterWrite()
     {
         $record = $this->owner;
@@ -102,7 +30,7 @@ class SmartDataObjectExtension extends DataExtension
         if ($ownerIsVersioned) {
             return;
         }
-        $relations = $this->getAllFileRelations();
+        $relations = $this->owner->getAllFileRelations();
         $changedFields = $this->owner->getChangedFields(true);
         foreach ($relations as $type => $names) {
             foreach ($names as $name) {

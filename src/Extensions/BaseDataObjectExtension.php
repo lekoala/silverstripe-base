@@ -144,11 +144,79 @@ class BaseDataObjectExtension extends DataExtension
     }
 
     /**
-     * @return bool
+     * Class names to consider for our getFiles* functions
+     * @return array
      */
-    protected function isSmart()
+    public function listFileTypes()
     {
-        return $this->owner->hasExtension(SmartDataObjectExtension::class);
+        return [
+            Image::class,
+            File::class,
+        ];
+    }
+
+    /**
+     * Get all file relations
+     *
+     * @return array with three keys : has_one, has_many, many_many
+     */
+    public function getAllFileRelations()
+    {
+        return [
+            'has_one' => $this->getHasOneFileRelations(),
+            'has_many' => $this->getHasManyFileRelations(),
+            'many_many' => $this->getManyManyFileRelations(),
+        ];
+    }
+    /**
+     * Files in hasOne
+     *
+     * @return array
+     */
+    public function getHasOneFileRelations()
+    {
+        return $this->findFileRelations($this->owner->hasOne());
+    }
+
+    /**
+     * Files in hasMany
+     *
+     * @return array
+     */
+    public function getHasManyFileRelations()
+    {
+        return $this->findFileRelations($this->owner->hasMany());
+    }
+
+    /**
+     * Files in manyMany
+     *
+     * @return array
+     */
+    public function getManyManyFileRelations()
+    {
+        return $this->findFileRelations($this->owner->manyMany());
+    }
+
+    /**
+     * Find file relations in a relation list
+     *
+     * @param array $arr list of relations
+     * @return array
+     */
+    public function findFileRelations($arr)
+    {
+        if (!$arr) {
+            return [];
+        }
+        $fileTypes = $this->listFileTypes();
+        $res = [];
+        foreach ($arr as $name => $type) {
+            if (\in_array($type, $fileTypes)) {
+                $res[] = $name;
+            }
+        }
+        return $res;
     }
 
     /**
@@ -192,6 +260,11 @@ class BaseDataObjectExtension extends DataExtension
         }
     }
 
+    /**
+     * @param FieldList $fields
+     * @param array $arr
+     * @return void
+     */
     public function removeFields(FieldList $fields, $arr)
     {
         if (!$arr) {
@@ -201,6 +274,7 @@ class BaseDataObjectExtension extends DataExtension
             $fields->removeByName($name);
         }
     }
+
     /**
      * @param BuildableFieldList $fields
      * @param array $arr
@@ -339,9 +413,6 @@ class BaseDataObjectExtension extends DataExtension
     {
         // We should not cleanup tables on versioned items because they can be restored
         if ($this->isVersioned()) {
-            return;
-        }
-        if (!$this->isSmart()) {
             return;
         }
         $rel = $this->getAllFileRelations();
