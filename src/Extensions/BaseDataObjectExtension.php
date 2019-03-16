@@ -19,7 +19,6 @@ use SilverStripe\ORM\UnsavedRelationList;
 use LeKoala\Base\Forms\BuildableFieldList;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\Forms\GridField\GridFieldDeleteAction;
-use Symbiote\GridFieldExtensions\GridFieldEditableColumns;
 use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
 
 /**
@@ -153,6 +152,10 @@ class BaseDataObjectExtension extends DataExtension
         return $class === Image::class || $class === File::class;
     }
 
+    public function onBeforeDelete()
+    {
+        $this->cleanupAssets();
+    }
 
     public function onAfterDelete()
     {
@@ -322,6 +325,18 @@ class BaseDataObjectExtension extends DataExtension
         } else {
             $this->owner->write();
         }
+    }
+
+    protected function cleanupAssets()
+    {
+        // We should not cleanup tables on versioned items because they can be restored
+        if ($this->isVersioned()) {
+            return;
+        }
+        $has_one = $this->owner->hasOne();
+
+        // TODO: loop over stuff and remove them
+        // foreach ($has_one as $name => $class) { }
     }
 
     /**

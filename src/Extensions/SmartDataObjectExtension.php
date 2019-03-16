@@ -143,6 +143,12 @@ class SmartDataObjectExtension extends DataExtension
             }
         }
     }
+    /**
+     * The place where to store assets
+     * We create a folder for each record to easily clean up after deletion
+     *
+     * @return string
+     */
     public function getFolderName()
     {
         $class = ClassHelper::getClassWithoutNamespace($this->owner);
@@ -152,8 +158,7 @@ class SmartDataObjectExtension extends DataExtension
     {
         $config = $this->owner->config();
         $dataFields = $fields->dataFields();
-        $manyManyFiles = $this->getManyManyFileRelations();
-        $manyManyFilesExtraFields = $config->many_many_extraFields ?? [];
+        $manyManyFilesExtraFields = $this->owner->manyManyExtraFields();
 
         foreach ($dataFields as $dataField) {
             $class = get_class($dataField);
