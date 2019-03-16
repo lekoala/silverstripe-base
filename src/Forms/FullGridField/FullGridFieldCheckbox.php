@@ -13,6 +13,7 @@ use SilverStripe\Forms\GridField\GridField_HTMLProvider;
 use SilverStripe\Forms\GridField\GridField_ColumnProvider;
 use SilverStripe\Forms\GridField\GridField_DataManipulator;
 use SilverStripe\Forms\LiteralField;
+use LeKoala\Base\Helpers\ClassHelper;
 
 /**
  * The checkbox handles adding or removing the record to the relation
@@ -47,7 +48,7 @@ class FullGridFieldCheckbox implements GridField_SaveHandler, GridField_ColumnPr
      * Toggle if removing items should be prevented
      * @var bool
      */
-    protected $preventRemove;
+    protected $preventRemove = false;
 
     /**
      * Toggle if we should handle empty post (may be dangerous!)
@@ -59,6 +60,11 @@ class FullGridFieldCheckbox implements GridField_SaveHandler, GridField_ColumnPr
      * @var array
      */
     protected $cannotBeRemovedIDs = [];
+
+    /**
+     * @var bool
+     */
+    protected $instantSave = false;
 
     /**
      * Get the value of preventRemove
@@ -121,6 +127,11 @@ class FullGridFieldCheckbox implements GridField_SaveHandler, GridField_ColumnPr
 
     public function handleSave(GridField $grid, DataObjectInterface $record)
     {
+        // Is handled for each record individually
+        if ($this->instantSave) {
+            return;
+        }
+
         $post = isset($_POST['FullGridSelect'][$grid->getName()]) ? array_keys($_POST['FullGridSelect'][$grid->getName()]) : [];
 
         // It's empty, handle only if chosen (it will remove everything!)
@@ -154,6 +165,52 @@ class FullGridFieldCheckbox implements GridField_SaveHandler, GridField_ColumnPr
                 }
             }
         }
+    }
+
+    public function handleInstantSave(GridField $grid, $data)
+    {
+        $checked = $data['checked'];
+        $id = $data['id'];
+        $recordInfo = $data['record'];
+
+        if (!$id || !$recordInfo) {
+            throw new Exception("No id or no record");
+        }
+
+        $recordInfosParts = explode('_', $recordInfo);
+        $recordClassName = ClassHelper::unsanitiseClassName($recordInfosParts[0]);
+        $recordID = $recordInfosParts[1];
+
+        /* @var $record DataObject */
+        $record = $recordClassName::get()->byID($recordID);
+        if (!$record) {
+            throw new Exception("Record $recordID of class $recordClassName not found");
+        }
+        if (!$record->canEdit()) {
+            throw new Exception("Cannot edit record");
+        }
+
+        $name = $grid->getName();
+
+        $rel = $this->saveToRelation ? $this->saveToRelation : $name;
+
+        /* @var $list ManyManyList */
+        $list = $record->$rel();
+
+        $msg = "Something wrong happened";
+        if ($checked) {
+            $list->add($id);
+            $msg = "Record added";
+        } else {
+            if (in_array($id, $this->cannotBeRemovedIDs)) {
+                // Do nothing
+            } else {
+                $list->removeByID($id);
+                $msg = "Record removed";
+            }
+        }
+
+        return $msg;
     }
 
     /**
@@ -209,6 +266,10 @@ class FullGridFieldCheckbox implements GridField_SaveHandler, GridField_ColumnPr
 
         $cb = CheckboxField::create('FullGridSelect[' . $gridField->getName() . '][' . $record->ID . ']', '')
             ->addExtraClass('FullGridSelect no-change-track');
+
+        if ($this->instantSave) {
+            $cb->addExtraClass('FullGridSelect-instantSave');
+        }
 
         if ($this->ids === null) {
             $this->ids = $gridField->getList()->column('ID');
@@ -341,6 +402,27 @@ class FullGridFieldCheckbox implements GridField_SaveHandler, GridField_ColumnPr
     public function setCannotBeRemovedIDs($cannotBeRemovedIDs)
     {
         $this->cannotBeRemovedIDs = $cannotBeRemovedIDs;
+        return $this;
+    }
+
+    /**
+     * Get the value of instantSave
+     * @return bool
+     */
+    public function getInstantSave()
+    {
+        return $this->instantSave;
+    }
+
+    /**
+     * Set the value of instantSave
+     *
+     * @param bool $instantSave
+     * @return $this
+     */
+    public function setInstantSave($instantSave)
+    {
+        $this->instantSave = $instantSave;
         return $this;
     }
 }
