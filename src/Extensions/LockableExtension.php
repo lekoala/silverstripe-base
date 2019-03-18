@@ -38,7 +38,6 @@ class LockableExtension extends DataExtension
             return;
         }
         $fields->makeReadonly();
-        foreach ($fields as $f) { }
     }
 
     public function canEdit($member)
