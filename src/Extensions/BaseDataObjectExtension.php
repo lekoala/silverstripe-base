@@ -418,6 +418,10 @@ class BaseDataObjectExtension extends DataExtension
         $rel = $this->getAllFileRelations();
         $owns =  $this->owner->owns;
 
+        if (!$owns) {
+            return;
+        }
+
         foreach ($rel as $relType => $list) {
             switch ($relType) {
                 case 'has_one':
