@@ -130,12 +130,12 @@ class CommonRequirements
     }
 
     /**
-     * @link https://polyfill.io/v2/docs/
+     * @link https://polyfill.io/v3/api/
      * @return void
      */
     public static function polyfillIo()
     {
-        Requirements::javascript('https://cdn.polyfill.io/v2/polyfill.min.js');
+        Requirements::javascript('https://cdn.polyfill.io/v3/polyfill.min.js?flags=gated');
     }
 
     /**
