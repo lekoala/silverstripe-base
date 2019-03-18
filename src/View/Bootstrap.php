@@ -32,9 +32,10 @@ class Bootstrap
 
     /**
      * @config
+     * We use 4.3.0 and not 4.3.1 that has issues with IE11
      * @var string
      */
-    private static $bootstrap_version = '4.3.1';
+    private static $bootstrap_version = '4.3.0';
 
     /**
      * @config
