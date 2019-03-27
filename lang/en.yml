@@ -69,13 +69,14 @@ en:
     LegalName: 'Legal Name'
     Phone: Phone
     View: 'View'
-    Back: 'Back'
+    UNDEFINED_ERROR: 'Something wrong happened'
   NewsItem:
     READ_MORE: 'Read more'
   NewsPage:
     NO_ARTICLES: 'No articles'
   NewsSidebar:
     ARCHIVES: Archives
+    CATEGORIES: Categories
     POPULAR_POSTS: 'Popular posts'
     SEARCH: Search
     TAGS: Tags

@@ -354,7 +354,7 @@ class BuildableFieldList extends FieldList
     /**
      * Set the value of i18nEntity
      *
-     * @return  self
+     * @return $this
      */
     public function setI18nEntity($i18nEntity)
     {
@@ -373,7 +373,7 @@ class BuildableFieldList extends FieldList
     /**
      * Set the value of defaultTab
      *
-     * @return  self
+     * @return $this
      */
     public function setDefaultTab($defaultTab)
     {

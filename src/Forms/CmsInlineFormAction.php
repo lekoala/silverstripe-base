@@ -52,6 +52,7 @@ class CmsInlineFormAction extends LiteralField
         parent::__construct($action, $title);
         $this->addExtraClass($extraClass);
     }
+
     public function performReadonlyTransformation()
     {
         return $this->castedCopy(self::class);
@@ -109,6 +110,9 @@ class CmsInlineFormAction extends LiteralField
         if ($this->newWindow) {
             $attrs .= ' target="_blank"';
         }
+        if ($this->readonly) {
+            $attrs .= ' style="display:none"';
+        }
         $content = '<a href="' . $link . '" class="btn ' . $this->extraClass() . ' action inline-action no-ajax"' . $attrs . '>';
         $title = $this->content;
         if ($this->buttonIcon) {
@@ -136,7 +140,7 @@ class CmsInlineFormAction extends LiteralField
      *
      * @param  array  $params
      *
-     * @return  self
+     * @return $this
      */
     public function setParams(array $params)
     {
@@ -160,7 +164,7 @@ class CmsInlineFormAction extends LiteralField
      *
      * @param  boolean  $newWindow
      *
-     * @return  self
+     * @return $this
      */
     public function setNewWindow($newWindow)
     {

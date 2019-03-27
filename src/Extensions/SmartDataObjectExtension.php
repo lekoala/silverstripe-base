@@ -5,13 +5,14 @@ use SilverStripe\Assets\File;
 use SilverStripe\Assets\Image;
 use SilverStripe\Assets\Folder;
 use SilverStripe\Forms\FieldList;
+use SilverStripe\Assets\Filesystem;
 use SilverStripe\ORM\DataExtension;
 use LeKoala\Base\Helpers\ClassHelper;
 use SilverStripe\Versioned\Versioned;
 use LeKoala\Base\Forms\SmartUploadField;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\AssetAdmin\Forms\UploadField;
-use SilverStripe\Assets\Filesystem;
+use LeKoala\Base\Forms\SmartSortableUploadField;
 
 /**
  * Automatically publish files and images related to this data object
@@ -21,53 +22,6 @@ use SilverStripe\Assets\Filesystem;
  */
 class SmartDataObjectExtension extends DataExtension
 {
-    protected function listFileTypes()
-    {
-        return [
-            Image::class,
-            File::class,
-        ];
-    }
-    protected function getAllFileRelations()
-    {
-        return [
-            'has_one' => $this->getHasOneFileRelations(),
-            'has_many' => $this->getHasManyFileRelations(),
-            'many_many' => $this->getManyManyFileRelations(),
-        ];
-    }
-    protected function getHasOneFileRelations()
-    {
-        $config = $this->owner->config();
-        $rel = $config->has_one;
-        return $this->findFileRelations($rel);
-    }
-    protected function getHasManyFileRelations()
-    {
-        $config = $this->owner->config();
-        $rel = $config->has_many;
-        return $this->findFileRelations($rel);
-    }
-    protected function getManyManyFileRelations()
-    {
-        $config = $this->owner->config();
-        $rel = $config->many_many;
-        return $this->findFileRelations($rel);
-    }
-    protected function findFileRelations($arr)
-    {
-        if (!$arr) {
-            return [];
-        }
-        $fileTypes = $this->listFileTypes();
-        $res = [];
-        foreach ($arr as $name => $type) {
-            if (\in_array($type, $fileTypes)) {
-                $res[] = $name;
-            }
-        }
-        return $res;
-    }
     public function onAfterWrite()
     {
         $record = $this->owner;
@@ -76,7 +30,7 @@ class SmartDataObjectExtension extends DataExtension
         if ($ownerIsVersioned) {
             return;
         }
-        $relations = $this->getAllFileRelations();
+        $relations = $this->owner->getAllFileRelations();
         $changedFields = $this->owner->getChangedFields(true);
         foreach ($relations as $type => $names) {
             foreach ($names as $name) {
@@ -142,6 +96,12 @@ class SmartDataObjectExtension extends DataExtension
             }
         }
     }
+    /**
+     * The place where to store assets
+     * We create a folder for each record to easily clean up after deletion
+     *
+     * @return string
+     */
     public function getFolderName()
     {
         $class = ClassHelper::getClassWithoutNamespace($this->owner);
@@ -149,22 +109,38 @@ class SmartDataObjectExtension extends DataExtension
     }
     public function updateCMSFields(FieldList $fields)
     {
+        $config = $this->owner->config();
         $dataFields = $fields->dataFields();
         $manyManyFiles = $this->getManyManyFileRelations();
+        $manyManyFilesExtraFields = $this->owner->manyManyExtraFields();
+
         foreach ($dataFields as $dataField) {
             $class = get_class($dataField);
+            $fieldName = $dataField->getName();
+            $newField = null;
             // Let's replace all base UploadFields with SmartUploadFields
             if ($class === UploadField::class) {
-                $newField = new SmartUploadField($dataField->getName(), $dataField->Title(), $dataField->getItems());
-                $fields->replaceField($dataField->getName(), $newField);
+                $newField = new SmartUploadField($fieldName, $dataField->Title(), $dataField->getItems());
             }
             // Adjust GridFields
             if ($class === GridField::class) {
                 // Let's replace many_many files grids with proper UploadFields
-                if (in_array($dataField->getName(), $manyManyFiles)) {
-                    $newField = new SmartUploadField($dataField->getName(), $dataField->Title(), $dataField->getList());
-                    $fields->replaceField($dataField->getName(), $newField);
+                if (in_array($fieldName, $manyManyFiles)) {
+                    $extraFields = $manyManyFilesExtraFields[$fieldName] ?? [];
+                    if (isset($extraFields['SortOrder'])) {
+                        $newField = new SmartSortableUploadField($fieldName, $dataField->Title(), $dataField->getList());
+                    } else {
+                        $newField = new SmartUploadField($fieldName, $dataField->Title(), $dataField->getList());
+                    }
                 }
+            }
+            if ($newField) {
+                // We should hide uploaders until we have an ID
+                // if ($this->owner->ID) {
+                    $fields->replaceField($fieldName, $newField);
+                // } else {
+                    // $fields->removeByName($fieldName);
+                // }
             }
         }
     }

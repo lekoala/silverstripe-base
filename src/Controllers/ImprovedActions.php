@@ -123,6 +123,8 @@ trait ImprovedActions
     {
         try {
             $result = parent::handleAction($request, $action);
+        } catch (RedirectionException $ex) {
+            return $this->redirect($ex->getRedirectUrl());
         } catch (ValidationException $ex) {
             $caller = $ex->getTrace();
             $callerFile = $caller[0]['file'] ?? 'unknonwn';

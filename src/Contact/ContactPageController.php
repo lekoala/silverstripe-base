@@ -4,6 +4,7 @@ namespace LeKoala\Base\Contact;
 use SilverStripe\Control\Email\Email;
 use LeKoala\Base\Contact\ContactSubmission;
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\Director;
 
 /**
  * Class \LeKoala\Base\Contact\ContactPageController
@@ -17,6 +18,7 @@ class ContactPageController extends \PageController
     private static $allowed_actions = [
         "index",
         "doSend",
+        'ContactForm',
     ];
 
     public function index(HTTPRequest $request)
@@ -26,6 +28,9 @@ class ContactPageController extends \PageController
         return $this;
     }
 
+    /**
+     * @return ContactForm
+     */
     public function ContactForm()
     {
         $form = ContactForm::create($this);
@@ -45,8 +50,7 @@ class ContactPageController extends \PageController
 
     /**
      * This handler is for plain html forms (eg if using a template instead of a Form object)
-     *
-     * @return void
+     * @return HTTPResponse
      */
     public function doSend()
     {
@@ -59,17 +63,13 @@ class ContactPageController extends \PageController
         $message = $request->postVar('message');
         // Validate data
         if (trim($name) == '') {
-            $this->sessionMessage(_t("ContactPageController.ERR_ENTER_NAME", "Entrez votre nom"), "bad");
-            return $this->redirectBack();
+            return $this->returnMessage(_t("ContactPageController.ERR_ENTER_NAME", "Entrez votre nom"), true);
         } elseif (trim($email) == '') {
-            $this->sessionMessage(_t("ContactPageController.ERR_ENTER_EMAIL", "Entrez votre emali"), "bad");
-            return $this->redirectBack();
+            return $this->returnMessage(_t("ContactPageController.ERR_ENTER_EMAIL", "Entrez votre email"), true);
         } elseif (!filter_var($email, \FILTER_VALIDATE_EMAIL)) {
-            $this->sessionMessage(_t("ContactPageController.ERR_ENTER_VALIDEMAIL", "Entrez un email valide"), "bad");
-            return $this->redirectBack();
+            return $this->returnMessage(_t("ContactPageController.ERR_ENTER_VALIDEMAIL", "Entrez un email valide"), true);
         } elseif (trim($message) == '') {
-            $this->sessionMessage(_t("ContactPageController.ERR_ENTER_MESSAGE", "Entrez votre message"), "bad");
-            return $this->redirectBack();
+            return $this->returnMessage(_t("ContactPageController.ERR_ENTER_MESSAGE", "Entrez votre message"), true);
         }
         // Register submission
         $submission = new ContactSubmission();
@@ -83,12 +83,28 @@ class ContactPageController extends \PageController
         // Send by email
         $address = $this->data()->Email;
         $result = $submission->sendByEmail($address);
-        if ($result) {
-            $this->sessionMessage(_t("ContactPageController.MESSAGE_SENT", "Votre message a bien été envoyé"), "good");
-        } else {
-            $this->sessionMessage(_t("ContactPageController.MESSAGE_ERROR", "Votre message n'a pas été envoyé"), "bad");
-            $this->getLogger()->info("Failed recipients: " . implode(',', $emailInst->getFailedRecipients()));
+        if (!$result) {
+            return $this->returnMessage(_t("ContactPageController.MESSAGE_ERROR", "Votre message n'a pas été envoyé"), true);
         }
-        return $this->redirectBack();
+        return $this->returnMessage(_t("ContactPageController.MESSAGE_SENT", "Votre message a bien été envoyé"));
+    }
+
+    /**
+     * @param string $msg
+     * @param boolean $error
+     * @return HTTPResponse
+     */
+    public function returnMessage($msg, $error = false)
+    {
+        $status = $error ? 'good' : 'bad';
+        if (Director::is_ajax()) {
+            if ($error) {
+                return $this->httpError(400, $msg);
+            }
+            return $msg;
+        } else {
+            $this->sessionMessage($msg, $status);
+            return $this->redirectBack();
+        }
     }
 }

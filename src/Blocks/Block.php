@@ -117,6 +117,7 @@ final class Block extends DataObject
      * @var boolean
      */
     public static $auto_update_page = true;
+
     public function forTemplate()
     {
         return $this->Content;
@@ -249,6 +250,12 @@ final class Block extends DataObject
                 if (is_array($v) && !empty($v['Files'])) {
                     $files = $v['Files'];
                     if (count($files) == 1) {
+                        // Remove ID from end of string
+                        // eg: if you added [$k, 'ImageID'] it should be accessible using "Image", not "ImageID"
+                        $lastChars = substr($k, strlen($k)-2, 2);
+                        if ($lastChars == 'ID') {
+                            $k = substr($k, 0, -2);
+                        }
                         $item[$k] = self::getPublishedImageByID($files[0]);
                     } else {
                         $imageList = new ArrayList();
@@ -278,19 +285,60 @@ final class Block extends DataObject
         }
         return $image;
     }
+
+    /**
+     * @return boolean
+     */
+    public function isInAdmin()
+    {
+        if (isset($_GET['live']) && Director::isDev()) {
+            return true;
+        }
+        if (Controller::has_curr()) {
+            return Controller::curr() instanceof LeftAndMain;
+        }
+        return false;
+    }
+
     public function onBeforeWrite()
     {
         parent::onBeforeWrite();
+        if (!$this->isInAdmin()) {
+            return;
+        }
+
+        // If we have a menu title (for anchors) we need an HTML ID
         if (!$this->HTMLID && $this->MenuTitle) {
             $filter = new URLSegmentFilter;
             $this->HTMLID = $filter->filter($this->MenuTitle);
         }
+
+        // Render template to content
         $Content = $this->renderWithTemplate();
         $this->Content = $Content;
+
+        // Clear unused data fields (see if we can remove setCastedField hijack altogether)
+        $ID = $_POST['ID'] ?? 0;
+
+        // Make sure we only assign data on currently edited block (not on other due to cascade update)
+        if ($ID == $this->ID) {
+            $PostedData = $_POST[self::DATA_KEY] ?? null;
+            $PostedSettings = $_POST[self::SETTINGS_KEY] ?? null;
+            if ($PostedData !== null) {
+                $this->BlockData = $PostedData;
+            }
+            if ($PostedSettings !== null) {
+                $this->Settings = $PostedSettings;
+            }
+        }
     }
+
     public function onAfterWrite()
     {
         parent::onAfterWrite();
+        if (!$this->isInAdmin()) {
+            return;
+        }
         if (self::$auto_update_page) {
             // Update Page Content to reflect updated block content
             $this->Page()->write();
@@ -364,7 +412,7 @@ final class Block extends DataObject
     {
         if (strpos($name, '[') !== false) {
             $matches = null;
-            \preg_match_all('/\[([a-zA-Z0-9_]+)\]/', $name, $matches);
+            preg_match_all('/\[([a-zA-Z0-9_]+)\]/', $name, $matches);
             $matches = $matches[1];
         } else {
             $matches = [$name];
@@ -393,6 +441,8 @@ final class Block extends DataObject
     }
     /**
      * Hijack setCastedField to ensure form saving works properly
+     *
+     * Add value on a per field basis
      *
      * @param string $fieldName
      * @param string $value
@@ -630,6 +680,6 @@ final class Block extends DataObject
     protected static function getBlockName($class)
     {
         $class = ClassHelper::getClassWithoutNamespace($class);
-        return str_replace('Block', '', $class);
+        return preg_replace('/Block$/', '', $class);
     }
 }

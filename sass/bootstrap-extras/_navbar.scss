@@ -42,6 +42,8 @@ $navbar-height: 56px;
         width: $navbar-logo-width;
         text-align: center;
         position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
     }
 
     .navbar-centered .navbar-nav {

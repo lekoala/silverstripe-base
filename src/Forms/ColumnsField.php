@@ -48,7 +48,7 @@ class ColumnsField extends FieldGroup
 
     /**
      * Set the value of breakpoint
-     * @return  self
+     * @return $this
      */
     public function setBreakpoint($breakpoint)
     {
@@ -69,7 +69,7 @@ class ColumnsField extends FieldGroup
     /**
      * Set the value of columnSizes
      *
-     * @return  self
+     * @return $this
      */
     public function setColumnSizes($columnSizes)
     {

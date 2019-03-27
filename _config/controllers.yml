@@ -5,3 +5,11 @@ After: '#rootroutes'
 SilverStripe\Control\Director:
   rules:
     '__time': 'LeKoala\Base\Controllers\TimeController'
+# ---
+# Name: base-controllers-live
+# Only:
+#   environment: live
+# ---
+# Typical gain is around 30% on the types request
+# SilverStripe\GraphQL\Controller:
+#   cache_types_in_filesystem: true

@@ -11,9 +11,11 @@ SilverStripe\CMS\Model\SiteTree:
   extensions:
     - LeKoala\Base\Extensions\SocialShareExtension
     - LeKoala\Base\Extensions\BasePageExtension
+    #- LeKoala\Base\Extensions\BootstrapPageExtension
 SilverStripe\SiteConfig\SiteConfig:
   extensions:
     - LeKoala\Base\SiteConfig\SiteConfigExtension
+    - LeKoala\Base\SiteConfig\GoogleSiteConfigExtension
     - LeKoala\Base\Extensions\SocialExtension
 SilverStripe\CMS\Controllers\ContentController:
   extensions:
@@ -38,6 +40,9 @@ LeKoala\Base\Tags\Tag:
 SilverStripe\Security\Member:
   extensions:
     - LeKoala\Base\Privacy\PrivacyMemberExtension
+SilverStripe\Control\Email\Email:
+  extensions:
+    - LeKoala\Base\Email\BaseEmailExtension
 ---
 Name: base-extensions-versioned
 After:

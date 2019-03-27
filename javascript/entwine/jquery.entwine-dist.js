@@ -700,7 +700,6 @@ Sizzle is good for finding elements for a selector, but not so good for telling 
 
 (function ($) {
 
-    // TODO:
     // Make attributes & IDs work
 
     var DIRECT = /DIRECT/g;

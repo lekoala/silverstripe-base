@@ -44,3 +44,15 @@ LeKoala\Base\Admin\BaseLeftAndMainExtension:
 .menu__icon {
     color: #BFC0C0;
 }
+
+.cms-help__toggle {
+    background: #20282C;
+}
+
+.cms-help__links a.cms-help__link, .cms-help__toggle-title {
+    color: #999;
+}
+
+.cms-help__links a.cms-help__link:hover {
+    color: #BFC0C0;
+}

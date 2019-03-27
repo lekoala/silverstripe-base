@@ -52,7 +52,7 @@ class InputMaskField extends TextField
      * @config
      * @var string
      */
-    private static $version = '4.0.3';
+    private static $version = '4.0.6';
 
     public function Type()
     {
@@ -178,13 +178,12 @@ class InputMaskField extends TextField
     public static function requirements()
     {
         $version = self::config()->version;
-        // cdnjs does not maintain new versions
-        // Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/$version/jquery.inputmask.bundle.min.js");
+        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/inputmask/$version/jquery.inputmask.bundle.min.js");
         // unpkg does not support beta version
         // Requirements::javascript("https://unpkg.com/inputmask@$version/dist/min/jquery.inputmask.bundle.min.js");
         // rawgit is best effort, might not be reliable
         // Requirements::javascript("https://cdn.rawgit.com/RobinHerbots/Inputmask/$version/dist/min/jquery.inputmask.bundle.min.js");
-        Requirements::javascript("https://cdn.jsdelivr.net/npm/inputmask@$version/dist/min/jquery.inputmask.bundle.min.js");
+        // Requirements::javascript("https://cdn.jsdelivr.net/npm/inputmask@$version/dist/min/jquery.inputmask.bundle.min.js");
         Requirements::javascript('base/javascript/ModularBehaviour.js');
         Requirements::javascript('base/javascript/fields/InputMaskField.js');
     }

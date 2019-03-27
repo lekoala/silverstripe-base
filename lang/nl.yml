@@ -70,6 +70,7 @@ nl:
     Phone: Phone
     View: 'Bekijken'
     Back: 'Terug'
+    UNDEFINED_ERROR: 'Something wrong happened'
   NewsItem:
     READ_MORE: 'Meer weten'
   NewsPage:

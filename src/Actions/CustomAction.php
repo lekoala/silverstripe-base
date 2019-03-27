@@ -2,6 +2,7 @@
 namespace LeKoala\Base\Actions;
 
 use SilverStripe\Forms\FormAction;
+use SilverStripe\Core\Convert;
 
 /**
  * Custom actions to use in getCMSActions
@@ -15,7 +16,15 @@ class CustomAction extends FormAction
 {
     use CustomButton;
 
+    /**
+     * @var boolean
+     */
     public $useButtonTag = true;
+
+    /**
+     * Used in ActionsGridFieldItemRequest::forwardActionToRecord
+     * @var boolean
+     */
     protected $shouldRefresh = false;
 
     public function __construct($name, $title, $form = null)
@@ -47,6 +56,9 @@ class CustomAction extends FormAction
         }
         // Note: type should stay "action" to properly submit
         $this->addExtraClass('custom-action');
+        if ($this->confirmation) {
+            $this->setAttribute("data-confirm", Convert::raw2htmlatt($this->confirmation));
+        }
         return parent::Field($properties);
     }
 

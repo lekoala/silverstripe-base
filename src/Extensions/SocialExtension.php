@@ -36,8 +36,15 @@ class SocialExtension extends DataExtension
     {
         $tab = new Tab('Social');
         $fields->addFieldToTab('Root', $tab);
+        $placeholders = [
+            'Facebook' => 'my_page_name',
+            'LinkedIn' => 'company/my_company_name',
+            'Youtube' => 'channel/my_channel_name'
+        ];
         foreach (self::$db as $name => $type) {
             $field = new TextField($name, $this->owner->fieldLabel($name));
+            $placeholder = $placeholders[$name] ?? '';
+            $field->setAttribute('placeholder', $placeholder);
             $tab->push($field);
         }
     }
@@ -55,7 +62,7 @@ class SocialExtension extends DataExtension
     }
     public function YoutubeLink()
     {
-        return 'https://www.youtube.com/user/' . $this->owner->Youtube;
+        return 'https://www.youtube.com/' . $this->owner->Youtube;
     }
     public function VimeoLink()
     {

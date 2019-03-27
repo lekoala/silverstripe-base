@@ -89,7 +89,7 @@ class CmsInlineModal extends LiteralField
      * Set the value of title
      *
      * @param string $title
-     * @return  self
+     * @return $this
      */
     public function setTitle($title)
     {

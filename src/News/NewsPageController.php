@@ -97,25 +97,11 @@ class NewsPageController extends \PageController
         }
         return $this->render(['Item' => $Item]);
     }
-    /**
-     * @return DataList
-     */
-    public function DisplayedItems()
-    {
-        $list = $this->data()->Items();
-        // Exclude unpublished and future items
-        $list = $list->where(NewsItem::defaultWhere());
-        return $list;
-    }
     public function PaginatedList()
     {
         $paginatedList = new PaginatedList($this->list, $this->getRequest());
         $paginatedList->setPageLength(6);
         return $paginatedList;
-    }
-    public function PopularItems($n = 3)
-    {
-        return $this->DisplayedItems()->sort('ViewCount DESC')->limit($n);
     }
     public function YearsList()
     {

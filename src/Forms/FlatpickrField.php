@@ -96,7 +96,7 @@ class FlatpickrField extends TextField
      * @config
      * @var string
      */
-    private static $version = '4.5.2';
+    private static $version = '4.5.7';
 
     /**
      * @config
@@ -318,6 +318,8 @@ class FlatpickrField extends TextField
     /**
      * Set id of the second element
      *
+     * eg: #Form_ItemEditForm_EndDate
+     *
      * @param string $range Id of the second element
      * @param bool $confirm
      * @return $this
@@ -532,8 +534,8 @@ class FlatpickrField extends TextField
             $lang = substr(i18n::get_locale(), 0, 2);
         }
         $version = self::config()->version;
-        // $cdnBase = "https://cdnjs.cloudflare.com/ajax/libs/flatpickr/$version";
-        $cdnBase = "https://cdn.jsdelivr.net/npm/flatpickr@$version/dist";
+        $cdnBase = "https://cdnjs.cloudflare.com/ajax/libs/flatpickr/$version";
+        // $cdnBase = "https://cdn.jsdelivr.net/npm/flatpickr@$version/dist";
         Requirements::css("$cdnBase/flatpickr.min.css");
         Requirements::javascript("$cdnBase/flatpickr.js");
         if ($lang != 'en') {

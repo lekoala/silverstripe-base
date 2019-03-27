@@ -8,6 +8,7 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Validator;
 use SilverStripe\View\Requirements;
 use LeKoala\Base\Helpers\ClassHelper;
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Control\RequestHandler;
 
@@ -96,12 +97,12 @@ class BaseForm extends Form
         }
         $actions = $this->buildActions(BuildableFieldList::fromFieldList($actions));
         if (!$actions) {
-            throw new Exception("buildActions must return the FieldList instance " . static::class);
+            throw new Exception("buildActions must return the FieldList instance in " . static::class);
         }
         if ($validator === null) {
             $validator = $this->buildValidator($fields);
             if (!$validator) {
-                throw new Exception("buildValidator must return a validator");
+                throw new Exception("buildValidator must return a validator in " . static::class);
             }
         }
         parent::__construct($controller, $name, $fields, $actions, $validator);
@@ -138,6 +139,7 @@ class BaseForm extends Form
      */
     protected function buildActions(BuildableFieldList $actions)
     {
+        // If we have a doSubmit method, add the action automatically
         if (method_exists($this, 'doSubmit')) {
             $actions->addAction("doSubmit", _t('BaseForm.DOSUBMIT', "Submit"));
         }
@@ -156,6 +158,8 @@ class BaseForm extends Form
     /**
      * Manually enable RequiredFields javascript validation
      *
+     * You can also use JsRequiredFields class
+     *
      * @return void
      */
     protected function enableJsValidation()
@@ -166,7 +170,7 @@ class BaseForm extends Form
     }
 
     /**
-     * @return \LeKoala\Base\BaseContentController
+     * @return \LeKoala\Base\Controllers\BaseContentController
      */
     public function getController()
     {
@@ -179,5 +183,28 @@ class BaseForm extends Form
     public function getLogger()
     {
         return $this->getController()->getLogger()->withName($this->getName());
+    }
+
+    /**
+     * @param string $message
+     * @return HTTPResponse
+     */
+    public function success($message)
+    {
+        $this->sessionMessage($message, "good");
+        return $this->getController()->redirectBack();
+    }
+
+    /**
+     * @param string $message
+     * @return HTTPResponse
+     */
+    public function error($message = null)
+    {
+        if ($message === null) {
+            $message = _t('Global.UNDEFINED_ERROR', "Something wrong happened");
+        }
+        $this->sessionError($message, "bad");
+        return $this->getController()->redirectBack();
     }
 }

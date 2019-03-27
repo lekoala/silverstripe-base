@@ -4,24 +4,20 @@
             <% if ShowInfosOnly %>
             $Infos
             <% else %>
-            <%t ContactPage.Address "ADDRESS" %>:<br/>
-            <a href="$GoogleMapsLink" target="_blank">$Address</a><br/>
-            <% end_if %>
+                <% if Address %>
+                <span class="ContactPage-Label"><%t ContactPage.Address "ADDRESS" %>:</span>
+                <a href="$GoogleMapsLink" target="_blank">$Address</a><br/>
+                <% end_if %>
 
-            <% if Phone %>
-            <%t ContactPage.Phone "PHONE" %>: <a href="tel:$Phone">$Phone</a><br/>
-            <% end_if %>
+                <% if Phone %>
+                <span class="ContactPage-Label"><%t ContactPage.Phone "PHONE" %>:</span>
+                <a href="tel:$Phone">$Phone</a><br/>
+                <% end_if %>
 
-            <% if Email %>
-
-            <%t ContactPage.Email "E-MAIL" %>: <a href="mailto:$Email">$Email</a><br/>
-            <% end_if %>
-
-            <% if ShowInfosOnly %>
-
-            <% else %>
-            <br/>
-            $Infos
+                <% if Email %>
+                <span class="ContactPage-Label"><%t ContactPage.Email "E-MAIL" %>:</span>
+                <a href="mailto:$Email">$Email</a><br/>
+                <% end_if %>
             <% end_if %>
 
             <% if MapEmbed %>

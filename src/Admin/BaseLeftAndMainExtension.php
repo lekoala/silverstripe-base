@@ -45,9 +45,6 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
     public function init()
     {
         $SiteConfig = SiteConfig::current_site_config();
-        if ($SiteConfig->ForceSSL) {
-            Director::forceSSL();
-        }
 
         // Never have comments as it can break ajax requests
         SSViewer::config()->set('source_file_comments', false);
@@ -65,6 +62,8 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
             } elseif (strpos($item->IconClass, 'fas fa-') !== false) {
                 CommonRequirements::fontAwesome5();
             } elseif (strpos($item->IconClass, 'bx bx-') !== false) {
+                CommonRequirements::boxIcons();
+            } elseif (strpos($item->IconClass, 'bx bxs-') !== false) {
                 CommonRequirements::boxIcons();
             }
         }
@@ -173,5 +172,22 @@ CSS;
     public function getLogger()
     {
         return Injector::inst()->get(LoggerInterface::class)->withName('Admin');
+    }
+
+    /**
+     * Get the currently edited id from the url
+     *
+     * @param int $idx The level (0 first level, 1 first sublevel...)
+     * @return int The id or 0 if not found
+     */
+    public function getCurrentRecordID($idx = 0)
+    {
+        $url = $this->owner->getRequest()->getURL();
+        $matches = null;
+        preg_match_all('/\/item\/(\d+)/', $url, $matches);
+        if (isset($matches[1][$idx])) {
+            return $matches[1][$idx];
+        }
+        return 0;
     }
 }

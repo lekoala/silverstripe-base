@@ -24,10 +24,6 @@ class CustomLink extends LiteralField
      */
     protected $link;
 
-    /**
-     * @var string
-     */
-    protected $confirmation;
 
     /**
      * @var boolean
@@ -95,7 +91,7 @@ class CustomLink extends LiteralField
     /**
      * Set the value of title
      *
-     * @return  self
+     * @return $this
      */
     public function setTitle($title)
     {
@@ -115,7 +111,7 @@ class CustomLink extends LiteralField
     /**
      * Set the value of link
      *
-     * @return  self
+     * @return $this
      */
     public function setLink($link)
     {
@@ -124,24 +120,7 @@ class CustomLink extends LiteralField
         return $this;
     }
 
-    /**
-     * Get the value of confirmation
-     */
-    public function getConfirmation()
-    {
-        return $this->confirmation;
-    }
 
-    /**
-     * Set the value of confirmation
-     *
-     * @return  self
-     */
-    public function setConfirmation($confirmation)
-    {
-        $this->confirmation = $confirmation;
-        return $this;
-    }
 
     /**
      * Get the value of newWindow
@@ -154,7 +133,7 @@ class CustomLink extends LiteralField
     /**
      * Set the value of newWindow
      *
-     * @return  self
+     * @return $this
      */
     public function setNewWindow($newWindow)
     {

@@ -1,10 +1,8 @@
 <?php
 namespace LeKoala\Base\Forms;
 
-use SilverStripe\Assets\File;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\Assets\Image;
-use LeKoala\Base\Helpers\ClassHelper;
 use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 use LeKoala\Base\Blocks\Block;
@@ -80,24 +78,6 @@ class SmartUploadField extends UploadField
             }
         }
         return parent::getFolderName();
-    }
-
-    /**
-     * Split Name[Input][Sub][Value] notation
-     *
-     * @param string $name
-     * @return array
-     */
-    public static function extractNameParts($name)
-    {
-        if (strpos($name, '[') !== false) {
-            $matches = null;
-            preg_match_all('/\[([a-zA-Z0-9_]+)\]/', $name, $matches);
-            $matches = $matches[1];
-        } else {
-            $matches = [$name];
-        }
-        return $matches;
     }
 
     public function setValue($value, $record = null)

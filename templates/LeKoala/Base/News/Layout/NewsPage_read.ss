@@ -15,7 +15,7 @@
                         $Content
                     </div>
                     <div class="NewsPage-Share">
-                        <% include SocialShareList %>
+                        <% include SocialShare %>
                     </div>
                 </div>
                 <% end_with %>

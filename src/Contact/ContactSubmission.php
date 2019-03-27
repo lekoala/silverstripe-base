@@ -4,6 +4,8 @@ namespace LeKoala\Base\Contact;
 use SilverStripe\ORM\DataObject;
 use LeKoala\Base\Contact\ContactPage;
 use SilverStripe\Control\Email\Email;
+use SilverStripe\SiteConfig\SiteConfig;
+use LeKoala\Base\Controllers\HasLogger;
 
 /**
  * Class \LeKoala\Base\Contact\ContactSubmission
@@ -20,6 +22,8 @@ use SilverStripe\Control\Email\Email;
  */
 class ContactSubmission extends DataObject
 {
+    use HasLogger;
+
     private static $table_name = 'ContactSubmission'; // When using namespace, specify table name
     private static $db = [
         "Name" => "Varchar(191)",
@@ -34,6 +38,14 @@ class ContactSubmission extends DataObject
         "Page" => ContactPage::class
     ];
     private static $default_sort = 'Created DESC';
+    private static $summary_fields = [
+        "Name", "Email", "Created"
+    ];
+
+    /**
+     * @param string $address
+     * @return bool
+     */
     public function sendByEmail($address = null)
     {
         $SiteConfig = SiteConfig::current_site_config();
@@ -48,28 +60,35 @@ class ContactSubmission extends DataObject
         $phone = $this->Phone;
         $message = $this->Message;
         $email = $this->Email;
-        $e_subject = 'You\'ve been contacted by ' . $name . '.';
+
+        $e_subject = 'You\'ve been contacted by ' . $name . ' [' . $SiteConfig->Title . ']';
         if ($subject) {
             $e_subject = $subject . ' [' . $SiteConfig->Title . ']';
         }
-        $e_body = "You have been contacted by: $name" . PHP_EOL . PHP_EOL;
-        $e_reply = "E-mail: $email\r\nPhone: $phone";
-        $e_content = "Message:\r\n$message" . PHP_EOL . PHP_EOL;
-        $msg = wordwrap($e_body . $e_content . $e_reply, 70);
+
+        $e_body = "You have been contacted by: $name<br/>";
+        $e_body .= "E-mail: $email<br/>";
+        if ($phone) {
+            $e_body .= "Phone: $phone<br/>";
+        }
+        $e_content = "<br/><hr/>Message:<br/>$message<hr/>";
+        $msg = $e_body . $e_content;
         $ex = null;
         try {
             $emailInst = new Email();
             $emailInst->setTo($address);
             $emailInst->setSubject($e_subject);
-            $emailInst->setBody($msg);
-            $emailInst->setReplyTo($email);
+            // $emailInst->setBody($msg);
+            $emailInst->addData(['EmailContent' => $msg]);
+            $emailInst->setReplyTo($email, $name);
             $result = $emailInst->send();
         } catch (\Exception $e) {
-            $result = null;
+            $result = $e->getMessage();
             $ex = $e;
-            $this->getLogger()->info($e);
+            self::getLogger()->info($e);
+            return false;
         }
-        $this->EmailResults = json_encode($result);
-        $this->write();
+        $this->EmailResults = is_string($result) ? $result : json_encode($result);
+        return $this->write();
     }
 }

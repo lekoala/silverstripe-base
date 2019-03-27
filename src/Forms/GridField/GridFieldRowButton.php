@@ -205,7 +205,7 @@ abstract class GridFieldRowButton implements GridField_ColumnProvider, GridField
      *
      * @param  string  $fontIcon  A silverstripe icon
      *
-     * @return  self
+     * @return $this
      */
     public function setFontIcon(string $fontIcon)
     {
@@ -228,7 +228,7 @@ abstract class GridFieldRowButton implements GridField_ColumnProvider, GridField
      *
      * @param  boolean  $hiddenOnHover  Adds class grid-field__icon-action--hidden-on-hover if set
      *
-     * @return  self
+     * @return $this
      */
     public function setHiddenOnHover(boolean $hiddenOnHover)
     {

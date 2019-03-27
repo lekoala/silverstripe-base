@@ -24,9 +24,9 @@ $btn-focus-width: $btn-focus-width/2;
     @include box-shadow($btn-box-shadow);
 
     &:hover {
-        color: var(--#{$color}-highlight-contrast);
-        background-color: var(--#{$color}-highlight);
-        border-color: var(--#{$color}-highlight);
+        color: var(--#{$color}-lowlight-contrast);
+        background-color: var(--#{$color}-lowlight);
+        border-color: var(--#{$color}-lowlight);
     }
 
     &:focus,
@@ -177,8 +177,16 @@ $btn-focus-width: $btn-focus-width/2;
     color: var(--primary-color) !important;
 }
 
+.text-primary-contrast {
+    color: var(--primary-color-contrast) !important;
+}
+
 .text-secondary {
     color: var(--secondary-color) !important;
+}
+
+.text-secondary-contrast {
+    color: var(--secondary-color-contrast) !important;
 }
 
 // Links
@@ -191,7 +199,21 @@ a {
 
     &.active,
     &:active {
+        color: var(--primary-color-highlight);
+    }
+}
+
+// Ensure dropdowns get the right color
+.dropdown a {
+
+    &.active,
+    &:active {
         color: $dropdown-link-active-color;
+    }
+
+    &.nav-link.active,
+    &.nav-link:active {
+        color: var(--primary-color-highlight);
     }
 }
 
@@ -297,6 +319,7 @@ form {
 
         a {
             color: var(--primary-color);
+            background: transparent;
         }
     }
 

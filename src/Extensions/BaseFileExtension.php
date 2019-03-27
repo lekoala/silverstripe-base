@@ -4,6 +4,7 @@ namespace LeKoala\Base\Extensions;
 
 use SilverStripe\ORM\DB;
 use SilverStripe\Assets\File;
+use SilverStripe\Core\Convert;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Control\Director;
 use SilverStripe\ORM\DataExtension;
@@ -33,6 +34,10 @@ class BaseFileExtension extends DataExtension
 {
     use Configurable;
 
+    private static $casting = [
+        "Lazy" => 'HTMLFragment',
+    ];
+
     /**
      * @config
      * @var string
@@ -40,11 +45,12 @@ class BaseFileExtension extends DataExtension
     private static $auto_clear_threshold = null;
 
     private static $db = [
+        // This helps tracking state of files uploaded through ajax uploaders
         "IsTemporary" => "Boolean",
     ];
     private static $has_one = [
         // Record is already used by versioned extensions
-        // ChangeSetItem already uses Object convention so use it
+        // ChangeSetItem already uses Object convention so use the same
         "Object" => DataObject::class,
     ];
 
@@ -86,6 +92,36 @@ class BaseFileExtension extends DataExtension
             ImageBackendFactory::class
         );
         $assetAdmin->generateThumbnails($this->owner, true);
+    }
+
+    /**
+     * Simply use MyImage.Lazy in your templates
+     *
+     * Pass MyImage.Lazy(200) if you don't want to limit width to a specific size
+     *
+     * Currently, boolean arguments are not supported in a template
+     * @link https://github.com/silverstripe/silverstripe-framework/issues/8690
+     *
+     * @param int $limitWidth
+     * @return string
+     */
+    public function Lazy($limitWidth = null)
+    {
+        $img = $this->owner;
+        if ($limitWidth) {
+            $img = $this->owner->ScaleWidth($limitWidth);
+        }
+        $url = Convert::raw2att($img->getURL());
+        $title = Convert::raw2att($img->getTitle());
+        if (!$limitWidth) {
+            return '<img data-src="' . $url . '" class="lazy" alt="' . $title . '" />';
+        }
+        // this reports original width if resized from template
+        // so we have to pass width as an argument
+        // @link https://github.com/silverstripe/silverstripe-assets/issues/201
+        $w = $img->getWidth();
+        $h = $img->getHeight();
+        return '<img data-src="' . $url . '" class="lazy" alt="' . $title . '" width="' . $w . '" height="' . $h . '" />';
     }
 
     /**

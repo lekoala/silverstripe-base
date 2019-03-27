@@ -3,6 +3,24 @@ body.cms {
     overflow: hidden;
 }
 
+/* Placeholder is definetely too dark @link https://github.com/silverstripe/silverstripe-admin/pull/806 */
+
+.field input.text::placeholder, .field select::placeholder, .field textarea::placeholder, .form-control::placeholder {
+    color: #adb8c9;
+}
+
+.field input.text::-webkit-input-placeholder, .field select::-webkit-input-placeholder, .field textarea::-webkit-input-placeholder, .form-control::-webkit-input-placeholder {
+    color: #adb8c9;
+}
+
+.field input.text::-moz-placeholder, .field select::-moz-placeholder, .field textarea::-moz-placeholder, .form-control::-moz-placeholder {
+    color: #adb8c9;
+}
+
+.field input.text:-ms-input-placeholder, .field select:-ms-input-placeholder, .field textarea:-ms-input-placeholder, .form-control:-ms-input-placeholder {
+    color: #adb8c9;
+}
+
 /* Large panels need this for small screens */
 .panel {
     overflow-x: auto;

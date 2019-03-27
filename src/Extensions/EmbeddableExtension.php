@@ -1,9 +1,10 @@
 <?php
 namespace LeKoala\Base\Extensions;
 
+use Embed\Embed;
+use SilverStripe\Forms\FieldList;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\ORM\ValidationResult;
-use Embed\Embed;
 
 /**
  * Class \LeKoala\Base\Extensions\EmbeddableExtension
@@ -16,6 +17,19 @@ class EmbeddableExtension extends DataExtension
     private static $db = [
         "EmbedURL" => "Varchar(255)"
     ];
+
+    public function updateCMSFields(FieldList $fields)
+    {
+        $EmbedURL = $fields->dataFieldByName('EmbedURL');
+        if ($EmbedURL) {
+            $EmbedURL->setTitle(_t('EmbeddableExtension.EMBEDURL', 'Embed from URL'));
+
+            $Content = $fields->dataFieldByName('Content');
+            if ($Content) {
+                $fields->insertAfter('Content', $EmbedURL);
+            }
+        }
+    }
 
     public function validate(ValidationResult $validationResult)
     {

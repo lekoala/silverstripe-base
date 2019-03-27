@@ -21,19 +21,19 @@ class CommonRequirements
      * @config
      * @var string
      */
-    private static $moment_version = '2.22.2';
+    private static $moment_version = '2.23.0';
 
     /**
      * @config
      * @var string
      */
-    private static $moment_timezone_version = '0.5.20';
+    private static $moment_timezone_version = '0.5.23';
 
     /**
      * @config
      * @var string
      */
-    private static $datefns_version = '1.29.0';
+    private static $datefns_version = '1.30.1';
 
     /**
      * @config
@@ -45,25 +45,73 @@ class CommonRequirements
      * @config
      * @var string
      */
-    private static $fa5_version = '5.1.0';
+    private static $fa5_version = '5.6.3';
 
     /**
      * @config
      * @var string
      */
-    private static $boxicons_version = '1.7.1';
+    private static $boxicons_version = '1.9.1';
 
     /**
      * @config
      * @var string
      */
-    private static $plyr_version = '3.3.22';
+    private static $plyr_version = '3.4.5';
 
     /**
      * @config
      * @var string
      */
-    private static $cleave_version = '1.4.4';
+    private static $cleave_version = '1.4.10';
+
+    /**
+     * @config
+     * @var string
+     */
+    private static $lazyload_ie_version = '8.17.0';
+
+    /**
+     * @config
+     * @var string
+     */
+    private static $lazyload_version = '10.19.0';
+
+    /**
+     * @config
+     * @var string
+     */
+    private static $fingerprintjs_version = '0.5.3';
+
+    /**
+     * @config
+     * @var string
+     */
+    private static $counterup2_version = '1.0.4';
+
+    /**
+     * @config
+     * @var string
+     */
+    private static $magnific_popup_version = '1.1.0';
+
+    /**
+     * @config
+     * @var string
+     */
+    private static $owl_carousel2_version = '2.3.4';
+
+    /**
+     * @config
+     * @var string
+     */
+    private static $aos_version = '2.3.4';
+
+    /**
+     * @config
+     * @var string
+     */
+    private static $imagesLoaded_version = '4.1.4';
 
     /**
      * Include all files in a given path
@@ -82,12 +130,12 @@ class CommonRequirements
     }
 
     /**
-     * @link https://polyfill.io/v2/docs/
+     * @link https://polyfill.io/v3/api/
      * @return void
      */
     public static function polyfillIo()
     {
-        Requirements::javascript('https://cdn.polyfill.io/v2/polyfill.min.js');
+        Requirements::javascript('https://cdn.polyfill.io/v3/polyfill.min.js?flags=gated');
     }
 
     /**
@@ -192,6 +240,16 @@ class CommonRequirements
     }
 
     /**
+     * @link https://github.com/valve/fingerprintjs/
+     * @return void
+     */
+    public static function fingerprintjs()
+    {
+        $version = self::config()->fingerprintjs_version;
+        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/fingerprintjs/$version/fingerprint.min.js");
+    }
+
+    /**
      * @return void
      */
     public static function utils()
@@ -200,12 +258,126 @@ class CommonRequirements
     }
 
     /**
+     * With added custom event polyfill
      * @link https://github.com/thepinecode/canvi
      * @return void
      */
     public static function canvi()
     {
         Requirements::css("base/javascript/vendor/canvi/canvi.css");
-        Requirements::javascript("base/javascript/vendor/canvi/canvi.js");
+        Requirements::javascript("base/javascript/vendor/canvi/canvi.min.js");
+    }
+
+    /**
+     * @link https://github.com/verlok/lazyload
+     * @return void
+     */
+    public static function lazyload()
+    {
+        $version = self::config()->lazyload_version;
+        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/vanilla-lazyload/$version/lazyload.min.js");
+        // Requirements::javascript("https://cdn.jsdelivr.net/npm/vanilla-lazyload@$version/dist/lazyload.min.js");
+    }
+
+    /**
+     * @link https://github.com/verlok/lazyload
+     * @return void
+     */
+    public static function lazyload_ie()
+    {
+        $version = self::config()->lazyload_ie_version;
+        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/vanilla-lazyload/$version/lazyload.min.js");
+        // Requirements::javascript("https://cdn.jsdelivr.net/npm/vanilla-lazyload@$version/dist/lazyload.min.js");
+    }
+
+    /**
+     * @link https://github.com/verlok/lazyload
+     * @return void
+     */
+    public static function lazyload_auto()
+    {
+        $version = self::config()->lazyload_version;
+        $ie_version = self::config()->lazyload_ie_version;
+
+        $js = <<<JS
+(function(w, d){
+    var b = d.getElementsByTagName('body')[0];
+    var s = d.createElement("script");
+    var v = !("IntersectionObserver" in w) ? "$ie_version" : "$version";
+    s.async = true;
+    s.src = "https://cdnjs.cloudflare.com/ajax/libs/vanilla-lazyload/" + v + "/lazyload.min.js";
+    w.lazyLoadOptions = {
+        elements_selector: ".lazy"
+    };
+    b.appendChild(s);
+}(window, document));
+JS;
+        Requirements::customScript($js, 'LazyloadAuto');
+    }
+
+    /**
+     * @link https://github.com/bfintal/Counter-Up2
+     * @return void
+     */
+    public static function counterup2()
+    {
+        $version = self::config()->counterup2_version;
+        Requirements::javascript("https://cdn.jsdelivr.net/npm/counterup2@$version/dist/index.min.js");
+    }
+
+    /**
+     * @link https://dimsemenov.com/plugins/magnific-popup/
+     * @param bool $css
+     * @return void
+     */
+    public static function magnificPopup($css = true)
+    {
+        $version = self::config()->magnific_popup_version;
+        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/$version/jquery.magnific-popup.min.js");
+        if ($css) {
+            Requirements::css("https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/$version/magnific-popup.min.css");
+        }
+    }
+
+    /**
+     * @link https://github.com/OwlCarousel2/OwlCarousel2
+     * @param bool $css
+     * @param bool $theme
+     * @return void
+     */
+    public static function owlCarousel2($css = true, $theme = 'default')
+    {
+        $version = self::config()->owl_carousel2_version;
+        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/$version/owl.carousel.min.js");
+        if ($css) {
+            Requirements::css("https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/$version/assets/owl.carousel.min.css");
+        }
+        if ($theme) {
+            Requirements::css("https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/$version/assets/owl.theme.$theme.min.css");
+        }
+    }
+
+    /**
+     * @link https://michalsnik.github.io/aos/
+     * @param bool $css
+     * @return void
+     */
+    public static function aos($css = true)
+    {
+        $version = self::config()->aos_version;
+        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/aos/$version/aos.js");
+        if ($css) {
+            Requirements::css("https://cdnjs.cloudflare.com/ajax/libs/aos/$version/aos.css");
+        }
+    }
+
+    /**
+     * @link https://imagesloaded.desandro.com/
+     * @return void
+     */
+    public static function imagesLoaded()
+    {
+        $version = self::config()->imagesLoaded_version;
+        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/$version/imagesloaded.min.js");
     }
 }

@@ -18,6 +18,11 @@ trait CustomButton
      */
     protected $buttonIcon;
 
+    /**
+     * @var string
+     */
+    protected $confirmation;
+
     public function setButtonType($type)
     {
         if ($this->extraClasses) {
@@ -67,6 +72,29 @@ trait CustomButton
     public function setButtonIcon(string $buttonIcon)
     {
         $this->buttonIcon = $buttonIcon;
+        return $this;
+    }
+
+    /**
+     * Get the value of confirmation
+     */
+    public function getConfirmation()
+    {
+        return $this->confirmation;
+    }
+
+    /**
+     * Set the value of confirmation
+     *
+     * @param string|bool
+     * @return $this
+     */
+    public function setConfirmation($confirmation)
+    {
+        if ($confirmation === true) {
+            $confirmation = _t('Global.CONFIRM_MESSAGE', 'Are you sure?');
+        }
+        $this->confirmation = $confirmation;
         return $this;
     }
 }

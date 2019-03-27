@@ -339,7 +339,7 @@ class TextCollector extends i18nTextCollector
      *
      * @param  boolean  $clearUnused
      *
-     * @return  self
+     * @return $this
      */
     public function setClearUnused($clearUnused)
     {
@@ -363,7 +363,7 @@ class TextCollector extends i18nTextCollector
      *
      * @param  array  $restrictToModules
      *
-     * @return  self
+     * @return $this
      */
     public function setRestrictToModules($restrictToModules)
     {
@@ -387,7 +387,7 @@ class TextCollector extends i18nTextCollector
      *
      * @param  boolean  $mergeWithExisting
      *
-     * @return  self
+     * @return $this
      */
     public function setMergeWithExisting($mergeWithExisting)
     {
@@ -411,7 +411,7 @@ class TextCollector extends i18nTextCollector
      *
      * @param  boolean  $debug
      *
-     * @return  self
+     * @return $this
      */
     public function setDebug($debug)
     {

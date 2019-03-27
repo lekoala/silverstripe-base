@@ -139,16 +139,23 @@ class ThemeSiteConfigExtension extends DataExtension
      */
     public function currentThemeOptions()
     {
+        // If we don't have a css theme, our options won't be used anyway
         $values = [
-            'allowFonts' => true,
-            'allowColors' => true,
+            'allowFonts' => false,
+            'allowColors' => false,
         ];
         if (!$this->owner->CssTheme) {
             return $values;
         }
+        // If we have a css theme, allow everything by default
+        $values = [
+            'allowFonts' => true,
+            'allowColors' => true,
+        ];
         $themeFile = $this->getThemeCssPath() . '/' . $this->owner->CssTheme;
         $contents = file_get_contents($themeFile);
-        if (strpos($contents, '@disallowFonts') !== false) {
+        // If we disallow fonts or have imported styles
+        if (strpos($contents, '@disallowFonts') !== false || strpos($contents, 'fonts.googleapis.com/css') !== false) {
             $values['allowFonts'] = false;
         }
         if (strpos($contents, '@disallowColors') !== false) {
@@ -298,6 +305,9 @@ class ThemeSiteConfigExtension extends DataExtension
             }
             if ($this->owner->BodyFontWeight) {
                 $this->owner->BodyFontWeight = 0;
+            }
+            if ($this->owner->GoogleFonts) {
+                $this->owner->GoogleFonts = null;
             }
         }
         if (!$themeOptions['allowColors']) {

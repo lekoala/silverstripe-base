@@ -59,7 +59,7 @@ trait CurrencyFormatter
     /**
      * The currency code (eg: USD, EUR...)
      *
-     * @return  self
+     * @return $this
      */
     public function setCurrency($currency)
     {

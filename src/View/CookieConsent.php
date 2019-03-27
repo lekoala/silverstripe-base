@@ -9,11 +9,17 @@ use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Control\Cookie;
 use SilverStripe\ORM\DataObject;
 use LeKoala\Base\Privacy\PrivacyNoticePage;
+use LeKoala\Base\Privacy\CookiesRequiredPage;
 
 /**
  * Add cookie consent to your website
  *
  * When consent is given, global onConsentReceived() will be called. As an helper, you can use CookieConsent::addScript to do that for you.
+ *
+ * For performance, remember to use this config and include the relevant sass file in base/sass/vendor
+ *
+ *   LeKoala\Base\View\CookieConsent:
+ *     inline_css: true
  *
  * @link https://cookieconsent.insites.com
  * @link https://cookieconsent.insites.com/documentation/disabling-cookies/
@@ -45,6 +51,12 @@ class CookieConsent
      * @var boolean
      */
     private static $cookies_required = false;
+
+    /**
+     * @config
+     * @var boolean
+     */
+    private static $inline_css = false;
 
     /**
      * @config
@@ -115,7 +127,7 @@ class CookieConsent
         $contentOpts = [
             'content' => [
                 'message' => $message,
-                'dismiss' => _t('CookieConsent.DECLINE', 'Decline'),
+                'deny' => _t('CookieConsent.DECLINE', 'Decline'),
                 'allow' => _t('CookieConsent.ALLOWCOOKIES', 'Allow cookies'),
                 'link' => _t('CookieConsent.LINK', 'Learn more'),
                 'href' => $privacyLink,
@@ -127,15 +139,17 @@ class CookieConsent
 
         // Include script
         $version = self::config()->version;
-        Requirements::css("//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/$version/cookieconsent.min.css");
+        if (!self::config()->inline_css) {
+            Requirements::css("//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/$version/cookieconsent.min.css");
+        }
         Requirements::javascript("//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/$version/cookieconsent.min.js");
 
         // Create url to redirect to if cookies are dismissed
         $cookiesRequired = self::config()->cookies_required ? 'true' : 'false';
         $cookiesLink = '/';
         if (self::config()->cookies_required) {
-            //TODO: make url configurable
-            $cookiesLink = '/cookies-required';
+            $page = DataObject::get_one(CookiesRequiredPage::class);
+            $cookiesLink = '/' . $page->Link();
         }
 
         $js = '';
@@ -144,7 +158,7 @@ class CookieConsent
             foreach (self::$scripts as $name => $script) {
                 $js .= "\n//$name\n$script";
             }
-            $js .= "\n}";
+            $js .= "\n}\n";
         }
 
         // Include custom init

@@ -62,7 +62,7 @@ class AlertField extends LiteralField
     /**
      * Set the value of alertType
      *
-     * @return  self
+     * @return $this
      */
     public function setAlertType($alertType)
     {
