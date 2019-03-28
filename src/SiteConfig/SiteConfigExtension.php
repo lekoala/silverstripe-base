@@ -54,6 +54,10 @@ class SiteConfigExtension extends DataExtension
         "Copyright" => "HTMLText", // A custom copyright text, otherwise defaults to (year) - Legal Name
     ];
 
+    private static $translate = [
+        "FooterText", "Copyright", "EmailFooter", "ContactInfos"
+    ];
+
     public function updateCMSFields(FieldList $fields)
     {
         // Contact fields

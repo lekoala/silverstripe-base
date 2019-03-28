@@ -36,6 +36,8 @@ class ThemeAssistantTask extends BuildTask
             file_put_contents($scssFile, $data);
 
             $this->message("Indexed $i components in _components.scss");
+        } else {
+            $this->message("There is no 'components' folder in your theme. Create one and put your sass files in there.");
         }
     }
 

@@ -111,7 +111,7 @@ class SmartDataObjectExtension extends DataExtension
     {
         $config = $this->owner->config();
         $dataFields = $fields->dataFields();
-        $manyManyFiles = $this->getManyManyFileRelations();
+        $manyManyFiles = $this->owner->getManyManyFileRelations();
         $manyManyFilesExtraFields = $this->owner->manyManyExtraFields();
 
         foreach ($dataFields as $dataField) {
