@@ -1,6 +1,7 @@
 <?php
 namespace LeKoala\Base\Controllers;
 
+use LeKoala\Base\News\NewsPage;
 use SilverStripe\ORM\DataObject;
 use LeKoala\Base\Contact\ContactPage;
 use LeKoala\Base\Privacy\PrivacyNoticePage;
@@ -39,5 +40,13 @@ trait PageGetters
     public function ContactPage()
     {
         return DataObject::get_one(ContactPage::class);
+    }
+
+    /**
+     * @return NewsPage
+     */
+    public function NewsPage()
+    {
+        return DataObject::get_one(NewsPage::class);
     }
 }
