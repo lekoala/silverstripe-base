@@ -245,14 +245,14 @@ final class Block extends DataObject
             $item['Counter'] = $counter;
             $item['FirstLast'] = $FirstLast;
             $item['EvenOdd'] = $i % 2 ? 'even' : 'odd';
-            // Handle files (stored in json as ["Files" => [ID]])
             foreach ($item as $k => $v) {
+                // Handle files (stored in json as ["Files" => [ID]])
                 if (is_array($v) && !empty($v['Files'])) {
                     $files = $v['Files'];
                     if (count($files) == 1) {
                         // Remove ID from end of string
                         // eg: if you added [$k, 'ImageID'] it should be accessible using "Image", not "ImageID"
-                        $lastChars = substr($k, strlen($k)-2, 2);
+                        $lastChars = substr($k, strlen($k) - 2, 2);
                         if ($lastChars == 'ID') {
                             $k = substr($k, 0, -2);
                         }
@@ -270,6 +270,25 @@ final class Block extends DataObject
         }
         return $list;
     }
+
+    /**
+     * Template helper to access images
+     *
+     * @param string|int $ID
+     * @return Image
+     */
+    public function ImageByID($ID)
+    {
+        if (!is_numeric($ID)) {
+            $ID = $this->DataArray()[$ID]['Files'][0];
+        }
+        $Image = self::getPublishedImageByID($ID);
+        if (!$Image) {
+            return false;
+        }
+        return $Image;
+    }
+
     /**
      * Make sure the image is published for the block
      *
@@ -450,7 +469,7 @@ final class Block extends DataObject
      */
     public function setCastedField($fieldName, $value)
     {
-         // A Data field
+        // A Data field
         if (strpos($fieldName, self::DATA_KEY . '[') === 0) {
             $obj = $this->dbObject(self::DATA_KEY)->addValue(self::extractNameParts($fieldName), $value);
             $obj->saveInto($this);
