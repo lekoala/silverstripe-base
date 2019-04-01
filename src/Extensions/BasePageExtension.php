@@ -22,6 +22,9 @@ use LeKoala\Base\Privacy\TermsAndConditionsPage;
  */
 class BasePageExtension extends DataExtension
 {
+    private static $casting = [
+        "HighlightWordInContent" => "HTMLFragment"
+    ];
 
     /**
      * Easily require the page in requireDefaultRecords using this method
@@ -164,5 +167,18 @@ class BasePageExtension extends DataExtension
             $cardType = 'summary_large_image';
         }
         $tags .= $this->createMetaTag('twitter:card', $cardType);
+    }
+
+    public function HighlightWordInContent($keyword)
+    {
+        $content = strip_tags($this->owner->Content);
+        $content = preg_replace("/\p{L}*?" . preg_quote($keyword) . "\p{L}*/ui", "<span class=\"search-highlight\">$0</span>", $content);
+        $pos = strpos($content, $keyword);
+        $start = $pos - 50;
+        if ($start < 0) {
+            $start = 0;
+        }
+        $content = substr($content, $start, 255) . '...';
+        return $content;
     }
 }
