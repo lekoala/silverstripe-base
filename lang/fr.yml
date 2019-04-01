@@ -21,6 +21,8 @@ fr:
     doRotateLogs: 'Rotate Logs'
   BootstrapModal:
     Close: Fermer
+  ContactForm:
+    SEND: 'Envoyez votre message'
   ContactPage:
     Address: ADDRESSE
     Email: E-MAIL
@@ -32,8 +34,6 @@ fr:
     ERR_ENTER_VALIDEMAIL: 'Entrez un email valide'
     MESSAGE_ERROR: 'Votre message n''a pas été envoyé.'
     MESSAGE_SENT: 'Votre message a bien été envoyé.'
-  ContactForm:
-    SEND: 'Envoyez votre message'
   CookieConsent:
     ALLOWCOOKIES: 'Accepter cookies'
     DECLINE: Refuser
@@ -48,6 +48,8 @@ fr:
   DataObjectActionsExtension:
     CREATEANDCLOSE: 'Create and Close'
     SAVEANDCLOSE: 'Save and Close'
+  EmbeddableExtension:
+    EMBEDURL: 'Embed from URL'
   FilePondField:
     labelFileProcessing: Uploading
     labelFileProcessingAborted: 'Upload cancelled'
@@ -62,26 +64,30 @@ fr:
     QUICKLY_FILTER: 'Quickly filter this list by keywords'
   Global:
     Address: Address
+    Back: Retour
+    CONFIRM_MESSAGE: 'Are you sure?'
+    Company: Société
+    CompanyRegistrationNumber: 'Company Registration Number'
     ContactInfos: 'Contact details'
     ContactsSettings: 'Contacts settings'
     DefaultFromEmail: 'Default From Email'
     Email: Email
     EmailFooter: 'Email Footer'
     EmailSettings: 'Email settings'
+    LegalCourt: 'Legal Court'
     LegalName: 'Legal Name'
-    Phone: Téléphone
     Name: Nom
+    Phone: Téléphone
     Subject: Sujet
-    Company: Société
-    View: 'Voir'
-    Back: 'Retour'
     UNDEFINED_ERROR: 'Une erreur s''est produite'
+    View: Voir
   NewsItem:
     READ_MORE: 'Savoir plus'
   NewsPage:
     NO_ARTICLES: 'Pas d''articles'
   NewsSidebar:
     ARCHIVES: Archives
+    CATEGORIES: Categories
     POPULAR_POSTS: 'Articles populaires'
     SEARCH: Chercher
     TAGS: Tags
@@ -90,10 +96,13 @@ fr:
     PLEASEREVIEW: 'Veuillez lire les documents suivants afin de continuer'
   SilverStripe\Admin\LeftAndMain:
     PreviewButton: Preview
+  SilverStripe\Forms\Form:
+    CSRF_FAILED_MESSAGE: 'There seems to have been a technical problem. Please click the back button, refresh your browser, and try again.'
   SimpleSearchControllerExtension:
     GO: Go
     SEARCH: Chercher
     SearchResults: 'Résultats recherche'
+    YouSearchFor: 'You searched for %s'
   SocialExtension:
     DISCOVER: 'J''ai découvert '
     SEE: 'Un aperçu :'

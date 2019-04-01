@@ -66,13 +66,13 @@ class SimpleSearchControllerExtension extends Extension
         $Query = $this->owner->getRequest()->getVar('q');
         $Results = null;
         if ($Query) {
-            $Query = \str_replace(' ', '%', $Query);
+            $FullQuery = \str_replace(' ', '%', $Query);
             $excludedClasses = [
                 ErrorPage::class,
             ];
             $Results = SiteTree::get()->filterAny([
-                "Title:PartialMatch" => $Query,
-                "Content:PartialMatch" => $Query,
+                "Title:PartialMatch" => $FullQuery,
+                "Content:PartialMatch" => $FullQuery,
             ])->exclude('ClassName', $excludedClasses);
         }
         $data = array(
