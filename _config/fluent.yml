@@ -2,6 +2,7 @@
 Name: base-fluent
 After:
   - '#versionedfiles'
+  - '#base-extensions'
 Only:
   moduleexists:
     - 'tractorcow/silverstripe-fluent'

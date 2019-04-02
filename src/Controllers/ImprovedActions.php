@@ -85,7 +85,9 @@ trait ImprovedActions
      */
     protected function isActionWithRequest($action)
     {
-        if ($this->owner->hasMethod($action)) {
+        // Keep in mind we can only create a reflection of action from the base class
+        // and not those provided by extensions
+        if (method_exists($this->owner, $action)) {
             $refl = new ReflectionMethod($this, $action);
             $params = $refl->getParameters();
             // Everything that gets a request as a parameter is a valid action

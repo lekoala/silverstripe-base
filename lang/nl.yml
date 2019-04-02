@@ -21,6 +21,8 @@ nl:
     doRotateLogs: 'Rotate Logs'
   BootstrapModal:
     Close: Sluiten
+  ContactForm:
+    SEND: 'Send your message'
   ContactPage:
     Address: ADDRESS
     Email: E-MAIL
@@ -46,6 +48,8 @@ nl:
   DataObjectActionsExtension:
     CREATEANDCLOSE: 'Create and Close'
     SAVEANDCLOSE: 'Save and Close'
+  EmbeddableExtension:
+    EMBEDURL: 'Embed from URL'
   FilePondField:
     labelFileProcessing: Uploading
     labelFileProcessingAborted: 'Upload cancelled'
@@ -60,23 +64,27 @@ nl:
     QUICKLY_FILTER: 'Quickly filter this list by keywords'
   Global:
     Address: Address
+    Back: Terug
+    CONFIRM_MESSAGE: 'Are you sure?'
+    CompanyRegistrationNumber: 'Company Registration Number'
     ContactInfos: 'Contact details'
     ContactsSettings: 'Contacts settings'
     DefaultFromEmail: 'Default From Email'
     Email: Email
     EmailFooter: 'Email Footer'
     EmailSettings: 'Email settings'
+    LegalCourt: 'Legal Court'
     LegalName: 'Legal Name'
     Phone: Phone
-    View: 'Bekijken'
-    Back: 'Terug'
     UNDEFINED_ERROR: 'Something wrong happened'
+    View: Bekijken
   NewsItem:
     READ_MORE: 'Meer weten'
   NewsPage:
     NO_ARTICLES: 'Geen artikels'
   NewsSidebar:
     ARCHIVES: Archives
+    CATEGORIES: Categories
     POPULAR_POSTS: 'Populaire posts'
     SEARCH: Zoeken
     TAGS: Tags
@@ -85,10 +93,13 @@ nl:
     PLEASEREVIEW: 'Gelieve onze voorwaarden te accepteren alvorens verder te gaan'
   SilverStripe\Admin\LeftAndMain:
     PreviewButton: Preview
+  SilverStripe\Forms\Form:
+    CSRF_FAILED_MESSAGE: 'There seems to have been a technical problem. Please click the back button, refresh your browser, and try again.'
   SimpleSearchControllerExtension:
     GO: Go
     SEARCH: Zoeken
     SearchResults: Zoekresultaten
+    YouSearchFor: 'You searched for %s'
   SocialExtension:
     DISCOVER: 'Ik vond  '
     SEE: 'Je kan het hier zien :'
