@@ -80,6 +80,9 @@ if (Director::isDev()) {
             'app'
         ]);
     }
+
+    // Fixes https://github.com/silverleague/silverstripe-ideannotator/issues/122
+    \SilverStripe\Core\Config\Config::modify()->set('SilverLeague\IDEAnnotator\Tests\Team', 'has_many', []);
 }
 
 // When running tests, use SQLite3

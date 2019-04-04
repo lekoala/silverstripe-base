@@ -33,20 +33,29 @@ class SimpleSearchControllerExtension extends Extension
         if ($this->owner->getRequest() && $this->owner->getRequest()->getVar('Search')) {
             $searchText = $this->owner->getRequest()->getVar('Search');
         }
-        $fields = new FieldList(
-            $Search = new TextField('q', false, $searchText)
-        );
+        $fieldsList = [];
+
+        $Search = new TextField('q', false, $searchText);
         $Search->setAttribute('placeholder', $placeholder);
-        $actions = new FieldList(
-            $Go = new FormAction('doSearch', _t('SimpleSearchControllerExtension.GO', 'Go'))
-        );
+        $fieldsList[] = $Search;
+
+        $fields = new FieldList($fieldsList);
+
+        $actionsList = [];
+
+        $Go = new FormAction('doSearch', _t('SimpleSearchControllerExtension.GO', 'Go'));
         $Go->setName('');
         $Go->setUseButtonTag(true);
         $Go->setButtonContent('<span class="fa fa-search"></span>');
+        $actionsList[] =  $Go;
+
+        $actions = new FieldList($actionsList);
+
         $form = Form::create($this->owner, __FUNCTION__, $fields, $actions);
         $form->setFormMethod('GET');
         $form->setFormAction($this->owner->Link('search'));
         $form->disableSecurityToken();
+
         return $form;
     }
     /**
@@ -57,19 +66,20 @@ class SimpleSearchControllerExtension extends Extension
         $Query = $this->owner->getRequest()->getVar('q');
         $Results = null;
         if ($Query) {
-            $Query = \str_replace(' ', '%', $Query);
+            $FullQuery = \str_replace(' ', '%', $Query);
             $excludedClasses = [
                 ErrorPage::class,
             ];
-            $Results = SiteTree::get()->where([
-                "Title LIKE ?" => ['%' . $Query . '%'],
-                "Content LIKE ?" => ['%' . $Query . '%'],
+            $Results = SiteTree::get()->filterAny([
+                "Title:PartialMatch" => $FullQuery,
+                "Content:PartialMatch" => $FullQuery,
             ])->exclude('ClassName', $excludedClasses);
         }
         $data = array(
             'Results' => $Results,
             'Query' => DBField::create_field('Text', $Query),
-            'Title' => _t('SimpleSearchControllerExtension.SearchResults', 'Search Results')
+            'Title' => _t('SimpleSearchControllerExtension.SearchResults', 'Search Results'),
+            'YouSearchedFor' => _t('SimpleSearchControllerExtension.YouSearchFor', 'You searched for %s', [$Query]),
         );
         return $this->owner->customise($data)->renderWith(array('Page_results', 'Page'));
     }

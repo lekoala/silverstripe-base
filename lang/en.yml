@@ -21,6 +21,8 @@ en:
     doRotateLogs: 'Rotate Logs'
   BootstrapModal:
     Close: Close
+  ContactForm:
+    SEND: 'Send your message'
   ContactPage:
     Address: ADDRESS
     Email: E-MAIL
@@ -46,6 +48,8 @@ en:
   DataObjectActionsExtension:
     CREATEANDCLOSE: 'Create and Close'
     SAVEANDCLOSE: 'Save and Close'
+  EmbeddableExtension:
+    EMBEDURL: 'Embed from URL'
   FilePondField:
     labelFileProcessing: Uploading
     labelFileProcessingAborted: 'Upload cancelled'
@@ -60,16 +64,19 @@ en:
     QUICKLY_FILTER: 'Quickly filter this list by keywords'
   Global:
     Address: Address
+    CONFIRM_MESSAGE: 'Are you sure?'
+    CompanyRegistrationNumber: 'Company Registration Number'
     ContactInfos: 'Contact details'
     ContactsSettings: 'Contacts settings'
     DefaultFromEmail: 'Default From Email'
     Email: Email
     EmailFooter: 'Email Footer'
     EmailSettings: 'Email settings'
+    LegalCourt: 'Legal Court'
     LegalName: 'Legal Name'
     Phone: Phone
-    View: 'View'
     UNDEFINED_ERROR: 'Something wrong happened'
+    View: View
   NewsItem:
     READ_MORE: 'Read more'
   NewsPage:
@@ -85,10 +92,13 @@ en:
     PLEASEREVIEW: 'Please review the following agreements to continue'
   SilverStripe\Admin\LeftAndMain:
     PreviewButton: Preview
+  SilverStripe\Forms\Form:
+    CSRF_FAILED_MESSAGE: 'There seems to have been a technical problem. Please click the back button, refresh your browser, and try again.'
   SimpleSearchControllerExtension:
     GO: Go
     SEARCH: Search
     SearchResults: 'Search Results'
+    YouSearchFor: 'You searched for %s'
   SocialExtension:
     DISCOVER: 'I discovered '
     SEE: 'You can see it here :'

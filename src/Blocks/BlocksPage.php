@@ -81,7 +81,7 @@ class BlocksPage extends Page
 
     public function getContent()
     {
-        // If you pass live, content of the block will always be fully rendered and written to the database
+        // If you pass ?live, content of the block will always be fully rendered and written to the database
         if (isset($_GET['live']) && Director::isDev()) {
             return $this->renderContent(true);
         }

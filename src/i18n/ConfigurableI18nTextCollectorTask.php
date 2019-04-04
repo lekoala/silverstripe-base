@@ -11,6 +11,7 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\Dev\Tasks\i18nTextCollectorTask;
 use SilverStripe\i18n\TextCollection\i18nTextCollector;
+use SilverStripe\Control\Controller;
 
 /**
  * A better task for collecting text
@@ -23,7 +24,7 @@ class ConfigurableI18nTextCollectorTask extends BuildTask
 
     private static $segment = 'i18nTextCollectorTask';
 
-    protected $title = "i18n Textcollector Task";
+    protected $title = "i18n Textcollector Task (configurable)";
 
     protected $description = "
 		Traverses through files in order to collect the 'entity master tables'
