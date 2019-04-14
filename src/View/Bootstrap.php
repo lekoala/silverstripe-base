@@ -50,6 +50,12 @@ class Bootstrap
     private static $js_cookie_version = '2.2.0';
 
     /**
+     * @config
+     * @var string
+     */
+    private static $bootstrap_multiselect = '0.9.15';
+
+    /**
      * Require defaults js requirements for bootstrap
      *
      * @return void
@@ -86,5 +92,19 @@ class Bootstrap
         $version = self::config()->bootstrap_native_version;
 
         Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/bootstrap.native/$version/bootstrap-native-v4.min.js");
+    }
+
+    /**
+     * @link https://github.com/davidstutz/bootstrap-multiselect
+     * @param bool $css
+     * @return void
+     */
+    public static function bootstrapMultiselect($css = true)
+    {
+        $version = self::config()->bootstrap_multiselect;
+        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/$version/js/bootstrap-multiselect.min.js");
+        if ($css) {
+            Requirements::css("https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/$version/css/bootstrap-multiselect.css");
+        }
     }
 }
