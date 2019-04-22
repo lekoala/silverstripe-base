@@ -10,6 +10,7 @@ use LeKoala\Base\View\CookieConsent;
 use LeKoala\Base\Forms\Bootstrap\Tab;
 use SilverStripe\Forms\CheckboxField;
 use LeKoala\Base\View\CommonRequirements;
+use SilverStripe\SiteConfig\SiteConfig;
 
 /**
  * Google SiteConfig stuff
@@ -95,8 +96,10 @@ ga('send', 'pageview');
 JS;
         }
 
+        $conditionalAnalytics = SiteConfig::config()->conditional_analytics;
+
         // If we use cookies and require cookie consent
-        if (CookieConsent::IsEnabled() && !$this->owner->GoogleAnalyticsWithoutCookies) {
+        if (CookieConsent::IsEnabled() && !$this->owner->GoogleAnalyticsWithoutCookies && $conditionalAnalytics) {
             CookieConsent::addScript($script, "GoogleAnalytics");
         } else {
             Requirements::customScript($script, "GoogleAnalytics");
