@@ -14,6 +14,7 @@ SilverStripe\CMS\Model\SiteTree:
     #- LeKoala\Base\Extensions\BootstrapPageExtension
 SilverStripe\SiteConfig\SiteConfig:
   conditional_analytics: true
+  gtag_manager: false
   extensions:
     - LeKoala\Base\SiteConfig\SiteConfigExtension
     - LeKoala\Base\SiteConfig\GoogleSiteConfigExtension
