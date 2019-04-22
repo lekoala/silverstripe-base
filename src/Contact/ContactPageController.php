@@ -23,7 +23,7 @@ class ContactPageController extends \PageController
 
     private static $allowed_actions = [
         "index",
-        'success',
+        'messageSent',
         "doSend",
         'ContactForm',
     ];
@@ -35,7 +35,7 @@ class ContactPageController extends \PageController
         return $this;
     }
 
-    public function success(HTTPRequest $request)
+    public function messageSent(HTTPRequest $request)
     {
         $error = $request->getVar('error');
         if ($error) {
@@ -125,7 +125,7 @@ class ContactPageController extends \PageController
             return $msg;
         }
         if (self::config()->use_distinct_succes_page) {
-            $link = $this->Link('success');
+            $link = $this->Link('messageSent');
             if ($error) {
                 $link .= "?error=1";
             }
