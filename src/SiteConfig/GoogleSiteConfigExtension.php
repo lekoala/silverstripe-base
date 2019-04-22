@@ -65,13 +65,15 @@ class GoogleSiteConfigExtension extends DataExtension
     public function requireGoogleAnalytics()
     {
         if (!Director::isLive()) {
-            return false;
+            // return false;
         }
         if (!$this->owner->GoogleAnalyticsCode) {
             return false;
         }
 
-        $gtag =  SiteConfig::config()->gtag_manager;
+        $config = SiteConfig::config();
+
+        $gtag =  $config->gtag_manager;
 
         // TODO: upgrade to fingerprintjs2 and check ad blockers issues
         // @link https://github.com/Foture/cookieless-google-analytics
@@ -109,7 +111,7 @@ JS;
             }
         }
 
-        $conditionalAnalytics = SiteConfig::config()->conditional_analytics;
+        $conditionalAnalytics = $config->conditional_analytics;
 
         if ($gtag) {
             Requirements::javascript('https://www.googletagmanager.com/gtag/js?id=' . $this->owner->GoogleAnalyticsCode);
