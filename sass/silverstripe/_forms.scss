@@ -164,6 +164,18 @@ form {
         }
     }
 
+    .field.checkbox {
+        &.required {
+            &:after {
+                content: " *";
+            }
+
+            >label:after {
+                content: "";
+            }
+        }
+    }
+
     .error {
         color: $danger;
     }
