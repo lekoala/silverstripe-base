@@ -25,6 +25,8 @@ use SilverStripe\Logging\DetailedErrorFormatter;
  * - Messaging
  * - Common imports (Env, Request)
  * - Utils
+ *
+ * See BuildTask::init and commented code to get started!
  */
 abstract class BuildTask extends DefaultBuildTask
 {
@@ -70,6 +72,18 @@ abstract class BuildTask extends DefaultBuildTask
     protected function init()
     {
         // Call you own code here in your subclasses
+        // $this->addOption("my_bool_option", "My Bool Option", false);
+        // $this->addOption("my_list_option", "My List Option", null, $list);
+        // $options = $this->askOptions();
+
+        // $my_bool_option = $options['my_bool_option'];
+        // $my_list_option = $options['my_list_option'];
+
+        // if ($my_bool_option) {
+        //     $this->message("Totally true");
+        // } else {
+        //     $this->message("Not true");
+        // }
     }
 
     /**

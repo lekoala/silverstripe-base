@@ -15,8 +15,15 @@ use SilverStripe\Control\Director;
  */
 class ContactPageController extends \PageController
 {
+    /**
+     * @config
+     * @var boolean
+     */
+    private static $use_distinct_succes_page = true;
+
     private static $allowed_actions = [
         "index",
+        'messageSent',
         "doSend",
         'ContactForm',
     ];
@@ -26,6 +33,20 @@ class ContactPageController extends \PageController
         // $this->sendDummyEmail();
         $this->SiteConfig()->requireGoogleMaps();
         return $this;
+    }
+
+    public function messageSent(HTTPRequest $request)
+    {
+        $error = $request->getVar('error');
+        if ($error) {
+            $Content = _t("ContactPageController.MESSAGE_ERROR", "Votre message n'a pas été envoyé");
+        } else {
+            $Content = _t("ContactPageController.MESSAGE_SENT", "Votre message a bien été envoyé");
+        }
+
+        return $this->render([
+            'Content' => $Content
+        ]);
     }
 
     /**
@@ -102,6 +123,13 @@ class ContactPageController extends \PageController
                 return $this->httpError(400, $msg);
             }
             return $msg;
+        }
+        if (self::config()->use_distinct_succes_page) {
+            $link = $this->Link('messageSent');
+            if ($error) {
+                $link .= "?error=1";
+            }
+            return $this->redirect($link);
         } else {
             $this->sessionMessage($msg, $status);
             return $this->redirectBack();

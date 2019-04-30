@@ -10,6 +10,7 @@ use LeKoala\Base\View\CookieConsent;
 use LeKoala\Base\Forms\Bootstrap\Tab;
 use SilverStripe\Forms\CheckboxField;
 use LeKoala\Base\View\CommonRequirements;
+use SilverStripe\SiteConfig\SiteConfig;
 
 /**
  * Google SiteConfig stuff
@@ -35,6 +36,7 @@ class GoogleSiteConfigExtension extends DataExtension
             $fields->addFieldToTab('Root', $tab);
         }
         $GoogleAnalyticsCode = new TextField('GoogleAnalyticsCode');
+        $GoogleAnalyticsCode->setAttribute("placeholder", "UA-XXXXXXX-Y");
         $tab->push($GoogleAnalyticsCode);
         $GoogleAnalyticsWithoutCookies = new CheckboxField('GoogleAnalyticsWithoutCookies');
         $tab->push($GoogleAnalyticsWithoutCookies);
@@ -63,11 +65,16 @@ class GoogleSiteConfigExtension extends DataExtension
     public function requireGoogleAnalytics()
     {
         if (!Director::isLive()) {
-            return false;
+            // return false;
         }
         if (!$this->owner->GoogleAnalyticsCode) {
             return false;
         }
+
+        $config = SiteConfig::config();
+
+        $gtag =  $config->gtag_manager;
+
         // TODO: upgrade to fingerprintjs2 and check ad blockers issues
         // @link https://github.com/Foture/cookieless-google-analytics
         if ($this->owner->GoogleAnalyticsWithoutCookies) {
@@ -85,7 +92,15 @@ ga('set', 'anonymizeIp', true);
 ga('send', 'pageview');
 JS;
         } else {
-            $script = <<<JS
+            if ($gtag) {
+                $script = <<<JS
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', '{$this->owner->GoogleAnalyticsCode}');
+JS;
+            } else {
+                $script = <<<JS
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
 m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
@@ -93,10 +108,16 @@ m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 ga('create', '{$this->owner->GoogleAnalyticsCode}', 'auto');
 ga('send', 'pageview');
 JS;
+            }
         }
 
+        $conditionalAnalytics = $config->conditional_analytics;
+
+        if ($gtag) {
+            Requirements::javascript('https://www.googletagmanager.com/gtag/js?id=' . $this->owner->GoogleAnalyticsCode);
+        }
         // If we use cookies and require cookie consent
-        if (CookieConsent::IsEnabled() && !$this->owner->GoogleAnalyticsWithoutCookies) {
+        if (CookieConsent::IsEnabled() && !$this->owner->GoogleAnalyticsWithoutCookies && $conditionalAnalytics) {
             CookieConsent::addScript($script, "GoogleAnalytics");
         } else {
             Requirements::customScript($script, "GoogleAnalytics");

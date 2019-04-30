@@ -55,11 +55,23 @@ class ContactForm extends BaseForm
         // Send by email
         $address = $controller->data()->Email;
         $result = $submission->sendByEmail($address);
+
+        $error = false;
+        $state = 'good';
         if ($result) {
-            $this->sessionMessage(_t("ContactPageController.MESSAGE_SENT", "Votre message a bien été envoyé"), "good");
+            $msg = _t("ContactPageController.MESSAGE_SENT", "Votre message a bien été envoyé");
         } else {
-            $this->sessionMessage(_t("ContactPageController.MESSAGE_ERROR", "Votre message n'a pas été envoyé"), "bad");
+            $msg = _t("ContactPageController.MESSAGE_ERROR", "Votre message n'a pas été envoyé");
+            $error = true;
+            $state = 'bad';
         }
+
+        if ($controller->hasMethod('returnMessage')) {
+            return $controller->returnMessage($msg, $error);
+        }
+
+        // Fallback if we use the contact form on another controller
+        $this->sessionMessage($msg, $state);
         return $this->getController()->redirectBack();
     }
 }
