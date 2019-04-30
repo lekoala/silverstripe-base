@@ -23,43 +23,63 @@ class FakeDataProvider
     ];
     protected static $addresses = [
         [
-            'Address' => '4880 Glory Rd', 'City' => 'Ponchatoula', 'Postcode' => 'LA 70454',
+            'Address' => '4880 Glory Rd',
+            'City' => 'Ponchatoula',
+            'Postcode' => 'LA 70454',
             'Country' => 'US'
         ],
         [
-            'Address' => '4363 Willow Oaks Lane', 'City' => 'Harrison Township',
-            'Postcode' => 'NJ 08062', 'Country' => 'US'
-        ],
-        [
-            'Address' => '3471 Chipmunk Ln', 'City' => 'Clifton Heights', 'Postcode' => 'PA 19018 ‎',
+            'Address' => '4363 Willow Oaks Lane',
+            'City' => 'Harrison Township',
+            'Postcode' => 'NJ 08062',
             'Country' => 'US'
         ],
         [
-            'Address' => '666 Koala Ln', 'City' => 'Mt Laurel', 'Postcode' => 'NJ 08054‎',
+            'Address' => '3471 Chipmunk Ln',
+            'City' => 'Clifton Heights',
+            'Postcode' => 'PA 19018 ‎',
             'Country' => 'US'
         ],
         [
-            'Address' => '3339 Little Acres Ln', 'City' => 'Woodford', 'Postcode' => 'VA 22580',
+            'Address' => '666 Koala Ln',
+            'City' => 'Mt Laurel',
+            'Postcode' => 'NJ 08054‎',
             'Country' => 'US'
         ],
         [
-            'Address' => '15 Anthony Avenue', 'City' => 'Essex', 'Postcode' => 'MD 21221',
+            'Address' => '3339 Little Acres Ln',
+            'City' => 'Woodford',
+            'Postcode' => 'VA 22580',
             'Country' => 'US'
         ],
         [
-            'Address' => '2942 Kelly Ave', 'City' => 'Baltimore', 'Postcode' => 'MD 21209',
+            'Address' => '15 Anthony Avenue',
+            'City' => 'Essex',
+            'Postcode' => 'MD 21221',
             'Country' => 'US'
         ],
         [
-            'Address' => '687 Burke Rd', 'City' => 'Delta', 'Postcode' => 'PA 17314',
+            'Address' => '2942 Kelly Ave',
+            'City' => 'Baltimore',
+            'Postcode' => 'MD 21209',
             'Country' => 'US'
         ],
         [
-            'Address' => '1196 Court St', 'City' => 'York', 'Postcode' => 'PA 17404 ‎',
+            'Address' => '687 Burke Rd',
+            'City' => 'Delta',
+            'Postcode' => 'PA 17314',
             'Country' => 'US'
         ],
         [
-            'Address' => 'Barnes St', 'City' => 'Bel Air', 'Postcode' => 'MD 21014',
+            'Address' => '1196 Court St',
+            'City' => 'York',
+            'Postcode' => 'PA 17404 ‎',
+            'Country' => 'US'
+        ],
+        [
+            'Address' => '25 Barnes St',
+            'City' => 'Bel Air',
+            'Postcode' => 'MD 21014',
             'Country' => 'US'
         ],
     ];
@@ -142,11 +162,38 @@ class FakeDataProvider
     /**
      * A random address
      *
-     * @return string
+     * @return array
      */
     public static function address()
     {
         return self::$addresses[array_rand(self::$addresses)];
+    }
+
+    /**
+     * A random address part
+     *
+     * @param string $part Address, Street, StreetNumber, City, Postcode or Country
+     * @return string
+     */
+    public static function addressPart($part)
+    {
+        $address = self::address();
+        $rpart = $part;
+        if ($part == 'Street' || $part == 'StreetNumber') {
+            $rpart = 'Address';
+        }
+        $v = $address[$rpart];
+        if ($part == 'Street' || $part == 'StreetNumber') {
+            $vex = explode(' ', $v);
+            if ($part == 'Street') {
+                array_shift($vex);
+                $v = implode(' ', $vex);
+            }
+            if ($part == 'StreetNumber') {
+                $v = $vex[0];
+            }
+        }
+        return $v;
     }
 
     /**
