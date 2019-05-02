@@ -15,7 +15,6 @@ use SilverStripe\ORM\DataExtension;
 use SilverStripe\Forms\DropdownField;
 use LeKoala\Base\ORM\FieldType\DBColor;
 use LeKoala\Base\Forms\SmartUploadField;
-use SilverStripe\AssetAdmin\Forms\UploadField;
 
 /**
  * Extend SiteConfig to make your website Themable
