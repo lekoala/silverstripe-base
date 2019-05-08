@@ -16,6 +16,17 @@ var utils = {
         var canvi = new Canvi({
             openButton: '.canvi-open-button'
         });
+    },
+    checkTop: function() {
+        var $body = $('body');
+        $(window).on('scroll', function() {
+            var scroll = $(window).scrollTop();
+            if (scroll == 0) {
+                $body.addClass('is-top');
+            } else {
+                $body.removeClass('is-top');
+            }
+        });
     }
 };
 

@@ -1,15 +1,10 @@
 <?php
 namespace LeKoala\Base\Theme;
 
-use SilverStripe\View\SSViewer;
 use SilverStripe\Core\Extension;
 use SilverStripe\Control\Director;
 use SilverStripe\View\Requirements;
-use SilverStripe\Control\Controller;
-use SilverStripe\Admin\AdminRootController;
-use SilverStripe\Admin\LeftAndMain;
 use LeKoala\Base\ORM\FieldType\DBColor;
-use SilverStripe\ORM\FieldType\DBClassName;
 use SilverStripe\SiteConfig\SiteConfig;
 
 /**
@@ -20,6 +15,18 @@ use SilverStripe\SiteConfig\SiteConfig;
 class ThemeControllerExtension extends Extension
 {
     use KnowsThemeDir;
+    protected static $customGoogleFont = null;
+
+    public static function getCustomGoogleFont()
+    {
+        return self::$customGoogleFont;
+    }
+
+    public static function setCustomGoogleFont($googleFont)
+    {
+        self::$customGoogleFont = $googleFont;
+    }
+
     public function onAfterInit()
     {
         if ($this->isAdminTheme()) {
@@ -28,13 +35,18 @@ class ThemeControllerExtension extends Extension
         $this->requireGoogleFonts();
         $this->requireThemeStyles();
     }
+
     protected function requireGoogleFonts()
     {
-        $SiteConfig = $this->owner->SiteConfig();
-        if ($SiteConfig->GoogleFonts) {
+        $googleFont = self::$customGoogleFont;
+        if (!$googleFont) {
+            $SiteConfig = $this->owner->SiteConfig();
+            $googleFont = $SiteConfig->GoogleFonts;
+        }
+        if ($googleFont) {
             //@link https://www.cdnplanet.com/blog/faster-google-webfonts-preconnect/
             Requirements::insertHeadTags('<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />');
-            Requirements::css('https://fonts.googleapis.com/css?family=' . $SiteConfig->GoogleFonts);
+            Requirements::css('https://fonts.googleapis.com/css?family=' . $googleFont);
         }
     }
     protected function requireThemeStyles()

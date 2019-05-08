@@ -1,0 +1,139 @@
+/*
+ * @link https://github.com/rolandtoth/hamburger-mixin/blob/master/hamburger.scss
+ */
+
+// helper mixin
+@mixin hamburger_tint($color: #000, $tint_text: false, $labelselector: '+ label') {
+    #{$labelselector} {
+        i, &::before, &::after {
+            background-color: $color;
+        }
+
+        @if $tint_text {
+            span {
+                color: $color;
+            }
+        }
+    }
+}
+
+// main mixin
+@mixin hamburger($width: 32px, $thickness: 3px, $gap: 7px, $color: #000, $background: transparent, $tint_text: false, $radius: 0, $radius_background: 0, $anim: 0.25s, $labelselector: '+ label', $padding: 0, $text: 'right', $style: false) {
+    $height: ($thickness*3) + ($gap*2);
+
+    @if $background !=transparent and $padding==0 {
+        $padding: round(($thickness + $gap) / 1.5);
+    }
+
+    display: none;
+
+    #{$labelselector} {
+        user-select: none;
+        position: relative;
+        display: inline-block;
+        width: $width;
+        height: $height;
+        box-sizing: content-box;
+        border: $padding solid transparent;
+        z-index: 1050;
+        line-height: $height;
+        white-space: nowrap;
+        background: $background;
+        border-radius: $radius_background;
+
+        span {
+            display: inline-block;
+            position: absolute;
+            left: 100%;
+            margin-top: 1px;
+            transition: color $anim;
+            margin-left: $padding;
+
+            @if $text==false {
+                display: none;
+            }
+
+            @if $text=='left' {
+                left: auto;
+                right: 100%;
+                margin-left: 0;
+                margin-right: $padding;
+            }
+
+            &::before, &::after {
+                content: '';
+                display: inline-block;
+                min-width: 10px;
+                width: $width*0.2;
+            }
+        }
+
+        i, &::before, &::after {
+            position: absolute;
+            left: 0;
+            display: block;
+            will-change: transform, background-color;
+            width: $width;
+            height: $thickness;
+            border-radius: $radius;
+            transition: transform $anim, background-color $anim;
+            backface-visibility: hidden;
+            outline: 1px solid transparent; // Firefox jagged animation fix
+        }
+
+        i {
+            top: $thickness + $gap;
+            // hide text
+            font-size: 0;
+            color: transparent;
+            line-height: 0;
+
+            @if $style=='align-left' {
+                max-width: $width * 0.75;
+                transform-origin: 66% center;
+            }
+
+            @if $style=='align-right' {
+                max-width: $width * 0.75;
+                margin-left: $width * 0.25;
+                transform-origin: 33% center;
+            }
+        }
+
+        &::before, &::after {
+            content: '';
+        }
+
+        &::before {
+            top: 0;
+        }
+
+        &::after {
+            bottom: 0;
+        }
+
+        &:hover {
+            cursor: pointer;
+        }
+    }
+
+    &:checked {
+        @if $anim !=-1 {
+            #{$labelselector} {
+                i {
+                    transform: scaleX(0.001);
+                }
+
+                &::before {
+                    transform: translateY($gap + $thickness) rotate(45deg);
+                }
+
+                &::after {
+                    transform: translateY(-($gap + $thickness)) rotate(-45deg);
+                }
+            }
+        }
+    }
+
+    @include hamburger_tint($color, $tint_text, $labelselector);
+}
