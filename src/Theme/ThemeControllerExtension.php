@@ -6,6 +6,7 @@ use SilverStripe\Control\Director;
 use SilverStripe\View\Requirements;
 use LeKoala\Base\ORM\FieldType\DBColor;
 use SilverStripe\SiteConfig\SiteConfig;
+use LeKoala\Base\Controllers\HasLogger;
 
 /**
  * Class \LeKoala\Base\Theme\ThemeControllerExtension
@@ -15,6 +16,7 @@ use SilverStripe\SiteConfig\SiteConfig;
 class ThemeControllerExtension extends Extension
 {
     use KnowsThemeDir;
+    use HasLogger;
     protected static $customGoogleFont = null;
 
     public static function getCustomGoogleFont()
@@ -134,6 +136,11 @@ class ThemeControllerExtension extends Extension
                 continue;
             }
             $value = $dbObject->getValue();
+            // There is no value and no default, continue
+            if (!$value && !$declarationValue) {
+                self::getLogger()->debug("$declarationName has no value in your theme files");
+                continue;
+            }
             // There is no value, use default
             if (!$value) {
                 $value = $declarationValue;

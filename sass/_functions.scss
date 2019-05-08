@@ -1,0 +1,8 @@
+@function social-color($key) {
+    @if map-has-key($social-brands-colors, $key) {
+        @return map-get($social-brands-colors, $key);
+    }
+
+    @warn "Unknown `#{$key}` in $social-brands-colors.";
+    @return null;
+}
