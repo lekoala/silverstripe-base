@@ -12,6 +12,7 @@ use SilverStripe\Admin\SecurityAdmin;
 use SilverStripe\Security\Permission;
 use LeKoala\Base\Actions\CustomAction;
 use LeKoala\Base\Security\MemberAudit;
+use SilverStripe\Security\LoginAttempt;
 
 /**
  * A lot of base functionalities for your members
@@ -34,15 +35,13 @@ class BaseMemberExtension extends DataExtension
     ];
 
     public function canLogIn($result)
-    {
-    }
+    { }
 
     /**
      * @deprecated
      */
     public function beforeMemberLoggedIn()
-    {
-    }
+    { }
 
     public function afterMemberLoggedIn()
     {
@@ -58,12 +57,10 @@ class BaseMemberExtension extends DataExtension
     }
 
     public function beforeMemberLoggedOut($request)
-    {
-    }
+    { }
 
     public function afterMemberLoggedOut($request)
-    {
-    }
+    { }
 
     /**
      * Returns the fields for the member form - used in the registration/profile module.
@@ -72,36 +69,28 @@ class BaseMemberExtension extends DataExtension
      * @param FieldList $fields
      */
     public function updateMemberFormFields(FieldList $fields)
-    {
-    }
+    { }
 
     public function updateMemberPasswordField($password)
-    {
-    }
+    { }
 
     public function updateDateFormat($format)
-    {
-    }
+    { }
 
     public function updateTimeFormat($format)
-    {
-    }
+    { }
 
     public function updateGroups($groups)
-    {
-    }
+    { }
 
     public function onBeforeChangePassword($password, $valid)
-    {
-    }
+    { }
 
     public function onAfterChangePassword($password, $valid)
-    {
-    }
+    { }
 
     public function registerFailedLogin()
-    {
-    }
+    { }
 
     public function updateCMSFields(FieldList $fields)
     {
