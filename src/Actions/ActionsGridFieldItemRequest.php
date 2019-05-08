@@ -54,12 +54,18 @@ class ActionsGridFieldItemRequest extends DataExtension
         if ($deleteAction) {
             $actions->remove($deleteAction);
             $actions->push($deleteAction);
+            if ($record->hasMethod('getDeleteButtonTitle')) {
+                $deleteAction->setTitle($record->getDeleteButtonTitle());
+            }
         }
         // Move cancel at the end
         $cancelButton = $actions->fieldByName('cancelbutton');
         if ($cancelButton) {
             $actions->remove($cancelButton);
             $actions->push($cancelButton);
+            if ($record->hasMethod('getCancelButtonTitle')) {
+                $cancelButton->setTitle($record->getCancelButtonTitle());
+            }
         }
     }
 
