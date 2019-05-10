@@ -2,7 +2,7 @@ nl:
   ActionsGridFieldItemRequest:
     DONE: 'Action {action} was done on {name}'
   BaseFileUploadReceiver:
-    ALLOWEXTENSION: 'Allowed extensions: {ext}'
+    ALLOWEXTENSION: 'Toegestane extensies: {ext}'
     MAXRESOLUTION: 'Max resolutie: 2048x2048px'
     MAXSIZE: 'Max documentgrootte: {size}'
   BaseForm:
