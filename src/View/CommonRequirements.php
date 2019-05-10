@@ -114,6 +114,12 @@ class CommonRequirements
     private static $imagesLoaded_version = '4.1.4';
 
     /**
+     * @config
+     * @var string
+     */
+    private static $swiper_version = '4.5.0';
+
+    /**
      * Include all files in a given path
      *
      * @param string $path
@@ -139,7 +145,8 @@ class CommonRequirements
      *
      * @return void
      */
-    public static function modularBehaviour() {
+    public static function modularBehaviour()
+    {
         Requirements::javascript("base/javascript/ModularBehaviour.js");
     }
 
@@ -395,5 +402,19 @@ JS;
     {
         $version = self::config()->imagesLoaded_version;
         Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/$version/imagesloaded.min.js");
+    }
+
+    /**
+     * @link http://idangero.us/swiper
+     * @param bool $css
+     * @return void
+     */
+    public static function swiper($css = true)
+    {
+        $version = self::config()->swiper_version;
+        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/Swiper/$version/js/swiper.min.js");
+        if ($css) {
+            Requirements::css("https://cdnjs.cloudflare.com/ajax/libs/Swiper/$version/css/swiper.min.css");
+        }
     }
 }
