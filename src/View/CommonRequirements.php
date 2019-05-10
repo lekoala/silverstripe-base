@@ -130,6 +130,20 @@ class CommonRequirements
     }
 
     /**
+     * Including modular behaviour tools to initialize scripts from html in one go
+     *
+     * Simply use  data-module="myModuleName" where myModuleName matches the jquery plugin
+     * You can pass options in data-config="{"myOption": "true"}" (it has to be properly json encoded)
+     *
+     * Larger option array might be better in php data-config="$JsonOptionsHere"
+     *
+     * @return void
+     */
+    public static function modularBehaviour() {
+        Requirements::javascript("base/javascript/ModularBehaviour.js");
+    }
+
+    /**
      * @link https://polyfill.io/v3/api/
      * @return void
      */
@@ -340,9 +354,11 @@ JS;
     }
 
     /**
+     * If you use ModularBehaviour, you can just do data-module="owlCarousel"
+     *
      * @link https://github.com/OwlCarousel2/OwlCarousel2
-     * @param bool $css
-     * @param bool $theme
+     * @param bool $css If you set this to false, think about including ../../../base/sass/vendor/owl-carousel2/owl.carousel
+     * @param bool $theme Name of your theme, stored in ../../../base/sass/vendor/owl-carousel2/owl.theme.default if you build your own styles
      * @return void
      */
     public static function owlCarousel2($css = true, $theme = 'default')
@@ -352,7 +368,7 @@ JS;
         if ($css) {
             Requirements::css("https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/$version/assets/owl.carousel.min.css");
         }
-        if ($theme) {
+        if ($css && $theme) {
             Requirements::css("https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/$version/assets/owl.theme.$theme.min.css");
         }
     }

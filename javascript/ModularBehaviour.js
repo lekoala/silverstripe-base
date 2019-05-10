@@ -33,9 +33,18 @@
             var module = e.data(config.moduleKey);
             var moduleConfig = e.data(config.configKey);
 
-            // External config selector
-            if (typeof moduleConfig === 'string' && moduleConfig.charAt(0) === '#') {
-                moduleConfig = $.parseJSON($(moduleConfig).text());
+            // Config parsing
+            if (typeof moduleConfig === 'string') {
+                // External config
+                if(moduleConfig.charAt(0) === '#') {
+                    moduleConfig = $.parseJSON($(moduleConfig).text());
+                }
+                else if(moduleConfig.charAt(0) === '{') {
+                    console.log("Invalid config. Make sure it's properly JSON encoded.", moduleConfig);
+                }
+                else {
+                    console.log("Weird config detected", moduleConfig);
+                }
             }
 
             if (typeof $.fn[module] !== 'undefined') {
