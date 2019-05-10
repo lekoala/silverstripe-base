@@ -96,7 +96,7 @@ class InputMaskField extends TextField
     /**
      * The value you want when unmasking to hidden field
      *
-     * @param string $value
+     * @param string $value The alias or "masked" to get the masked value as is
      * @return $this
      */
     public function setDataFormat($value)
@@ -128,8 +128,8 @@ class InputMaskField extends TextField
      * *: alphanumeric
      * (aaa): optional part
      *
-     * @param [type] $value
-     * @return void
+     * @param string $value
+     * @return $this
      */
     public function setMask($value)
     {

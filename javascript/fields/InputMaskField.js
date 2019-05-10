@@ -23,9 +23,14 @@
             var val = null;
             // Apply a given formatting
             if (dataformat) {
-                val = Inputmask.format(val, {
-                    alias: dataformat
-                });
+                if(dataformat == "masked") {
+                    val = $this.val();
+                }
+                else {
+                    val = Inputmask.format(val, {
+                        alias: dataformat
+                    });
+                }
             } else {
                 val = $this.inputmask("unmaskedvalue");
             }
