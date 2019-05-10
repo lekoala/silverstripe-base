@@ -52,7 +52,7 @@ class InputMaskField extends TextField
      * @config
      * @var string
      */
-    private static $version = '4.0.6';
+    private static $version = '4.0.8';
 
     public function Type()
     {
@@ -120,6 +120,17 @@ class InputMaskField extends TextField
         return $this->getConfig('mask');
     }
 
+    /**
+     * Set the mask
+     *
+     * 9: numeric
+     * a: alphabetical
+     * *: alphanumeric
+     * (aaa): optional part
+     *
+     * @param [type] $value
+     * @return void
+     */
     public function setMask($value)
     {
         return $this->setConfig('mask', $value);

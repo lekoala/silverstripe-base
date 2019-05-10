@@ -255,6 +255,17 @@ class BuildableFieldList extends FieldList
      * @param string $name
      * @param string $title
      * @param array $attributes
+     * @return InputMaskField
+     */
+    public function addInputMask($name, $title = null, $attributes = [])
+    {
+        return $this->addField(InputMaskField::class, $name, $title, $attributes);
+    }
+
+    /**
+     * @param string $name
+     * @param string $title
+     * @param array $attributes
      * @return CheckboxField
      */
     public function addCheckbox($name = "IsEnabled", $title = null, $attributes = [])
