@@ -2,14 +2,15 @@
 namespace LeKoala\Base\Actions;
 
 use SilverStripe\Forms\FieldList;
+use SilverStripe\Control\Director;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Controller;
-use SilverStripe\Admin\CMSProfileController;
 use SilverStripe\SiteConfig\SiteConfig;
-use SilverStripe\Control\Director;
+use LeKoala\Base\Forms\CmsInlineFormAction;
 use LeKoala\Base\Helpers\SilverStripeIcons;
+use SilverStripe\Admin\CMSProfileController;
 
 /**
  * Class \LeKoala\Base\Actions\DataObjectActionsExtension
@@ -79,6 +80,17 @@ class DataObjectActionsExtension extends DataExtension
             $utils = $this->owner->getBaseCMSUtils();
         } else {
             $utils = new FieldList();
+        }
+        // Next/prev
+        $controller = Controller::curr();
+        $url = $controller->getRequest()->getURL();
+        if ($this->owner->ID && $this->owner->hasMethod('NextRecord') && $NextRecord = $this->owner->NextRecord()) {
+            $utils->unshift($NextBtnLink = new CmsInlineFormAction('NextBtnLink', 'Next >', 'btn-secondary'));
+            $NextBtnLink->setUrl(str_replace('/' . $this->owner->ID . '/', '/' . $NextRecord->ID . '/', $url));
+        }
+        if ($this->owner->ID && $this->owner->hasMethod('PrevRecord') && $PrevRecord = $this->owner->PrevRecord()) {
+            $utils->unshift($PrevBtnLink = new CmsInlineFormAction('PrevBtnLink', '< Previous', 'btn-secondary'));
+            $PrevBtnLink->setUrl(str_replace('/' . $this->owner->ID . '/', '/' . $PrevRecord->ID . '/', $url));
         }
         $this->owner->extend('updateCMSUtils', $utils);
         return $utils;

@@ -51,7 +51,7 @@ class CommonRequirements
      * @config
      * @var string
      */
-    private static $boxicons_version = '1.9.1';
+    private static $boxicons_version = '2.0.2';
 
     /**
      * @config
