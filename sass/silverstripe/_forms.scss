@@ -118,6 +118,11 @@
     border-width: $input-border-width 0;
 }
 
+.field.literal {
+    padding-top: $input-padding-y;
+    padding-bottom: $input-padding-y;
+}
+
 form {
     .description {
         display: block;
@@ -178,5 +183,35 @@ form {
 
     .error {
         color: $danger;
+    }
+
+    &.form-inline {
+        fieldset {
+            float: left;
+
+            .field {
+                float: left;
+                margin-bottom: 0;
+                margin-right: $spacer;
+
+                label.left {
+                    float: left;
+                    margin-right: $spacer/2;
+                }
+
+                label.right {
+                    float: right;
+                    margin-left: $spacer/2;
+                }
+
+                .middleColumn {
+                    float: left;
+                }
+            }
+        }
+
+        .btn-toolbar {
+            float: left;
+        }
     }
 }
