@@ -3,20 +3,24 @@ namespace LeKoala\Base\Controllers;
 
 use \Exception;
 use SilverStripe\i18n\i18n;
+use SilverStripe\ORM\DataList;
 use LeKoala\Base\View\Alertify;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\View\SSViewer;
 use SilverStripe\Control\Cookie;
+use SilverStripe\Control\Session;
+use SilverStripe\Security\Member;
 use SilverStripe\Control\Director;
 use LeKoala\Base\View\DeferBackend;
 use SilverStripe\ORM\DatabaseAdmin;
 use SilverStripe\Security\Security;
 use SilverStripe\View\Requirements;
 use LeKoala\Base\View\CookieConsent;
+use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\Connect\DatabaseException;
 use SilverStripe\CMS\Controllers\ContentController;
-use SilverStripe\Control\Session;
 
 /**
  * A more opiniated base controller for your app
@@ -171,6 +175,61 @@ class BaseContentController extends ContentController
             $class .= ' Security';
         }
         return $class;
+    }
+
+    /**
+     * @return DataList
+     */
+    public function MembersOnlyMenu()
+    {
+        $result = SiteTree::get()->filter([
+            "ShowInMenus" => 1,
+            "ParentID" => 0,
+            "CanViewType" => "LoggedInUsers"
+        ]);
+
+        return $result;
+    }
+
+    /**
+     * @return DataList
+     */
+    public function NonMemberOnlyMenu()
+    {
+        $result = SiteTree::get()->filter([
+            "ShowInMenus" => 1,
+            "ParentID" => 0,
+            "CanViewType" => "Anyone"
+        ]);
+
+        return $result;
+    }
+
+    /**
+     * This function is useful if you display two sets of menus
+     * one for your logged in users and one for non logged in users
+     * @return ArrayList
+     */
+    public function ToggleMemberMenu()
+    {
+        if (Member::currentUserID()) {
+            $result = $this->MembersOnlyMenu();
+        } else {
+            $result = $this->NonMemberOnlyMenu();
+        }
+
+        $visible = [];
+
+        // Remove all entries the can not be viewed by the current user
+        if (isset($result)) {
+            foreach ($result as $page) {
+                /** @var SiteTree $page */
+                if ($page->canView()) {
+                    $visible[] = $page;
+                }
+            }
+        }
+        return new ArrayList($visible);
     }
 
     /**
