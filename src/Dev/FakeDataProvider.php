@@ -1,6 +1,9 @@
 <?php
 namespace LeKoala\Base\Dev;
 
+use SilverStripe\Assets\Image;
+use SilverStripe\Assets\Folder;
+use SilverStripe\ORM\DataObject;
 use LeKoala\Base\Geo\CountriesList;
 
 /**
@@ -12,7 +15,6 @@ class FakeDataProvider
     protected static $latitude = 50.7802;
     protected static $longitude = 4.4269;
     protected static $avatarsPath = 'resources/avatars';
-    protected static $imageRss = 'https://unsplash.com/rss';
     protected static $firstNames = [
         'Caecilius', 'Quintus', 'Horatius', 'Flaccus', 'Clodius',
         'Metellus', 'Flavius', 'Hortensius', 'Julius', 'Decimus', 'Gaius'
@@ -334,24 +336,18 @@ class FakeDataProvider
      */
     public static function image()
     {
-        $images = DataObject::get('Image', "Filename LIKE 'assets/Faker/Images%'");
-        if (!count($images)) {
-            $rss = file_get_contents(self::$imageRss);
-            $xml = simplexml_load_string($rss);
-            $nodes = $xml->xpath("//image");
-            $i = 0;
-
-            $folder = Folder::find_or_make(self::$folder . '/Images');
-            $dir = $folder->getFullPath();
-            $filter = new FileNameFilter;
-            foreach ($nodes as $node) {
-                $i++;
-                $image = file_get_contents((string)$node->url);
-                $filename = $dir . '/' . basename($filter->filter((string)$node->title) . '.jpg');
-                file_put_contents($filename, $image);
+        $path = self::$folder . '/Images';
+        $images = Image::get()->where("FileFilename LIKE '$path%'");
+        if ($images->count() <= 0) {
+            $folder = Folder::find_or_make($path);
+            foreach (range(1, 30) as $i) {
+                $data = file_get_contents("https://picsum.photos/id/$i/1920/1080");
+                $filename = "$path/fake-$i.jpg";
+                $imageObj = new Image;
+                $imageObj->setFromString($data, $filename);
+                $imageObj->write();
             }
-            $folder->syncChildren();
-            $images = DataObject::get('Image', "Filename LIKE 'assets/Faker/Images%'");
+            $images = Image::get()->where("FileFilename LIKE 'Faker/Images%'");
         }
         $rand = rand(0, count($images));
         foreach ($images as $key => $image) {
@@ -360,6 +356,34 @@ class FakeDataProvider
             }
         }
         return $images->First();
+    }
+
+    /**
+     * Get a random image unique for a record that can be deleted without side effects
+     * for other records
+     *
+     * @param DataObject $record
+     * @return Image
+     */
+    public static function ownImage($record)
+    {
+        $path = self::$folder;
+        if ($record->hasMethod('getFolderName')) {
+            $path = $record->getFolderName();
+            $path .= "/" . self::$folder;
+        }
+
+        $i = rand(1, 1080);
+        $data = file_get_contents("https://picsum.photos/id/$i/1920/1080");
+
+        $name =  "fake-$i.jpg";
+        $filename = "$path/$name";
+
+        $imageObj = new Image;
+        $imageObj->setFromString($data, $filename);
+        $imageObj->write();
+
+        return $imageObj;
     }
 
     /**

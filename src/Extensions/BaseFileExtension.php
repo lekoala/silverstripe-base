@@ -5,6 +5,7 @@ namespace LeKoala\Base\Extensions;
 use SilverStripe\ORM\DB;
 use SilverStripe\Assets\File;
 use SilverStripe\Core\Convert;
+use SilverStripe\Assets\Folder;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Control\Director;
 use SilverStripe\ORM\DataExtension;
@@ -242,6 +243,9 @@ class BaseFileExtension extends DataExtension
      */
     public function getRelativePath()
     {
+        if ($this->owner instanceof Folder) {
+            throw new Exception("This method is not supported for folders");
+        }
         $Filename = $this->owner->FileFilename;
         $Dir = dirname($Filename);
         $Name = basename($Filename);

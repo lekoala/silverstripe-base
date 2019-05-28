@@ -2,11 +2,14 @@
 namespace LeKoala\Base\Dev\Tasks;
 
 use \Exception;
+use SilverStripe\Assets\Image;
 use LeKoala\Base\Dev\BuildTask;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Member;
 use SilverStripe\Control\Director;
+use LeKoala\Base\Helpers\ClassHelper;
+use SilverStripe\Forms\DropdownField;
 use SilverStripe\ORM\FieldType\DBInt;
 use LeKoala\Base\Dev\FakeDataProvider;
 use SilverStripe\ORM\FieldType\DBDate;
@@ -27,16 +30,28 @@ class FakeRecordGeneratorTask extends BuildTask
         $list = $this->getValidDataObjects();
         $this->addOption("model", "Which model to generate", null, $list);
         $this->addOption("how_many", "How many records to generate", 20);
-        $this->addOption("member_from_api", "Use api to generate members", true);
+        $this->addOption("member_from_api", "Use https://randomuser.me to generate members", true);
+        $this->addOption("clear_existing", "Clear existing data", false);
 
         $options = $this->askOptions();
 
         $model = $options['model'];
         $how_many = $options['how_many'];
         $member_from_api = $options['member_from_api'];
+        $clear_existing = $options['clear_existing'];
 
         if ($model) {
             $sing = singleton($model);
+
+            if ($clear_existing) {
+                $this->message("Clearing existing data", "warning");
+                $cleared = 0;
+                foreach ($model::get() as $rec) {
+                    $rec->delete();
+                    $cleared++;
+                }
+                $this->message("Cleared $cleared records");
+            }
 
             if ($model == Member::class && $member_from_api) {
                 $this->createMembersFromApi($how_many);
@@ -47,29 +62,77 @@ class FakeRecordGeneratorTask extends BuildTask
                     try {
                         $rec = $model::create();
 
+                        $fields = $rec->getCMSFields();
+
                         // Fill according to type
                         $db = $model::config()->db;
+                        $owns = $model::config()->owns;
                         $has_one = $model::config()->has_one;
+                        $has_many = $model::config()->has_many;
+                        $many_many = $model::config()->many_many;
 
                         foreach ($db as $name => $type) {
                             $rec->$name = $this->getRandomValueFromType($type, $name, $rec);
+
+                            $field = $fields->dataFieldByName($name);
+
+                            // For dropdown fields and the likes, we might use the getSource thing
+                            if ($field->hasMethod('getSource')) {
+                                $source = $field->getSource();
+                                if (is_array($source)) {
+                                    $source = array_keys($source);
+                                    $rec->$name = $source[array_rand($source)];
+                                }
+                            }
                         }
 
-                        foreach ($has_one as $name => $class) {
-                            $nameID = $name . 'ID';
-                            if ($class == 'Image') {
-                                $rel = FakeDataProvider::image();
-                            } else {
-                                $rel = FakeDataProvider::record($class);
+                        $hasFillFake = $rec->hasMethod('fillFake');
+
+                        // Only populate relations for record without fillFake
+                        if (!$hasFillFake) {
+                            foreach ($has_one as $name => $class) {
+                                $rel = null;
+                                $nameID = $name . 'ID';
+                                $isOwned = isset($owns[$name]) ? true : false;
+
+                                if ($isOwned) {
+                                    if ($class == Image::class) {
+                                        $rel = FakeDataProvider::ownImage($rec, $name);
+                                    }
+                                } else {
+                                    if ($class == Image::class) {
+                                        $rel = FakeDataProvider::image();
+                                    } else {
+                                        $rel = FakeDataProvider::record($class);
+                                    }
+                                }
+
+                                if ($rel) {
+                                    $rec->$nameID = $rel->ID;
+                                }
                             }
-                            if ($rel) {
-                                $rec->$nameID = $rel->ID;
+                            foreach ($many_many as $name => $class) {
+                                if (is_array($class)) {
+                                    continue;
+                                }
+
+                                $rel = null;
+                                if ($isOwned) {
+                                    if ($class == Image::class) {
+                                        $rel = FakeDataProvider::ownImage($rec);
+                                    }
+                                } else {
+                                    $rel = FakeDataProvider::record($class);
+                                }
+                                if ($rel) {
+                                    $rec->$name()->add($rel->ID);
+                                }
                             }
                         }
 
                         $id = $rec->write();
 
-                        if ($rec->hasMethod('fillFake')) {
+                        if ($hasFillFake) {
                             $rec->fillFake();
                         }
 
@@ -81,6 +144,8 @@ class FakeRecordGeneratorTask extends BuildTask
                     }
                 }
             }
+        } else {
+            $this->message("Implement 'fillFake' method to create your own fakes");
         }
     }
 
@@ -102,6 +167,8 @@ class FakeRecordGeneratorTask extends BuildTask
                 } elseif ($name == 'Locality' || $name == 'City') {
                     $addr = FakeDataProvider::address();
                     return $addr['City'];
+                } elseif ($name == 'URLSegment' || $name == 'Slug') {
+                    return null; // let autogeneration happen
                 }
                 return FakeDataProvider::words(3, 7);
             case 'Date':
