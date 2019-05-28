@@ -199,7 +199,7 @@ class BaseContentController extends ContentController
         $result = SiteTree::get()->filter([
             "ShowInMenus" => 1,
             "ParentID" => 0,
-            "CanViewType" => "Anyone"
+            "CanViewType" => ["Anyone", "Inherit"]
         ]);
 
         return $result;
