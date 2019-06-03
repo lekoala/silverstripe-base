@@ -19,6 +19,8 @@ use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Forms\GridField\GridFieldConfig;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
+use SilverStripe\Forms\OptionsetField;
+use SilverStripe\Forms\DateField;
 
 /**
  * A field list that can create it its fields
@@ -316,6 +318,42 @@ class BuildableFieldList extends FieldList
     {
         $attributes['options'] = $src;
         return $this->addField(DropdownField::class, $name, $title, $attributes);
+    }
+
+    /**
+     * @param string $name
+     * @param string $title
+     * @param array $src
+     * @param array $attributes
+     * @return OptionsetField
+     */
+    public function addOptionset($name = "Option", $title = null, $src = [], $attributes = [])
+    {
+        $attributes['options'] = $src;
+        return $this->addField(OptionsetField::class, $name, $title, $attributes);
+    }
+
+    /**
+     * @param string $name
+     * @param string $title
+     * @param array $attributes
+     * @return DateField
+     */
+    public function addDate($name = "Date", $title = null, $attributes = [])
+    {
+        return $this->addField(DateField::class, $name, $title, $attributes);
+    }
+
+    /**
+     * @param string $name
+     * @param string $title
+     * @param array $src
+     * @param array $attributes
+     * @return InputMaskDateField
+     */
+    public function addDateMask($name = "BirthDate", $title = null, $attributes = [])
+    {
+        return $this->addField(InputMaskDateField::class, $name, $title, $attributes);
     }
 
     /**

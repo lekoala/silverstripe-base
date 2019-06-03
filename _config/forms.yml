@@ -30,3 +30,5 @@ SilverStripe\Forms\GridField\GridField:
 SilverStripe\Versioned\VersionedGridFieldItemRequest:
   extensions:
     - LeKoala\Base\Forms\GridField\VersionedGridFieldItemRequestExtension
+LeKoala\Base\Forms\InputMaskDateTimeField:
+  default_input_format: 'auto'
