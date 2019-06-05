@@ -219,6 +219,24 @@ class BuildableFieldList extends FieldList
     }
 
     /**
+     * @param string $content
+     * @param string $name
+     * @param string $type
+     * @return AlertField
+     */
+    public function addAlert($content, $type = null, $name = null)
+    {
+        static $i = 0;
+        if ($name === null) {
+            $i++;
+            $name = "A_$i";
+        }
+        $field = AlertField::create($name, $content, $type);
+        $this->pushOrAddToTab($field);
+        return $field;
+    }
+
+    /**
      * @param string $name
      * @param string $title
      * @param array $attributes
