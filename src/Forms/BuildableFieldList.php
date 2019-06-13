@@ -21,6 +21,8 @@ use SilverStripe\Forms\GridField\GridFieldConfig;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
 use SilverStripe\Forms\OptionsetField;
 use SilverStripe\Forms\DateField;
+use SilverStripe\Forms\ReadonlyField;
+use SilverStripe\Forms\NumericField;
 
 /**
  * A field list that can create it its fields
@@ -106,6 +108,8 @@ class BuildableFieldList extends FieldList
                 $object->setDescription($v);
             } elseif ($k == 'options') {
                 $object->setSource($v);
+            } elseif ($k == 'empty') {
+                $object->setHasEmptyDefault($v);
             } else {
                 $object->setAttribute($k, $v);
             }
@@ -219,6 +223,17 @@ class BuildableFieldList extends FieldList
     }
 
     /**
+     * @param string $name
+     * @param string $title
+     * @param array $attributes
+     * @return ReadonlyField
+     */
+    public function addReadonly($name, $title = null, $attributes = [])
+    {
+        return $this->addField(ReadonlyField::class, $name, $title, $attributes);
+    }
+
+    /**
      * @param string $content
      * @param string $name
      * @param string $type
@@ -329,7 +344,7 @@ class BuildableFieldList extends FieldList
      * @param string $name
      * @param string $title
      * @param array $src
-     * @param array $attributes
+     * @param array $attributes Special attrs : empty, source
      * @return DropdownField
      */
     public function addDropdown($name = "Option", $title = null, $src = [], $attributes = [])
@@ -377,12 +392,58 @@ class BuildableFieldList extends FieldList
     /**
      * @param string $name
      * @param string $title
+     * @param array $src
+     * @param array $attributes
+     * @return InputMaskNumericField
+     */
+    public function addNumericMask($name = "Number", $title = null, $attributes = [])
+    {
+        return $this->addField(InputMaskNumericField::class, $name, $title, $attributes);
+    }
+
+    /**
+     * @param string $name
+     * @param string $title
+     * @param array $src
+     * @param array $attributes
+     * @return InputMaskCurrencyField
+     */
+    public function addCurrencyMask($name = "Amount", $title = null, $attributes = [])
+    {
+        return $this->addField(InputMaskCurrencyField::class, $name, $title, $attributes);
+    }
+    /**
+     * @param string $name
+     * @param string $title
+     * @param array $src
+     * @param array $attributes
+     * @return InputMaskDateField
+     */
+    public function addIntegerMask($name = "Number", $title = null, $attributes = [])
+    {
+        return $this->addField(InputMaskIntegerField::class, $name, $title, $attributes);
+    }
+
+    /**
+     * @param string $name
+     * @param string $title
      * @param array $attributes
      * @return TextField
      */
     public function addText($name = "Title", $title = null, $attributes = [])
     {
         return $this->addField(TextField::class, $name, $title, $attributes);
+    }
+
+    /**
+     * @param string $name
+     * @param string $title
+     * @param array $attributes
+     * @return NumericField
+     */
+    public function addNumeric($name = "Number", $title = null, $attributes = [])
+    {
+        return $this->addField(NumericField::class, $name, $title, $attributes);
     }
 
     /**
