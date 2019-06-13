@@ -23,7 +23,7 @@ class InputMaskDateTimeField extends InputMaskField
     {
         // Normalize input value according to our format
         if ($value) {
-            $value = date((self::convertDateFormatToPhp(self::getDefaultDateFormat()) . ' H:i:s', strtotime($value));
+            $value = date((self::convertDateFormatToPhp(self::getDefaultDateFormat())) . ' H:i:s', strtotime($value));
         }
         $this->value = $value;
         return $this;
