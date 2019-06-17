@@ -19,6 +19,9 @@ TractorCow\Fluent\Extension\FluentExtension:
     - Varchar(59)
     - Varchar(99)
     - Varchar(199)
+    # Our custom stuff
+    - UntranslatedVarchar
+    - LeKoala\Base\ORM\FieldType\UntranslatedVarchar
 # Add extensions to SilverStripe
 SilverStripe\SiteConfig\SiteConfig:
   extensions:

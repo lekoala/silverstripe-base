@@ -45,6 +45,8 @@ SilverStripe\Core\Injector\Injector:
     class: LeKoala\Base\ORM\FieldType\DBBetterForeignKey
   PolymorphicForeignKey:
     class: LeKoala\Base\ORM\FieldType\DBNullablePolymorphicForeignKey
+  UntranslatedVarchar:
+    class: LeKoala\Base\ORM\FieldType\DBUntranslatedVarchar
 ---
 Name: base-searchfilters
 After: '#coresearchfilters'

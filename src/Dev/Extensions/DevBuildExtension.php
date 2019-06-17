@@ -16,6 +16,9 @@ use LeKoala\Base\Helpers\ClassHelper;
 use LeKoala\Base\Subsite\SubsiteHelper;
 use LeKoala\Base\Extensions\BaseFileExtension;
 use LeKoala\ExcelImportExport\ExcelBulkLoader;
+use LeKoala\Base\i18n\BaseI18n;
+use TractorCow\Fluent\Model\Locale;
+use SilverStripe\i18n\i18n;
 
 /**
  * Allow the following functions before dev build
@@ -27,6 +30,7 @@ use LeKoala\ExcelImportExport\ExcelBulkLoader;
  * - generateQueryTraits
  * - clearCache
  * - clearEmptyFolders
+ * - provisionLocales
  *
  * Preserve current subsite
  *
@@ -158,6 +162,38 @@ SQL;
         // Restore subsite
         if ($this->currentSubsite) {
             SubsiteHelper::changeSubsite($this->currentSubsite);
+        }
+
+        $provisionLocales = $this->owner->getRequest()->getVar('provisionLocales');
+        if ($provisionLocales) {
+            $this->displayMessage("<div class='build'><p><b>Provisioning locales</b></p><ul>\n\n");
+            $this->provisionLocales();
+            $this->displayMessage("</ul>\n<p><b>Locales provisioned!</b></p></div>");
+        }
+    }
+
+    protected function provisionLocales()
+    {
+        $locales = BaseI18n::config()->default_locales;
+        if (empty($locales)) {
+            $this->displayMessage("No locales defined in BaseI18n:default_locales");
+            return;
+        }
+
+        foreach ($locales as $loc) {
+            $Locale = Locale::get()->filter('Locale', $loc)->first();
+            $allLocales = i18n::getData()->getLocales();
+            if (!$Locale) {
+                $Locale = new Locale();
+                $Locale->Title = $allLocales[$loc];
+                $Locale->Locale = $loc;
+                $Locale->URL = BaseI18n::get_lang($loc);
+                $Locale->IsGlobalDefault = $loc == i18n::get_locale();
+                $Locale->write();
+                $this->displayMessage("Locale $loc created<br/>");
+            } else {
+                $this->displayMessage("Locale $loc already exist<br/>");
+            }
         }
     }
 
