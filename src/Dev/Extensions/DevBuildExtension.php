@@ -187,7 +187,7 @@ SQL;
                 $Locale = new Locale();
                 $Locale->Title = $allLocales[$loc];
                 $Locale->Locale = $loc;
-                $Locale->URL = BaseI18n::get_lang($loc);
+                $Locale->URLSegment = BaseI18n::get_lang($loc);
                 $Locale->IsGlobalDefault = $loc == i18n::get_locale();
                 $Locale->write();
                 $this->displayMessage("Locale $loc created<br/>");
