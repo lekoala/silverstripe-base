@@ -43,19 +43,6 @@ class DataObjectActionsExtension extends DataExtension
             return;
         }
 
-        if ($this->owner->canEdit()) {
-            if ($this->owner->ID) {
-                $label = _t('DataObjectActionsExtension.SAVEANDCLOSE', 'Save and Close');
-            } else {
-                $label = _t('DataObjectActionsExtension.CREATEANDCLOSE', 'Create and Close');
-            }
-            $saveAndClose = new FormAction('doSaveAndClose', $label);
-            $saveAndClose->addExtraClass('btn-primary');
-            $saveAndClose->addExtraClass('font-icon-' . SilverStripeIcons::ICON_LEVEL_UP);
-            $saveAndClose->setUseButtonTag(true);
-            $actions->push($saveAndClose);
-        }
-
         // Next/prev
         if ($this->owner->ID && $this->owner->hasMethod('PrevRecord') && $this->owner->PrevRecord()) {
             $doSaveAndPrev = new FormAction('doSaveAndPrev', 'Save and Previous');

@@ -261,6 +261,11 @@ body.cms {
     right: 1.5385rem;
 }
 
+#Form_ItemEditForm_action_doDelete.default-position {
+    position: inherit;
+    right: 0;
+}
+
 .cms-content-header-utils {
     padding-right: 1.5385rem;
 }

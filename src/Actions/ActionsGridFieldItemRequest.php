@@ -4,13 +4,15 @@ namespace LeKoala\Base\Actions;
 use Exception;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FieldList;
+use SilverStripe\Control\Director;
+use SilverStripe\Forms\FormAction;
 use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\ORM\ValidationResult;
+use LeKoala\Base\Helpers\SilverStripeIcons;
 use SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest;
-use SilverStripe\Control\Director;
 
 /**
  * Decorates {@link GridDetailForm_ItemRequest} to use new form actions and buttons.
@@ -49,11 +51,38 @@ class ActionsGridFieldItemRequest extends DataExtension
         foreach ($CMSActions as $action) {
             $actions->push($action);
         }
+
+        $saveAndClose = null;
+        if ($record->canEdit()) {
+            if ($record->ID) {
+                $label = _t('DataObjectActionsExtension.SAVEANDCLOSE', 'Save and Close');
+            } else {
+                $label = _t('DataObjectActionsExtension.CREATEANDCLOSE', 'Create and Close');
+            }
+            $saveAndClose = new FormAction('doSaveAndClose', $label);
+            $saveAndClose->addExtraClass('btn-primary');
+            $saveAndClose->addExtraClass('font-icon-' . SilverStripeIcons::ICON_LEVEL_UP);
+            $saveAndClose->setUseButtonTag(true);
+            $actions->push($saveAndClose);
+        }
+
+        // We have a 4.4 setup
+        $RightGroup = $actions->fieldByName('RightGroup');
+
+        // Insert again to make sure our actions are properly placed after apply changes
+        if ($RightGroup) {
+            $actions->remove($RightGroup);
+            $actions->push($RightGroup);
+        }
+
         // Move delete at the end
         $deleteAction = $actions->fieldByName('action_doDelete');
         if ($deleteAction) {
             $actions->remove($deleteAction);
             $actions->push($deleteAction);
+            if ($RightGroup) {
+                $deleteAction->addExtraClass('default-position');
+            }
             if ($record->hasMethod('getDeleteButtonTitle')) {
                 $deleteAction->setTitle($record->getDeleteButtonTitle());
             }
@@ -63,6 +92,9 @@ class ActionsGridFieldItemRequest extends DataExtension
         if ($cancelButton) {
             $actions->remove($cancelButton);
             $actions->push($cancelButton);
+            if ($RightGroup) {
+                $deleteAction->addExtraClass('default-position');
+            }
             if ($record->hasMethod('getCancelButtonTitle')) {
                 $cancelButton->setTitle($record->getCancelButtonTitle());
             }
