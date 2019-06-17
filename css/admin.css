@@ -1,3 +1,8 @@
+/* Wrong link color */
+.cms-menu a {
+    color: #fff;
+}
+
 /* Prevent double scroll in 4.2 */
 body.cms {
     overflow: hidden;
