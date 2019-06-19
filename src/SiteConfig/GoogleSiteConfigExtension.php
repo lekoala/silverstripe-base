@@ -15,6 +15,10 @@ use SilverStripe\SiteConfig\SiteConfig;
 /**
  * Google SiteConfig stuff
  *
+ * SilverStripe\SiteConfig\SiteConfig:
+ *   extensions:
+ *     - LeKoala\Base\SiteConfig\GoogleSiteConfigExtension
+ *
  * @property \SilverStripe\SiteConfig\SiteConfig|\LeKoala\Base\SiteConfig\GoogleSiteConfigExtension $owner
  * @property string $GoogleAnalyticsCode
  * @property boolean $GoogleAnalyticsWithoutCookies

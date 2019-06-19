@@ -15,6 +15,10 @@ use SilverStripe\SiteConfig\SiteConfig;
 /**
  * Facebook SiteConfig stuff
  *
+ * SilverStripe\SiteConfig\SiteConfig:
+ *   extensions:
+ *     - LeKoala\Base\SiteConfig\FacebookSiteConfigExtension
+ *
  * @property \SilverStripe\SiteConfig\SiteConfig|\LeKoala\Base\SiteConfig\FacebookSiteConfigExtension $owner
  * @property string $FacebookPixelId
  */
