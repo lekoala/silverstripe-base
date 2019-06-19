@@ -7,9 +7,24 @@ use SilverStripe\Control\Director;
 use SilverStripe\View\Requirements;
 use SilverStripe\Core\Config\Configurable;
 
+/**
+ * Configure shared requirements
+ *
+ * Easy to set custom versions in yml
+ *
+ * LeKoala\Base\View\CommonRequirements:
+ *   jquery_version: '1.12.4'
+ */
 class CommonRequirements
 {
     use Configurable;
+
+
+    /**
+     * @config
+     * @var string
+     */
+    private static $jquery_version = '3.4.1';
 
     /**
      * @config
@@ -157,6 +172,20 @@ class CommonRequirements
     public static function polyfillIo()
     {
         Requirements::javascript('https://cdn.polyfill.io/v3/polyfill.min.js?flags=gated');
+    }
+
+    /**
+     * @param bool $slim
+     * @return void
+     */
+    public static function jquery($slim = false)
+    {
+        $version = self::config()->jquery_version;
+        $ext = '';
+        if ($slim) {
+            $ext = '.slim';
+        }
+        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/jquery/$version/jquery" . $ext . ".min.js");
     }
 
     /**

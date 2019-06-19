@@ -23,7 +23,7 @@ use SilverStripe\Admin\CMSProfileController;
 class DataObjectActionsExtension extends DataExtension
 {
     /**
-     * @link https://docs.silverstripe.org/en/3/developer_guides/customising_the_admin_interface/how_tos/extend_cms_interface/
+     * @link https://docs.silverstripe.org/en/4/developer_guides/customising_the_admin_interface/how_tos/extend_cms_interface/
      * @param FieldList $actions
      * @return void
      */
