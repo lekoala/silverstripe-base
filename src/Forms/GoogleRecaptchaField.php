@@ -1,9 +1,10 @@
 <?php
 namespace LeKoala\Base\Forms;
 
-use SilverStripe\Forms\LiteralField;
-use SilverStripe\View\Requirements;
+use Exception;
 use SilverStripe\Core\Environment;
+use SilverStripe\View\Requirements;
+use SilverStripe\Forms\LiteralField;
 use SilverStripe\ORM\ValidationException;
 
 /**
