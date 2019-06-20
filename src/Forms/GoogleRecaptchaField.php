@@ -20,7 +20,7 @@ class GoogleRecaptchaField extends LiteralField
     {
         try {
             $apiKey = self::getPublicKey();
-            $content = '<div class="g-recaptcha" data-sitekey="' . $apiKey . '"></div>';
+            $content = '<div class="field g-recaptcha" data-sitekey="' . $apiKey . '"></div>';
         } catch (Exception $ex) {
             $content = '<div style="background:red;color:white">' . $ex->getMessage() . '</div>';
         }
@@ -31,10 +31,10 @@ class GoogleRecaptchaField extends LiteralField
         parent::__construct($name, $content);
     }
 
-    public function Field($properties = array())
+    public function FieldHolder($properties = array())
     {
         Requirements::javascript("https://www.google.com/recaptcha/api.js");
-        return parent::Field($properties);
+        return parent::FieldHolder($properties);
     }
 
     public static function isSetupReady()
