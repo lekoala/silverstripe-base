@@ -8,10 +8,12 @@ use LeKoala\Base\Extensions\URLSegmentExtension;
 /**
  * This controller helps dealing with DataObject based records
  *
- * The ID is passed first so that
+ * The ID is passed first so that we don't need to specify an ugly action in url
  *
  * The viewer template for the default action is _read
  *
+ * Since it is difficult to change your base controller, it might be better
+ * to apply IsRecordController to your own controller instead
  */
 class RecordController extends BaseContentController
 {
