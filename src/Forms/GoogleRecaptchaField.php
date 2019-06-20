@@ -102,4 +102,22 @@ class GoogleRecaptchaField extends LiteralField
             throw new ValidationException("recaptcha error : " . $error);
         }
     }
+
+    public static function postContent($url, $postdata)
+    {
+        $postdata = http_build_query($postdata);
+
+        $opts = array(
+            'http' =>
+            array(
+                'method'  => 'POST',
+                'header'  => 'Content-Type: application/x-www-form-urlencoded',
+                'content' => $postdata
+            )
+        );
+
+        $context  = stream_context_create($opts);
+
+        return file_get_contents($url, false, $context);
+    }
 }
