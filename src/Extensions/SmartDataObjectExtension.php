@@ -25,7 +25,7 @@ class SmartDataObjectExtension extends DataExtension
     public function onAfterWrite()
     {
         $record = $this->owner;
-        // If the owner is versioned, do no do this!
+        // If the owner is versioned, do not do this!
         $ownerIsVersioned = $record && $record->hasExtension(Versioned::class);
         if ($ownerIsVersioned) {
             return;
@@ -39,7 +39,7 @@ class SmartDataObjectExtension extends DataExtension
                     // Check state
                     if ($this->owner->$field) {
                         $file = $this->owner->$name();
-                        if (!$file->isPublished()) {
+                        if (!$file->isPublished() && $file->ID) {
                             $file->doPublish();
                         }
                     }
@@ -64,7 +64,7 @@ class SmartDataObjectExtension extends DataExtension
                     }
                 } else {
                     foreach ($this->owner->$name() as $file) {
-                        if (!$file->isPublished()) {
+                        if (!$file->isPublished() && $file->ID) {
                             $file->doPublish();
                         }
                     }
@@ -137,9 +137,9 @@ class SmartDataObjectExtension extends DataExtension
             if ($newField) {
                 // We should hide uploaders until we have an ID
                 // if ($this->owner->ID) {
-                    $fields->replaceField($fieldName, $newField);
+                $fields->replaceField($fieldName, $newField);
                 // } else {
-                    // $fields->removeByName($fieldName);
+                // $fields->removeByName($fieldName);
                 // }
             }
         }

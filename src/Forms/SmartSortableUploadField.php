@@ -11,6 +11,14 @@ use Bummzack\SortableFile\Forms\SortableUploadField;
  * Improves the default uploader by uploading to a consistent default location
  * Records should really have an ID before uploading to ensure we know where to place the file
  * Otherwise, files might be uploaded and attached to nothing
+ *
+ * Default sort column is SortOrder
+ *
+ * private static $many_many_extraFields = [
+ *   "Images" => [
+ *     "SortOrder" => "Int"
+ *   ]
+ * ];
  */
 class SmartSortableUploadField extends SortableUploadField
 {
