@@ -207,4 +207,13 @@ class BaseForm extends Form
         $this->sessionError($message, "bad");
         return $this->getController()->redirectBack();
     }
+
+    /**
+     * @param string $link
+     * @return HTTPResponse
+     */
+    public function redirectTo($link)
+    {
+        return $this->getController()->redirect($this->getController()->Link($link));
+    }
 }

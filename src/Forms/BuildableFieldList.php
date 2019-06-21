@@ -21,6 +21,7 @@ use SilverStripe\Forms\GridField\GridFieldConfig;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
 use SilverStripe\Forms\OptionsetField;
 use SilverStripe\Forms\DateField;
+use SilverStripe\Forms\CheckboxSetField;
 
 /**
  * A field list that can create it its fields
@@ -275,6 +276,18 @@ class BuildableFieldList extends FieldList
         return $this->addField(CheckboxField::class, $name, $title, $attributes);
     }
 
+    /**
+     * @param string $name
+     * @param string $title
+     * @param array $src
+     * @param array $attributes
+     * @return CheckboxSetField
+     */
+    public function addCheckboxset($name = "Options", $title = null, $src = [], $attributes = [])
+    {
+        $attributes['options'] = $src;
+        return $this->addField(CheckboxSetField::class, $name, $title, $attributes);
+    }
     /**
      * @param string $name
      * @param array $attributes
