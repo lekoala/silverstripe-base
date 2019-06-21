@@ -42,10 +42,10 @@ class BaseMemberExtension extends DataExtension
     {
         if ($this->owner->hasExtension(MemberValidationStatusExtension::class)) {
             if ($this->owner->IsValidationStatusPending()) {
-                $result->addError(_t('BaseMemberExtension.ACCOUNT_PENDING', "Your account is currently pending."));
+                $result->addError(_t('BaseMemberExtension.ACCOUNT_PENDING', "Your account is currently pending"));
             }
             if ($this->owner->IsValidationStatusDisabled()) {
-                $result->addError(_t('BaseMemberExtension.ACCOUNT_DISABLED', "Your account has been disabled. Please contact an administrator."));
+                $result->addError(_t('BaseMemberExtension.ACCOUNT_DISABLED', "Your account has been disabled"));
             }
         }
     }

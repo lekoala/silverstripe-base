@@ -31,16 +31,16 @@ class MemberValidationStatusExtension extends DataExtension
 
     public function IsValidationStatusPending()
     {
-        return $this->owner->ValidationStatus = self::VALIDATION_STATUS_PENDING;
+        return $this->owner->ValidationStatus == self::VALIDATION_STATUS_PENDING;
     }
 
     public function IsValidationStatusApproved()
     {
-        return $this->owner->ValidationStatus = self::VALIDATION_STATUS_APPROVED;
+        return $this->owner->ValidationStatus == self::VALIDATION_STATUS_APPROVED;
     }
 
     public function IsValidationStatusDisabled()
     {
-        return $this->owner->ValidationStatus = self::VALIDATION_STATUS_DISABLED;
+        return $this->owner->ValidationStatus == self::VALIDATION_STATUS_DISABLED;
     }
 }
