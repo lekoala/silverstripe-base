@@ -40,6 +40,11 @@ class BaseMemberExtension extends DataExtension
 
     public function canLogIn(ValidationResult $result)
     {
+        // Admin can always log in
+        if (Permission::check('ADMIN', 'any', $this->owner)) {
+            return;
+        }
+        // If MemberValidationStatus extension is applied, check validation status
         if ($this->owner->hasExtension(MemberValidationStatusExtension::class)) {
             if ($this->owner->IsValidationStatusPending()) {
                 $result->addError(_t('BaseMemberExtension.ACCOUNT_PENDING', "Your account is currently pending"));
