@@ -23,7 +23,7 @@ class MemberAudit extends DataObject
 
     public static $rename_columns = [
         'Ip' => 'IP',
-        'Action' => 'Event',
+        'Action' => 'Event', // Action is reserved
         'Data' => 'AuditData'
     ];
     private static $db = [
@@ -40,7 +40,7 @@ class MemberAudit extends DataObject
 
     public function forTemplate()
     {
-        return $this->Created . ' - ' . $this->Action;
+        return $this->Created . ' - ' . $this->Event;
     }
 
     public function canEdit($member = null)
