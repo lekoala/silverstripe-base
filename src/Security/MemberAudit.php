@@ -34,7 +34,7 @@ class MemberAudit extends DataObject
         'Member' => Member::class,
     ];
     private static $summary_fields = array(
-        'Created', 'Action', 'AuditData'
+        'Created', 'Event', 'AuditData'
     );
     private static $default_sort = 'Created DESC';
 

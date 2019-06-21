@@ -200,7 +200,7 @@ class BaseMemberExtension extends DataExtension
      */
     public function IsAdmin()
     {
-        return Permission::check('CMS_ACCESS');
+        return Permission::check('CMS_ACCESS', 'any', $this->owner);
     }
 
     /**
