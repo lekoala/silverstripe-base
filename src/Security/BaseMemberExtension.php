@@ -214,9 +214,6 @@ class BaseMemberExtension extends DataExtension
         $r->MemberID = $this->owner->ID;
         $r->Event = $event;
         if ($data) {
-            if (is_array($data)) {
-                $data = json_encode($data);
-            }
             $r->AuditData = $data;
         }
         return $r->write();

@@ -10,6 +10,8 @@ use LeKoala\Base\ORM\FieldType\DBJson;
  *
  * Simply call $member->audit('myevent',$mydata) to create a new audit record
  *
+ * Try to keep "myevent" simple and consistent and set variable data in the data parameter
+ *
  * @property string $IP
  * @property string $Event
  * @property string $AuditData
@@ -32,11 +34,19 @@ class MemberAudit extends DataObject
     ];
     private static $has_one = [
         'Member' => Member::class,
+        'SourceMember' => Member::class,
     ];
     private static $summary_fields = array(
         'Created', 'Event', 'AuditData'
     );
     private static $default_sort = 'Created DESC';
+
+    protected function onBeforeWrite()
+    {
+        parent::onBeforeWrite();
+
+        $this->SourceMembreID = Member::currentUserID();
+    }
 
     public function forTemplate()
     {
