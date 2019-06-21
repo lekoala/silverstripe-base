@@ -21,10 +21,19 @@ class InputMaskDateTimeField extends InputMaskField
 
     public function setValue($value, $data = null)
     {
-        return parent::setValue($value, $data);
+        // Normalize input value according to our format
+        if ($value) {
+            $value = date((self::convertDateFormatToPhp(self::getDefaultDateFormat())) . ' H:i:s', strtotime($value));
+        }
+        $this->value = $value;
+        return $this;
     }
 
-    public static function getDefaultInputFormat()
+    /**
+     * Get the input format for inputmask
+     * @return string
+     */
+    public static function getDefaultDateFormat()
     {
         $config = self::config()->get('default_input_format');
         if (!$config || $config == 'auto') {
@@ -39,6 +48,18 @@ class InputMaskDateTimeField extends InputMaskField
             }
         }
         return $config;
+    }
+
+    /**
+     * @param string $format
+     * @return string
+     */
+    public static function convertDateFormatToPhp($format)
+    {
+        $format = str_replace('yyyy', 'Y', $format);
+        $format = str_replace('mm', 'm', $format);
+        $format = str_replace('dd', 'd', $format);
+        return $format;
     }
 
     /**

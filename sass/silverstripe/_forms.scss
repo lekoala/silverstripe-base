@@ -185,6 +185,11 @@ form {
         color: $danger;
     }
 
+    // use this to align checkboxes to other regular inputs in a row
+    .field.field-aligned {
+        margin-top: 2.375rem;
+    }
+
     &.form-inline {
         fieldset {
             float: left;

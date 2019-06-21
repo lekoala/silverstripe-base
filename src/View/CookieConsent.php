@@ -149,7 +149,9 @@ class CookieConsent
         $cookiesLink = '/';
         if (self::config()->cookies_required) {
             $page = DataObject::get_one(CookiesRequiredPage::class);
-            $cookiesLink = '/' . $page->Link();
+            if ($page) {
+                $cookiesLink = '/' . $page->Link();
+            }
         }
 
         $js = '';

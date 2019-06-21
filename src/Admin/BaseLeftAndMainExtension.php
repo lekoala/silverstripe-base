@@ -15,8 +15,14 @@ use SilverStripe\Admin\LeftAndMainExtension;
 use SilverStripe\Core\Config\Config;
 
 /**
- * Class \LeKoala\Base\LeftAndMainExtension
+ * Available config
  *
+ * LeKoala\Base\Admin\BaseLeftAndMainExtension:
+ *   dark_theme: true
+ *   help_enabled: false
+ *   removed_items:
+ *     - SilverStripe-CampaignAdmin-CampaignAdmin
+ *     ...
  * @property \SilverStripe\Admin\SecurityAdmin|\SilverStripe\CMS\Controllers\CMSMain|\LeKoala\Base\Admin\BaseLeftAndMainExtension $owner
  */
 class BaseLeftAndMainExtension extends LeftAndMainExtension
@@ -29,6 +35,12 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
      * @var boolean
      */
     private static $dark_theme = false;
+
+    /**
+     * @config
+     * @var boolean
+     */
+    private static $help_enabled = true;
 
     /**
      * @config
@@ -189,5 +201,13 @@ CSS;
             return $matches[1][$idx];
         }
         return 0;
+    }
+
+    /**
+     * @return bool
+     */
+    public function IsHelpEnabled()
+    {
+        return self::config()->help_enabled;
     }
 }

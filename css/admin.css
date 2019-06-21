@@ -1,3 +1,8 @@
+/* Wrong link color */
+.cms-menu a {
+    color: #fff;
+}
+
 /* Prevent double scroll in 4.2 */
 body.cms {
     overflow: hidden;
@@ -254,6 +259,11 @@ body.cms {
 #Form_ItemEditForm_action_doDelete {
     position: absolute;
     right: 1.5385rem;
+}
+
+#Form_ItemEditForm_action_doDelete.default-position {
+    position: inherit;
+    right: 0;
 }
 
 .cms-content-header-utils {

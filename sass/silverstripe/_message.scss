@@ -6,18 +6,23 @@
     margin-bottom: $alert-margin-bottom;
     border: $alert-border-width solid transparent;
     @include border-radius($alert-border-radius);
+
     a {
         font-weight: $alert-link-font-weight;
     }
+
     &.warning {
         @include alert-variant(theme-color-level('warning', $alert-bg-level), theme-color-level('warning', $alert-border-level), theme-color-level('warning', $alert-color-level));
     }
-    &.good {
+
+    &.good, &.success {
         @include alert-variant(theme-color-level('success', $alert-bg-level), theme-color-level('success', $alert-border-level), theme-color-level('success', $alert-color-level));
     }
-    &.bad {
+
+    &.bad, &.error {
         @include alert-variant(theme-color-level('danger', $alert-bg-level), theme-color-level('danger', $alert-border-level), theme-color-level('danger', $alert-color-level));
     }
+
     &.info {
         @include alert-variant(theme-color-level('info', $alert-bg-level), theme-color-level('info', $alert-border-level), theme-color-level('info', $alert-color-level));
     }

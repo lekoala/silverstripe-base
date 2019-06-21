@@ -15,6 +15,10 @@ use SilverStripe\SiteConfig\SiteConfig;
 /**
  * Google SiteConfig stuff
  *
+ * SilverStripe\SiteConfig\SiteConfig:
+ *   extensions:
+ *     - LeKoala\Base\SiteConfig\GoogleSiteConfigExtension
+ *
  * @property \SilverStripe\SiteConfig\SiteConfig|\LeKoala\Base\SiteConfig\GoogleSiteConfigExtension $owner
  * @property string $GoogleAnalyticsCode
  * @property boolean $GoogleAnalyticsWithoutCookies
@@ -23,7 +27,7 @@ use SilverStripe\SiteConfig\SiteConfig;
 class GoogleSiteConfigExtension extends DataExtension
 {
     private static $db = [
-        "GoogleAnalyticsCode" => "Varchar(59)", // UA-XXXXXXX-Y
+        "GoogleAnalyticsCode" => "Varchar(59)", // GA_MEASUREMENT_ID : UA-XXXXXXX-Y
         "GoogleAnalyticsWithoutCookies" => "Boolean",
         "GoogleMapsApiKey" => "Varchar(59)",
     ];
@@ -59,15 +63,26 @@ class GoogleSiteConfigExtension extends DataExtension
     }
 
     /**
+     * @return bool
+     */
+    public function shouldRequireGoogleAnalytics()
+    {
+        if (!Director::isLive()) {
+            return false;
+        }
+        if (!$this->owner->GoogleAnalyticsCode) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * Called automatically by BaseContentController
-     * @return void
+     * @return bool
      */
     public function requireGoogleAnalytics()
     {
-        if (!Director::isLive()) {
-            // return false;
-        }
-        if (!$this->owner->GoogleAnalyticsCode) {
+        if (!$this->shouldRequireGoogleAnalytics()) {
             return false;
         }
 

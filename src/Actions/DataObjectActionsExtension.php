@@ -23,7 +23,7 @@ use SilverStripe\Admin\CMSProfileController;
 class DataObjectActionsExtension extends DataExtension
 {
     /**
-     * @link https://docs.silverstripe.org/en/3/developer_guides/customising_the_admin_interface/how_tos/extend_cms_interface/
+     * @link https://docs.silverstripe.org/en/4/developer_guides/customising_the_admin_interface/how_tos/extend_cms_interface/
      * @param FieldList $actions
      * @return void
      */
@@ -41,19 +41,6 @@ class DataObjectActionsExtension extends DataExtension
         $ctrl = Controller::curr();
         if ($ctrl instanceof CMSProfileController) {
             return;
-        }
-
-        if ($this->owner->canEdit()) {
-            if ($this->owner->ID) {
-                $label = _t('DataObjectActionsExtension.SAVEANDCLOSE', 'Save and Close');
-            } else {
-                $label = _t('DataObjectActionsExtension.CREATEANDCLOSE', 'Create and Close');
-            }
-            $saveAndClose = new FormAction('doSaveAndClose', $label);
-            $saveAndClose->addExtraClass('btn-primary');
-            $saveAndClose->addExtraClass('font-icon-' . SilverStripeIcons::ICON_LEVEL_UP);
-            $saveAndClose->setUseButtonTag(true);
-            $actions->push($saveAndClose);
         }
 
         // Next/prev

@@ -4,6 +4,7 @@ namespace LeKoala\Base\Contact;
 use LeKoala\Base\Forms\BaseForm;
 use LeKoala\Base\Forms\BuildableFieldList;
 use SilverStripe\Forms\RequiredFields;
+use LeKoala\Base\Forms\GoogleRecaptchaField;
 
 class ContactForm extends BaseForm
 {
@@ -22,6 +23,10 @@ class ContactForm extends BaseForm
         });
         $fields->addText('Subject');
         $fields->addTextarea('Message');
+
+        if (GoogleRecaptchaField::isSetupReady()) {
+            $fields->push(new GoogleRecaptchaField);
+        }
 
         return $fields;
     }
@@ -44,8 +49,12 @@ class ContactForm extends BaseForm
         return $validator;
     }
 
-    public function doSubmit()
+    public function doSubmit($data)
     {
+        if (GoogleRecaptchaField::isSetupReady()) {
+            GoogleRecaptchaField::validateResponse($data);
+        }
+
         $controller = $this->getController();
         // Register submission
         $submission = new ContactSubmission();

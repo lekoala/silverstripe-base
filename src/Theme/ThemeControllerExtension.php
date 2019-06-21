@@ -56,6 +56,13 @@ class ThemeControllerExtension extends Extension
         $themeDir = $this->getThemeDir();
         $cssPath = Director::baseFolder() . '/' . $themeDir . '/css';
         $SiteConfig = $this->owner->SiteConfig();
+
+        /**
+         * You can disable this by setting. Make sure to do it AFTER #base-theme
+         *
+         * SilverStripe\SiteConfig\SiteConfig:
+         *   auto_include_css: false
+         */
         if (SiteConfig::config()->auto_include_css) {
             $files = glob($cssPath . '/*.css');
 
@@ -71,7 +78,7 @@ class ThemeControllerExtension extends Extension
                     continue;
                 }
                 // themedCSS use filename without extension
-                $name = rtrim($name, '.css');
+                $name = pathinfo($name, PATHINFO_FILENAME);
                 Requirements::themedCSS($name);
             }
         }

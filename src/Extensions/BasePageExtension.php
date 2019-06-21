@@ -14,17 +14,34 @@ use LeKoala\Base\Subsite\SubsiteHelper;
 use SilverStripe\SiteConfig\SiteConfig;
 use LeKoala\Base\Privacy\PrivacyNoticePage;
 use LeKoala\Base\Privacy\TermsAndConditionsPage;
+use SilverStripe\Forms\CheckboxField;
 
 /**
  * Useful utilities for pages
+ *
+ * Should be applied to SiteTree. Always applied in base-extensions
  *
  * @property \SilverStripe\CMS\Model\SiteTree|\LeKoala\Base\Extensions\BasePageExtension $owner
  */
 class BasePageExtension extends DataExtension
 {
+    private static $db = [
+        "ShowInFooter" => "Boolean"
+    ];
     private static $casting = [
         "HighlightWordInContent" => "HTMLFragment"
     ];
+
+    public function updateCMSFields(\SilverStripe\Forms\FieldList $fields)
+    {
+        // nothing
+    }
+
+    public function updateSettingsFields(\SilverStripe\Forms\FieldList $fields)
+    {
+        // For i18n it is stored under {$ancestorClass}.{$type}_{$name}, so SilverStripe\CMS\Model\SiteTree.db_ShowInFooter
+        $fields->insertAfter("ShowInMenus", new CheckboxField("ShowInFooter", $this->owner->fieldLabel("ShowInFooter")));
+    }
 
     /**
      * Easily require the page in requireDefaultRecords using this method

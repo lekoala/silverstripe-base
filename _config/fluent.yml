@@ -19,6 +19,9 @@ TractorCow\Fluent\Extension\FluentExtension:
     - Varchar(59)
     - Varchar(99)
     - Varchar(199)
+    # Our custom stuff
+    - UntranslatedVarchar
+    - LeKoala\Base\ORM\FieldType\UntranslatedVarchar
 # Add extensions to SilverStripe
 SilverStripe\SiteConfig\SiteConfig:
   extensions:
@@ -30,3 +33,7 @@ LeKoala\Base\News\NewsItem:
 LeKoala\Base\Blocks\Block:
   extensions:
     - 'TractorCow\Fluent\Extension\FluentExtension'
+# You may want to enable this if your records are not showing up!
+# SilverStripe\ORM\DataObject:
+#   cms_publish_required: false
+#   frontend_publish_required: false

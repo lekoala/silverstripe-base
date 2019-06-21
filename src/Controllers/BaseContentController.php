@@ -37,6 +37,8 @@ class BaseContentController extends ContentController
     use Messaging;
     use PageGetters;
     use TimeHelpers;
+    use LangHelpers;
+    use MenuHelpers;
 
     /**
      * Inject public dependencies into the controller
@@ -177,60 +179,6 @@ class BaseContentController extends ContentController
         return $class;
     }
 
-    /**
-     * @return DataList
-     */
-    public function MembersOnlyMenu()
-    {
-        $result = SiteTree::get()->filter([
-            "ShowInMenus" => 1,
-            "ParentID" => 0,
-            "CanViewType" => "LoggedInUsers"
-        ]);
-
-        return $result;
-    }
-
-    /**
-     * @return DataList
-     */
-    public function NonMemberOnlyMenu()
-    {
-        $result = SiteTree::get()->filter([
-            "ShowInMenus" => 1,
-            "ParentID" => 0,
-            "CanViewType" => ["Anyone", "Inherit"]
-        ]);
-
-        return $result;
-    }
-
-    /**
-     * This function is useful if you display two sets of menus
-     * one for your logged in users and one for non logged in users
-     * @return ArrayList
-     */
-    public function ToggleMemberMenu()
-    {
-        if (Member::currentUserID()) {
-            $result = $this->MembersOnlyMenu();
-        } else {
-            $result = $this->NonMemberOnlyMenu();
-        }
-
-        $visible = [];
-
-        // Remove all entries the can not be viewed by the current user
-        if (isset($result)) {
-            foreach ($result as $page) {
-                /** @var SiteTree $page */
-                if ($page->canView()) {
-                    $visible[] = $page;
-                }
-            }
-        }
-        return new ArrayList($visible);
-    }
 
     /**
      *  Allow lang to be set by the request. This must happen after parent::init()
