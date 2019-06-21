@@ -12,6 +12,7 @@ use SilverStripe\Admin\SecurityAdmin;
 use SilverStripe\Security\Permission;
 use LeKoala\Base\Actions\CustomAction;
 use LeKoala\Base\Security\MemberAudit;
+use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\LoginAttempt;
 
 /**
@@ -33,9 +34,21 @@ class BaseMemberExtension extends DataExtension
         'LastVisited' => 'Datetime',
         'NumVisit' => 'Int',
     ];
+    private static $has_many = [
+        "Audits" => MemberAudit::class
+    ];
 
-    public function canLogIn($result)
-    { }
+    public function canLogIn(ValidationResult $result)
+    {
+        if ($this->owner->hasExtension(MemberValidationStatusExtension::class)) {
+            if ($this->owner->IsValidationStatusPending()) {
+                $result->addError(_t('BaseMemberExtension.ACCOUNT_PENDING', "Your account is currently pending."));
+            }
+            if ($this->owner->IsValidationStatusDisabled()) {
+                $result->addError(_t('BaseMemberExtension.ACCOUNT_DISABLED', "Your account has been disabled. Please contact an administrator."));
+            }
+        }
+    }
 
     /**
      * @deprecated
@@ -185,10 +198,9 @@ class BaseMemberExtension extends DataExtension
         return Permission::check('CMS_ACCESS');
     }
 
-
     /**
      * @param string $event
-     * @param string $data
+     * @param string|array $data
      * @return int
      */
     public function audit($event, $data = null)
@@ -197,6 +209,9 @@ class BaseMemberExtension extends DataExtension
         $r->MemberID = $this->owner->ID;
         $r->Event = $event;
         if ($data) {
+            if (is_array($data)) {
+                $data = json_encode($data);
+            }
             $r->AuditData = $data;
         }
         return $r->write();
