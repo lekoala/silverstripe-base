@@ -10,6 +10,7 @@ use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\ORM\ValidationResult;
 use LeKoala\Base\Helpers\SilverStripeIcons;
 use SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest;
@@ -136,9 +137,17 @@ class ActionsGridFieldItemRequest extends DataExtension
         $error = false;
         try {
             $result = $record->$action($data, $form, $controller);
+
+            // We have a response
+            if ($result instanceof HTTPResponse) {
+                return $result;
+            }
+
             if ($result === false) {
+                // Result returned an error (false)
                 $error = true;
             } elseif (is_string($result)) {
+                // Result is a message
                 $message = $result;
             }
         } catch (Exception $ex) {
