@@ -55,7 +55,9 @@ class MemberValidationStatusExtension extends DataExtension
         $this->owner->ValidationStatus = self::VALIDATION_STATUS_APPROVED;
         $this->owner->write();
 
-        $this->owner->audit('Validation Status Changed', ['Status' => self::VALIDATION_STATUS_APPROVED]);
+        $auditID = $this->owner->audit('Validation Status Changed', ['Status' => self::VALIDATION_STATUS_APPROVED]);
+
+        return _t('MemberValidationStatusExtension.APPROVED', 'Member approved');
     }
 
     public function doValidationDisable()
@@ -63,7 +65,9 @@ class MemberValidationStatusExtension extends DataExtension
         $this->owner->ValidationStatus = self::VALIDATION_STATUS_DISABLED;
         $this->owner->write();
 
-        $this->owner->audit('Validation Status Changed', ['Status' => self::VALIDATION_STATUS_DISABLED]);
+        $auditID =  $this->owner->audit('Validation Status Changed', ['Status' => self::VALIDATION_STATUS_DISABLED]);
+
+        return _t('MemberValidationStatusExtension.DISABLED', 'Member disabled');
     }
 
     public function IsValidationStatusPending()

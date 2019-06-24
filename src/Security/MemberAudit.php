@@ -37,7 +37,7 @@ class MemberAudit extends DataObject
         'SourceMember' => Member::class,
     ];
     private static $summary_fields = array(
-        'Created', 'Event', 'AuditData'
+        'Created', 'Event', 'SourceMember.Title', 'AuditData'
     );
     private static $default_sort = 'Created DESC';
 
@@ -45,7 +45,7 @@ class MemberAudit extends DataObject
     {
         parent::onBeforeWrite();
 
-        $this->SourceMembreID = Member::currentUserID();
+        $this->SourceMemberID = Member::currentUserID();
     }
 
     public function forTemplate()

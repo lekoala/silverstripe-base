@@ -14,6 +14,8 @@ use LeKoala\Base\Actions\CustomAction;
 use LeKoala\Base\Security\MemberAudit;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\LoginAttempt;
+use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
+use SilverStripe\Forms\GridField\GridFieldAddNewButton;
 
 /**
  * A lot of base functionalities for your members
@@ -35,7 +37,7 @@ class BaseMemberExtension extends DataExtension
         'NumVisit' => 'Int',
     ];
     private static $has_many = [
-        "Audits" => MemberAudit::class
+        "Audits" => MemberAudit::class . ".Member",
     ];
 
     public function canLogIn(ValidationResult $result)
@@ -118,6 +120,17 @@ class BaseMemberExtension extends DataExtension
             'LastVisited',
             'NumVisit',
         ]);
+
+        $Audits = $fields->dataFieldByName('Audits');
+        if ($Audits) {
+            if (Permission::check('ADMIN')) {
+                $AuditsConfig = $Audits->getConfig();
+                $AuditsConfig->removeComponentsByType(GridFieldAddExistingAutocompleter::class);
+                $AuditsConfig->removeComponentsByType(GridFieldAddNewButton::class);
+            } else {
+                $fields->removeByName('Audits');
+            }
+        }
 
         // Some fields don't make sense upon creation
         if (!$this->owner->ID) {
