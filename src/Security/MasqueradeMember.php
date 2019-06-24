@@ -8,6 +8,7 @@ use SilverStripe\Control\HTTPResponse;
  * Controls masquerade related functions
  *
  * Remember you can visit /Security/end_masquerade to go back to your previous user
+ * Use $LogoutURL from BaseContentController to get accurate url for easier use
  */
 trait MasqueradeMember
 {
