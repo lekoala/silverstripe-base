@@ -25,9 +25,10 @@ trait MasqueradeMember
         $session->save($request);
 
         $response = new HTTPResponse();
-        $response->addHeader("X-ControllerURL", "/");
+        $response->addHeader("X-ControllerURL", "/home");
         $response->addHeader("X-Reload", true);
-        $response->redirect('/');
+        // don't use redirect, but rely on X-ControllerURL instead to have proper redirect from cms
+        // $response->redirect('/');
         return $response;
     }
 

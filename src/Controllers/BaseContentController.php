@@ -179,6 +179,15 @@ class BaseContentController extends ContentController
         return $class;
     }
 
+    public function LogoutURL()
+    {
+        $member = Member::currentUser();
+        if ($member && $member->IsMasquerading()) {
+            return '/Security/end_masquerade';
+        }
+        return '/Security/logout';
+    }
+
 
     /**
      *  Allow lang to be set by the request. This must happen after parent::init()

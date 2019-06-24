@@ -139,7 +139,7 @@ class ActionsGridFieldItemRequest extends DataExtension
             $result = $record->$action($data, $form, $controller);
 
             // We have a response
-            if ($result instanceof HTTPResponse) {
+            if ($result && $result instanceof HTTPResponse) {
                 return $result;
             }
 
