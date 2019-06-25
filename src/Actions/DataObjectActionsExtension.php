@@ -69,6 +69,13 @@ class DataObjectActionsExtension extends DataExtension
             $utils = new FieldList();
         }
         // Next/prev
+        // Use native 4.4 feature instead
+        // $utils = $this->addPrevNextUtils($utils);
+        $this->owner->extend('updateCMSUtils', $utils);
+        return $utils;
+    }
+
+    public function addPrevNextUtils(FieldList $utils) {
         $controller = Controller::curr();
         $url = $controller->getRequest()->getURL();
         if ($this->owner->ID && $this->owner->hasMethod('NextRecord') && $NextRecord = $this->owner->NextRecord()) {
@@ -79,7 +86,6 @@ class DataObjectActionsExtension extends DataExtension
             $utils->unshift($PrevBtnLink = new CmsInlineFormAction('PrevBtnLink', '< Previous', 'btn-secondary'));
             $PrevBtnLink->setUrl(str_replace('/' . $this->owner->ID . '/', '/' . $PrevRecord->ID . '/', $url));
         }
-        $this->owner->extend('updateCMSUtils', $utils);
         return $utils;
     }
 }
