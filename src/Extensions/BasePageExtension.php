@@ -1,21 +1,22 @@
 <?php
 namespace LeKoala\Base\Extensions;
 
+use Exception;
 use SilverStripe\ORM\DB;
 use SilverStripe\i18n\i18n;
 use SilverStripe\Core\Convert;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\Control\Controller;
 use LeKoala\Base\Contact\ContactPage;
 use SilverStripe\ErrorPage\ErrorPage;
+use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Versioned\Versioned;
 use LeKoala\Base\Subsite\SubsiteHelper;
 use SilverStripe\SiteConfig\SiteConfig;
 use LeKoala\Base\Privacy\PrivacyNoticePage;
 use LeKoala\Base\Privacy\TermsAndConditionsPage;
-use SilverStripe\Forms\CheckboxField;
-use SilverStripe\Control\Controller;
 
 /**
  * Useful utilities for pages
@@ -126,8 +127,12 @@ class BasePageExtension extends DataExtension
 
         $controller = Controller::curr();
         $sourceObject = $owner;
-        if ($controller->hasMethod("getRequestedRecord")) {
-            $sourceObject = $controller->getRequestedRecord();
+        try {
+            if ($controller->hasMethod("getRequestedRecord")) {
+                $sourceObject = $controller->getRequestedRecord();
+            }
+        } catch (Exception $ex) {
+            // Keep page as source
         }
 
         $SiteConfig = SiteConfig::current_site_config();
