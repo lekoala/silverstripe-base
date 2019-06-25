@@ -15,6 +15,7 @@ use SilverStripe\SiteConfig\SiteConfig;
 use LeKoala\Base\Privacy\PrivacyNoticePage;
 use LeKoala\Base\Privacy\TermsAndConditionsPage;
 use SilverStripe\Forms\CheckboxField;
+use SilverStripe\Control\Controller;
 
 /**
  * Useful utilities for pages
@@ -31,6 +32,11 @@ class BasePageExtension extends DataExtension
     private static $casting = [
         "HighlightWordInContent" => "HTMLFragment"
     ];
+
+    public function getPageTitleSeparator()
+    {
+        return $this->owner->config()->page_title_separator;
+    }
 
     public function updateCMSFields(\SilverStripe\Forms\FieldList $fields)
     {
@@ -118,22 +124,34 @@ class BasePageExtension extends DataExtension
             return;
         }
 
+        $controller = Controller::curr();
+        $sourceObject = $owner;
+        if ($controller->hasMethod("getRequestedRecord")) {
+            $sourceObject = $controller->getRequestedRecord();
+        }
+
         $SiteConfig = SiteConfig::current_site_config();
-        $descriptionText = $owner->MetaDescription;
-        if (!$descriptionText && $owner->hasField('Content')) {
-            $descriptionText = preg_replace('/\s+/', ' ', $owner->dbObject('Content')->Summary());
+        $descriptionText = '';
+        if ($sourceObject->hasField('MetaDescription')) {
+            $descriptionText = $sourceObject->MetaDescription;
+        }
+        if (!$descriptionText && $sourceObject->hasMethod('getShareDescription')) {
+            $descriptionText = $sourceObject->getShareDescription();
+        }
+        if (!$descriptionText && $sourceObject->hasField('Content')) {
+            $descriptionText = preg_replace('/\s+/', ' ', $sourceObject->dbObject('Content')->Summary());
         }
         $imageLink = '';
-        if ($owner->hasMethod('getMetaImage')) {
-            $imageLink = $owner->getMetaImage();
+        if ($sourceObject->hasMethod('getMetaImage')) {
+            $imageLink = $sourceObject->getMetaImage();
         }
         $ogType = "website";
-        if ($owner->hasMethod('getOGType')) {
-            $ogType = $owner->getOGType();
+        if ($sourceObject->hasMethod('getOGType')) {
+            $ogType = $sourceObject->getOGType();
         }
-        $shareTitle = $owner->getTitle();
-        if ($owner->hasMethod('getShareTitle')) {
-            $shareTitle = $owner->getShareTitle();
+        $shareTitle = $sourceObject->getTitle();
+        if ($sourceObject->hasMethod('getShareTitle')) {
+            $shareTitle = $sourceObject->getShareTitle();
         }
         $tags = '';
         // OpenGraph

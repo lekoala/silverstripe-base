@@ -57,10 +57,15 @@ trait IsRecordController
     public function index()
     {
         $ID = $this->getRequest()->param('ID');
+        $page = $this->data();
         // We have a record : use a view action
         if ($ID) {
             $record = $this->getRequestedRecord();
-            $data = ['Item' => $record];
+            $data = [
+                'Item' => $record,
+                "Title" => $record->getTitle(),
+                "MetaTitle" => $record->getTitle() . ' ' . $page->getPageTitleSeparator() . ' ' . $page->getTitle()
+            ];
             if (method_exists($this, 'onView')) {
                 $extraData = $this->onView($record);
                 if ($extraData && is_array($extraData)) {
