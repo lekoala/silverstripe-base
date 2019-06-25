@@ -81,7 +81,11 @@ class FakeRecordGeneratorTask extends BuildTask
                                 $source = $field->getSource();
                                 if (is_array($source)) {
                                     $source = array_keys($source);
-                                    $rec->$name = $source[array_rand($source)];
+                                    $value = $source[array_rand($source)];
+
+                                    // Use save into to ensure consistency
+                                    $field->setValue($value);
+                                    $field->saveInto($rec);
                                 }
                             }
                         }

@@ -75,7 +75,8 @@ class DataObjectActionsExtension extends DataExtension
         return $utils;
     }
 
-    public function addPrevNextUtils(FieldList $utils) {
+    public function addPrevNextUtils(FieldList $utils)
+    {
         $controller = Controller::curr();
         $url = $controller->getRequest()->getURL();
         if ($this->owner->ID && $this->owner->hasMethod('NextRecord') && $NextRecord = $this->owner->NextRecord()) {
