@@ -22,8 +22,9 @@ class InputMaskIntegerField extends InputMaskNumericField
      */
     public function performReadonlyTransformation()
     {
-        $field = $this->castedCopy('SilverStripe\\Forms\\NumericField');
-        $field->setReadonly(true);
+        // $field = $this->castedCopy('SilverStripe\\Forms\\NumericField');
+        // $field->setReadonly(true);
+        $field = $this->castedCopy(NumericReadonlyField::class);
         return $field;
     }
 }

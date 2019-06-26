@@ -2,6 +2,7 @@
 namespace LeKoala\Base\Forms;
 
 use LeKoala\Base\Helpers\CurrencyFormatter;
+use SilverStripe\Forms\ReadonlyField;
 
 /**
  * Format numbers
@@ -39,8 +40,9 @@ class InputMaskNumericField extends InputMaskField
      */
     public function performReadonlyTransformation()
     {
-        $field = $this->castedCopy('SilverStripe\\Forms\\NumericField');
-        $field->setReadonly(true);
+        // $field = $this->castedCopy('SilverStripe\\Forms\\NumericField');
+        // $field->setReadonly(true);
+        $field = $this->castedCopy(NumericReadonlyField::class);
         return $field;
     }
 
