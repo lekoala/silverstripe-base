@@ -219,4 +219,11 @@ form {
             float: left;
         }
     }
+
+    // If we have a readonly form, make clear distinction between labels and field values
+    &.readonly {
+        label {
+            font-weight: bold;
+        }
+    }
 }
