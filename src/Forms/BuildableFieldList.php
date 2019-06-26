@@ -452,6 +452,17 @@ class BuildableFieldList extends FieldList
      * @param string $name
      * @param string $title
      * @param array $attributes
+     * @return PhoneField
+     */
+    public function addPhone($name = "Phone", $title = null, $attributes = [])
+    {
+        return $this->addField(PhoneField::class, $name, $title, $attributes);
+    }
+
+    /**
+     * @param string $name
+     * @param string $title
+     * @param array $attributes
      * @return NumericField
      */
     public function addNumeric($name = "Number", $title = null, $attributes = [])
