@@ -1,6 +1,7 @@
 <?php
 namespace LeKoala\Base\Forms;
 
+use SilverStripe\Forms\DateField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\TextField;
@@ -10,20 +11,20 @@ use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\HiddenField;
 use LeKoala\Base\Forms\ColumnsField;
 use SilverStripe\Forms\LiteralField;
+use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\PasswordField;
+use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\TextareaField;
 use SilverStripe\Forms\CompositeField;
+use SilverStripe\Forms\OptionsetField;
+use SilverStripe\Forms\CheckboxSetField;
+use LeKoala\Base\Forms\YesNoOptionsetField;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Forms\GridField\GridFieldConfig;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
-use SilverStripe\Forms\OptionsetField;
-use SilverStripe\Forms\DateField;
-use SilverStripe\Forms\CheckboxSetField;
-use SilverStripe\Forms\ReadonlyField;
-use SilverStripe\Forms\NumericField;
 
 /**
  * A field list that can create it its fields
@@ -321,6 +322,7 @@ class BuildableFieldList extends FieldList
         $attributes['options'] = $src;
         return $this->addField(CheckboxSetField::class, $name, $title, $attributes);
     }
+
     /**
      * @param string $name
      * @param array $attributes
@@ -377,6 +379,17 @@ class BuildableFieldList extends FieldList
     {
         $attributes['options'] = $src;
         return $this->addField(OptionsetField::class, $name, $title, $attributes);
+    }
+
+    /**
+     * @param string $name
+     * @param string $title
+     * @param array $attributes
+     * @return YesNoOptionsetField
+     */
+    public function addYesNo($name = "Option", $title = null, $attributes = [])
+    {
+        return $this->addField(YesNoOptionsetField::class, $name, $title, $attributes);
     }
 
     /**

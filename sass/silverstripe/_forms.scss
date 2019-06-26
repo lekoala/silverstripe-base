@@ -161,6 +161,12 @@ form {
             list-style: none;
             padding: 0;
         }
+
+        &.inline {
+            li {
+                float: left;
+            }
+        }
     }
 
     .field.required {
