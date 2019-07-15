@@ -67,8 +67,11 @@ class ColumnsField extends FieldGroup
     }
 
     /**
-     * Set the value of columnSizes
+     * Set size of columns based on their position
      *
+     * Eg: [1 => 4, 2 => 8]
+     *
+     * @param array $columnSizes An position based array of sizes to assign to your columns
      * @return $this
      */
     public function setColumnSizes($columnSizes)

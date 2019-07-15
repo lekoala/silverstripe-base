@@ -1,4 +1,5 @@
 <?php
+
 namespace LeKoala\Base\Forms;
 
 use SilverStripe\Forms\DateField;
@@ -25,6 +26,7 @@ use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Forms\GridField\GridFieldConfig;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
+use SilverStripe\Forms\FieldGroup;
 
 /**
  * A field list that can create it its fields
@@ -324,6 +326,37 @@ class BuildableFieldList extends FieldList
     }
 
     /**
+     * @param array $attributes
+     * @param string $name
+     * @return FieldGroup
+     */
+    public function addFieldGroup($attributes = [], $name = null)
+    {
+        static $i = 0;
+        if ($name === null) {
+            $i++;
+            $name = "Group_$i";
+        }
+        return $this->addField(FieldGroup::class, $name, null, $attributes);
+    }
+
+    /**
+     * @param array $attributes
+     * @param string $name
+     * @return CompositeField
+     */
+    public function addCompositeField($attributes = [], $name = null)
+    {
+        static $i = 0;
+        if ($name === null) {
+            $i++;
+            $name = "Composite_$i";
+        }
+        return $this->addField(CompositeField::class, $name, null, $attributes);
+    }
+
+
+    /**
      * @param string $name
      * @param array $attributes
      * @return HiddenField
@@ -509,11 +542,15 @@ class BuildableFieldList extends FieldList
      * Group fields into a column field
      *
      * @param callable $callable
+     * @param array $columnSizes
      * @return $this
      */
-    public function group($callable)
+    public function group($callable, $columnSizes = null)
     {
         $group = new ColumnsField();
+        if ($columnSizes !== null) {
+            $group->setColumnSizes($columnSizes);
+        }
         $this->pushOrAddToTab($group);
         $this->currentGroup = $group;
         $callable($this);
