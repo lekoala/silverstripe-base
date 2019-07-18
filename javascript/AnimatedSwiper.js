@@ -38,76 +38,75 @@
             var direction = $el.data('direction');
 
             // Configuration
+            // @link https://idangero.us/swiper/api/
             var conf = {};
 
             if (items) {
-                conf.slidesPerView = items
-            };
+                conf.slidesPerView = items;
+            }
             if (autoplay) {
-                conf.autoplay = autoplay
-            };
+                conf.autoplay = autoplay;
+            }
             if (iSlide) {
-                conf.initialSlide = iSlide
-            };
+                conf.initialSlide = iSlide;
+            }
             if (center) {
-                conf.centeredSlides = center
-            };
+                conf.centeredSlides = center;
+            }
             if (loop) {
-                conf.loop = loop
-            };
+                conf.loop = loop;
+            }
             if (effect) {
-                conf.effect = effect
-            };
+                conf.effect = effect;
+            }
             if (direction) {
-                conf.direction = direction
-            };
+                conf.direction = direction;
+            }
             if (prev) {
-                conf.prevButton = '#' + prev
-            };
+                conf.prevButton = '#' + prev;
+            }
             if (next) {
-                conf.nextButton = '#' + next
-            };
+                conf.nextButton = '#' + next;
+            }
             if (pagination) {
-                conf.pagination = '#' + pagination,
-                    conf.paginationClickable = true
-            };
+                conf.pagination = '#' + pagination;
+                conf.paginationClickable = true;
+            }
 
             // Animate Function
-            function animated_swiper(selector, init) {
-                var animated = function() {
-                    $(selector + ' [data-animate]').each(function() {
-                        var anim = $(this).data('animate');
-                        var delay = $(this).data('delay');
-                        var duration = $(this).data('duration');
+            var animated = function() {
+                var slide = this.slides[this.realIndex];
+                $(slide).find('[data-animate]').each(function() {
+                    var anim = $(this).data('animate');
+                    var delay = $(this).data('delay');
+                    var duration = $(this).data('duration');
 
-                        $(this).removeClass('anim' + anim)
-                            .addClass(anim + ' animated')
-                            .css({
-                                webkitAnimationDelay: delay,
-                                animationDelay: delay,
-                                webkitAnimationDuration: duration,
-                                animationDuration: duration
-                            })
-                            .one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function() {
-                                $(this).removeClass(anim + ' animated');
-                            });
-                    });
-                };
-                animated();
-                // Make animated when slide change
-                init.on('slideChangeTransitionStart', function() {
-                    $(initID + ' [data-animate]').removeClass('animated');
+                    $(this)
+                        .removeClass(anim)
+                        .addClass(anim + ' animated')
+                        .css({
+                            webkitAnimationDelay: delay,
+                            animationDelay: delay,
+                            webkitAnimationDuration: duration,
+                            animationDuration: duration
+                        })
+                        .one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function() {
+                            $(this).removeClass(anim + ' animated');
+                        });
                 });
-                init.on('slideChange', animated);
             };
 
             // Initialization
-            if (container) {
-                var initID = '#' + container;
+            var initID = '#' + container;
 
-                var init = new Swiper(initID, conf);
-                animated_swiper(initID, init);
-            };
+            conf.init = false;
+            var swiper = new Swiper(initID, conf);
+
+            // Animate on init or slide
+            swiper.on('init', animated);
+            swiper.on('slideChangeTransitionStart', animated);
+
+            swiper.init();
 
         },
         log: function(text) {
