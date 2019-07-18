@@ -15,10 +15,12 @@ trait IsRecordController
     /**
      * We pass the ID first to have a consistent url schema
      * Index method will handle both case: with or without ID passed
+     * In order to allow other url handlers, like a category handler
+     * we need to add it ourself...
      */
-    private static $url_handlers = [
-        '$ID/$Action' => 'handleAction',
-    ];
+    // private static $url_handlers = [
+    //     '$ID/$Action' => 'handleAction',
+    // ];
 
     /**
      * Get the record
@@ -56,11 +58,18 @@ trait IsRecordController
 
     public function index()
     {
+        $url_handlers = $this->config()->url_handlers;
+        if (!isset($url_handlers['$ID/$Action'])) {
+            throw new Exception("Please add private static \$url_handlers to your class with \$ID/\$Action");
+        }
         $ID = $this->getRequest()->param('ID');
         $page = $this->data();
         // We have a record : use a view action
         if ($ID) {
             $record = $this->getRequestedRecord();
+            if (!$record) {
+                return $this->httpError(404, "Record $ID not found");
+            }
             $data = [
                 'Item' => $record,
                 "Title" => $record->getTitle(),

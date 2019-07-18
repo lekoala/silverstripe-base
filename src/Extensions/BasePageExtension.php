@@ -130,6 +130,9 @@ class BasePageExtension extends DataExtension
         try {
             if ($controller->hasMethod("getRequestedRecord")) {
                 $sourceObject = $controller->getRequestedRecord();
+                if (!$sourceObject) {
+                    $sourceObject = $owner;
+                }
             }
         } catch (Exception $ex) {
             // Keep page as source

@@ -94,6 +94,8 @@
                 $.fn.ModularBehaviour.beforeHooks[module].call(e, moduleConfig);
             }
 
+            // console.log("Initialise module " + module);
+
             // apply = array of args
             // call = comma separated list of args
             // here, we pass as the first argument a config object

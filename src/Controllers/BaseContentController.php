@@ -21,6 +21,7 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\Connect\DatabaseException;
 use SilverStripe\CMS\Controllers\ContentController;
+use SilverStripe\Core\Config\Config;
 
 /**
  * A more opiniated base controller for your app
@@ -68,6 +69,12 @@ class BaseContentController extends ContentController
         // Ensure you load with "defer" your libs!
         // @link https://flaviocopes.com/javascript-async-defer/#tldr-tell-me-whats-the-best
         Requirements::set_backend(new DeferBackend);
+
+        // Maybe we could add dynamically the url handler??
+        // $traits = class_uses($this);
+        // if (isset($traits[IsRecordController::class])) {
+        //     Config::inst()->modify()->merge(get_class($this), 'url_handlers', '$ID/$Action');
+        // }
 
         try {
             parent::init();
