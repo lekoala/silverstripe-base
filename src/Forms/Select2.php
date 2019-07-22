@@ -1,4 +1,5 @@
 <?php
+
 namespace LeKoala\Base\Forms;
 
 use SilverStripe\ORM\DB;
@@ -309,7 +310,24 @@ trait Select2
         $baseTable = $sng->baseTable();
 
         // Make a fast query to the table without orm overhead
-        $sql = 'SELECT ID AS id, Title AS text FROM ' . $baseTable . ' WHERE Title IS NOT NULL AND Title LIKE ?';
+        $searchField = 'Title';
+
+        // Ensure field exists, this is really rudimentary
+        $db = $class::config()->db;
+        if (!isset($db[$searchField])) {
+            $searchField = 'Name';
+        }
+        if (!isset($db[$searchField])) {
+            $searchField = 'Surname';
+        }
+        if (!isset($db[$searchField])) {
+            $searchField = 'Email';
+        }
+        if (!isset($db[$searchField])) {
+            $searchField = 'ID';
+        }
+
+        $sql = 'SELECT ID AS id, ' . $searchField . ' AS text FROM ' . $baseTable . ' WHERE ' . $searchField . ' IS NOT NULL AND ' . $searchField . ' LIKE ?';
         if ($where) {
             $sql .= " AND $where";
         }
