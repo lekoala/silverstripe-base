@@ -85,11 +85,11 @@ nl:
     UNDEFINED_ERROR: 'Er deed zich een fout voor.'
     View: Bekijken
     YES: 'Ja'
-  MemberValidationStatusExtension:
+  ValidationStatusExtension:
     APPROVE: Goedkeuren
-    APPROVED: 'Lid goedgekeurd'
+    APPROVED: 'Goedgekeurd'
     DISABLE: Disable
-    DISABLED: 'Member disabled'
+    DISABLED: 'Disabled'
     VALIDATION_STATUS_APPROVED: goedgekeurd
     VALIDATION_STATUS_DISABLED: disabled
     VALIDATION_STATUS_PENDING: 'in afwachting van goedkeuring'

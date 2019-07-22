@@ -1,15 +1,16 @@
 <?php
-namespace LeKoala\Base\Security;
+
+namespace LeKoala\Base\Extensions;
 
 use SilverStripe\Forms\FieldList;
 use SilverStripe\ORM\DataExtension;
 use LeKoala\Base\Actions\CustomAction;
 
 /**
- * Allow to enable/disable login for your members based on status
+ * Allow to enable/disable login for your objects based on status
  * See BaseMemberExtension for usage
  */
-class MemberValidationStatusExtension extends DataExtension
+class ValidationStatusExtension extends DataExtension
 {
     const VALIDATION_STATUS_PENDING = 'pending';
     const VALIDATION_STATUS_APPROVED = 'approved';
@@ -25,9 +26,9 @@ class MemberValidationStatusExtension extends DataExtension
     public static function listStatus()
     {
         return [
-            self::VALIDATION_STATUS_PENDING => _t('MemberValidationStatusExtension.VALIDATION_STATUS_PENDING', 'pending'),
-            self::VALIDATION_STATUS_APPROVED => _t('MemberValidationStatusExtension.VALIDATION_STATUS_APPROVED', 'approved'),
-            self::VALIDATION_STATUS_DISABLED => _t('MemberValidationStatusExtension.VALIDATION_STATUS_DISABLED', 'disabled'),
+            self::VALIDATION_STATUS_PENDING => _t('ValidationStatusExtension.VALIDATION_STATUS_PENDING', 'pending'),
+            self::VALIDATION_STATUS_APPROVED => _t('ValidationStatusExtension.VALIDATION_STATUS_APPROVED', 'approved'),
+            self::VALIDATION_STATUS_DISABLED => _t('ValidationStatusExtension.VALIDATION_STATUS_DISABLED', 'disabled'),
         ];
     }
 
@@ -39,14 +40,14 @@ class MemberValidationStatusExtension extends DataExtension
     public function updateCMSActions(FieldList $actions)
     {
         if ($this->IsValidationStatusPending()) {
-            $actions->push(new CustomAction('doValidationApprove', _t('MemberValidationStatusExtension.APPROVE', 'Approve')));
-            $actions->push(new CustomAction('doValidationDisable', _t('MemberValidationStatusExtension.DISABLE', 'Disable')));
+            $actions->push(new CustomAction('doValidationApprove', _t('ValidationStatusExtension.APPROVE', 'Approve')));
+            $actions->push(new CustomAction('doValidationDisable', _t('ValidationStatusExtension.DISABLE', 'Disable')));
         }
         if ($this->IsValidationStatusApproved()) {
-            $actions->push(new CustomAction('doValidationDisable', _t('MemberValidationStatusExtension.DISABLE', 'Disable')));
+            $actions->push(new CustomAction('doValidationDisable', _t('ValidationStatusExtension.DISABLE', 'Disable')));
         }
         if ($this->IsValidationStatusDisabled()) {
-            $actions->push(new CustomAction('doValidationApprove', _t('MemberValidationStatusExtension.APPROVE', 'Approve')));
+            $actions->push(new CustomAction('doValidationApprove', _t('ValidationStatusExtension.APPROVE', 'Approve')));
         }
     }
 
@@ -57,7 +58,7 @@ class MemberValidationStatusExtension extends DataExtension
 
         $auditID = $this->owner->audit('Validation Status Changed', ['Status' => self::VALIDATION_STATUS_APPROVED]);
 
-        return _t('MemberValidationStatusExtension.APPROVED', 'Member approved');
+        return _t('ValidationStatusExtension.APPROVED', 'Approved');
     }
 
     public function doValidationDisable()
@@ -67,7 +68,7 @@ class MemberValidationStatusExtension extends DataExtension
 
         $auditID =  $this->owner->audit('Validation Status Changed', ['Status' => self::VALIDATION_STATUS_DISABLED]);
 
-        return _t('MemberValidationStatusExtension.DISABLED', 'Member disabled');
+        return _t('ValidationStatusExtension.DISABLED', 'Disabled');
     }
 
     public function IsValidationStatusPending()

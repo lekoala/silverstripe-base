@@ -85,11 +85,11 @@ en:
     UNDEFINED_ERROR: 'Something went wrong'
     View: View
     YES: 'Yes'
-  MemberValidationStatusExtension:
+  ValidationStatusExtension:
     APPROVE: Approve
-    APPROVED: 'Member approved'
+    APPROVED: 'Approved'
     DISABLE: Disable
-    DISABLED: 'Member disabled'
+    DISABLED: 'Disabled'
     VALIDATION_STATUS_APPROVED: approved
     VALIDATION_STATUS_DISABLED: disabled
     VALIDATION_STATUS_PENDING: pending

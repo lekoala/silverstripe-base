@@ -1,4 +1,5 @@
 <?php
+
 namespace LeKoala\Base\Security;
 
 use SilverStripe\ORM\DB;
@@ -14,8 +15,9 @@ use LeKoala\Base\Actions\CustomAction;
 use LeKoala\Base\Security\MemberAudit;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\LoginAttempt;
-use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
+use LeKoala\Base\Extensions\ValidationStatusExtension;
 use SilverStripe\Forms\GridField\GridFieldAddNewButton;
+use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
 
 /**
  * A lot of base functionalities for your members
@@ -47,7 +49,7 @@ class BaseMemberExtension extends DataExtension
             return;
         }
         // If MemberValidationStatus extension is applied, check validation status
-        if ($this->owner->hasExtension(MemberValidationStatusExtension::class)) {
+        if ($this->owner->hasExtension(ValidationStatusExtension::class)) {
             if ($this->owner->IsValidationStatusPending()) {
                 $result->addError(_t('BaseMemberExtension.ACCOUNT_PENDING', "Your account is currently pending"));
             }
@@ -61,7 +63,9 @@ class BaseMemberExtension extends DataExtension
      * @deprecated
      */
     public function beforeMemberLoggedIn()
-    { }
+    {
+        //
+    }
 
     public function afterMemberLoggedIn()
     {
@@ -77,10 +81,14 @@ class BaseMemberExtension extends DataExtension
     }
 
     public function beforeMemberLoggedOut($request)
-    { }
+    {
+        //
+    }
 
     public function afterMemberLoggedOut($request)
-    { }
+    {
+        //
+    }
 
     /**
      * Returns the fields for the member form - used in the registration/profile module.
@@ -89,28 +97,44 @@ class BaseMemberExtension extends DataExtension
      * @param FieldList $fields
      */
     public function updateMemberFormFields(FieldList $fields)
-    { }
+    {
+        //
+    }
 
     public function updateMemberPasswordField($password)
-    { }
+    {
+        //
+    }
 
     public function updateDateFormat($format)
-    { }
+    {
+        //
+    }
 
     public function updateTimeFormat($format)
-    { }
+    {
+        //
+    }
 
     public function updateGroups($groups)
-    { }
+    {
+        //
+    }
 
     public function onBeforeChangePassword($password, $valid)
-    { }
+    {
+        //
+    }
 
     public function onAfterChangePassword($password, $valid)
-    { }
+    {
+        //
+    }
 
     public function registerFailedLogin()
-    { }
+    {
+        //
+    }
 
     public function updateCMSFields(FieldList $fields)
     {
