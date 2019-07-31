@@ -1,4 +1,5 @@
 <?php
+
 namespace LeKoala\Base\Forms;
 
 use SilverStripe\Core\Convert;
@@ -103,6 +104,11 @@ class CmsInlineFormAction extends LiteralField
         return $this;
     }
 
+    public function Type()
+    {
+        return 'inline-action';
+    }
+
     public function FieldHolder($properties = array())
     {
         $link = $this->getUrl();
@@ -113,7 +119,7 @@ class CmsInlineFormAction extends LiteralField
         if ($this->readonly) {
             $attrs .= ' style="display:none"';
         }
-        $content = '<a href="' . $link . '" class="btn ' . $this->extraClass() . ' action inline-action no-ajax"' . $attrs . '>';
+        $content = '<a href="' . $link . '" class="btn ' . $this->extraClass() . ' action no-ajax"' . $attrs . '>';
         $title = $this->content;
         if ($this->buttonIcon) {
             $title = '<span class="font-icon-' . $this->buttonIcon . '"></span> ' . $title;
