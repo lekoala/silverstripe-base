@@ -1,4 +1,5 @@
 <?php
+
 namespace LeKoala\Base\Helpers;
 
 /**
@@ -14,8 +15,11 @@ class FormHelper
      */
     public static function decodeOrExplode($str)
     {
+        if (empty($str)) {
+            return [];
+        }
         if (strpos($str, '[') === 0) {
-            return json_decode($str, true);
+            return json_decode($str, JSON_OBJECT_AS_ARRAY);
         }
         return explode(',', $str);
     }
