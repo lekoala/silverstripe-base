@@ -434,3 +434,10 @@ select.ag-cell-edit-input {
     height: 34px;
     border-radius: 0;
 }
+
+/* quick filters */
+
+.quickfilters label {
+    margin: 0;
+    margin-right: 1em;
+}

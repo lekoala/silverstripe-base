@@ -1,4 +1,5 @@
 <?php
+
 namespace LeKoala\Base\Forms\GridField;
 
 use SilverStripe\Core\Extension;
@@ -71,7 +72,7 @@ class GridFieldExtension extends Extension
      */
     public function getDisplayFields()
     {
-        return $this->getDataColumns()->getDisplayFields();
+        return $this->getDataColumns()->getDisplayFields($this->owner);
     }
 
     /**
