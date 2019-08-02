@@ -53,6 +53,11 @@
         /* iOS fix for unreadable disabled content; see https://github.com/twbs/bootstrap/issues/11655. */
         opacity: 1;
     }
+
+    // Fix fake readonly for dealing with autofill see FormHelper::disableAutofill
+    &[readonly].autofill-disabled {
+        background-color: $input-bg;
+    }
 }
 
 .field select {

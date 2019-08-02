@@ -81,6 +81,8 @@ class FullGridField extends GridField
     /**
      * Filters to apply to the list if no sql select is provided
      *
+     * Cannot be used at the same time as setSqlSelect
+     *
      * @param array $filters
      * @return $this
      */
@@ -104,6 +106,8 @@ class FullGridField extends GridField
 
     /**
      * Shorthand for setting sql select
+     *
+     * This will disable filters (since it's the SQLSelect that will be used)
      *
      * @param SQLSelect $select
      * @return $this
