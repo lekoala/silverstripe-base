@@ -16,6 +16,10 @@ use SilverStripe\ORM\DataObject;
  */
 class SubsiteExtension extends DataExtension
 {
+    /**
+     * @var boolean
+     */
+    public static $delete_related = true;
 
     /**
      * @return SiteConfig
@@ -53,17 +57,19 @@ class SubsiteExtension extends DataExtension
     {
         parent::onBeforeDelete();
 
-        // Delete SiteConfig
-        $SiteConfig = SiteConfig::get()->filter('SubsiteID', $this->owner->ID)->first();
-        if ($SiteConfig) {
-            $SiteConfig->delete();
-        }
+        if (self::$delete_related) {
+            // Delete SiteConfig
+            $SiteConfig = SiteConfig::get()->filter('SubsiteID', $this->owner->ID)->first();
+            if ($SiteConfig) {
+                $SiteConfig->delete();
+            }
 
-        // Ripple delete any objects
-        foreach (DataObjectSubsite::listDataObjectWithSubsites() as $class) {
-            $list = $class::get()->filter('SubsiteID', $this->owner->ID);
-            foreach ($list as $item) {
-                $item->delete();
+            // Ripple delete any objects
+            foreach (DataObjectSubsite::listDataObjectWithSubsites() as $class) {
+                $list = $class::get()->filter('SubsiteID', $this->owner->ID);
+                foreach ($list as $item) {
+                    $item->delete();
+                }
             }
         }
     }
