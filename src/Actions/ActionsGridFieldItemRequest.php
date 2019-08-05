@@ -1,4 +1,5 @@
 <?php
+
 namespace LeKoala\Base\Actions;
 
 use Exception;
@@ -47,6 +48,7 @@ class ActionsGridFieldItemRequest extends DataExtension
         $itemRequest = $this->owner;
         $record = $itemRequest->record;
         $CMSActions = $record->getCMSActions();
+
         /* @var $actions FieldList */
         $actions = $form->Actions();
         foreach ($CMSActions as $action) {
@@ -78,9 +80,19 @@ class ActionsGridFieldItemRequest extends DataExtension
 
         // Move delete at the end
         $deleteAction = $actions->fieldByName('action_doDelete');
+
+        // SoftDeletable support
+        $undoDelete = $actions->fieldByName('action_doCustomAction[undoDelete]');
+        $forceDelete = $actions->fieldByName('action_doCustomAction[forceDelete]');
+
         if ($deleteAction) {
             $actions->remove($deleteAction);
-            $actions->push($deleteAction);
+            if ($forceDelete) {
+                $actions->push($forceDelete);
+            } else {
+                $actions->push($deleteAction);
+            }
+
             if ($RightGroup) {
                 $deleteAction->addExtraClass('default-position');
             }

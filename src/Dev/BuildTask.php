@@ -1,4 +1,5 @@
 <?php
+
 namespace LeKoala\Base\Dev;
 
 use Exception;
@@ -110,8 +111,7 @@ abstract class BuildTask extends DefaultBuildTask
     protected function outputHeader()
     {
         $taskTitle = $this->getTitle();
-        if (Director::is_cli()) {
-        } else {
+        if (Director::is_cli()) { } else {
             $html = "<!DOCTYPE html><html><head><title>$taskTitle</title>";
             $html .= '<link rel="stylesheet" type="text/css" href="/resources/base/css/buildtask.css" />';
             $html .= '</head><body><div class="info header"><h1>Running Task ' . $taskTitle . '</h1></div><div class="build">';
@@ -121,8 +121,7 @@ abstract class BuildTask extends DefaultBuildTask
 
     protected function outputFooter()
     {
-        if (Director::is_cli()) {
-        } else {
+        if (Director::is_cli()) { } else {
             $html = "</div></body>";
             echo $html;
         }
@@ -185,11 +184,15 @@ abstract class BuildTask extends DefaultBuildTask
      * @param string $key
      * @param string $title
      * @param mixed $default Default value. Input type will be based on this (bool => checkbox, etc)
-     * @param array $list An array of value for a dropdown
+     * @param array|Map $list An array of value for a dropdown
      * @return void
      */
     protected function addOption($key, $title, $default = '', $list = null)
     {
+        // Handle maps
+        if (is_object($list) && method_exists($list, 'toArray')) {
+            $list = $list->toArray();
+        }
         $opt = [
             'key' => $key,
             'title' => $title,
