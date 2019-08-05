@@ -111,7 +111,9 @@ abstract class BuildTask extends DefaultBuildTask
     protected function outputHeader()
     {
         $taskTitle = $this->getTitle();
-        if (Director::is_cli()) { } else {
+        if (Director::is_cli()) {
+            // Nothing in CLI
+        } else {
             $html = "<!DOCTYPE html><html><head><title>$taskTitle</title>";
             $html .= '<link rel="stylesheet" type="text/css" href="/resources/base/css/buildtask.css" />';
             $html .= '</head><body><div class="info header"><h1>Running Task ' . $taskTitle . '</h1></div><div class="build">';
@@ -121,7 +123,9 @@ abstract class BuildTask extends DefaultBuildTask
 
     protected function outputFooter()
     {
-        if (Director::is_cli()) { } else {
+        if (Director::is_cli()) {
+            // Nothing in CLI
+        } else {
             $html = "</div></body>";
             echo $html;
         }
