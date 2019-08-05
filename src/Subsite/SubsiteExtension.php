@@ -1,4 +1,5 @@
 <?php
+
 namespace LeKoala\Base\Subsite;
 
 use SilverStripe\Forms\FieldList;
@@ -6,6 +7,7 @@ use SilverStripe\Control\Director;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\SiteConfig\SiteConfig;
 use SilverStripe\Subsites\Model\SubsiteDomain;
+use SilverStripe\ORM\DataObject;
 
 /**
  * Improve subsites
@@ -44,6 +46,25 @@ class SubsiteExtension extends DataExtension
     {
         if ($this->owner->ID && Director::isDev()) {
             $this->addLocalDomain();
+        }
+    }
+
+    public function onBeforeDelete()
+    {
+        parent::onBeforeDelete();
+
+        // Delete SiteConfig
+        $SiteConfig = SiteConfig::get()->filter('SubsiteID', $this->owner->ID)->first();
+        if ($SiteConfig) {
+            $SiteConfig->delete();
+        }
+
+        // Ripple delete any objects
+        foreach (DataObjectSubsite::listDataObjectWithSubsites() as $class) {
+            $list = $class::get()->filter('SubsiteID', $this->owner->ID);
+            foreach ($list as $item) {
+                $item->delete();
+            }
         }
     }
 

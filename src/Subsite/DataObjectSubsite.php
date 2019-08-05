@@ -1,7 +1,10 @@
 <?php
+
 namespace LeKoala\Base\Subsite;
 
 use SilverStripe\ORM\DataQuery;
+use SilverStripe\Core\ClassInfo;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\ORM\DataExtension;
@@ -22,6 +25,22 @@ class DataObjectSubsite extends DataExtension
     private static $has_one = [
         'Subsite' => Subsite::class,
     ];
+
+    /**
+     * @return array
+     */
+    public static function listDataObjectWithSubsites()
+    {
+        $arr = array();
+        $dataobjects = ClassInfo::subclassesFor(DataObject::class);
+        foreach ($dataobjects as $dataobject) {
+            $singl = singleton($dataobject);
+            if ($singl->hasExtension(self::class)) {
+                $arr[$dataobject] = $dataobject;
+            }
+        }
+        return $arr;
+    }
 
     /**
      * Update any requests to limit the results to the current site
