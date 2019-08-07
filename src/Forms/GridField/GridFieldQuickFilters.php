@@ -34,7 +34,8 @@ class GridFieldQuickFilters implements GridField_HTMLProvider
      */
     public function getHTMLFragments($gridField)
     {
-        $currFilters = isset($_GET['quickfilters']) ? explode(',', $_GET['quickfilters']) : [];
+        // Use request because it can be sent through GET (regular) or POST (ajax search form)
+        $currFilters = isset($_REQUEST['quickfilters']) ? explode(',', $_REQUEST['quickfilters']) : [];
         $html = '<div class="quickfilters">';
         // nested form do not work we use js in admin.js to trigger the post
         // $html .= '<form method="get" action="">';
