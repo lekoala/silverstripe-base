@@ -11,6 +11,7 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest;
 use SilverStripe\Control\Director;
+use SilverStripe\ORM\DataObject;
 
 /**
  * Decorates {@link GridDetailForm_ItemRequest} to use new form actions and buttons.
@@ -199,7 +200,9 @@ class ActionsGridFieldItemRequest extends DataExtension
         if ($next && !empty($data['_activetab'])) {
             $link .= '#' . $data['_activetab'];
         }
-        return $controller->redirect($link);
+        // $this->getResponse()->addHeader('X-Reload', true);
+        // $this->getResponse()->addHeader('X-ControllerURL', $link);
+        return $controller->redirect($link, 302);
     }
 
     public function doSaveAndPrev($data, $form)
@@ -214,7 +217,15 @@ class ActionsGridFieldItemRequest extends DataExtension
         if ($prev && !empty($data['_activetab'])) {
             $link .= '#' . $data['_activetab'];
         }
-        return $controller->redirect($link);
+        // $this->getResponse()->addHeader('X-Reload', true);
+        // $this->getResponse()->addHeader('X-ControllerURL', $link);
+        return $controller->redirect($link, 302);
+    }
+
+    public function getResponse()
+    {
+        $controller = $this->getToplevelController();
+        return $controller->getResponse();
     }
 
     /**
