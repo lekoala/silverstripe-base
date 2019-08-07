@@ -8,7 +8,10 @@ use SilverStripe\ORM\ValidationResult;
 use SilverStripe\View\Parsers\URLSegmentFilter;
 
 /**
- * Class \LeKoala\Base\Extensions\URLSegmentExtension
+ * URL Segment extension
+ *
+ * By default link will be applied WITHOUT actions
+ * see IsRecordController trait to see how it's done
  *
  * @property \LeKoala\Base\News\NewsCategory|\LeKoala\Base\News\NewsItem|\LeKoala\Base\Tags\Tag|\PortfolioCategory|\PortfolioItem|\LeKoala\Base\Extensions\URLSegmentExtension $owner
  * @property string $URLSegment

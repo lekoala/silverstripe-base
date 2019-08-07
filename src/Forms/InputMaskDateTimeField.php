@@ -1,6 +1,8 @@
 <?php
 namespace LeKoala\Base\Forms;
 
+use SilverStripe\i18n\i18n;
+
 /**
  * Format date field using ISO value
  *
@@ -19,7 +21,45 @@ class InputMaskDateTimeField extends InputMaskField
 
     public function setValue($value, $data = null)
     {
-        return parent::setValue($value, $data);
+        // Normalize input value according to our format
+        if ($value) {
+            $value = date((self::convertDateFormatToPhp(self::getDefaultDateFormat())) . ' H:i:s', strtotime($value));
+        }
+        $this->value = $value;
+        return $this;
+    }
+
+    /**
+     * Get the input format for inputmask
+     * @return string
+     */
+    public static function getDefaultDateFormat()
+    {
+        $config = self::config()->get('default_input_format');
+        if (!$config || $config == 'auto') {
+            $locale = strtolower(substr(i18n::get_locale(), 0, 2));
+            switch ($locale) {
+                case 'fr':
+                case 'nl':
+                    return 'dd/mm/yyyy';
+                    break;
+                default:
+                    return 'yyyy-mm-dd';
+            }
+        }
+        return $config;
+    }
+
+    /**
+     * @param string $format
+     * @return string
+     */
+    public static function convertDateFormatToPhp($format)
+    {
+        $format = str_replace('yyyy', 'Y', $format);
+        $format = str_replace('mm', 'm', $format);
+        $format = str_replace('dd', 'd', $format);
+        return $format;
     }
 
     /**

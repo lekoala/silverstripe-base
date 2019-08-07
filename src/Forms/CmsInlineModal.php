@@ -48,7 +48,11 @@ class CmsInlineModal extends LiteralField
         $attrs = '';
         $modalID = 'modal_' . $this->name;
 
-        $content = '<label for="' . $modalID . '" class="btn btn-primary"' . $attrs . '>';
+        $onclick = '';
+        if ($this->iframe) {
+            $onclick = "resizeIframe(document.getElementById(this.getAttribute('for') + '_iframe'))";
+        }
+        $content = '<label for="' . $modalID . '" class="btn btn-primary"' . $attrs . ' onclick="' . $onclick . '">';
         $content .= $this->title;
         $content .= '</label>';
         $content .= '<div class="pure-modal from-top">';
@@ -62,12 +66,12 @@ class CmsInlineModal extends LiteralField
         $content .= '<label for="' . $modalID . '" class="close">&#10006;</label>';
         // Iframe if set
         if ($this->iframe && $this->iframeTop) {
-            $content .= '<iframe src="' . $this->iframe . '" width="100%%" style="max-height:400px" frameBorder="0" scrolling="auto" onload="resizeIframe(this);"></iframe>';
+            $content .= '<iframe id="' . $modalID . '_iframe" src="' . $this->iframe . '" width="100%%" style="max-height:400px" frameBorder="0" scrolling="auto"></iframe>';
         }
         $content .= $this->content;
         // Iframe if set
         if ($this->iframe && !$this->iframeTop) {
-            $content .= '<iframe src="' . $this->iframe . '" width="100%%" style="max-height:400px" frameBorder="0" scrolling="auto" onload="resizeIframe(this);"></iframe>';
+            $content .= '<iframe id="' . $modalID . '_iframe"  src="' . $this->iframe . '" width="100%%" style="max-height:400px" frameBorder="0" scrolling="auto"></iframe>';
         }
         $content .= '</div>';
         $content .= '</div>';

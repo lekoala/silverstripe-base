@@ -33,3 +33,39 @@
         transform: translate(0, -50%);
     }
 }
+
+@mixin selection {
+    ::selection {
+        @content;
+    }
+
+    ::-moz-selection {
+        @content;
+    }
+
+    ::-webkit-selection {
+        @content;
+    }
+}
+
+@mixin placeholder {
+    &::-webkit-input-placeholder {
+        @content
+    }
+
+    &:-moz-placeholder {
+        @content
+    }
+
+    &::-moz-placeholder {
+        @content
+    }
+
+    &:-ms-input-placeholder {
+        @content
+    }
+}
+
+@mixin transition($property : 'all', $duration: 0.2, $easing: 'ease-in-out') {
+    transition: $property $duration $easing
+}

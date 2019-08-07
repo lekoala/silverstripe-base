@@ -1,17 +1,20 @@
 <?php
+
 namespace LeKoala\Base\Actions;
 
 use Exception;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FieldList;
+use SilverStripe\Control\Director;
+use SilverStripe\Forms\FormAction;
 use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\ORM\ValidationResult;
+use LeKoala\Base\Helpers\SilverStripeIcons;
 use SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest;
-use SilverStripe\Control\Director;
-use SilverStripe\ORM\DataObject;
 
 /**
  * Decorates {@link GridDetailForm_ItemRequest} to use new form actions and buttons.
@@ -45,22 +48,69 @@ class ActionsGridFieldItemRequest extends DataExtension
         $itemRequest = $this->owner;
         $record = $itemRequest->record;
         $CMSActions = $record->getCMSActions();
+
         /* @var $actions FieldList */
         $actions = $form->Actions();
         foreach ($CMSActions as $action) {
             $actions->push($action);
         }
+
+        $saveAndClose = null;
+        if ($record->canEdit()) {
+            if ($record->ID) {
+                $label = _t('DataObjectActionsExtension.SAVEANDCLOSE', 'Save and Close');
+            } else {
+                $label = _t('DataObjectActionsExtension.CREATEANDCLOSE', 'Create and Close');
+            }
+            $saveAndClose = new FormAction('doSaveAndClose', $label);
+            $saveAndClose->addExtraClass('btn-primary');
+            $saveAndClose->addExtraClass('font-icon-' . SilverStripeIcons::ICON_LEVEL_UP);
+            $saveAndClose->setUseButtonTag(true);
+            $actions->push($saveAndClose);
+        }
+
+        // We have a 4.4 setup
+        $RightGroup = $actions->fieldByName('RightGroup');
+
+        // Insert again to make sure our actions are properly placed after apply changes
+        if ($RightGroup) {
+            $actions->remove($RightGroup);
+            $actions->push($RightGroup);
+        }
+
         // Move delete at the end
         $deleteAction = $actions->fieldByName('action_doDelete');
+
+        // SoftDeletable support
+        $undoDelete = $actions->fieldByName('action_doCustomAction[undoDelete]');
+        $forceDelete = $actions->fieldByName('action_doCustomAction[forceDelete]');
+
         if ($deleteAction) {
             $actions->remove($deleteAction);
-            $actions->push($deleteAction);
+            if ($forceDelete) {
+                $actions->push($forceDelete);
+            } else {
+                $actions->push($deleteAction);
+            }
+
+            if ($RightGroup) {
+                $deleteAction->addExtraClass('default-position');
+            }
+            if ($record->hasMethod('getDeleteButtonTitle')) {
+                $deleteAction->setTitle($record->getDeleteButtonTitle());
+            }
         }
         // Move cancel at the end
         $cancelButton = $actions->fieldByName('cancelbutton');
         if ($cancelButton) {
             $actions->remove($cancelButton);
             $actions->push($cancelButton);
+            if ($RightGroup) {
+                $deleteAction->addExtraClass('default-position');
+            }
+            if ($record->hasMethod('getCancelButtonTitle')) {
+                $cancelButton->setTitle($record->getCancelButtonTitle());
+            }
         }
     }
 
@@ -99,9 +149,17 @@ class ActionsGridFieldItemRequest extends DataExtension
         $error = false;
         try {
             $result = $record->$action($data, $form, $controller);
+
+            // We have a response
+            if ($result && $result instanceof HTTPResponse) {
+                return $result;
+            }
+
             if ($result === false) {
+                // Result returned an error (false)
                 $error = true;
             } elseif (is_string($result)) {
+                // Result is a message
                 $message = $result;
             }
         } catch (Exception $ex) {
@@ -200,9 +258,7 @@ class ActionsGridFieldItemRequest extends DataExtension
         if ($next && !empty($data['_activetab'])) {
             $link .= '#' . $data['_activetab'];
         }
-        // $this->getResponse()->addHeader('X-Reload', true);
-        // $this->getResponse()->addHeader('X-ControllerURL', $link);
-        return $controller->redirect($link, 302);
+        return $controller->redirect($link);
     }
 
     public function doSaveAndPrev($data, $form)
@@ -217,15 +273,7 @@ class ActionsGridFieldItemRequest extends DataExtension
         if ($prev && !empty($data['_activetab'])) {
             $link .= '#' . $data['_activetab'];
         }
-        // $this->getResponse()->addHeader('X-Reload', true);
-        // $this->getResponse()->addHeader('X-ControllerURL', $link);
-        return $controller->redirect($link, 302);
-    }
-
-    public function getResponse()
-    {
-        $controller = $this->getToplevelController();
-        return $controller->getResponse();
+        return $controller->redirect($link);
     }
 
     /**

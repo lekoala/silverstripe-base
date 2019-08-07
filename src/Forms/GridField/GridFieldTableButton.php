@@ -62,7 +62,7 @@ abstract class GridFieldTableButton implements GridField_HTMLProvider, GridField
      * @param string $targetFragment The HTML fragment to write the button into
      * @param string $buttonLabel
      */
-    public function __construct($targetFragment = "before", $buttonLabel = null)
+    public function __construct($targetFragment = "buttons-before-right", $buttonLabel = null)
     {
         $this->targetFragment = $targetFragment;
         if ($buttonLabel) {

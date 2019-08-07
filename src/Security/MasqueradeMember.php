@@ -2,7 +2,14 @@
 namespace LeKoala\Base\Security;
 
 use SilverStripe\Control\Controller;
+use SilverStripe\Control\HTTPResponse;
 
+/**
+ * Controls masquerade related functions
+ *
+ * Remember you can visit /Security/end_masquerade to go back to your previous user
+ * Use $LogoutURL from BaseContentController to get accurate url for easier use
+ */
 trait MasqueradeMember
 {
     /**
@@ -18,9 +25,12 @@ trait MasqueradeMember
         $session = $request->getSession();
         $session->save($request);
 
-        //TODO: properly use ss response object
-        header('Location: /');
-        exit();
+        $response = new HTTPResponse();
+        $response->addHeader("X-ControllerURL", "/home");
+        $response->addHeader("X-Reload", true);
+        // don't use redirect, but rely on X-ControllerURL instead to have proper redirect from cms
+        // $response->redirect('/');
+        return $response;
     }
 
     /**

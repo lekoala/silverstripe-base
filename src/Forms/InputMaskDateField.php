@@ -12,13 +12,18 @@ class InputMaskDateField extends InputMaskDateTimeField
     {
         parent::__construct($name, $title, $value);
 
-        $this->setInputFormat('yyyy-mm-dd');
+        $this->setInputFormat(self::getDefaultDateFormat());
         // use ISO date format when unmasking to ensure proper data storage in the db
-        $this->setDataFormat('yyyy-mm-dd');
+        $this->setOutputFormat('yyyy-mm-dd');
     }
 
     public function setValue($value, $data = null)
     {
-        return parent::setValue($value, $data);
+        // Normalize input value according to our format
+        if ($value) {
+            $value = date(self::convertDateFormatToPhp(self::getDefaultDateFormat()), strtotime($value));
+        }
+        $this->value = $value;
+        return $this;
     }
 }

@@ -2,17 +2,19 @@ nl:
   ActionsGridFieldItemRequest:
     DONE: 'Action {action} was done on {name}'
   BaseFileUploadReceiver:
-    ALLOWEXTENSION: 'Allowed extensions: {ext}'
+    ALLOWEXTENSION: 'Toegestane extensies: {ext}'
     MAXRESOLUTION: 'Max resolutie: 2048x2048px'
     MAXSIZE: 'Max documentgrootte: {size}'
   BaseForm:
     DOSUBMIT: Verzenden
   BaseMemberExtension:
+    ACCOUNT_DISABLED: 'Uw account werd afgesloten.'
+    ACCOUNT_PENDING: 'Uw account wordt momenteel gevalideerd.'
     MEMBER_UNLOCKED: 'Member unlocked'
   BaseSecurityAdminExtension:
     LockedMembers: 'Locked Members'
-    LogAlert: 'Last updated on {updated}'
-    LogSize: 'Total size is {size}'
+    LogAlert: 'Laatste update op {updated}'
+    LogSize: 'Totale grootte {size}'
     Logs: Logs
     MembersOnlyGroups: 'Only group members are shown. To add a user to a group, link it from an existing group.'
     RecentPasswordFailures: 'Recent Password Failures'
@@ -22,17 +24,17 @@ nl:
   BootstrapModal:
     Close: Sluiten
   ContactForm:
-    SEND: 'Send your message'
+    SEND: 'Uw bericht versturen'
   ContactPage:
-    Address: ADDRESS
+    Address: ADRES
     Email: E-MAIL
-    Phone: PHONE
+    Phone: TELEFOON
   ContactPageController:
     ERR_ENTER_EMAIL: 'Vul uw e-mail in'
     ERR_ENTER_MESSAGE: 'Schrijf uw bericht'
     ERR_ENTER_NAME: 'Vul uw naam in'
     ERR_ENTER_VALIDEMAIL: 'Vul een geldig e-mailadres in'
-    MESSAGE_ERROR: 'Uw bericht werd niet verstuurd. '
+    MESSAGE_ERROR: 'Uw bericht werd niet verstuurd.'
     MESSAGE_SENT: 'Uw bericht werd verstuurd.'
   CookieConsent:
     ALLOWCOOKIES: 'Cookies accepteren'
@@ -42,66 +44,75 @@ nl:
     MESSAGE_REQUIRED: 'This website require the usage of cookies. Please accept them to continue'
   CookiesRequiredPage:
     ACCEPT_COOKIES: 'Ik accepteer het gebruik van cookies'
-    COOKIES_ARE_REQUIRED: 'Er worden cookies gebruikt op deze website '
+    COOKIES_ARE_REQUIRED: 'Er worden cookies gebruikt op deze website'
   CountryDropdownField:
     TITLE: Land
   DataObjectActionsExtension:
-    CREATEANDCLOSE: 'Create and Close'
-    SAVEANDCLOSE: 'Save and Close'
+    CREATEANDCLOSE: 'Creëren en sluiten'
+    SAVEANDCLOSE: 'Sauver et fermer'
   EmbeddableExtension:
     EMBEDURL: 'Embed from URL'
   FilePondField:
     labelFileProcessing: Uploading
-    labelFileProcessingAborted: 'Upload cancelled'
-    labelFileProcessingComplete: 'Upload complete'
+    labelFileProcessingAborted: 'Upload geannuleerd'
+    labelFileProcessingComplete: 'Upload voltooid'
     labelIdle: 'Sleep en plaats of <span class="filepond--label-action"> Zoek </span>'
-    labelTapToCancel: 'tap to undo'
+    labelTapToCancel: 'Klik om ongedaan te maken'
   FlatpickrField:
-    NO_DATE_SELECTED: 'No date'
-    NO_TIME_SELECTED: 'No time'
+    NO_DATE_SELECTED: 'Geen datum'
+    NO_TIME_SELECTED: 'Geen tijd'
     SELECT_A_DATE: 'Kies een datum...'
   FullGridFieldQuickFilter:
     QUICKLY_FILTER: 'Quickly filter this list by keywords'
   Global:
     Address: Address
     Back: Terug
-    CONFIRM_MESSAGE: 'Are you sure?'
-    CompanyRegistrationNumber: 'Company Registration Number'
-    ContactInfos: 'Contact details'
-    ContactsSettings: 'Contacts settings'
+    CONFIRM_MESSAGE: 'Bent u zeker?'
+    Company: Bedrijf
+    CompanyRegistrationNumber: 'Registratienummer bedrijf'
+    ContactInfos: Contactgegevens
+    ContactsSettings: 'Contact instellingen'
     DefaultFromEmail: 'Default From Email'
     Email: Email
     EmailFooter: 'Email Footer'
     EmailSettings: 'Email settings'
     LegalCourt: 'Legal Court'
     LegalName: 'Legal Name'
-    Phone: Phone
-    UNDEFINED_ERROR: 'Something wrong happened'
+    NO: 'Nee'
+    Name: Naam
+    Phone: Telefoon
+    Subject: Onderwerp
+    UNDEFINED_ERROR: 'Er deed zich een fout voor.'
     View: Bekijken
+    YES: 'Ja'
+  ValidationStatusExtension:
+    APPROVE: Goedkeuren
+    APPROVED: 'Goedgekeurd'
+    DISABLE: Disable
+    DISABLED: 'Disabled'
+    VALIDATION_STATUS_APPROVED: goedgekeurd
+    VALIDATION_STATUS_DISABLED: disabled
+    VALIDATION_STATUS_PENDING: 'in afwachting van goedkeuring'
   NewsItem:
     READ_MORE: 'Meer weten'
   NewsPage:
     NO_ARTICLES: 'Geen artikels'
   NewsSidebar:
     ARCHIVES: Archives
-    CATEGORIES: Categories
+    CATEGORIES: Categorieën
     POPULAR_POSTS: 'Populaire posts'
     SEARCH: Zoeken
     TAGS: Tags
   PrivacyForm:
-    IAGREE: 'Ik heb gelezen en goedgekeurd...'
+    IAGREE: 'Ik heb gelezen en goedgekeurd'
     PLEASEREVIEW: 'Gelieve onze voorwaarden te accepteren alvorens verder te gaan'
-  SilverStripe\Admin\LeftAndMain:
-    PreviewButton: Preview
-  SilverStripe\Forms\Form:
-    CSRF_FAILED_MESSAGE: 'There seems to have been a technical problem. Please click the back button, refresh your browser, and try again.'
   SimpleSearchControllerExtension:
     GO: Go
     SEARCH: Zoeken
     SearchResults: Zoekresultaten
-    YouSearchFor: 'You searched for %s'
+    YouSearchFor: 'U zocht naar  %s'
   SocialExtension:
-    DISCOVER: 'Ik vond  '
+    DISCOVER: 'Ik vond'
     SEE: 'Je kan het hier zien :'
   URLSegmentExtension:
     URLSEGMENT: 'URL Segment'

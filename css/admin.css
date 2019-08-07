@@ -1,3 +1,8 @@
+/* Wrong link color */
+.cms-menu a {
+    color: #fff;
+}
+
 /* Prevent double scroll in 4.2 */
 body.cms {
     overflow: hidden;
@@ -256,6 +261,11 @@ body.cms {
     right: 1.5385rem;
 }
 
+#Form_ItemEditForm_action_doDelete.default-position {
+    position: inherit;
+    right: 0;
+}
+
 .cms-content-header-utils {
     padding-right: 1.5385rem;
 }
@@ -423,4 +433,11 @@ select.ag-cell-edit-input {
     visibility: hidden;
     height: 34px;
     border-radius: 0;
+}
+
+/* quick filters */
+
+.quickfilters label {
+    margin: 0;
+    margin-right: 1em;
 }

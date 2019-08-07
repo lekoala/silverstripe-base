@@ -1,14 +1,17 @@
 <?php
 namespace LeKoala\Base\Extensions;
 
+use Exception;
 use SilverStripe\ORM\DB;
 use SilverStripe\i18n\i18n;
 use SilverStripe\Core\Convert;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\Control\Controller;
 use LeKoala\Base\Contact\ContactPage;
 use SilverStripe\ErrorPage\ErrorPage;
+use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Versioned\Versioned;
 use LeKoala\Base\Subsite\SubsiteHelper;
 use SilverStripe\SiteConfig\SiteConfig;
@@ -18,13 +21,34 @@ use LeKoala\Base\Privacy\TermsAndConditionsPage;
 /**
  * Useful utilities for pages
  *
+ * Should be applied to SiteTree. Always applied in base-extensions
+ *
  * @property \SilverStripe\CMS\Model\SiteTree|\LeKoala\Base\Extensions\BasePageExtension $owner
  */
 class BasePageExtension extends DataExtension
 {
+    private static $db = [
+        "ShowInFooter" => "Boolean"
+    ];
     private static $casting = [
         "HighlightWordInContent" => "HTMLFragment"
     ];
+
+    public function getPageTitleSeparator()
+    {
+        return $this->owner->config()->page_title_separator;
+    }
+
+    public function updateCMSFields(\SilverStripe\Forms\FieldList $fields)
+    {
+        // nothing
+    }
+
+    public function updateSettingsFields(\SilverStripe\Forms\FieldList $fields)
+    {
+        // For i18n it is stored under {$ancestorClass}.{$type}_{$name}, so SilverStripe\CMS\Model\SiteTree.db_ShowInFooter
+        $fields->insertAfter("ShowInMenus", new CheckboxField("ShowInFooter", $this->owner->fieldLabel("ShowInFooter")));
+    }
 
     /**
      * Easily require the page in requireDefaultRecords using this method
@@ -101,22 +125,41 @@ class BasePageExtension extends DataExtension
             return;
         }
 
+        $controller = Controller::curr();
+        $sourceObject = $owner;
+        try {
+            if ($controller->hasMethod("getRequestedRecord")) {
+                $sourceObject = $controller->getRequestedRecord();
+                if (!$sourceObject) {
+                    $sourceObject = $owner;
+                }
+            }
+        } catch (Exception $ex) {
+            // Keep page as source
+        }
+
         $SiteConfig = SiteConfig::current_site_config();
-        $descriptionText = $owner->MetaDescription;
-        if (!$descriptionText && $owner->hasField('Content')) {
-            $descriptionText = preg_replace('/\s+/', ' ', $owner->dbObject('Content')->Summary());
+        $descriptionText = '';
+        if ($sourceObject->hasField('MetaDescription')) {
+            $descriptionText = $sourceObject->MetaDescription;
+        }
+        if (!$descriptionText && $sourceObject->hasMethod('getShareDescription')) {
+            $descriptionText = $sourceObject->getShareDescription();
+        }
+        if (!$descriptionText && $sourceObject->hasField('Content')) {
+            $descriptionText = preg_replace('/\s+/', ' ', $sourceObject->dbObject('Content')->Summary());
         }
         $imageLink = '';
-        if ($owner->hasMethod('getMetaImage')) {
-            $imageLink = $owner->getMetaImage();
+        if ($sourceObject->hasMethod('getMetaImage')) {
+            $imageLink = $sourceObject->getMetaImage();
         }
         $ogType = "website";
-        if ($owner->hasMethod('getOGType')) {
-            $ogType = $owner->getOGType();
+        if ($sourceObject->hasMethod('getOGType')) {
+            $ogType = $sourceObject->getOGType();
         }
-        $shareTitle = $owner->getTitle();
-        if ($owner->hasMethod('getShareTitle')) {
-            $shareTitle = $owner->getShareTitle();
+        $shareTitle = $sourceObject->getTitle();
+        if ($sourceObject->hasMethod('getShareTitle')) {
+            $shareTitle = $sourceObject->getShareTitle();
         }
         $tags = '';
         // OpenGraph

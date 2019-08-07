@@ -1,4 +1,5 @@
 <?php
+
 namespace LeKoala\Base\Security;
 
 use SilverStripe\ORM\DB;
@@ -12,6 +13,11 @@ use SilverStripe\Admin\SecurityAdmin;
 use SilverStripe\Security\Permission;
 use LeKoala\Base\Actions\CustomAction;
 use LeKoala\Base\Security\MemberAudit;
+use SilverStripe\ORM\ValidationResult;
+use SilverStripe\Security\LoginAttempt;
+use LeKoala\Base\Extensions\ValidationStatusExtension;
+use SilverStripe\Forms\GridField\GridFieldAddNewButton;
+use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
 
 /**
  * A lot of base functionalities for your members
@@ -32,9 +38,25 @@ class BaseMemberExtension extends DataExtension
         'LastVisited' => 'Datetime',
         'NumVisit' => 'Int',
     ];
+    private static $has_many = [
+        "Audits" => MemberAudit::class . ".Member",
+    ];
 
-    public function canLogIn($result)
+    public function canLogIn(ValidationResult $result)
     {
+        // Admin can always log in
+        if (Permission::check('ADMIN', 'any', $this->owner)) {
+            return;
+        }
+        // If MemberValidationStatus extension is applied, check validation status
+        if ($this->owner->hasExtension(ValidationStatusExtension::class)) {
+            if ($this->owner->IsValidationStatusPending()) {
+                $result->addError(_t('BaseMemberExtension.ACCOUNT_PENDING', "Your account is currently pending"));
+            }
+            if ($this->owner->IsValidationStatusDisabled()) {
+                $result->addError(_t('BaseMemberExtension.ACCOUNT_DISABLED', "Your account has been disabled"));
+            }
+        }
     }
 
     /**
@@ -42,6 +64,7 @@ class BaseMemberExtension extends DataExtension
      */
     public function beforeMemberLoggedIn()
     {
+        //
     }
 
     public function afterMemberLoggedIn()
@@ -59,10 +82,12 @@ class BaseMemberExtension extends DataExtension
 
     public function beforeMemberLoggedOut($request)
     {
+        //
     }
 
     public function afterMemberLoggedOut($request)
     {
+        //
     }
 
     /**
@@ -73,34 +98,42 @@ class BaseMemberExtension extends DataExtension
      */
     public function updateMemberFormFields(FieldList $fields)
     {
+        //
     }
 
     public function updateMemberPasswordField($password)
     {
+        //
     }
 
     public function updateDateFormat($format)
     {
+        //
     }
 
     public function updateTimeFormat($format)
     {
+        //
     }
 
     public function updateGroups($groups)
     {
+        //
     }
 
     public function onBeforeChangePassword($password, $valid)
     {
+        //
     }
 
     public function onAfterChangePassword($password, $valid)
     {
+        //
     }
 
     public function registerFailedLogin()
     {
+        //
     }
 
     public function updateCMSFields(FieldList $fields)
@@ -111,6 +144,17 @@ class BaseMemberExtension extends DataExtension
             'LastVisited',
             'NumVisit',
         ]);
+
+        $Audits = $fields->dataFieldByName('Audits');
+        if ($Audits) {
+            if (Permission::check('ADMIN')) {
+                $AuditsConfig = $Audits->getConfig();
+                $AuditsConfig->removeComponentsByType(GridFieldAddExistingAutocompleter::class);
+                $AuditsConfig->removeComponentsByType(GridFieldAddNewButton::class);
+            } else {
+                $fields->removeByName('Audits');
+            }
+        }
 
         // Some fields don't make sense upon creation
         if (!$this->owner->ID) {
@@ -193,13 +237,12 @@ class BaseMemberExtension extends DataExtension
      */
     public function IsAdmin()
     {
-        return Permission::check('CMS_ACCESS');
+        return Permission::check('CMS_ACCESS', 'any', $this->owner);
     }
-
 
     /**
      * @param string $event
-     * @param string $data
+     * @param string|array $data
      * @return int
      */
     public function audit($event, $data = null)

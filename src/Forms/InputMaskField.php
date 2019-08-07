@@ -52,7 +52,7 @@ class InputMaskField extends TextField
      * @config
      * @var string
      */
-    private static $version = '4.0.6';
+    private static $version = '4.0.8';
 
     public function Type()
     {
@@ -96,7 +96,7 @@ class InputMaskField extends TextField
     /**
      * The value you want when unmasking to hidden field
      *
-     * @param string $value
+     * @param string $value The alias or "masked" to get the masked value as is
      * @return $this
      */
     public function setDataFormat($value)
@@ -120,6 +120,17 @@ class InputMaskField extends TextField
         return $this->getConfig('mask');
     }
 
+    /**
+     * Set the mask
+     *
+     * 9: numeric
+     * a: alphabetical
+     * *: alphanumeric
+     * (aaa): optional part
+     *
+     * @param string $value
+     * @return $this
+     */
     public function setMask($value)
     {
         return $this->setConfig('mask', $value);

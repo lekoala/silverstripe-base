@@ -9,8 +9,8 @@
  *
  * Plugins are rebound on ajax load automatically
  */
-(function ($) {
-    $.fn.ModularBehaviour = function (opts) {
+(function($) {
+    $.fn.ModularBehaviour = function(opts) {
         // default configuration
         var config = $.extend({}, {
             moduleKey: 'module',
@@ -22,6 +22,29 @@
         var timeout;
         var retries = 0;
 
+        /**
+         * Instantiate objects dynamically
+         *
+         * @param object constructor Object reference
+         * @param array args Array of arguments to pass to the constructor
+         * @return object The instantiated object
+         */
+        function instantiate(constructor, args) {
+            // Available since IE>=9
+            var instance = Object.create(constructor.prototype);
+            constructor.apply(instance, args);
+            return instance;
+        }
+
+        /**
+         * @return string
+         */
+        function getNewModuleId() {
+            var counter = 0;
+            counter++;
+            return 'ModularBehaviour' + counter.toString();
+        }
+
         // main function
         function init(e) {
             // prevent multiple inits
@@ -32,19 +55,38 @@
             var initFailed = false;
             var module = e.data(config.moduleKey);
             var moduleConfig = e.data(config.configKey);
+            var noConfig = false;
+            var windowRef = window[module];
+            var jqueryRef = $.fn[module];
+            var inst = null;
+            var moduleId = e.attr('id');
 
-            // External config selector
-            if (typeof moduleConfig === 'string' && moduleConfig.charAt(0) === '#') {
-                moduleConfig = $.parseJSON($(moduleConfig).text());
+            // we need an id!
+            if (!moduleId) {
+                moduleId = getNewModuleId();
+                e.attr('id', moduleId);
             }
 
-            if (typeof $.fn[module] !== 'undefined') {
+            // Config parsing
+            if (typeof moduleConfig === 'string') {
+                // External config
+                if (moduleConfig.charAt(0) === '#') {
+                    moduleConfig = $.parseJSON($(moduleConfig).text());
+                } else if (moduleConfig.charAt(0) === '{') {
+                    console.log("Invalid config. Make sure it's properly JSON encoded.", moduleConfig);
+                } else {
+                    console.log("Weird config detected", moduleConfig);
+                }
+            }
+
+            if (typeof jqueryRef !== 'undefined') {
                 isJqueryModule = true;
             }
 
             // Prevent undefined config
             if (!moduleConfig) {
                 moduleConfig = {};
+                noConfig = true;
             }
 
             // Dispatch beforeHooks
@@ -52,15 +94,27 @@
                 $.fn.ModularBehaviour.beforeHooks[module].call(e, moduleConfig);
             }
 
+            // console.log("Initialise module " + module);
+
             // apply = array of args
             // call = comma separated list of args
             // here, we pass as the first argument a config object
             if (isJqueryModule) {
                 // It's a jquery module
-                $.fn[module].call(e, moduleConfig);
-            } else if (typeof window[module] !== "undefined") {
-                // It's a global var
-                window[module].call('#' + e.attr('id'), moduleConfig);
+                inst = jqueryRef.call(e, moduleConfig);
+            } else if (typeof windowRef !== "undefined") {
+                // It's a global object, expecting the "new" keyword to be used
+                // if you don't want to use the "new" keyword, consider wrapping the function in a jQuery plugin
+                if (noConfig) {
+                    inst = instantiate(windowRef, [
+                        '#' + moduleId
+                    ]);
+                } else {
+                    inst = instantiate(windowRef, [
+                        '#' + moduleId,
+                        moduleConfig
+                    ]);
+                }
             } else {
                 // console.log(module + " is not defined");
                 e.addClass(config.failedClass);
@@ -68,7 +122,7 @@
             }
 
             if (typeof $.fn.ModularBehaviour.afterHooks[module] !== 'undefined') {
-                $.fn.ModularBehaviour.afterHooks[module].call(e, moduleConfig);
+                $.fn.ModularBehaviour.afterHooks[module].call(e, moduleConfig, inst);
             }
 
             // If init failed, we may need to try again later (ajax requirements can be delayed...)
@@ -76,13 +130,13 @@
                 e.addClass(config.initClass);
                 e.removeClass(config.failedClass);
             } else {
-                // This is a bit of a hack
+                // This is a bit of a hack, dom might not be properly parsed (after ajax load for instance)
                 if (timeout) {
                     clearTimeout(timeout);
                 }
                 retries++;
                 if (retries > 4) {
-                    timeout = setTimeout(function () {
+                    timeout = setTimeout(function() {
                         $('[data-module]').ModularBehaviour();
                     }, 250);
                 }
@@ -90,7 +144,7 @@
         }
 
         // initialize every element
-        this.each(function () {
+        this.each(function() {
             init($(this));
         });
         return this;
@@ -109,15 +163,15 @@
             document.addEventListener('DOMContentLoaded', fn);
         }
     }
-    ready(function () {
+    ready(function() {
         $('[data-module]').ModularBehaviour();
     });
 
     // after each successfull ajax request, try to init modules again after requirements are loaded
-    var decodePath = function (str) {
+    var decodePath = function(str) {
         return str.replace(/%2C/g, ',').replace(/\&amp;/g, '&').replace(/^\s+|\s+$/g, '');
     };
-    $(document).ajaxSuccess(function (event, xhr, settings) { // eslint-disable-line no-unused-vars
+    $(document).ajaxSuccess(function(event, xhr, settings) { // eslint-disable-line no-unused-vars
         // Check if jquery ondemand will trigger script loading
         var newJsIncludes = [];
         if (xhr.getResponseHeader && xhr.getResponseHeader('X-Include-JS') && $.isItemLoaded) {

@@ -7,9 +7,24 @@ use SilverStripe\Control\Director;
 use SilverStripe\View\Requirements;
 use SilverStripe\Core\Config\Configurable;
 
+/**
+ * Configure shared requirements
+ *
+ * Easy to set custom versions in yml
+ *
+ * LeKoala\Base\View\CommonRequirements:
+ *   jquery_version: '1.12.4'
+ */
 class CommonRequirements
 {
     use Configurable;
+
+
+    /**
+     * @config
+     * @var string
+     */
+    private static $jquery_version = '3.4.1';
 
     /**
      * @config
@@ -51,7 +66,7 @@ class CommonRequirements
      * @config
      * @var string
      */
-    private static $boxicons_version = '1.9.1';
+    private static $boxicons_version = '2.0.2';
 
     /**
      * @config
@@ -114,6 +129,12 @@ class CommonRequirements
     private static $imagesLoaded_version = '4.1.4';
 
     /**
+     * @config
+     * @var string
+     */
+    private static $swiper_version = '4.5.0';
+
+    /**
      * Include all files in a given path
      *
      * @param string $path
@@ -130,12 +151,41 @@ class CommonRequirements
     }
 
     /**
+     * Including modular behaviour tools to initialize scripts from html in one go
+     *
+     * Simply use  data-module="myModuleName" where myModuleName matches the jquery plugin
+     * You can pass options in data-config="{"myOption": "true"}" (it has to be properly json encoded)
+     *
+     * Larger option array might be better in php data-config="$JsonOptionsHere"
+     *
+     * @return void
+     */
+    public static function modularBehaviour()
+    {
+        Requirements::javascript("base/javascript/ModularBehaviour.js");
+    }
+
+    /**
      * @link https://polyfill.io/v3/api/
      * @return void
      */
     public static function polyfillIo()
     {
         Requirements::javascript('https://cdn.polyfill.io/v3/polyfill.min.js?flags=gated');
+    }
+
+    /**
+     * @param bool $slim
+     * @return void
+     */
+    public static function jquery($slim = false)
+    {
+        $version = self::config()->jquery_version;
+        $ext = '';
+        if ($slim) {
+            $ext = '.slim';
+        }
+        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/jquery/$version/jquery" . $ext . ".min.js");
     }
 
     /**
@@ -340,9 +390,11 @@ JS;
     }
 
     /**
+     * If you use ModularBehaviour, you can just do data-module="owlCarousel"
+     *
      * @link https://github.com/OwlCarousel2/OwlCarousel2
-     * @param bool $css
-     * @param bool $theme
+     * @param bool $css If you set this to false, think about including ../../../base/sass/vendor/owl-carousel2/owl.carousel
+     * @param bool $theme Name of your theme, stored in ../../../base/sass/vendor/owl-carousel2/owl.theme.default if you build your own styles
      * @return void
      */
     public static function owlCarousel2($css = true, $theme = 'default')
@@ -352,7 +404,7 @@ JS;
         if ($css) {
             Requirements::css("https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/$version/assets/owl.carousel.min.css");
         }
-        if ($theme) {
+        if ($css && $theme) {
             Requirements::css("https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/$version/assets/owl.theme.$theme.min.css");
         }
     }
@@ -379,5 +431,19 @@ JS;
     {
         $version = self::config()->imagesLoaded_version;
         Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/$version/imagesloaded.min.js");
+    }
+
+    /**
+     * @link http://idangero.us/swiper
+     * @param bool $css
+     * @return void
+     */
+    public static function swiper($css = true)
+    {
+        $version = self::config()->swiper_version;
+        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/Swiper/$version/js/swiper.min.js");
+        if ($css) {
+            Requirements::css("https://cdnjs.cloudflare.com/ajax/libs/Swiper/$version/css/swiper.min.css");
+        }
     }
 }

@@ -3,6 +3,7 @@ Name: base-cms
 ---
 SilverStripe\CMS\Model\SiteTree:
   meta_generator: ''
+  page_title_separator: '|'
 SilverStripe\Admin\LeftAndMain:
   extra_requirements_css:
     - 'base/css/admin.css'

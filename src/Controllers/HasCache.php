@@ -13,7 +13,7 @@ use SilverStripe\Core\Injector\Injector;
 trait HasCache
 {
     /**
-     * @return LoggerInterface
+     * @return CacheInterface
      */
     public static function getCache($name = 'app')
     {

@@ -33,7 +33,7 @@ trait ConfigurableField
      *
      * @param string $key
      * @param string $value
-     * @return string
+     * @return $this
      */
     public function setConfig($key, $value)
     {

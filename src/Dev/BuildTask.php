@@ -1,4 +1,5 @@
 <?php
+
 namespace LeKoala\Base\Dev;
 
 use Exception;
@@ -25,6 +26,8 @@ use SilverStripe\Logging\DetailedErrorFormatter;
  * - Messaging
  * - Common imports (Env, Request)
  * - Utils
+ *
+ * See BuildTask::init and commented code to get started!
  */
 abstract class BuildTask extends DefaultBuildTask
 {
@@ -70,6 +73,18 @@ abstract class BuildTask extends DefaultBuildTask
     protected function init()
     {
         // Call you own code here in your subclasses
+        // $this->addOption("my_bool_option", "My Bool Option", false);
+        // $this->addOption("my_list_option", "My List Option", null, $list);
+        // $options = $this->askOptions();
+
+        // $my_bool_option = $options['my_bool_option'];
+        // $my_list_option = $options['my_list_option'];
+
+        // if ($my_bool_option) {
+        //     $this->message("Totally true");
+        // } else {
+        //     $this->message("Not true");
+        // }
     }
 
     /**
@@ -97,6 +112,7 @@ abstract class BuildTask extends DefaultBuildTask
     {
         $taskTitle = $this->getTitle();
         if (Director::is_cli()) {
+            // Nothing in CLI
         } else {
             $html = "<!DOCTYPE html><html><head><title>$taskTitle</title>";
             $html .= '<link rel="stylesheet" type="text/css" href="/resources/base/css/buildtask.css" />';
@@ -108,6 +124,7 @@ abstract class BuildTask extends DefaultBuildTask
     protected function outputFooter()
     {
         if (Director::is_cli()) {
+            // Nothing in CLI
         } else {
             $html = "</div></body>";
             echo $html;
@@ -171,11 +188,15 @@ abstract class BuildTask extends DefaultBuildTask
      * @param string $key
      * @param string $title
      * @param mixed $default Default value. Input type will be based on this (bool => checkbox, etc)
-     * @param array $list An array of value for a dropdown
+     * @param array|Map $list An array of value for a dropdown
      * @return void
      */
     protected function addOption($key, $title, $default = '', $list = null)
     {
+        // Handle maps
+        if (is_object($list) && method_exists($list, 'toArray')) {
+            $list = $list->toArray();
+        }
         $opt = [
             'key' => $key,
             'title' => $title,

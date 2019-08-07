@@ -53,6 +53,11 @@
         /* iOS fix for unreadable disabled content; see https://github.com/twbs/bootstrap/issues/11655. */
         opacity: 1;
     }
+
+    // Fix fake readonly for dealing with autofill see FormHelper::disableAutofill
+    &[readonly].autofill-disabled {
+        background-color: $input-bg;
+    }
 }
 
 .field select {
@@ -118,6 +123,11 @@
     border-width: $input-border-width 0;
 }
 
+.field.literal {
+    padding-top: $input-padding-y;
+    padding-bottom: $input-padding-y;
+}
+
 form {
     .description {
         display: block;
@@ -156,6 +166,12 @@ form {
             list-style: none;
             padding: 0;
         }
+
+        &.inline {
+            li {
+                float: left;
+            }
+        }
     }
 
     .field.required {
@@ -164,7 +180,61 @@ form {
         }
     }
 
+    .field.checkbox {
+        &.required {
+            &:after {
+                content: " *";
+            }
+
+            >label:after {
+                content: "";
+            }
+        }
+    }
+
     .error {
         color: $danger;
+    }
+
+    // use this to align checkboxes to other regular inputs in a row
+    .field.field-aligned {
+        margin-top: 2.375rem;
+    }
+
+    &.form-inline {
+        fieldset {
+            float: left;
+
+            .field {
+                float: left;
+                margin-bottom: 0;
+                margin-right: $spacer;
+
+                label.left {
+                    float: left;
+                    margin-right: $spacer/2;
+                }
+
+                label.right {
+                    float: right;
+                    margin-left: $spacer/2;
+                }
+
+                .middleColumn {
+                    float: left;
+                }
+            }
+        }
+
+        .btn-toolbar {
+            float: left;
+        }
+    }
+
+    // If we have a readonly form, make clear distinction between labels and field values
+    &.readonly {
+        label {
+            font-weight: bold;
+        }
     }
 }

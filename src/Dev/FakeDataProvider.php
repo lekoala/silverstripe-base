@@ -1,6 +1,9 @@
 <?php
 namespace LeKoala\Base\Dev;
 
+use SilverStripe\Assets\Image;
+use SilverStripe\Assets\Folder;
+use SilverStripe\ORM\DataObject;
 use LeKoala\Base\Geo\CountriesList;
 
 /**
@@ -12,7 +15,6 @@ class FakeDataProvider
     protected static $latitude = 50.7802;
     protected static $longitude = 4.4269;
     protected static $avatarsPath = 'resources/avatars';
-    protected static $imageRss = 'https://unsplash.com/rss';
     protected static $firstNames = [
         'Caecilius', 'Quintus', 'Horatius', 'Flaccus', 'Clodius',
         'Metellus', 'Flavius', 'Hortensius', 'Julius', 'Decimus', 'Gaius'
@@ -23,43 +25,63 @@ class FakeDataProvider
     ];
     protected static $addresses = [
         [
-            'Address' => '4880 Glory Rd', 'City' => 'Ponchatoula', 'Postcode' => 'LA 70454',
+            'Address' => '4880 Glory Rd',
+            'City' => 'Ponchatoula',
+            'Postcode' => 'LA 70454',
             'Country' => 'US'
         ],
         [
-            'Address' => '4363 Willow Oaks Lane', 'City' => 'Harrison Township',
-            'Postcode' => 'NJ 08062', 'Country' => 'US'
-        ],
-        [
-            'Address' => '3471 Chipmunk Ln', 'City' => 'Clifton Heights', 'Postcode' => 'PA 19018 ‎',
+            'Address' => '4363 Willow Oaks Lane',
+            'City' => 'Harrison Township',
+            'Postcode' => 'NJ 08062',
             'Country' => 'US'
         ],
         [
-            'Address' => '666 Koala Ln', 'City' => 'Mt Laurel', 'Postcode' => 'NJ 08054‎',
+            'Address' => '3471 Chipmunk Ln',
+            'City' => 'Clifton Heights',
+            'Postcode' => 'PA 19018 ‎',
             'Country' => 'US'
         ],
         [
-            'Address' => '3339 Little Acres Ln', 'City' => 'Woodford', 'Postcode' => 'VA 22580',
+            'Address' => '666 Koala Ln',
+            'City' => 'Mt Laurel',
+            'Postcode' => 'NJ 08054‎',
             'Country' => 'US'
         ],
         [
-            'Address' => '15 Anthony Avenue', 'City' => 'Essex', 'Postcode' => 'MD 21221',
+            'Address' => '3339 Little Acres Ln',
+            'City' => 'Woodford',
+            'Postcode' => 'VA 22580',
             'Country' => 'US'
         ],
         [
-            'Address' => '2942 Kelly Ave', 'City' => 'Baltimore', 'Postcode' => 'MD 21209',
+            'Address' => '15 Anthony Avenue',
+            'City' => 'Essex',
+            'Postcode' => 'MD 21221',
             'Country' => 'US'
         ],
         [
-            'Address' => '687 Burke Rd', 'City' => 'Delta', 'Postcode' => 'PA 17314',
+            'Address' => '2942 Kelly Ave',
+            'City' => 'Baltimore',
+            'Postcode' => 'MD 21209',
             'Country' => 'US'
         ],
         [
-            'Address' => '1196 Court St', 'City' => 'York', 'Postcode' => 'PA 17404 ‎',
+            'Address' => '687 Burke Rd',
+            'City' => 'Delta',
+            'Postcode' => 'PA 17314',
             'Country' => 'US'
         ],
         [
-            'Address' => 'Barnes St', 'City' => 'Bel Air', 'Postcode' => 'MD 21014',
+            'Address' => '1196 Court St',
+            'City' => 'York',
+            'Postcode' => 'PA 17404 ‎',
+            'Country' => 'US'
+        ],
+        [
+            'Address' => '25 Barnes St',
+            'City' => 'Bel Air',
+            'Postcode' => 'MD 21014',
             'Country' => 'US'
         ],
     ];
@@ -142,11 +164,38 @@ class FakeDataProvider
     /**
      * A random address
      *
-     * @return string
+     * @return array
      */
     public static function address()
     {
         return self::$addresses[array_rand(self::$addresses)];
+    }
+
+    /**
+     * A random address part
+     *
+     * @param string $part Address, Street, StreetNumber, City, Postcode or Country
+     * @return string
+     */
+    public static function addressPart($part)
+    {
+        $address = self::address();
+        $rpart = $part;
+        if ($part == 'Street' || $part == 'StreetNumber') {
+            $rpart = 'Address';
+        }
+        $v = $address[$rpart];
+        if ($part == 'Street' || $part == 'StreetNumber') {
+            $vex = explode(' ', $v);
+            if ($part == 'Street') {
+                array_shift($vex);
+                $v = implode(' ', $vex);
+            }
+            if ($part == 'StreetNumber') {
+                $v = $vex[0];
+            }
+        }
+        return $v;
     }
 
     /**
@@ -287,24 +336,18 @@ class FakeDataProvider
      */
     public static function image()
     {
-        $images = DataObject::get('Image', "Filename LIKE 'assets/Faker/Images%'");
-        if (!count($images)) {
-            $rss = file_get_contents(self::$imageRss);
-            $xml = simplexml_load_string($rss);
-            $nodes = $xml->xpath("//image");
-            $i = 0;
-
-            $folder = Folder::find_or_make(self::$folder . '/Images');
-            $dir = $folder->getFullPath();
-            $filter = new FileNameFilter;
-            foreach ($nodes as $node) {
-                $i++;
-                $image = file_get_contents((string)$node->url);
-                $filename = $dir . '/' . basename($filter->filter((string)$node->title) . '.jpg');
-                file_put_contents($filename, $image);
+        $path = self::$folder . '/Images';
+        $images = Image::get()->where("FileFilename LIKE '$path%'");
+        if ($images->count() <= 0) {
+            $folder = Folder::find_or_make($path);
+            foreach (range(1, 30) as $i) {
+                $data = file_get_contents("https://picsum.photos/id/$i/1920/1080");
+                $filename = "$path/fake-$i.jpg";
+                $imageObj = new Image;
+                $imageObj->setFromString($data, $filename);
+                $imageObj->write();
             }
-            $folder->syncChildren();
-            $images = DataObject::get('Image', "Filename LIKE 'assets/Faker/Images%'");
+            $images = Image::get()->where("FileFilename LIKE 'Faker/Images%'");
         }
         $rand = rand(0, count($images));
         foreach ($images as $key => $image) {
@@ -313,6 +356,34 @@ class FakeDataProvider
             }
         }
         return $images->First();
+    }
+
+    /**
+     * Get a random image unique for a record that can be deleted without side effects
+     * for other records
+     *
+     * @param DataObject $record
+     * @return Image
+     */
+    public static function ownImage($record)
+    {
+        $path = self::$folder;
+        if ($record->hasMethod('getFolderName')) {
+            $path = $record->getFolderName();
+            $path .= "/" . self::$folder;
+        }
+
+        $i = rand(1, 1080);
+        $data = file_get_contents("https://picsum.photos/id/$i/1920/1080");
+
+        $name =  "fake-$i.jpg";
+        $filename = "$path/$name";
+
+        $imageObj = new Image;
+        $imageObj->setFromString($data, $filename);
+        $imageObj->write();
+
+        return $imageObj;
     }
 
     /**

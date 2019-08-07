@@ -15,7 +15,6 @@ use SilverStripe\ORM\DataExtension;
 use SilverStripe\Forms\DropdownField;
 use LeKoala\Base\ORM\FieldType\DBColor;
 use LeKoala\Base\Forms\SmartUploadField;
-use SilverStripe\AssetAdmin\Forms\UploadField;
 
 /**
  * Extend SiteConfig to make your website Themable
@@ -226,8 +225,6 @@ class ThemeSiteConfigExtension extends DataExtension
         $Favicon->setAllowedExtensions('zip');
         $Favicon->setDescription("Upload the zip file generated with <a href=\"https://realfavicongenerator.net/\" target=\"_blank\">Real Favicon Generator</a>. Theme Color will be used as background for your icon.");
         $themeTab->push($Favicon);
-
-        l('add theme uploads');
     }
 
     /**

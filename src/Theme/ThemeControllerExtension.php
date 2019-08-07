@@ -1,16 +1,12 @@
 <?php
 namespace LeKoala\Base\Theme;
 
-use SilverStripe\View\SSViewer;
 use SilverStripe\Core\Extension;
 use SilverStripe\Control\Director;
 use SilverStripe\View\Requirements;
-use SilverStripe\Control\Controller;
-use SilverStripe\Admin\AdminRootController;
-use SilverStripe\Admin\LeftAndMain;
 use LeKoala\Base\ORM\FieldType\DBColor;
-use SilverStripe\ORM\FieldType\DBClassName;
 use SilverStripe\SiteConfig\SiteConfig;
+use LeKoala\Base\Controllers\HasLogger;
 
 /**
  * Class \LeKoala\Base\Theme\ThemeControllerExtension
@@ -20,6 +16,19 @@ use SilverStripe\SiteConfig\SiteConfig;
 class ThemeControllerExtension extends Extension
 {
     use KnowsThemeDir;
+    use HasLogger;
+    protected static $customGoogleFont = null;
+
+    public static function getCustomGoogleFont()
+    {
+        return self::$customGoogleFont;
+    }
+
+    public static function setCustomGoogleFont($googleFont)
+    {
+        self::$customGoogleFont = $googleFont;
+    }
+
     public function onAfterInit()
     {
         if ($this->isAdminTheme()) {
@@ -28,13 +37,18 @@ class ThemeControllerExtension extends Extension
         $this->requireGoogleFonts();
         $this->requireThemeStyles();
     }
+
     protected function requireGoogleFonts()
     {
-        $SiteConfig = $this->owner->SiteConfig();
-        if ($SiteConfig->GoogleFonts) {
+        $googleFont = self::$customGoogleFont;
+        if (!$googleFont) {
+            $SiteConfig = $this->owner->SiteConfig();
+            $googleFont = $SiteConfig->GoogleFonts;
+        }
+        if ($googleFont) {
             //@link https://www.cdnplanet.com/blog/faster-google-webfonts-preconnect/
             Requirements::insertHeadTags('<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />');
-            Requirements::css('https://fonts.googleapis.com/css?family=' . $SiteConfig->GoogleFonts);
+            Requirements::css('https://fonts.googleapis.com/css?family=' . $googleFont);
         }
     }
     protected function requireThemeStyles()
@@ -42,6 +56,13 @@ class ThemeControllerExtension extends Extension
         $themeDir = $this->getThemeDir();
         $cssPath = Director::baseFolder() . '/' . $themeDir . '/css';
         $SiteConfig = $this->owner->SiteConfig();
+
+        /**
+         * You can disable this by setting. Make sure to do it AFTER #base-theme
+         *
+         * SilverStripe\SiteConfig\SiteConfig:
+         *   auto_include_css: false
+         */
         if (SiteConfig::config()->auto_include_css) {
             $files = glob($cssPath . '/*.css');
 
@@ -57,7 +78,7 @@ class ThemeControllerExtension extends Extension
                     continue;
                 }
                 // themedCSS use filename without extension
-                $name = rtrim($name, '.css');
+                $name = pathinfo($name, PATHINFO_FILENAME);
                 Requirements::themedCSS($name);
             }
         }
@@ -122,6 +143,11 @@ class ThemeControllerExtension extends Extension
                 continue;
             }
             $value = $dbObject->getValue();
+            // There is no value and no default, continue
+            if (!$value && !$declarationValue) {
+                self::getLogger()->debug("$declarationName has no value in your theme files");
+                continue;
+            }
             // There is no value, use default
             if (!$value) {
                 $value = $declarationValue;

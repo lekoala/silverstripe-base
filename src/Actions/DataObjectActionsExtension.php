@@ -2,14 +2,15 @@
 namespace LeKoala\Base\Actions;
 
 use SilverStripe\Forms\FieldList;
+use SilverStripe\Control\Director;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Controller;
-use SilverStripe\Admin\CMSProfileController;
 use SilverStripe\SiteConfig\SiteConfig;
-use SilverStripe\Control\Director;
+use LeKoala\Base\Forms\CmsInlineFormAction;
 use LeKoala\Base\Helpers\SilverStripeIcons;
+use SilverStripe\Admin\CMSProfileController;
 
 /**
  * Class \LeKoala\Base\Actions\DataObjectActionsExtension
@@ -22,7 +23,7 @@ use LeKoala\Base\Helpers\SilverStripeIcons;
 class DataObjectActionsExtension extends DataExtension
 {
     /**
-     * @link https://docs.silverstripe.org/en/3/developer_guides/customising_the_admin_interface/how_tos/extend_cms_interface/
+     * @link https://docs.silverstripe.org/en/4/developer_guides/customising_the_admin_interface/how_tos/extend_cms_interface/
      * @param FieldList $actions
      * @return void
      */
@@ -40,19 +41,6 @@ class DataObjectActionsExtension extends DataExtension
         $ctrl = Controller::curr();
         if ($ctrl instanceof CMSProfileController) {
             return;
-        }
-
-        if ($this->owner->canEdit()) {
-            if ($this->owner->ID) {
-                $label = _t('DataObjectActionsExtension.SAVEANDCLOSE', 'Save and Close');
-            } else {
-                $label = _t('DataObjectActionsExtension.CREATEANDCLOSE', 'Create and Close');
-            }
-            $saveAndClose = new FormAction('doSaveAndClose', $label);
-            $saveAndClose->addExtraClass('btn-primary');
-            $saveAndClose->addExtraClass('font-icon-' . SilverStripeIcons::ICON_LEVEL_UP);
-            $saveAndClose->setUseButtonTag(true);
-            $actions->push($saveAndClose);
         }
 
         // Next/prev
@@ -80,7 +68,25 @@ class DataObjectActionsExtension extends DataExtension
         } else {
             $utils = new FieldList();
         }
+        // Next/prev
+        // Use native 4.4 feature instead
+        // $utils = $this->addPrevNextUtils($utils);
         $this->owner->extend('updateCMSUtils', $utils);
+        return $utils;
+    }
+
+    public function addPrevNextUtils(FieldList $utils)
+    {
+        $controller = Controller::curr();
+        $url = $controller->getRequest()->getURL();
+        if ($this->owner->ID && $this->owner->hasMethod('NextRecord') && $NextRecord = $this->owner->NextRecord()) {
+            $utils->unshift($NextBtnLink = new CmsInlineFormAction('NextBtnLink', 'Next >', 'btn-secondary'));
+            $NextBtnLink->setUrl(str_replace('/' . $this->owner->ID . '/', '/' . $NextRecord->ID . '/', $url));
+        }
+        if ($this->owner->ID && $this->owner->hasMethod('PrevRecord') && $PrevRecord = $this->owner->PrevRecord()) {
+            $utils->unshift($PrevBtnLink = new CmsInlineFormAction('PrevBtnLink', '< Previous', 'btn-secondary'));
+            $PrevBtnLink->setUrl(str_replace('/' . $this->owner->ID . '/', '/' . $PrevRecord->ID . '/', $url));
+        }
         return $utils;
     }
 }

@@ -12,12 +12,12 @@
 // You can use sass variable to set defaults, although if you use colors it is
 // best to define them in your SiteConfig
 :root {
-    --primary-color: #007bff;
-    --secondary-color: #6610f2;
-    --body-font-family: "Roboto", serif;
-    --body-font-weight: 300;
-    --header-font-family: "Roboto", serif;
-    --header-font-weight: 400;
+    --primary-color: #{$primary};
+    --secondary-color: #{$secondary};
+    --body-font-family: #{$font-family-base};
+    --body-font-weight: #{$font-weight-base};
+    --header-font-family: #{$headings-font-family};
+    --header-font-weight: #{$headings-font-weight};
 }
 
 // If you allow fonts, uncomment this

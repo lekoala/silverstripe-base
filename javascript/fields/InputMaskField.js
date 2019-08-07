@@ -7,6 +7,7 @@
         var val = $this.val();
         var dataformat = $this.data("dataformat");
         var isDecimal = $this.data("isDecimal");
+        var config = $this.data("config");
 
         // Duplicate input field to store data value
         var hiddenInput = $("<input/>", {
@@ -20,14 +21,18 @@
 
         // Update real hidden field with unmasked value
         $this.on('keyup blur', function () {
-            var val = null;
+            var val = $this.inputmask("unmaskedvalue");
             // Apply a given formatting
             if (dataformat) {
-                val = Inputmask.format(val, {
-                    alias: dataformat
-                });
-            } else {
-                val = $this.inputmask("unmaskedvalue");
+                // Keep the masked input in case you want it
+                if(dataformat == "masked") {
+                    val = $this.val();
+                }
+                else {
+                    val = Inputmask.format(val, {
+                        alias: dataformat
+                    });
+                }
             }
             // Decimal %
             if (isDecimal) {

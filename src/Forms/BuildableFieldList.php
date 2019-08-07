@@ -1,6 +1,8 @@
 <?php
+
 namespace LeKoala\Base\Forms;
 
+use SilverStripe\Forms\DateField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\TextField;
@@ -10,15 +12,21 @@ use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\HiddenField;
 use LeKoala\Base\Forms\ColumnsField;
 use SilverStripe\Forms\LiteralField;
+use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\PasswordField;
+use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\TextareaField;
 use SilverStripe\Forms\CompositeField;
+use SilverStripe\Forms\OptionsetField;
+use SilverStripe\Forms\CheckboxSetField;
+use LeKoala\Base\Forms\YesNoOptionsetField;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Forms\GridField\GridFieldConfig;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
+use SilverStripe\Forms\FieldGroup;
 
 /**
  * A field list that can create it its fields
@@ -104,6 +112,8 @@ class BuildableFieldList extends FieldList
                 $object->setDescription($v);
             } elseif ($k == 'options') {
                 $object->setSource($v);
+            } elseif ($k == 'empty') {
+                $object->setHasEmptyDefault($v);
             } else {
                 $object->setAttribute($k, $v);
             }
@@ -220,6 +230,35 @@ class BuildableFieldList extends FieldList
      * @param string $name
      * @param string $title
      * @param array $attributes
+     * @return ReadonlyField
+     */
+    public function addReadonly($name, $title = null, $attributes = [])
+    {
+        return $this->addField(ReadonlyField::class, $name, $title, $attributes);
+    }
+
+    /**
+     * @param string $content
+     * @param string $name
+     * @param string $type
+     * @return AlertField
+     */
+    public function addAlert($content, $type = null, $name = null)
+    {
+        static $i = 0;
+        if ($name === null) {
+            $i++;
+            $name = "A_$i";
+        }
+        $field = AlertField::create($name, $content, $type);
+        $this->pushOrAddToTab($field);
+        return $field;
+    }
+
+    /**
+     * @param string $name
+     * @param string $title
+     * @param array $attributes
      * @return UploadField
      */
     public function addUpload($name = "ImageID", $title = null, $attributes = [])
@@ -242,12 +281,80 @@ class BuildableFieldList extends FieldList
      * @param string $name
      * @param string $title
      * @param array $attributes
+     * @return FilePondField
+     */
+    public function addSingleFilePond($name = "ImageID", $title = null, $attributes = [])
+    {
+        $fp = $this->addField(FilePondField::class, $name, $title, $attributes);
+        $fp->setAllowedMaxFileNumber(1);
+        return $fp;
+    }
+
+    /**
+     * @param string $name
+     * @param string $title
+     * @param array $attributes
+     * @return InputMaskField
+     */
+    public function addInputMask($name, $title = null, $attributes = [])
+    {
+        return $this->addField(InputMaskField::class, $name, $title, $attributes);
+    }
+
+    /**
+     * @param string $name
+     * @param string $title
+     * @param array $attributes
      * @return CheckboxField
      */
     public function addCheckbox($name = "IsEnabled", $title = null, $attributes = [])
     {
         return $this->addField(CheckboxField::class, $name, $title, $attributes);
     }
+
+    /**
+     * @param string $name
+     * @param string $title
+     * @param array $src
+     * @param array $attributes
+     * @return CheckboxSetField
+     */
+    public function addCheckboxset($name = "Options", $title = null, $src = [], $attributes = [])
+    {
+        $attributes['options'] = $src;
+        return $this->addField(CheckboxSetField::class, $name, $title, $attributes);
+    }
+
+    /**
+     * @param array $attributes
+     * @param string $name
+     * @return FieldGroup
+     */
+    public function addFieldGroup($attributes = [], $name = null)
+    {
+        static $i = 0;
+        if ($name === null) {
+            $i++;
+            $name = "Group_$i";
+        }
+        return $this->addField(FieldGroup::class, $name, null, $attributes);
+    }
+
+    /**
+     * @param array $attributes
+     * @param string $name
+     * @return CompositeField
+     */
+    public function addCompositeField($attributes = [], $name = null)
+    {
+        static $i = 0;
+        if ($name === null) {
+            $i++;
+            $name = "Composite_$i";
+        }
+        return $this->addField(CompositeField::class, $name, null, $attributes);
+    }
+
 
     /**
      * @param string $name
@@ -285,7 +392,7 @@ class BuildableFieldList extends FieldList
      * @param string $name
      * @param string $title
      * @param array $src
-     * @param array $attributes
+     * @param array $attributes Special attrs : empty, source
      * @return DropdownField
      */
     public function addDropdown($name = "Option", $title = null, $src = [], $attributes = [])
@@ -297,12 +404,116 @@ class BuildableFieldList extends FieldList
     /**
      * @param string $name
      * @param string $title
+     * @param array $src
+     * @param array $attributes
+     * @return OptionsetField
+     */
+    public function addOptionset($name = "Option", $title = null, $src = [], $attributes = [])
+    {
+        $attributes['options'] = $src;
+        return $this->addField(OptionsetField::class, $name, $title, $attributes);
+    }
+
+    /**
+     * @param string $name
+     * @param string $title
+     * @param array $attributes
+     * @return YesNoOptionsetField
+     */
+    public function addYesNo($name = "Option", $title = null, $attributes = [])
+    {
+        return $this->addField(YesNoOptionsetField::class, $name, $title, $attributes);
+    }
+
+    /**
+     * @param string $name
+     * @param string $title
+     * @param array $attributes
+     * @return DateField
+     */
+    public function addDate($name = "Date", $title = null, $attributes = [])
+    {
+        return $this->addField(DateField::class, $name, $title, $attributes);
+    }
+
+    /**
+     * @param string $name
+     * @param string $title
+     * @param array $src
+     * @param array $attributes
+     * @return InputMaskDateField
+     */
+    public function addDateMask($name = "BirthDate", $title = null, $attributes = [])
+    {
+        return $this->addField(InputMaskDateField::class, $name, $title, $attributes);
+    }
+
+    /**
+     * @param string $name
+     * @param string $title
+     * @param array $src
+     * @param array $attributes
+     * @return InputMaskNumericField
+     */
+    public function addNumericMask($name = "Number", $title = null, $attributes = [])
+    {
+        return $this->addField(InputMaskNumericField::class, $name, $title, $attributes);
+    }
+
+    /**
+     * @param string $name
+     * @param string $title
+     * @param array $src
+     * @param array $attributes
+     * @return InputMaskCurrencyField
+     */
+    public function addCurrencyMask($name = "Amount", $title = null, $attributes = [])
+    {
+        return $this->addField(InputMaskCurrencyField::class, $name, $title, $attributes);
+    }
+    /**
+     * @param string $name
+     * @param string $title
+     * @param array $src
+     * @param array $attributes
+     * @return InputMaskDateField
+     */
+    public function addIntegerMask($name = "Number", $title = null, $attributes = [])
+    {
+        return $this->addField(InputMaskIntegerField::class, $name, $title, $attributes);
+    }
+
+    /**
+     * @param string $name
+     * @param string $title
      * @param array $attributes
      * @return TextField
      */
     public function addText($name = "Title", $title = null, $attributes = [])
     {
         return $this->addField(TextField::class, $name, $title, $attributes);
+    }
+
+    /**
+     * @param string $name
+     * @param string $title
+     * @param array $attributes
+     * @return PhoneField
+     */
+    public function addPhone($name = "Phone", $title = null, $attributes = [])
+    {
+        return $this->addField(PhoneField::class, $name, $title, $attributes);
+    }
+
+    /**
+     * @param string $name
+     * @param string $title
+     * @param array $attributes
+     * @return NumericField
+     */
+    public function addNumeric($name = "Number", $title = null, $attributes = [])
+    {
+        return $this->addField(NumericField::class, $name, $title, $attributes);
     }
 
     /**
@@ -331,11 +542,15 @@ class BuildableFieldList extends FieldList
      * Group fields into a column field
      *
      * @param callable $callable
+     * @param array $columnSizes
      * @return $this
      */
-    public function group($callable)
+    public function group($callable, $columnSizes = null)
     {
         $group = new ColumnsField();
+        if ($columnSizes !== null) {
+            $group->setColumnSizes($columnSizes);
+        }
         $this->pushOrAddToTab($group);
         $this->currentGroup = $group;
         $callable($this);

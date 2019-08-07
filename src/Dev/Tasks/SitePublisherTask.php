@@ -3,6 +3,7 @@ namespace LeKoala\Base\Dev\Tasks;
 
 use LeKoala\Base\Dev\BuildTask;
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Versioned\Versioned;
 
 /**
  */
@@ -16,68 +17,55 @@ class SitePublisherTask extends BuildTask
     {
         $request = $this->getRequest();
 
-        $this->addOption("other_classes", "Write other classes (comma separated)");
+        $this->addOption("classes", "Classes to publish (comma separated)", 'Page');
         $this->addOption("go", "Set this to 1 to proceed", 0);
 
         $options = $this->askOptions();
 
-        $other_classes = $options['other_classes'];
+        $classes = $options['classes'];
         $go = $options['go'];
 
-        $singl = \Page::singleton();
-        $fluent = $singl->has_extension("\\TractorCow\\Fluent\\Extension\\FluentExtension");
-        $Pages = \Page::get();
-
-        $cbPublish = function ($Pages) {
-            foreach ($Pages as $Page) {
-                $this->message('Publishing page "' . $Page->Title . '"');
-                $Page->publishRecursive();
-            }
-        };
-        $cbSave = function ($List) {
+        $cbSave = function ($List, $publish = false) {
             foreach ($List as $Item) {
-                $this->message('Saving item "' . $Item->Title . '"');
-                $Item->write();
+                $this->message('Saving item "' . $Item->getTitle() . '"');
+                if ($publish) {
+                    $Item->publishRecursive();
+                } else {
+                    $Item->write();
+                }
             }
         };
+
+        $classesToPublish = explode(',', $classes);
 
         if ($go) {
-            if ($fluent) {
-                $state = \TractorCow\Fluent\State\FluentState::singleton();
-                $allLocales = \TractorCow\Fluent\Model\Locale::get();
-                foreach ($allLocales as $locale) {
-                    $this->message('Publishing with locale ' . $locale->Locale);
-                    $state->withState(function ($state) use ($locale, $Pages, $cbPublish) {
-                        $state->setLocale($locale->Locale);
-                        $cbPublish($Pages);
-                    });
-                }
-            } else {
-                $cbPublish($Pages);
-            }
+            foreach ($classesToPublish as $class) {
+                $this->message("Publishing class $class");
 
-            if ($other_classes) {
-                $arr = explode(',', $other_classes);
+                $List = $class::get();
+                $singl = $class::singleton();
+                $fluent = $singl->has_extension("\\TractorCow\\Fluent\\Extension\\FluentExtension");
 
-                foreach ($arr as $class) {
-                    $this->message("Publishing class $class");
+                $publish = $singl->has_extension(Versioned::class);
 
-                    $List = $class::get();
-
-                    if ($fluent) {
-                        $state = \TractorCow\Fluent\State\FluentState::singleton();
-                        $allLocales = \TractorCow\Fluent\Model\Locale::get();
-                        foreach ($allLocales as $locale) {
-                            $this->message('Publishing with locale ' . $locale->Locale);
-                            $state->withState(function ($state) use ($locale, $List, $cbSave) {
-                                $state->setLocale($locale->Locale);
-                                $cbSave($List);
-                            });
-                        }
-                    } else {
-                        $cbSave($List);
+                // With fluent we need to change state when saving
+                if ($fluent) {
+                    $state = \TractorCow\Fluent\State\FluentState::singleton();
+                    $allLocales = \TractorCow\Fluent\Model\Locale::get();
+                    foreach ($allLocales as $locale) {
+                        $this->message('Publishing with locale ' . $locale->Locale, "info");
+                        $state->withState(function ($state) use ($locale, $List, $cbSave, $publish) {
+                            $state->setLocale($locale->Locale);
+                            $cbSave($List, $publish);
+                        });
                     }
+                } else {
+                    $cbSave($List, $publish);
                 }
+            }
+        } else {
+            foreach ($classesToPublish as $class) {
+                $this->message("Would publish " . $class::get()->count() . " items for class " . $class);
             }
         }
     }
