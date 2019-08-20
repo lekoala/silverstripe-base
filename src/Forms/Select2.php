@@ -69,7 +69,7 @@ trait Select2
      * @config
      * @var string
      */
-    private static $version = '4.0.6-rc.0';
+    private static $version = '4.0.8';
 
     public function Type()
     {
@@ -430,13 +430,14 @@ trait Select2
         // Do not use select2 because it is reserved
         $this->setAttribute('data-config', json_encode($config));
 
-        Requirements::css('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css');
+        $version = self::config()->version;
+        Requirements::css("https://cdnjs.cloudflare.com/ajax/libs/select2/$version/css/select2.min.css");
         if ($ctrl instanceof LeftAndMain) {
             Requirements::css('base/css/Select2Field.css');
         }
-        Requirements::javascript('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.js');
+        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/select2/$version/js/select2.js");
         if ($lang != 'en') {
-            Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/i18n/$lang.js");
+            Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/select2/$version/js/i18n/$lang.js");
         }
         Requirements::javascript('base/javascript/ModularBehaviour.js');
         Requirements::javascript('base/javascript/fields/Select2Field.js');
