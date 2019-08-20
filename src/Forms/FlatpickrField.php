@@ -106,7 +106,7 @@ class FlatpickrField extends TextField
     private static $default_config = [
         'allowInput' => true, // Otherwise it will show as a readonly field
         'altInput' => true,
-        'altInputClass' => 'flatpickr-alt',
+        'altInputClass' => 'text flatpickr-alt',
         'defaultDate' => '',
         'time_24hr' => true,
     ];
