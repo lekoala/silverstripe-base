@@ -1,4 +1,5 @@
 <?php
+
 namespace LeKoala\Base\i18n;
 
 use SilverStripe\i18n\i18n;
@@ -48,13 +49,16 @@ class BaseI18n
     /**
      * Make sure we get a proper two characters lang
      *
-     * @param string $lang
+     * @param string|object $lang a string or a fluent locale object
      * @return string a two chars lang
      */
     public static function get_lang($lang = null)
     {
         if (!$lang) {
             $lang = i18n::get_locale();
+        }
+        if (is_object($lang)) {
+            $lang = $lang->Locale;
         }
         return substr($lang, 0, 2);
     }
