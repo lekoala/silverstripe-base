@@ -7,7 +7,7 @@ use SilverStripe\Admin\AdminRootController;
 /**
  * Additionnal functionnalities
  *
- * @property \SilverStripe\Security\Security|\LeKoala\Base\Security\BaseSecurityExtension $owner
+ * @property \SilverStripe\Security\CMSSecurity|\SilverStripe\Security\Security|\LeKoala\Base\Security\BaseSecurityExtension $owner
  */
 class BaseSecurityExtension extends Extension
 {

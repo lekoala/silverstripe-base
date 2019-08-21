@@ -26,7 +26,7 @@ use SilverStripe\AssetAdmin\Controller\AssetAdmin;
  * - Shorthands methods for standard sizes thumbnails (SmallAssetThumbnail, LargeAssetThumbnail)
  * - Smart cropping
  *
- * @property \SilverStripe\Assets\File|\SilverStripe\Assets\Image|\LeKoala\Base\Extensions\BaseFileExtension $owner
+ * @property \SilverStripe\Assets\File|\SilverStripe\Assets\Folder|\SilverStripe\Assets\Image|\LeKoala\Base\Extensions\BaseFileExtension $owner
  * @property boolean $IsTemporary
  * @property int $ObjectID
  * @method \SilverStripe\ORM\DataObject Object()

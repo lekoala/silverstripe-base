@@ -9,7 +9,7 @@ use SilverStripe\ORM\DataExtension;
  * Class \LeKoala\Base\Extensions\SocialShareExtension
  *
  * @link http://www.sharelinkgenerator.com/
- * @property \LeKoala\Base\News\NewsItem|\PortfolioItem|\SilverStripe\CMS\Model\SiteTree|\LeKoala\Base\Extensions\SocialShareExtension $owner
+ * @property \PortfolioItem|\LeKoala\Base\Blocks\BlocksPage|\LeKoala\Base\Contact\ContactPage|\LeKoala\Base\News\NewsItem|\LeKoala\Base\Privacy\CookiesRequiredPage|\LeKoala\Base\Privacy\PrivacyNoticePage|\LeKoala\Base\Privacy\TermsAndConditionsPage|\SilverStripe\CMS\Model\RedirectorPage|\SilverStripe\CMS\Model\SiteTree|\SilverStripe\CMS\Model\VirtualPage|\LeKoala\Base\Extensions\SocialShareExtension $owner
  */
 class SocialShareExtension extends DataExtension
 {

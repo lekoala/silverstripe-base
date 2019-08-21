@@ -1,4 +1,5 @@
 <?php
+
 namespace LeKoala\Base\News;
 
 use SilverStripe\ORM\DB;
@@ -25,16 +26,21 @@ use LeKoala\Base\VideoEmbed\VideoEmbed;
  * @property string $Content
  * @property string $Published
  * @property int $ViewCount
+ * @property int $FileFRID
+ * @property int $FileENID
  * @property int $ImageID
  * @property int $FileID
  * @property int $PageID
  * @property int $CategoryID
+ * @method \SilverStripe\Assets\File FileFR()
+ * @method \SilverStripe\Assets\File FileEN()
  * @method \SilverStripe\Assets\Image Image()
  * @method \SilverStripe\Assets\File File()
  * @method \LeKoala\Base\News\NewsPage Page()
  * @method \LeKoala\Base\News\NewsCategory Category()
  * @method \SilverStripe\ORM\ManyManyList|\LeKoala\Base\Tags\Tag[] Tags()
  * @method \SilverStripe\ORM\ManyManyList|\SilverStripe\Assets\Image[] Images()
+ * @mixin \NewsFileExtension
  * @mixin \LeKoala\Base\Extensions\URLSegmentExtension
  * @mixin \LeKoala\Base\Extensions\SmartDataObjectExtension
  * @mixin \LeKoala\Base\Tags\TaggableExtension
@@ -70,17 +76,20 @@ class NewsItem extends DataObject
         "Title", "Thumbnail.CMSThumbnail", "Published"
     ];
     private static $default_sort = 'Published DESC';
+    public static $configure_fields = true;
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
-        $Image = new SmartUploadField("Image");
-        $Image->setIsMultiUpload(false);
-        $Image->setAllowedFileCategories("image/supported");
-        $fields->addFieldToTab('Root.Main', $Image);
-        $File = new SmartUploadField("File");
-        $File->setIsMultiUpload(false);
-        $fields->addFieldToTab('Root.Main', $File);
-        $fields->makeFieldReadonly('ViewCount');
+        if (self::$configure_fields) {
+            $Image = new SmartUploadField("Image");
+            $Image->setIsMultiUpload(false);
+            $Image->setAllowedFileCategories("image/supported");
+            $fields->addFieldToTab('Root.Main', $Image);
+            $File = new SmartUploadField("File");
+            $File->setIsMultiUpload(false);
+            $fields->addFieldToTab('Root.Main', $File);
+            $fields->makeFieldReadonly('ViewCount');
+        }
         return $fields;
     }
     public function Thumbnail()

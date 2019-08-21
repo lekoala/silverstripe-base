@@ -13,7 +13,7 @@ use SilverStripe\View\Parsers\URLSegmentFilter;
  * By default link will be applied WITHOUT actions
  * see IsRecordController trait to see how it's done
  *
- * @property \LeKoala\Base\News\NewsCategory|\LeKoala\Base\News\NewsItem|\LeKoala\Base\Tags\Tag|\PortfolioCategory|\PortfolioItem|\LeKoala\Base\Extensions\URLSegmentExtension $owner
+ * @property \PortfolioCategory|\PortfolioItem|\LeKoala\Base\News\NewsCategory|\LeKoala\Base\News\NewsItem|\LeKoala\Base\Tags\Tag|\LeKoala\Base\Extensions\URLSegmentExtension $owner
  * @property string $URLSegment
  */
 class URLSegmentExtension extends DataExtension

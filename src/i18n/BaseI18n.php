@@ -3,9 +3,10 @@
 namespace LeKoala\Base\i18n;
 
 use SilverStripe\i18n\i18n;
+use TractorCow\Fluent\Model\Locale;
+use TractorCow\Fluent\State\FluentState;
 use SilverStripe\Core\Config\Configurable;
 use TractorCow\Fluent\Extension\FluentExtension;
-use TractorCow\Fluent\Model\Locale;
 
 /**
  * i18n helper class
@@ -68,12 +69,25 @@ class BaseI18n
     }
 
     /**
+     * Get the right locale (using fluent data if exists)
+     *
+     * @return string
+     */
+    public static function get_locale()
+    {
+        if (class_exists(FluentState::class)) {
+            return FluentState::singleton()->getLocale();
+        }
+        return i18n::get_locale();
+    }
+
+    /**
      * Get a locale from the lang
      *
      * @param string $lang
      * @return string
      */
-    public static function get_locale($lang)
+    public static function get_locale_from_lang($lang)
     {
         // Use fluent data
         if (class_exists(Locale::class)) {

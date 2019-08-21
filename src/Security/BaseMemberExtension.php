@@ -28,6 +28,7 @@ use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
  * @property \SilverStripe\Security\Member|\LeKoala\Base\Security\BaseMemberExtension $owner
  * @property string $LastVisited
  * @property int $NumVisit
+ * @method \SilverStripe\ORM\DataList|\LeKoala\Base\Security\MemberAudit[] Audits()
  */
 class BaseMemberExtension extends DataExtension
 {

@@ -23,7 +23,8 @@ use SilverStripe\Core\Config\Config;
  *   removed_items:
  *     - SilverStripe-CampaignAdmin-CampaignAdmin
  *     ...
- * @property \SilverStripe\Admin\SecurityAdmin|\SilverStripe\CMS\Controllers\CMSMain|\LeKoala\Base\Admin\BaseLeftAndMainExtension $owner
+ *
+ * @property \LeKoala\Base\Admin\BaseModelAdmin|\SiteAdmin|\SilverStripe\Admin\CMSProfileController|\SilverStripe\Admin\ModelAdmin|\SilverStripe\Admin\SecurityAdmin|\SilverStripe\CampaignAdmin\CampaignAdmin|\SilverStripe\Reports\ReportAdmin|\SilverStripe\SiteConfig\SiteConfigLeftAndMain|\SilverStripe\VersionedAdmin\ArchiveAdmin|\SilverStripe\AssetAdmin\Controller\AssetAdmin|\SilverStripe\CMS\Controllers\CMSMain|\SilverStripe\CMS\Controllers\CMSPageAddController|\SilverStripe\CMS\Controllers\CMSPageEditController|\SilverStripe\CMS\Controllers\CMSPageHistoryController|\SilverStripe\CMS\Controllers\CMSPageSettingsController|\SilverStripe\CMS\Controllers\CMSPagesController|\SilverStripe\VersionedAdmin\Controllers\CMSPageHistoryViewerController|\SilverStripe\VersionedAdmin\Controllers\HistoryViewerController|\TractorCow\Fluent\Control\LocaleAdmin|\LeKoala\Base\Admin\BaseLeftAndMainExtension $owner
  */
 class BaseLeftAndMainExtension extends LeftAndMainExtension
 {

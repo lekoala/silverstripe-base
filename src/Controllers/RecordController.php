@@ -14,6 +14,7 @@ use LeKoala\Base\Extensions\URLSegmentExtension;
  *
  * Since it is difficult to change your base controller, it might be better
  * to apply IsRecordController to your own controller instead
+ *
  */
 class RecordController extends BaseContentController
 {

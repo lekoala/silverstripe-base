@@ -12,6 +12,9 @@ use SilverStripe\Forms\GridField\GridFieldConfig_RecordViewer;
  * Makes record locked
  *
  * Unlocking require special action
+ *
+ * @property \LeKoala\Base\Extensions\LockableExtension $owner
+ * @property boolean $IsLocked
  */
 class LockableExtension extends DataExtension
 {

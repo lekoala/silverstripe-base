@@ -9,6 +9,9 @@ use LeKoala\Base\Actions\CustomAction;
 /**
  * Allow to enable/disable login for your objects based on status
  * See BaseMemberExtension for usage
+ *
+ * @property \LeKoala\Base\Extensions\ValidationStatusExtension $owner
+ * @property string $ValidationStatus
  */
 class ValidationStatusExtension extends DataExtension
 {

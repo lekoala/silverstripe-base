@@ -8,6 +8,8 @@ use LeKoala\Base\Theme\ThemeSiteConfigExtension;
 
 /**
  * Some useful stuff for your emails
+ *
+ * @property \LeKoala\Base\Email\BaseEmailExtension $owner
  */
 class BaseEmailExtension extends Extension
 {

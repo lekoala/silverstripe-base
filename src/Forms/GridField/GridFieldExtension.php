@@ -12,7 +12,7 @@ use SilverStripe\Forms\GridField\GridFieldDataColumns;
  * - Helper methods for field labels
  * - Data columns helpers
  *
- * @property \SilverStripe\Forms\GridField\GridField|\LeKoala\Base\Forms\GridField\GridFieldExtension $owner
+ * @property \LeKoala\Base\Forms\FullGridField\FullGridField|\SilverStripe\Forms\GridField\GridField|\LeKoala\Base\Forms\GridField\GridFieldExtension $owner
  */
 class GridFieldExtension extends Extension
 {

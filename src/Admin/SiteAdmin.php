@@ -10,6 +10,7 @@ use LeKoala\Base\Contact\ContactSubmission;
 
 /**
  * Get a global overview of your website DataObjects
+ *
  */
 class SiteAdmin extends BaseModelAdmin
 {

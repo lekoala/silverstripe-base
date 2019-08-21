@@ -23,7 +23,8 @@ use LeKoala\Base\Privacy\TermsAndConditionsPage;
  *
  * Should be applied to SiteTree. Always applied in base-extensions
  *
- * @property \SilverStripe\CMS\Model\SiteTree|\LeKoala\Base\Extensions\BasePageExtension $owner
+ * @property \LeKoala\Base\Blocks\BlocksPage|\LeKoala\Base\Contact\ContactPage|\LeKoala\Base\Privacy\CookiesRequiredPage|\LeKoala\Base\Privacy\PrivacyNoticePage|\LeKoala\Base\Privacy\TermsAndConditionsPage|\SilverStripe\CMS\Model\RedirectorPage|\SilverStripe\CMS\Model\SiteTree|\SilverStripe\CMS\Model\VirtualPage|\LeKoala\Base\Extensions\BasePageExtension $owner
+ * @property boolean $ShowInFooter
  */
 class BasePageExtension extends DataExtension
 {
