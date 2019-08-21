@@ -67,7 +67,7 @@ class FileHelper
      * Recursively remove a dir
      *
      * @param string $dir
-     * @return void
+     * @return bool
      */
     public static function rmDir($dir)
     {
