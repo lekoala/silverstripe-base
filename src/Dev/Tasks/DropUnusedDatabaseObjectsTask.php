@@ -1,4 +1,5 @@
 <?php
+
 namespace LeKoala\Base\Dev\Tasks;
 
 use SilverStripe\ORM\DB;
@@ -7,6 +8,7 @@ use SilverStripe\Core\ClassInfo;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Versioned\Versioned;
 
 /**
  * SilverStripe never delete your tables or fields. Be careful if your database has other tables than SilverStripe!
@@ -136,6 +138,8 @@ class DropUnusedDatabaseObjectsTask extends BuildTask
         $this->message('<h2>Tables</h2>');
 
         foreach ($classes as $class) {
+            /* @var $singl SilverStripe\ORM\DataObject */
+            $singl = $class::singleton();
             $table = $dataObjectSchema->tableName($class);
             $lcTable = strtolower($table);
 
@@ -146,12 +150,16 @@ class DropUnusedDatabaseObjectsTask extends BuildTask
 
             self::removeFromArray($lcTable, $tablesToRemove);
             // Remove from the list versioned tables
-            self::removeFromArray($lcTable . '_live', $tablesToRemove);
-            self::removeFromArray($lcTable . '_versions', $tablesToRemove);
+            if ($singl->hasExtension(Versioned::class)) {
+                self::removeFromArray($lcTable . '_live', $tablesToRemove);
+                self::removeFromArray($lcTable . '_versions', $tablesToRemove);
+            }
             // Remove from the list fluent tables
-            self::removeFromArray($lcTable . '_localised', $tablesToRemove);
-            self::removeFromArray($lcTable . '_localised_live', $tablesToRemove);
-            self::removeFromArray($lcTable . '_localised_versions', $tablesToRemove);
+            if ($singl->hasExtension("\\TractorCow\\Fluent\\Extension\\FluentExtension")) {
+                self::removeFromArray($lcTable . '_localised', $tablesToRemove);
+                self::removeFromArray($lcTable . '_localised_live', $tablesToRemove);
+                self::removeFromArray($lcTable . '_localised_versions', $tablesToRemove);
+            }
 
             // Relations
             $hasMany = $class::config()->has_many;
