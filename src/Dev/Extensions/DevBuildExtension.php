@@ -44,6 +44,13 @@ class DevBuildExtension extends Extension
     {
         $this->currentSubsite = SubsiteHelper::currentSubsiteID();
 
+        $renameColumns = $this->owner->getRequest()->getVar('fixTableCase');
+        if ($renameColumns) {
+            $this->displayMessage("<div class='build'><p><b>Fixing tables case</b></p><ul>\n\n");
+            $this->fixTableCase();
+            $this->displayMessage("</ul>\n<p><b>Tables fixed!</b></p></div>");
+        }
+
         $renameColumns = $this->owner->getRequest()->getVar('renameColumns');
         if ($renameColumns) {
             $this->displayMessage("<div class='build'><p><b>Renaming columns</b></p><ul>\n\n");
@@ -57,6 +64,22 @@ class DevBuildExtension extends Extension
             $this->truncateSiteTree();
             $this->displayMessage("</ul>\n<p><b>SiteTree truncated!</b></p></div>");
         }
+    }
+
+    protected function fixTableCase()
+    {
+        if (!Director::isDev()) {
+            throw new Exception("Only available in dev mode");
+        }
+
+        $conn = DB::get_conn();
+        $dbName = $conn->getSelectedDatabase();
+
+        $tablesSql = "SELECT table_name FROM information_schema.tables WHERE table_schema = '$dbName';";
+
+        $result = DB::query($tablesSql);
+
+        //TODO: check list of tables name and match any lowercased one to the right one from the db schema
     }
 
     protected function truncateSiteTree()
