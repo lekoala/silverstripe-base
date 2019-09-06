@@ -1,4 +1,5 @@
 <?php
+
 namespace LeKoala\Base\Actions;
 
 use LeKoala\Base\Extensions\SortableExtension;
@@ -17,7 +18,7 @@ trait HasPrevNext
         if ($this->hasExtension(SortableExtension::class)) {
             return $this->owner->PreviousInList($class::get());
         }
-        return $class::get()->where('ID < ' . $this->ID)->sort('ID DESC')->first();
+        return $class::get()->filter('ID:GreaterThan', $this->ID)->sort('ID DESC')->first();
     }
 
     /**
@@ -29,6 +30,6 @@ trait HasPrevNext
         if ($this->hasExtension(SortableExtension::class)) {
             return $this->owner->NextInList($class::get());
         }
-        return $class::get()->where('ID > ' . $this->ID)->sort('ID ASC')->first();
+        return $class::get()->filter('ID:LessThan', $this->ID)->sort('ID ASC')->first();
     }
 }
