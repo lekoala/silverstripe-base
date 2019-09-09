@@ -1,4 +1,5 @@
 <?php
+
 namespace LeKoala\Base\Theme;
 
 use SilverStripe\Forms\Tab;
@@ -165,8 +166,12 @@ class ThemeSiteConfigExtension extends DataExtension
 
     public function updateCMSFields(FieldList $fields)
     {
-        $themeTab = new Tab("Theme");
-        $fields->addFieldToTab('Root', $themeTab);
+        $themeTab = $fields->fieldByName('Theme');
+        if (!$themeTab || !$themeTab instanceof Tab) {
+            $themeTab = new Tab("Theme");
+            $fields->addFieldToTab('Root', $themeTab);
+        }
+
         // If we have themes, allow to configure some css variables in them
         $cssThemes = $this->listCssThemes();
         $themeOptions = $this->currentThemeOptions();
