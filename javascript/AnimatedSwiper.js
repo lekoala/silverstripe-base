@@ -26,16 +26,20 @@
             var $el = $(this.element);
 
             var container = $el.attr('id');
-            var pagination = $el.find('[data-swiper="pagination"]').attr('id');
-            var prev = $el.find('[data-swiper="prev"]').attr('id');
-            var next = $el.find('[data-swiper="next"]').attr('id');
-            var items = $el.data('items');
+            // @link http://idangero.us/swiper/api/#pagination
+            var pagination = $el.data('swiper-pagination');
+            // @link http://idangero.us/swiper/api/#navigation
+            var prev = $el.data('swiper-prev');
+            var next = $el.data('swiper-next');
+            // @link http://idangero.us/swiper/api/#autoplay
             var autoplay = $el.data('autoplay');
+            // @link http://idangero.us/swiper/api/#parameters
+            var items = $el.data('items'); //  Number of slides per view (default : 1)
             var iSlide = $el.data('initial');
             var loop = $el.data('loop');
             var center = $el.data('center');
-            var effect = $el.data('effect');
-            var direction = $el.data('direction');
+            var effect = $el.data('effect'); // "slide", "fade", "cube", "coverflow" or "flip"
+            var direction = $el.data('direction'); // 'horizontal' or 'vertical' (for vertical slider).
 
             // Configuration
             // @link https://idangero.us/swiper/api/
@@ -62,36 +66,56 @@
             if (direction) {
                 conf.direction = direction;
             }
-            if (prev) {
-                conf.prevButton = '#' + prev;
-            }
-            if (next) {
-                conf.nextButton = '#' + next;
+            if (prev && next) {
+                var navigationConfig = {
+                    "prevEl": prev,
+                    "nextEl": next
+                }
+                conf.navigation = navigationConfig;
             }
             if (pagination) {
-                conf.pagination = '#' + pagination;
-                conf.paginationClickable = true;
+                var paginationConfig = {
+                    "el": pagination,
+                    "clickable": true
+                };
+                conf.pagination = paginationConfig
             }
 
             // Animate Function
             var animated = function() {
-                var slide = this.slides[this.realIndex];
+                // active index is need for loops
+                var slide = this.slides[this.activeIndex];
+                // console.log("slide");
                 $(slide).find('[data-animate]').each(function() {
-                    var anim = $(this).data('animate');
-                    var delay = $(this).data('delay');
-                    var duration = $(this).data('duration');
 
-                    $(this)
+                    var animatedEl = $(this);
+                    var anim = animatedEl.data('animate');
+                    var delay = animatedEl.data('delay');
+                    var duration = animatedEl.data('duration');
+
+                    if (!delay) {
+                        delay = '0';
+                    }
+                    if (!duration) {
+                        duration = '1s';
+                    }
+
+                    var cssValues = {
+                        webkitAnimationDelay: delay,
+                        animationDelay: delay,
+                        webkitAnimationDuration: duration,
+                        animationDuration: duration
+                    };
+
+                    animatedEl
                         .removeClass(anim)
                         .addClass(anim + ' animated')
-                        .css({
-                            webkitAnimationDelay: delay,
-                            animationDelay: delay,
-                            webkitAnimationDuration: duration,
-                            animationDuration: duration
-                        })
+                        .css(cssValues)
                         .one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function() {
-                            $(this).removeClass(anim + ' animated');
+                            // console.log(animatedEl);
+                            animatedEl.removeClass(anim + ' animated');
+                            animatedEl.addClass("animated-end");
+                            // console.log('anim done');
                         });
                 });
             };
@@ -99,6 +123,7 @@
             // Initialization
             var initID = '#' + container;
 
+            // Init is false to allow animation callback
             conf.init = false;
             var swiper = new Swiper(initID, conf);
 
@@ -107,6 +132,8 @@
             swiper.on('slideChangeTransitionStart', animated);
 
             swiper.init();
+
+            // console.log(swiper);
 
         },
         log: function(text) {
