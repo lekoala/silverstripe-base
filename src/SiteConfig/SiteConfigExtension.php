@@ -1,21 +1,15 @@
 <?php
+
 namespace LeKoala\Base\SiteConfig;
 
-use SilverStripe\Forms\Tab;
-use SilverStripe\Assets\File;
-use SilverStripe\Assets\Image;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\TextField;
-use SilverStripe\Control\Director;
-use SilverStripe\View\Requirements;
-use SilverStripe\ORM\DataExtension;
-use SilverStripe\Forms\TextareaField;
-use SilverStripe\AssetAdmin\Forms\UploadField;
-use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
 use SilverStripe\Forms\HeaderField;
-use LeKoala\Base\Forms\Builder;
-use SilverStripe\Forms\CheckboxField;
-use LeKoala\Base\View\CookieConsent;
+use SilverStripe\ORM\DataExtension;
+use SilverStripe\Control\Email\Email;
+use SilverStripe\Forms\TextareaField;
+use SilverStripe\SiteConfig\SiteConfig;
+use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
 
 /**
  * Class \LeKoala\Base\SiteConfigExtension
@@ -112,5 +106,34 @@ class SiteConfigExtension extends DataExtension
     public function CopyrightYear()
     {
         return date('Y');
+    }
+
+    /**
+     * Use form spree to send forms
+     *
+     * Set this in your config to use
+     *
+     * SilverStripe\SiteConfig\SiteConfig:
+     *   use_formspree: true
+     *
+     * @link https://formspree.io/
+     * @return bool
+     */
+    public function UseFormSpree()
+    {
+        return SiteConfig::config()->use_formspree;
+    }
+
+    /**
+     * @return string
+     */
+    public function FormSpreeFormAction()
+    {
+        $SiteConfig = SiteConfig::current_site_config();
+        $address = $SiteConfig->ContactEmail;
+        if (!$address) {
+            $address = Email::config()->admin_email;
+        }
+        return 'https://formspree.io/' . urlencode($address);
     }
 }
