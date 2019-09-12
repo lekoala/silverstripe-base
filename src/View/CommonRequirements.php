@@ -416,6 +416,8 @@ JS;
     }
 
     /**
+     * Don't forget to call AOS.init(); somewhere ;-)
+     *
      * @link https://michalsnik.github.io/aos/
      * @param bool $css
      * @return void
