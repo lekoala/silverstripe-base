@@ -1,4 +1,5 @@
 <?php
+
 namespace LeKoala\Base\Contact;
 
 use SilverStripe\ORM\DataObject;
@@ -49,6 +50,10 @@ class ContactSubmission extends DataObject
     public function sendByEmail($address = null)
     {
         $SiteConfig = SiteConfig::current_site_config();
+        if ($SiteConfig->hasMethod("UseFormSpree") && $SiteConfig->UseFormSpree()) {
+            $this->EmailResults = "Sent with FormSpree";
+            return $this->write();
+        }
         if (!$address) {
             $address = $SiteConfig->ContactEmail;
         }

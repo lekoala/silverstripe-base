@@ -135,6 +135,12 @@ class CommonRequirements
     private static $swiper_version = '4.5.0';
 
     /**
+     * config
+     * @var string
+     */
+    private static $rellax_version = '1.10.0';
+
+    /**
      * Include all files in a given path
      *
      * @param string $path
@@ -410,6 +416,8 @@ JS;
     }
 
     /**
+     * Don't forget to call AOS.init(); somewhere ;-)
+     *
      * @link https://michalsnik.github.io/aos/
      * @param bool $css
      * @return void
@@ -445,5 +453,15 @@ JS;
         if ($css) {
             Requirements::css("https://cdnjs.cloudflare.com/ajax/libs/Swiper/$version/css/swiper.min.css");
         }
+    }
+
+    /**
+     * @link https://dixonandmoe.com/rellax/
+     * @return void
+     */
+    public static function rellax()
+    {
+        $version = self::config()->rellax_version;
+        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/rellax/$version/rellax.min.js");
     }
 }
