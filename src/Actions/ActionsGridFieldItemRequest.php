@@ -330,7 +330,7 @@ class ActionsGridFieldItemRequest extends DataExtension
     {
         $controller = $this->getToplevelController();
         if ($isNewRecord) {
-            return $controller->redirect($this->Link());
+            return $controller->redirect($this->owner->Link());
         } elseif ($this->owner->gridField->getList()->byID($this->owner->record->ID)) {
             // Return new view, as we can't do a "virtual redirect" via the CMS Ajax
             // to the same URL (it assumes that its content is already current, and doesn't reload)
