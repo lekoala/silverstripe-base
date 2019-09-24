@@ -8,6 +8,7 @@ use LeKoala\Base\Theme\ThemeSiteConfigExtension;
 
 /**
  * Some useful stuff for your emails
+ * @link https://docs.silverstripe.org/en/4/developer_guides/email/
  *
  * @property \LeKoala\Base\Email\BaseEmailExtension $owner
  */
@@ -35,5 +36,30 @@ class BaseEmailExtension extends Extension
 
         $colors['BtnBg'] = $sc->PrimaryColor;
         $colors['Btn'] = $sc->dbObject('PrimaryColor')->ContrastColor();
+    }
+
+    /**
+     * Get body of message after rendering
+     * Useful for previews
+     *
+     * @return string
+     */
+    public function getRenderedBody()
+    {
+        $this->owner->render();
+        return $this->owner->getSwiftMessage()->getBody();
+    }
+
+    /**
+     * Don't forget that setBody will erase content of html template
+     * Prefer to use this instead. Basically you can replace setBody calls with this method
+     * URLs are rewritten by render process
+     *
+     * @param string $body
+     * @return Email
+     */
+    public function addBody($body)
+    {
+        return $this->owner->addData("Body", $body);
     }
 }
