@@ -1,4 +1,5 @@
 <?php
+
 namespace LeKoala\Base\ORM\FieldType;
 
 use LeKoala\Base\Forms\ColorField;
@@ -318,7 +319,25 @@ class DBColor extends DBVarchar
      */
     public function ContrastColor($dark = null, $light = null)
     {
-        return self::HEX_CONTRAST($this->Color(), $dark, $light);
+        $Color = $this->Color();
+        $ContrastColor = self::HEX_CONTRAST($Color, $dark, $light);
+        // Make sure we actually get a contrast
+        if ($Color == $ContrastColor) {
+            if (!$dark) {
+                $dark = '#000000';
+            }
+            if (!$light) {
+                $light = '#ffffff';
+            }
+            if ($Color != $dark) {
+                return $dark;
+            }
+            if ($Color != $light) {
+                return $light;
+            }
+            return '#666666';
+        }
+        return $ContrastColor;
     }
 
     /**

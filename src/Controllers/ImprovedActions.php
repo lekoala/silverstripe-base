@@ -125,7 +125,8 @@ trait ImprovedActions
     {
         try {
             $result = parent::handleAction($request, $action);
-        } catch (RedirectionException $ex) {
+        }
+        catch (RedirectionException $ex) {
             return $this->redirect($ex->getRedirectUrl());
         } catch (ValidationException $ex) {
             $caller = $ex->getTrace();

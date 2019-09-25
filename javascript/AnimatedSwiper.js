@@ -83,8 +83,13 @@
 
             // Animate Function
             var animated = function() {
-                // active index is need for loops
-                var slide = this.slides[this.activeIndex];
+                // active index is needed when using loops
+                var slide = 0;
+                if (loop) {
+                    slide = this.slides[this.activeIndex];
+                } else {
+                    slide = this.slides[this.currentIndex];
+                }
                 // console.log("slide");
                 $(slide).find('[data-animate]').each(function() {
 
