@@ -99,7 +99,11 @@ class SubsiteHelper
      */
     public static function SubsiteIDFromSession()
     {
-        return Controller::curr()->getRequest()->getSession()->get('SubsiteID');
+        $session = Controller::curr()->getRequest()->getSession();
+        if ($session) {
+            return $session->get('SubsiteID');
+        }
+        return 0;
     }
 
     /**
@@ -113,6 +117,9 @@ class SubsiteHelper
             return;
         }
         self::$previousSubsite = self::currentSubsiteID();
+
+        // Do this otherwise changeSubsite has no effect if false
+        SubsiteState::singleton()->setUseSessions(true);
         Subsite::changeSubsite($ID);
         // This can help avoiding getting static objects like SiteConfig
         if ($flush !== null && $flush) {
