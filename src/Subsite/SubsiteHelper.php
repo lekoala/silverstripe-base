@@ -4,6 +4,7 @@ namespace LeKoala\Base\Subsite;
 
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Control\Controller;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Subsites\Model\Subsite;
 use SilverStripe\Subsites\State\SubsiteState;
 
@@ -104,6 +105,27 @@ class SubsiteHelper
             return $session->get('SubsiteID');
         }
         return 0;
+    }
+
+    /**
+     * Typically call this on PageController::init
+     * This is due to InitStateMiddleware not using session in front end and not persisting get var parameters
+     *
+     * @param HTTPRequest $request
+     * @return int
+     */
+    public static function forceSubsiteFromRequest(HTTPRequest $request)
+    {
+        $subsiteID = $request->getVar('SubsiteID');
+        if ($subsiteID) {
+            $request->getSession()->set('ForcedSubsiteID', $subsiteID);
+        } else {
+            $subsiteID = $request->getSession()->get('ForcedSubsiteID');
+        }
+        if ($subsiteID) {
+            self::changeSubsite($subsiteID, true);
+        }
+        return $subsiteID;
     }
 
     /**
