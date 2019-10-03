@@ -80,20 +80,13 @@ class ActionsGridFieldItemRequest extends DataExtension
 
         // Move delete at the end
         $deleteAction = $actions->fieldByName('action_doDelete');
-
-        // SoftDeletable support
-        $undoDelete = $actions->fieldByName('action_doCustomAction[undoDelete]');
-        $forceDelete = $actions->fieldByName('action_doCustomAction[forceDelete]');
-
         if ($deleteAction) {
+            // Move at the end of the stack
             $actions->remove($deleteAction);
-            if ($forceDelete) {
-                $actions->push($forceDelete);
-            } else {
-                $actions->push($deleteAction);
-            }
+            $actions->push($deleteAction);
 
             if ($RightGroup) {
+                // Without this positionning fails and button is stuck near +
                 $deleteAction->addExtraClass('default-position');
             }
             if ($record->hasMethod('getDeleteButtonTitle')) {
@@ -103,13 +96,47 @@ class ActionsGridFieldItemRequest extends DataExtension
         // Move cancel at the end
         $cancelButton = $actions->fieldByName('cancelbutton');
         if ($cancelButton) {
+            // Move at the end of the stack
             $actions->remove($cancelButton);
             $actions->push($cancelButton);
             if ($RightGroup) {
+                // Without this positionning fails and button is stuck near +
                 $deleteAction->addExtraClass('default-position');
             }
             if ($record->hasMethod('getCancelButtonTitle')) {
                 $cancelButton->setTitle($record->getCancelButtonTitle());
+            }
+        }
+        // SoftDeletable support
+        $undoDelete = $actions->fieldByName('action_doCustomAction[undoDelete]');
+        $forceDelete = $actions->fieldByName('action_doCustomAction[forceDelete]');
+        $softDelete = $actions->fieldByName('action_doCustomAction[softDelete]');
+        if ($softDelete) {
+            if ($deleteAction) {
+                $actions->remove($deleteAction);
+            }
+            if ($RightGroup) {
+                // Move at the end of the stack
+                $actions->remove($softDelete);
+                $actions->push($softDelete);
+                // Without this positionning fails and button is stuck near +
+                if ($RightGroup) {
+                    $softDelete->addExtraClass('default-position');
+                }
+            }
+        }
+        if ($forceDelete) {
+            if ($deleteAction) {
+                $actions->remove($deleteAction);
+            }
+            if ($RightGroup) {
+                // Move at the end of the stack
+                $actions->remove($forceDelete);
+                $actions->push($forceDelete);
+                // Without this positionning fails and button is stuck near +
+                if ($RightGroup) {
+                    $forceDelete->addExtraClass('default-position');
+                }
             }
         }
     }
