@@ -14,7 +14,8 @@ var utils = {
     },
     canvi: function() {
         var canvi = new Canvi({
-            openButton: '.canvi-open-button'
+            openButton: '.canvi-open-button',
+            pushContent: false
         });
     },
     checkTop: function() {
