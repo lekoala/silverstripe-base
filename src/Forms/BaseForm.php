@@ -1,7 +1,7 @@
 <?php
+
 namespace LeKoala\Base\Forms;
 
-use Exception;
 use SilverStripe\Forms\Form;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Forms\FieldList;
@@ -92,8 +92,7 @@ class BaseForm extends Form
         // Attach record as hidden fields, these can be used by the controller
         // To properly restore the record on POST if it was depending on url params or query string
         if ($this->record) {
-            $fields->addHidden('_RecordID', ['value' => $this->record->ID]);
-            $fields->addHidden('_RecordClassName', ['value' => $this->record->ClassName]);
+            $this->addHiddenRecordFields($fields);
         }
         $actions = $this->buildActions(BuildableFieldList::fromFieldList($actions));
         if (!$actions) {
@@ -112,6 +111,29 @@ class BaseForm extends Form
         } elseif ($this->params) {
             $this->loadDataFrom($this->params);
         }
+    }
+
+    public function getRecord()
+    {
+        return $this->record;
+    }
+
+    public function setRecord(DataObject $record)
+    {
+        $recordType = $this->recordType;
+        if ($recordType) {
+            if (!$record instanceof $recordType) {
+                throw new Exception("Object must be an instance of $recordType, it is: " . get_class($record));
+            }
+        }
+        $this->record = $record;
+        $this->addHiddenRecordFields($this->fields);
+    }
+
+    protected function addHiddenRecordFields(FieldList $fields)
+    {
+        $fields->addHidden('_RecordID', ['value' => $this->record->ID]);
+        $fields->addHidden('_RecordClassName', ['value' => $this->record->ClassName]);
     }
 
     protected function Type()
@@ -141,7 +163,11 @@ class BaseForm extends Form
     {
         // If we have a doSubmit method, add the action automatically
         if (method_exists($this, 'doSubmit')) {
-            $actions->addAction("doSubmit", _t('BaseForm.DOSUBMIT', "Submit"));
+            $label =  _t('BaseForm.DOSUBMIT', "Submit");
+            if ($this->record) {
+                $label = _t('BaseForm.DOEDIT', "Save changes");
+            }
+            $actions->addAction("doSubmit", $label);
         }
         return $actions;
     }
