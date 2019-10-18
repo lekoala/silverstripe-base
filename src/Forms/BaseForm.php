@@ -113,6 +113,23 @@ class BaseForm extends Form
         }
     }
 
+    /**
+     * Returns the instance of the requested record for this request
+     * Permissions checks are up to you
+     *
+     * @return DataObject|null
+     */
+    public function getRequestedRecord()
+    {
+        $request = $this->getRequest();
+        $class = $request->requestVar('_RecordClassName');
+        $id = (int) $request->requestVar('_RecordID');
+        if ($class && $id) {
+            return DataObject::get_by_id($class, $id);
+        }
+        return null;
+    }
+
     public function getRecord()
     {
         return $this->record;
