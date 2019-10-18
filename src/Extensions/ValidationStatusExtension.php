@@ -88,4 +88,19 @@ class ValidationStatusExtension extends DataExtension
     {
         return $this->owner->ValidationStatus == self::VALIDATION_STATUS_DISABLED;
     }
+
+    public function IsNotValidationStatusPending()
+    {
+        return $this->owner->ValidationStatus != self::VALIDATION_STATUS_PENDING;
+    }
+
+    public function IsNotValidationStatusApproved()
+    {
+        return $this->owner->ValidationStatus != self::VALIDATION_STATUS_APPROVED;
+    }
+
+    public function IsNotValidationStatusDisabled()
+    {
+        return $this->owner->ValidationStatus != self::VALIDATION_STATUS_DISABLED;
+    }
 }
