@@ -4,6 +4,7 @@ namespace LeKoala\Base\Extensions;
 
 use SilverStripe\Security\Member;
 use SilverStripe\ORM\DataExtension;
+use SilverStripe\Security\Permission;
 
 /**
  * Make a DataObject have a Member owner
@@ -30,5 +31,44 @@ class OwnershipExtension extends DataExtension
     public function IsNotOwner()
     {
         return $this->owner->OwnerID != Member::currentUserID();
+    }
+
+    /**
+     * @param Member $member
+     * @return boolean
+     */
+    public function canView($member = null)
+    {
+        // Can always view
+        if ($this->IsOwner()) {
+            return true;
+        }
+        return Permission::check('ADMIN', 'any', $member);
+    }
+
+    /**
+     * @param Member $member
+     * @return boolean
+     */
+    public function canEdit($member = null)
+    {
+        // Can always view
+        if ($this->IsOwner()) {
+            return true;
+        }
+        return Permission::check('ADMIN', 'any', $member);
+    }
+
+    /**
+     * @param Member $member
+     * @return boolean
+     */
+    public function canDelete($member = null)
+    {
+        // Can always view
+        if ($this->IsOwner()) {
+            return true;
+        }
+        return Permission::check('ADMIN', 'any', $member);
     }
 }
