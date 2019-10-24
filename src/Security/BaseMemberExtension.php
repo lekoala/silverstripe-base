@@ -43,6 +43,8 @@ class BaseMemberExtension extends DataExtension
         "Audits" => MemberAudit::class . ".Member",
     ];
 
+    public static $do_base_member_fields_update = true;
+
     public function canLogIn(ValidationResult $result)
     {
         // Admin can always log in
@@ -139,9 +141,14 @@ class BaseMemberExtension extends DataExtension
 
     public function updateCMSFields(FieldList $fields)
     {
+        if (!self::$do_base_member_fields_update) {
+            return;
+        }
+
         $ctrl = Controller::curr();
 
         $fields->makeFieldReadonly([
+            'FailedLoginCount',
             'LastVisited',
             'NumVisit',
         ]);
@@ -162,8 +169,6 @@ class BaseMemberExtension extends DataExtension
             $fields->removeByName(
                 [
                     'FailedLoginCount',
-                    'LastVisited',
-                    'NumVisit',
                 ]
             );
         }
@@ -176,8 +181,6 @@ class BaseMemberExtension extends DataExtension
             $fields->removeByName([
                 'DirectGroups',
                 'Permissions',
-                'LastVisited',
-                'NumVisit',
             ]);
         }
     }
