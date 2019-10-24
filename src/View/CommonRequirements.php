@@ -132,7 +132,7 @@ class CommonRequirements
      * @config
      * @var string
      */
-    private static $swiper_version = '4.5.0';
+    private static $swiper_version = '4.5.1';
 
     /**
      * config

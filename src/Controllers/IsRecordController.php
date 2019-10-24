@@ -1,4 +1,5 @@
 <?php
+
 namespace LeKoala\Base\Controllers;
 
 use Exception;
@@ -70,6 +71,10 @@ trait IsRecordController
             if (!$record) {
                 return $this->httpError(404, "Record $ID not found");
             }
+            if (!$record->canView()) {
+                return $this->httpError(404, "Record $ID cannot be viewed");
+            }
+
             $data = [
                 'Item' => $record,
                 "Title" => $record->getTitle(),

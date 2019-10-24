@@ -3,7 +3,9 @@
 namespace LeKoala\Base\Extensions;
 
 use SilverStripe\Forms\FieldList;
+use SilverStripe\Security\Member;
 use SilverStripe\ORM\DataExtension;
+use SilverStripe\Security\Permission;
 use LeKoala\Base\Actions\CustomAction;
 
 /**
@@ -33,6 +35,20 @@ class ValidationStatusExtension extends DataExtension
             self::VALIDATION_STATUS_APPROVED => _t('ValidationStatusExtension.VALIDATION_STATUS_APPROVED', 'approved'),
             self::VALIDATION_STATUS_DISABLED => _t('ValidationStatusExtension.VALIDATION_STATUS_DISABLED', 'disabled'),
         ];
+    }
+
+
+    /**
+     * @param Member $member
+     * @return boolean
+     */
+    public function canView($member = null)
+    {
+        // Can always see approved
+        if ($this->IsValidationStatusApproved()) {
+            return true;
+        }
+        return Permission::check('ADMIN', 'any', $member);
     }
 
     public function updateCMSFields(FieldList $fields)
@@ -87,5 +103,20 @@ class ValidationStatusExtension extends DataExtension
     public function IsValidationStatusDisabled()
     {
         return $this->owner->ValidationStatus == self::VALIDATION_STATUS_DISABLED;
+    }
+
+    public function IsNotValidationStatusPending()
+    {
+        return $this->owner->ValidationStatus != self::VALIDATION_STATUS_PENDING;
+    }
+
+    public function IsNotValidationStatusApproved()
+    {
+        return $this->owner->ValidationStatus != self::VALIDATION_STATUS_APPROVED;
+    }
+
+    public function IsNotValidationStatusDisabled()
+    {
+        return $this->owner->ValidationStatus != self::VALIDATION_STATUS_DISABLED;
     }
 }
