@@ -42,7 +42,7 @@
 
                   <table cellpadding="0" cellspacing="0" border="0" width="88%" style="width: 88% !important; min-width: 88%; max-width: 88%;">
                      <tr>
-                        <td align="left" valign="top">
+                        <td align="center" valign="top">
                            <div style="height: 39px; line-height: 39px; font-size: 37px;">&nbsp;</div>
                            <a href="#" target="_blank" style="display: block; <% if SiteConfig.LogoID %>max-width: 128px;<% else %>text-decoration:none<% end_if %>">
                               <% if SiteConfig.LogoID %>
@@ -74,19 +74,20 @@
                   <table cellpadding="0" cellspacing="0" border="0" width="100%" style="width: 100% !important; min-width: 100%; max-width: 100%; background: #f3f3f3;">
                      <tr>
                         <td align="center" valign="top">
-                           <div style="height: 34px; line-height: 34px; font-size: 32px;">&nbsp;</div>
-                           <% if SiteConfig.Copyright %>
-                           <table cellpadding="0" cellspacing="0" border="0" width="88%" style="width: 88% !important; min-width: 88%; max-width: 88%;">
-                              <tr>
-                                 <td align="center" valign="top">
+                            <% if SiteConfig.EmailFooter %>
+                            <table cellpadding="0" cellspacing="0" border="0" width="88%" style="width: 88% !important; min-width: 88%; max-width: 88%;">
+                                <tr>
+                                    <td align="center" valign="top">
                                     <div style="height: 34px; line-height: 34px; font-size: 32px;">&nbsp;</div>
                                     <font face="'Source Sans Pro', sans-serif" color="#868686" style="font-size: 17px; line-height: 20px;">
-                                       <span style="font-family: 'Source Sans Pro', Arial, Tahoma, Geneva, sans-serif; color: #868686; font-size: 17px; line-height: 20px;">$SiteConfig.Copyright</span>
+                                        <span style="font-family: 'Source Sans Pro', Arial, Tahoma, Geneva, sans-serif; color: #868686; font-size: 17px; line-height: 20px;">$SiteConfig.EmailFooter</span>
                                     </font>
                                     <div style="height: 35px; line-height: 35px; font-size: 33px;">&nbsp;</div>
-                                 </td>
-                              </tr>
-                           </table>
+                                    </td>
+                                </tr>
+                            </table>
+                            <% else %>
+                            <div style="height: 34px; line-height: 34px; font-size: 32px;">&nbsp;</div>
                             <% end_if %>
                         </td>
                      </tr>
