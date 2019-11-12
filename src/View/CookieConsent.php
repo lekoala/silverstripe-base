@@ -84,7 +84,12 @@ class CookieConsent
     {
         $SiteConfig = SiteConfig::current_site_config();
 
-        $opts = self::config()->opts;
+        $conf = self::config();
+
+        // options to pass to js constructor
+        $opts = $conf->opts;
+
+        $use_theme = $conf->force_colors ? false : true;
 
         $privacyLink = 'https://cookiesandyou.com/';
         // If we have a privacy notice, use it!
@@ -101,25 +106,35 @@ class CookieConsent
         $PrimaryColor = $SiteConfig->dbObject('PrimaryColor');
         $ThemeColor = $SiteConfig->dbObject('ThemeColor');
 
+        /*
+        Sample config:
+
+        LeKoala\Base\View\CookieConsent:
+            popup_background: '#232323'
+            popup_text: '#fafafa'
+            button_background: '#98252d'
+            button_text: '#ffffff'
+            force_colors: 1
+        */
         $paletteOpts = [
             'palette' => [
                 'popup' => [
-                    'background' => $opts->popup_background ? $opts->popup_background : '#efefef',
-                    'text' => $opts->popup_text ? $opts->popup_text : '#404040',
+                    'background' => $conf->popup_background ? $conf->popup_background : '#efefef',
+                    'text' => $conf->popup_text ? $conf->popup_text : '#404040',
                 ],
                 'button' => [
-                    'background' =>  $opts->button_background ? $opts->button_background : '#8ec760',
-                    'text' => $opts->button_text ? $opts->button_text : '#ffffff',
+                    'background' =>  $conf->button_background ? $conf->button_background : '#8ec760',
+                    'text' => $conf->button_text ? $conf->button_text : '#ffffff',
                 ]
             ]
         ];
-        if ($PrimaryColor->getValue()) {
+        if ($PrimaryColor->getValue() && $use_theme) {
             $paletteOpts['palette']['button'] = [
                 'background' => $PrimaryColor->HighlightColor(),
                 'text' => $PrimaryColor->HighlightContrastColor(),
             ];
         }
-        if ($ThemeColor->getValue()) {
+        if ($ThemeColor->getValue() && $use_theme) {
             $paletteOpts['palette']['popup'] = [
                 'background' => $ThemeColor->Color(),
                 'text' => $ThemeColor->ContrastColor(),
