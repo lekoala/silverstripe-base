@@ -5,6 +5,7 @@ use SilverStripe\Assets\Image;
 use SilverStripe\Assets\Folder;
 use SilverStripe\ORM\DataObject;
 use LeKoala\Base\Geo\CountriesList;
+use SilverStripe\Control\Director;
 
 /**
  * Provide fake data for random record generation
@@ -318,7 +319,7 @@ class FakeDataProvider
         $name = $filter->filter($name);
 
         $folderName = self::$folder . '/' . $folder;
-        $folderPath = BASE_PATH . '/assets/' . $folderName;
+        $folderPath = Director::publicFolder() . '/assets/' . $folderName;
         $filename = $folderPath . '/' . $name;
         $folderInst = Folder::find_or_make($folderName);
         file_put_contents($filename, $data);

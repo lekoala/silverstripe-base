@@ -83,6 +83,7 @@ class CookieConsent
     public static function requirements()
     {
         $SiteConfig = SiteConfig::current_site_config();
+
         $opts = self::config()->opts;
 
         $privacyLink = 'https://cookiesandyou.com/';
@@ -103,12 +104,12 @@ class CookieConsent
         $paletteOpts = [
             'palette' => [
                 'popup' => [
-                    'background' => '#efefef',
-                    'text' => '#404040',
+                    'background' => $opts->popup_background ? $opts->popup_background : '#efefef',
+                    'text' => $opts->popup_text ? $opts->popup_text : '#404040',
                 ],
                 'button' => [
-                    'background' => '#8ec760',
-                    'text' => '#ffffff',
+                    'background' =>  $opts->button_background ? $opts->button_background : '#8ec760',
+                    'text' => $opts->button_text ? $opts->button_text : '#ffffff',
                 ]
             ]
         ];
