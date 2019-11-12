@@ -1,4 +1,5 @@
 <?php
+
 namespace LeKoala\Base\Theme;
 
 use SilverStripe\Core\Extension;
@@ -70,6 +71,11 @@ class ThemeControllerExtension extends Extension
             foreach ($files as $file) {
                 // Skip theme files, they should be included through SiteConfig
                 if (strpos($file, '-theme.css') !== false) {
+                    continue;
+                }
+                // Skip unminified files if we have a min file
+                $minFile = str_replace('.css', '.min.css', $file);
+                if (in_array($minFile, $files)) {
                     continue;
                 }
                 $name = basename($file);
