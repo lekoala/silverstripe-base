@@ -90,7 +90,7 @@ if (Director::isDev()) {
 // Currently, some issue when running test, see pull request
 // @link https://github.com/silverstripe/silverstripe-sqlite3/pull/43
 if (Director::is_cli()) {
-    if (strpos($_SERVER['PHP_SELF'], '/bin/phpunit') !== false) {
+    if (isset($_SERVER['argv'][0]) && $_SERVER['argv'][0] == 'vendor/bin/phpunit') {
         global $databaseConfig;
         if (class_exists(\SilverStripe\SQLite\SQLite3Database::class)) {
             $databaseConfig['type'] = 'SQLite3Database';
