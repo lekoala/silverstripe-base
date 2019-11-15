@@ -141,6 +141,12 @@ class CommonRequirements
     private static $rellax_version = '1.10.0';
 
     /**
+     * config
+     * @var string
+     */
+    private static $rangeslider_version = '2.3.2';
+
+    /**
      * Include all files in a given path
      *
      * @param string $path
@@ -463,5 +469,15 @@ JS;
     {
         $version = self::config()->rellax_version;
         Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/rellax/$version/rellax.min.js");
+    }
+
+    /**
+     * @link https://rangeslider.js.org/
+     * @return void
+     */
+    public static function rangeslider()
+    {
+        $version = self::config()->rangeslider_version;
+        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/rangeslider.js/$version/rangeslider.min.js");
     }
 }
