@@ -162,7 +162,7 @@ class CommonRequirements
      * config
      * @var string
      */
-    private static $slick_version = '1.9.0';
+    private static $slick_version = '1.8.1';
 
     /**
      * Include all files in a given path

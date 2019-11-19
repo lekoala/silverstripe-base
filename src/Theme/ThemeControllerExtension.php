@@ -18,13 +18,26 @@ class ThemeControllerExtension extends Extension
 {
     use KnowsThemeDir;
     use HasLogger;
+
+    /**
+     * @var string
+     */
     protected static $customGoogleFont = null;
 
+    /**
+     * @return string
+     */
     public static function getCustomGoogleFont()
     {
         return self::$customGoogleFont;
     }
 
+    /**
+     * Set a custom font to be included
+     *
+     * @param string $googleFont The strings that comes after ?family=
+     * @return void
+     */
     public static function setCustomGoogleFont($googleFont)
     {
         self::$customGoogleFont = $googleFont;
