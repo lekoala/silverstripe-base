@@ -159,6 +159,12 @@ class CommonRequirements
     private static $wnumb_version = '1.1.0';
 
     /**
+     * config
+     * @var string
+     */
+    private static $slick_version = '1.9.0';
+
+    /**
      * Include all files in a given path
      *
      * @param string $path
@@ -521,5 +527,19 @@ JS;
     {
         $version = self::config()->wnumb_version;
         Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/wnumb/$version/wNumb.min.js");
+    }
+
+    /**
+     * @link http://kenwheeler.github.io/slick/
+     * @param bool $css
+     * @return void
+     */
+    public static function slick($css = true)
+    {
+        $version = self::config()->slick_version;
+        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/$version/slick.min.js");
+        if ($css) {
+            Requirements::css("https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/$version/slick.min.css");
+        }
     }
 }
