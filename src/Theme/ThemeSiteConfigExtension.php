@@ -142,7 +142,7 @@ class ThemeSiteConfigExtension extends DataExtension
         // If we don't have a css theme, our options won't be used anyway
         $values = [
             'allowFonts' => false,
-            'allowColors' => false,
+            'allowColors' => true,
         ];
         if (!$this->owner->CssTheme) {
             return $values;
