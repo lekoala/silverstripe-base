@@ -1,10 +1,12 @@
 <?php
+
 namespace LeKoala\Base\Contact;
 
-use SilverStripe\Control\Email\Email;
-use LeKoala\Base\Contact\ContactSubmission;
-use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\Director;
+use SilverStripe\View\Requirements;
+use SilverStripe\Control\Email\Email;
+use SilverStripe\Control\HTTPRequest;
+use LeKoala\Base\Contact\ContactSubmission;
 
 /**
  * Class \LeKoala\Base\Contact\ContactPageController
@@ -27,6 +29,21 @@ class ContactPageController extends \PageController
         "doSend",
         'ContactForm',
     ];
+
+
+    public function init()
+    {
+        parent::init();
+
+        /*
+        LeKoala\Base\Contact\ContactPageController:
+          theme_files: true
+        */
+        if ($this->config()->theme_files) {
+            Requirements::themedCSS('contact.css');
+            Requirements::themedJavascript('contact.js');
+        }
+    }
 
     public function index(HTTPRequest $request)
     {

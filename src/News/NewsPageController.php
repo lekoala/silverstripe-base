@@ -1,4 +1,5 @@
 <?php
+
 namespace LeKoala\Base\News;
 
 use SilverStripe\ORM\DB;
@@ -12,6 +13,7 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\ORM\FieldType\DBDate;
 use SilverStripe\ORM\Queries\SQLSelect;
 use SilverStripe\ORM\FieldType\DBDatetime;
+use SilverStripe\View\Requirements;
 
 /**
  * Class \LeKoala\Base\News\NewsPageController
@@ -38,6 +40,15 @@ class NewsPageController extends \PageController
     {
         parent::init();
         $this->list = $this->DisplayedItems();
+
+        /*
+        LeKoala\Base\News\NewsPageController:
+          theme_files: true
+        */
+        if ($this->config()->theme_files) {
+            Requirements::themedCSS('news.css');
+            Requirements::themedJavascript('news.js');
+        }
     }
     public function index(HTTPRequest $request)
     {

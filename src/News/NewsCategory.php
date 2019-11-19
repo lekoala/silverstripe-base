@@ -1,4 +1,5 @@
 <?php
+
 namespace LeKoala\Base\News;
 
 use SilverStripe\Assets\Image;

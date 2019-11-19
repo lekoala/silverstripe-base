@@ -1,4 +1,5 @@
 <?php
+
 namespace LeKoala\Base\News;
 
 use LeKoala\Base\News\NewsItem;

@@ -1,4 +1,5 @@
 <?php
+
 namespace LeKoala\Base\Contact;
 
 use LeKoala\Base\Forms\BaseForm;

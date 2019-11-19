@@ -1,4 +1,5 @@
 <?php
+
 namespace LeKoala\Base\Contact;
 
 use SilverStripe\Forms\TextField;

@@ -1,4 +1,5 @@
 <?php
+
 namespace LeKoala\Base\Faq;
 
 use LeKoala\Base\Faq\FaqItem;
@@ -18,8 +19,7 @@ use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
 class FaqPage extends \Page
 {
     private static $table_name = 'FaqPage'; // When using namespace, specify table name
-    private static $db = [
-    ];
+    private static $db = [];
     private static $has_many = [
         "Items" => FaqItem::class,
         "Categories" => FaqCategory::class,

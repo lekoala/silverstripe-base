@@ -1,4 +1,5 @@
 <?php
+
 namespace LeKoala\Base\Faq;
 
 use SilverStripe\ORM\DataObject;
