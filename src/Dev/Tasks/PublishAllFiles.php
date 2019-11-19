@@ -24,7 +24,7 @@ class PublishAllFilesTask extends BuildTask
     /**
      * @return AssetAdmin
      */
-    public function getAssetAdmin()
+    public static function getAssetAdmin()
     {
         return AssetAdmin::singleton();
     }
@@ -33,7 +33,7 @@ class PublishAllFilesTask extends BuildTask
     {
         set_time_limit(0);
         SubsiteHelper::disableFilter();
-        $admin = $this->getAssetAdmin();
+        $admin = self::getAssetAdmin();
 
         $originalDir = BASE_PATH . '/'. Director::publicDir() . '/assets/';
 

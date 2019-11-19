@@ -1,4 +1,5 @@
 <?php
+
 namespace LeKoala\Base\Dev;
 
 use SilverStripe\Assets\Image;
@@ -319,13 +320,13 @@ class FakeDataProvider
         $name = $filter->filter($name);
 
         $folderName = self::$folder . '/' . $folder;
-        $folderPath = Director::publicFolder() . '/assets/' . $folderName;
-        $filename = $folderPath . '/' . $name;
-        $folderInst = Folder::find_or_make($folderName);
-        file_put_contents($filename, $data);
-        $folderInst->syncChildren();
+        $filename = $folderName . '/' . $name;
 
-        return Image::find($folderName . '/' . $name);
+        $image = new Image;
+        $image->setFromString($data, $filename);
+        $image->write();
+
+        return $image;
     }
 
     /**
@@ -347,12 +348,22 @@ class FakeDataProvider
                 $imageObj = new Image;
                 $imageObj->setFromString($data, $filename);
                 $imageObj->write();
+
+                // publish this stuff!
+                if ($imageObj->isInDB() && !$imageObj->isPublished()) {
+                    $imageObj->publishSingle();
+                }
             }
             $images = Image::get()->where("FileFilename LIKE 'Faker/Images%'");
         }
         $rand = rand(0, count($images));
         foreach ($images as $key => $image) {
             if ($key == $rand) {
+                // publish this stuff!
+                if ($image->isInDB() && !$image->isPublished()) {
+                    $image->publishSingle();
+                }
+
                 return $image;
             }
         }
@@ -380,11 +391,11 @@ class FakeDataProvider
         $name =  "fake-$i.jpg";
         $filename = "$path/$name";
 
-        $imageObj = new Image;
-        $imageObj->setFromString($data, $filename);
-        $imageObj->write();
+        $image = new Image;
+        $image->setFromString($data, $filename);
+        $image->write();
 
-        return $imageObj;
+        return $image;
     }
 
     /**

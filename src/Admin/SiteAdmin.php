@@ -1,4 +1,5 @@
 <?php
+
 use LeKoala\Base\Tags\Tag;
 use LeKoala\Base\Faq\FaqItem;
 use LeKoala\Base\News\NewsItem;
@@ -10,6 +11,12 @@ use LeKoala\Base\Contact\ContactSubmission;
 
 /**
  * Get a global overview of your website DataObjects
+ *
+ * You can extends this with your own models
+ *
+ * SiteAdmin:
+ *   managed_models:
+ *     - 'MyCustomModel'
  *
  */
 class SiteAdmin extends BaseModelAdmin
