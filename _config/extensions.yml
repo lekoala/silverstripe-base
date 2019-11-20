@@ -37,6 +37,12 @@ LeKoala\Base\News\NewsItem:
 LeKoala\Base\News\NewsCategory:
   extensions:
     - LeKoala\Base\Extensions\URLSegmentExtension
+LeKoala\Base\Faq\FaqItem:
+  extensions:
+    - LeKoala\Base\Extensions\SortableExtension
+LeKoala\Base\Faq\FaqCategory:
+  extensions:
+    - LeKoala\Base\Extensions\SortableExtension
 LeKoala\Base\Tags\Tag:
   extensions:
     - LeKoala\Base\Extensions\URLSegmentExtension
