@@ -38,6 +38,7 @@ class ContactPage extends \Page
         "Latitude" => "Float(10,6)",
         "Longitude" => "Float(10,6)",
         "MapEmbed" => "HTMLText",
+        "SuccessContent" => "HTMLText",
     ];
     private static $has_many = [
         "Submissions" => ContactSubmission::class
@@ -64,7 +65,11 @@ class ContactPage extends \Page
             'MapEmbedHelper',
             'You can use a website like <a href="https://www.google.be/maps" target="_blank">Google Map</a> to create a map<br/><br/>'
         ));
-        //
+
+        $fields->addFieldsToTab('Root.Success', $SuccessContent = new HTMLEditorField('SuccessContent'));
+        $SuccessContent->setRows(10);
+        $SuccessContent->addExtraClass('stacked');
+
         $SubmissionsConfig = GridFieldConfig_RecordEditor::create();
         $Submissions = new GridField('Submissions', $this->fieldLabel('Submission'), $this->Submissions(), $SubmissionsConfig);
         $fields->addFieldsToTab('Root.Submissions', $Submissions);
