@@ -27,7 +27,19 @@ SilverStripe\SiteConfig\SiteConfig:
   extensions:
     - 'TractorCow\Fluent\Extension\FluentExtension'
 # Add extensions to our base classes
+LeKoala\Base\Tags\Tag:
+  extensions:
+    - 'TractorCow\Fluent\Extension\FluentExtension'
 LeKoala\Base\News\NewsItem:
+  extensions:
+    - 'TractorCow\Fluent\Extension\FluentExtension'
+LeKoala\Base\News\NewsCategory:
+  extensions:
+    - 'TractorCow\Fluent\Extension\FluentExtension'
+LeKoala\Base\Faq\FaqItem:
+  extensions:
+    - 'TractorCow\Fluent\Extension\FluentExtension'
+LeKoala\Base\Faq\FaqCategory:
   extensions:
     - 'TractorCow\Fluent\Extension\FluentExtension'
 LeKoala\Base\Blocks\Block:

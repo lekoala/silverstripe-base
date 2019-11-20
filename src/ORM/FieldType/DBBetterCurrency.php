@@ -44,7 +44,7 @@ class DBBetterCurrency extends DBCurrency
      * @param integer $decimals
      * @return string
      */
-    function Amount($decimals = 2)
+    public function Amount($decimals = 2)
     {
         return $this->formattedCurrency($this->value, $decimals);
     }
@@ -55,7 +55,7 @@ class DBBetterCurrency extends DBCurrency
      * @param integer $decimals
      * @return string
      */
-    function HTMLAmount($decimals = 2)
+    public function HTMLAmount($decimals = 2)
     {
         return str_replace(' ', '&nbsp;', $this->Amount($decimals));
     }

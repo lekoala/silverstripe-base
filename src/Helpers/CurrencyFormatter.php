@@ -1,4 +1,5 @@
 <?php
+
 namespace LeKoala\Base\Helpers;
 
 use NumberFormatter;
@@ -44,7 +45,7 @@ trait CurrencyFormatter
      */
     public function getLocale()
     {
-        return $this->locale ? : i18n::get_locale();
+        return $this->locale ?: i18n::get_locale();
     }
 
     /**
@@ -95,6 +96,16 @@ trait CurrencyFormatter
     }
 
     /**
+     * Get default symbol
+     *
+     * @return string
+     */
+    public function getDefaultCurrencyPosition()
+    {
+        return DBCurrency::config()->uninherited('currency_position');
+    }
+
+    /**
      * Get grouping separator
      *
      * @return strubg
@@ -134,7 +145,13 @@ trait CurrencyFormatter
         // We only format according to the locale if the currency is set
         if (!$currency) {
             $symbol = $this->getCurrencySymbol();
-            $ret = "$symbol " . number_format(abs($amount), $decimals, $this->getCurrencyDecimalSeparator(), $this->getCurrencyGroupingSeparator());
+            $pos = $this->getDefaultCurrencyPosition();
+            $fmt =  number_format(abs($amount), $decimals, $this->getCurrencyDecimalSeparator(), $this->getCurrencyGroupingSeparator());;
+            if ($pos == 'after') {
+                $ret = "$fmt $symbol";
+            } else {
+                $ret = "$symbol $fmt";
+            }
         } else {
             $formatter = $this->getFormatter();
             $ret = $formatter->formatCurrency($amount, $currency);
