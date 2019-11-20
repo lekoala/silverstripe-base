@@ -1,4 +1,9 @@
 <div class="container">
+    <% if Content %>
+    <div class="row my-4">
+        <div class="col-md-12">$Content</div>
+    </div>
+    <% end_if %>
     <div class="row my-4">
         <div class="col-md-6 ContactPage-Details">
             <% if ShowInfosOnly %>
