@@ -2,6 +2,7 @@
 
 namespace LeKoala\Base\Admin;
 
+use LeKoala\Base\Extensions\SortableExtension;
 use SilverStripe\Forms\Form;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Admin\ModelAdmin;
@@ -11,6 +12,7 @@ use LeKoala\Base\Subsite\SubsiteHelper;
 use SilverStripe\Admin\AdminRootController;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldDeleteAction;
+use Symbiote\GridFieldExtensions\GridFieldOrderableRows;
 
 /**
  * Improved ModelAdmin
@@ -90,10 +92,15 @@ abstract class BaseModelAdmin extends ModelAdmin
     {
         $form = parent::getEditForm($id, $fields);
 
+        $singl = singleton($this->modelClass);
+
         $gridField = $this->getGridField($form);
         $gridField->getConfig()->removeComponentsByType(GridFieldDeleteAction::class);
         if (self::config()->can_delete_from_list) {
             $gridField->getConfig()->addComponent(new GridFieldDeleteAction(false));
+        }
+        if ($singl->hasExtension(SortableExtension::class)) {
+            $gridField->getConfig()->addComponent(new GridFieldOrderableRows());
         }
 
         return $form;
