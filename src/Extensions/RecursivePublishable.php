@@ -16,7 +16,6 @@ use SilverStripe\Versioned\RecursivePublishable as BaseRecursivePublishable;
  */
 class RecursivePublishable extends BaseRecursivePublishable
 {
-
     /**
      * Find objects which own this object.
      * Note that objects will only be searched in the same stage as the given record.

@@ -1,4 +1,5 @@
 <?php
+
 namespace LeKoala\Base\Extensions;
 
 use SilverStripe\ORM\DataList;
@@ -37,7 +38,7 @@ class SortableExtension extends DataExtension
     public function getNextSort()
     {
         $class = get_class($this->owner);
-        $max = (int)$class::get()->max('Sort');
+        $max = (int) $class::get()->max('Sort');
         return $max + 1;
     }
 

@@ -1,4 +1,5 @@
 <?php
+
 namespace LeKoala\Base\Extensions;
 
 use Embed\Embed;

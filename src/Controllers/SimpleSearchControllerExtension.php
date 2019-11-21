@@ -1,5 +1,6 @@
 <?php
-namespace LeKoala\Base\Extensions;
+
+namespace LeKoala\Base\Controllers;
 
 use SilverStripe\Forms\Form;
 use SilverStripe\Core\Extension;
@@ -12,8 +13,6 @@ use SilverStripe\ORM\FieldType\DBField;
 
 /**
  * A simple alternative to full text search
- *
- * @property \PortfolioPageController|\LeKoala\Base\Blocks\BlocksPageController|\LeKoala\Base\Contact\ContactPageController|\LeKoala\Base\Controllers\BaseContentController|\LeKoala\Base\Controllers\RecordController|\LeKoala\Base\Dev\TypographyController|\LeKoala\Base\Faq\FaqPageController|\LeKoala\Base\News\NewsPageController|\LeKoala\Base\Privacy\CookiesRequiredPageController|\SilverStripe\ErrorPage\ErrorPageController|\SilverStripe\CMS\Controllers\ContentController|\SilverStripe\CMS\Model\RedirectorPageController|\LeKoala\Base\Extensions\SimpleSearchControllerExtension $owner
  */
 class SimpleSearchControllerExtension extends Extension
 {

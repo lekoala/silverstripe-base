@@ -52,6 +52,9 @@ SilverStripe\Security\Member:
 SilverStripe\Control\Email\Email:
   extensions:
     - LeKoala\Base\Email\BaseEmailExtension
+LeKoala\Base\Geo\Address:
+  extensions:
+    - LeKoala\Base\Geo\GeoExtension
 ---
 Name: base-extensions-versioned
 After:

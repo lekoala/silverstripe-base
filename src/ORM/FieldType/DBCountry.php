@@ -1,10 +1,13 @@
 <?php
+
 namespace LeKoala\Base\ORM\FieldType;
 
 use SilverStripe\ORM\FieldType\DBVarchar;
 use LeKoala\Base\Forms\CountryDropdownField;
+use LeKoala\Base\Geo\CountriesList;
 
 /**
+ * A country field
  */
 class DBCountry extends DBVarchar
 {
@@ -17,5 +20,13 @@ class DBCountry extends DBVarchar
     {
         $field = CountryDropdownField::create($this->name, $title);
         return $field;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCountryName()
+    {
+        return CountriesList::getName($this->value);
     }
 }

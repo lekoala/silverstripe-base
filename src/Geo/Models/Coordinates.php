@@ -2,6 +2,9 @@
 
 namespace LeKoala\Base\Geo\Models;
 
+/**
+ * A global coordinates model
+ */
 class Coordinates
 {
     /**
@@ -54,7 +57,7 @@ class Coordinates
     /**
      * Get the value of latitude
      */
-    public function getLatitude() : ? float
+    public function getLatitude(): ?float
     {
         return $this->latitude;
     }
@@ -73,7 +76,7 @@ class Coordinates
     /**
      * Get the value of longitude
      */
-    public function getLongitude() : ? float
+    public function getLongitude(): ?float
     {
         return $this->longitude;
     }

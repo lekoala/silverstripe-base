@@ -23,4 +23,17 @@ class CountriesList
         $countries = array_change_key_case($countries, CASE_UPPER);
         return $countries;
     }
+
+    /**
+     * @param string $code
+     * @return string
+     */
+    public static function getName($code)
+    {
+        $list = self::get();
+        if (isset($list[$code])) {
+            return $list[$code];
+        }
+        return $code;
+    }
 }

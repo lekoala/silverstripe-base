@@ -2,9 +2,13 @@
 
 namespace LeKoala\Base\Geo\Models;
 
+/**
+ * A global country model
+ */
 class Country
 {
     /**
+     * Uppercased country code
      * @var string
      */
     protected $code;
@@ -53,7 +57,7 @@ class Country
     }
 
     /**
-     * sSet the country code
+     * Set the country code
      *
      * @return $this
      */

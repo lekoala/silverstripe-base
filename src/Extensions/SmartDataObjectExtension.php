@@ -1,8 +1,8 @@
 <?php
+
 namespace LeKoala\Base\Extensions;
 
 use SilverStripe\Assets\File;
-use SilverStripe\Assets\Image;
 use SilverStripe\Assets\Folder;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Assets\Filesystem;

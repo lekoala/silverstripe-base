@@ -1,4 +1,5 @@
 <?php
+
 namespace LeKoala\Base\Extensions;
 
 use SilverStripe\ORM\SS_List;

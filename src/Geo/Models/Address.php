@@ -4,8 +4,10 @@ namespace LeKoala\Base\Geo\Models;
 
 use LeKoala\Base\Geo\Models\Country;
 use LeKoala\Base\Geo\Models\Coordinates;
-use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 
+/**
+ * A global address model
+ */
 class Address
 {
     /**
@@ -77,7 +79,7 @@ class Address
      *
      * @return Country
      */
-    public function getCountry() : Country
+    public function getCountry(): Country
     {
         return $this->country;
     }
@@ -100,7 +102,7 @@ class Address
      *
      * @return Coordinates
      */
-    public function getCoordinates() : Coordinates
+    public function getCoordinates(): Coordinates
     {
         return $this->coordinates;
     }
@@ -123,7 +125,7 @@ class Address
      *
      * @return string
      */
-    public function getStreetName() : ? string
+    public function getStreetName(): ?string
     {
         return $this->streetName;
     }
@@ -147,7 +149,7 @@ class Address
      *
      * @return string
      */
-    public function getStreetNumber() : ? string
+    public function getStreetNumber(): ?string
     {
         return $this->streetNumber;
     }
@@ -171,7 +173,7 @@ class Address
      *
      * @return string
      */
-    public function getPostalCode() : ? string
+    public function getPostalCode(): ?string
     {
         return $this->postalCode;
     }
@@ -195,7 +197,7 @@ class Address
      *
      * @return string
      */
-    public function getLocality() : ? string
+    public function getLocality(): ?string
     {
         return $this->locality;
     }

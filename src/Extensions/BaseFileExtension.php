@@ -136,8 +136,8 @@ class BaseFileExtension extends DataExtension
      */
     public function SmartFill($width, $height)
     {
-        $width = (int)$width;
-        $height = (int)$height;
+        $width = (int) $width;
+        $height = (int) $height;
         $variant = $this->owner->variantName(__FUNCTION__, $width, $height);
         return $this->owner->manipulateImage($variant, function (Image_Backend $backend) use ($width, $height) {
             $clone = clone $backend;

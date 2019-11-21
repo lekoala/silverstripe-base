@@ -1,4 +1,5 @@
 <?php
+
 namespace LeKoala\Base\Extensions;
 
 use SilverStripe\ORM\DB;
@@ -29,8 +30,6 @@ use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
  * - after delete, cleanup tables
  * - non versioned class should publish their own assets
  * - declarative cms fields : removed_fields, ...
- *
- * @property \TimelineItem|\PortfolioCategory|\PortfolioItem|\LeKoala\Base\Blocks\Block|\LeKoala\Base\Blocks\BlocksPage|\LeKoala\Base\Contact\ContactPage|\LeKoala\Base\Contact\ContactSubmission|\LeKoala\Base\Faq\FaqCategory|\LeKoala\Base\Faq\FaqItem|\LeKoala\Base\News\NewsCategory|\LeKoala\Base\News\NewsItem|\LeKoala\Base\Privacy\CookiesRequiredPage|\LeKoala\Base\Privacy\PrivacyNoticePage|\LeKoala\Base\Privacy\TermsAndConditionsPage|\LeKoala\Base\Security\MemberAudit|\LeKoala\Base\Tags\Tag|\SilverStripe\Assets\File|\SilverStripe\Assets\Folder|\SilverStripe\Assets\Image|\SilverStripe\SiteConfig\SiteConfig|\SilverStripe\Versioned\ChangeSet|\SilverStripe\Versioned\ChangeSetItem|\SilverStripe\Assets\Shortcodes\FileLink|\SilverStripe\CMS\Model\RedirectorPage|\SilverStripe\CMS\Model\SiteTree|\SilverStripe\CMS\Model\SiteTreeLink|\SilverStripe\CMS\Model\VirtualPage|\SilverStripe\Security\Group|\SilverStripe\Security\LoginAttempt|\SilverStripe\Security\Member|\SilverStripe\Security\MemberPassword|\SilverStripe\Security\PermissionRole|\SilverStripe\Security\PermissionRoleCode|\SilverStripe\Security\RememberLoginHash|\TractorCow\Fluent\Model\Domain|\TractorCow\Fluent\Model\FallbackLocale|\TractorCow\Fluent\Model\Locale|\LeKoala\Base\Extensions\BaseDataObjectExtension $owner
  */
 class BaseDataObjectExtension extends DataExtension
 {

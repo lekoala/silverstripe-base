@@ -1,7 +1,7 @@
 <?php
+
 namespace LeKoala\Base\Extensions;
 
-use SilverStripe\Forms\FieldList;
 use SilverStripe\ORM\DataExtension;
 use LeKoala\Base\Geo\Models\Address;
 use SilverStripe\Control\Controller;
