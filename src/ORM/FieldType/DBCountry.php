@@ -27,6 +27,6 @@ class DBCountry extends DBVarchar
      */
     public function getCountryName()
     {
-        return CountriesList::getName($this->value);
+        return CountriesList::getNameFromCode($this->value);
     }
 }

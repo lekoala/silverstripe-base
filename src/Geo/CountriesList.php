@@ -28,12 +28,25 @@ class CountriesList
      * @param string $code
      * @return string
      */
-    public static function getName($code)
+    public static function getNameFromCode($code)
     {
         $list = self::get();
         if (isset($list[$code])) {
             return $list[$code];
         }
         return $code;
+    }
+
+    /**
+     * @param string $name
+     * @return string
+     */
+    public static function getCodeFromName($name)
+    {
+        $list = array_flip(self::get());
+        if (isset($list[$name])) {
+            return $list[$name];
+        }
+        return strtoupper(substr($name, 0, 2));
     }
 }
