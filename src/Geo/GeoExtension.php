@@ -51,4 +51,54 @@ class GeoExtension extends DataExtension
     {
         return  $this->owner->dbObject('CountryCode')->getCountryName();
     }
+
+    /**
+     * Get location (number street)
+     *
+     * @return string
+     */
+    public function getStreet()
+    {
+        return trim($this->owner->StreetNumber . ' ' . $this->owner->StreetName);
+    }
+
+    /**
+     * Get location (city, country)
+     *
+     * @return string
+     */
+    public function getLocation()
+    {
+        return trim($this->owner->PostalCode . ' ' . $this->owner->Locality . ', ' . $this->getCountryName(), ' ,');
+    }
+
+    /**
+     * Get location (city, country) on multiple lines
+     *
+     * @return string
+     */
+    public function getLocationLines()
+    {
+        return trim($this->owner->PostalCode . ' ' . $this->owner->Locality . "\n" . $this->getCountryName(), ' ,');
+    }
+
+    /**
+     * Full address on 1 line
+     *
+     * @return string
+     */
+    public function getAddress()
+    {
+        return trim($this->getStreet() . ', ' . $this->getLocation());
+    }
+
+    /**
+     * Full address on multiple lines
+     *
+     * @return string
+     */
+    public function getAddressLines()
+    {
+        return trim($this->getStreet() . "\n" . $this->getLocationLines());
+    }
 }

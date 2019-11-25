@@ -17,6 +17,12 @@ class Address extends DataObject
 
     private static $db = [
         "Phone" => "Phone", // contact phone...
+        "Email" => "Varchar", // contact email in case of notification
         "Notes" => "Text", // delivery notes etc
     ];
+
+    public function getTitle()
+    {
+        return $this->getAddress();
+    }
 }
