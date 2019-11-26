@@ -16,4 +16,14 @@ class SimpleCompanyExtension extends DataExtension
         "CompanyName" => "Varchar(255)",
         "VatNumber" => "Varchar(255)",
     ];
+
+    public function IsIndividual()
+    {
+        return $this->owner->CompanyName == '';
+    }
+
+    public function IsCompany()
+    {
+        return $this->owner->CompanyName != '';
+    }
 }
