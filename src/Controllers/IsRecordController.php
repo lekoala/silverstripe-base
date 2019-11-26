@@ -9,6 +9,15 @@ use LeKoala\Base\Extensions\URLSegmentExtension;
 /**
  * Apply this trait to your controllers managing records
  *
+ * Sample code to include:
+ *
+ * use IsRecordController;
+ * const MODEL_CLASS = MyModel::class;
+ *
+ * private static $url_handlers = [
+ *     '$ID/$Action' => 'handleAction',
+ * ];
+ *
  * You can use onIndex and onView method to apply extra behaviour
  */
 trait IsRecordController
