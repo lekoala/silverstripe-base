@@ -47,6 +47,15 @@ class GeoExtension extends DataExtension
         return $html;
     }
 
+    /**
+     * @param string $code
+     * @return bool
+     */
+    public function IsCountry($code)
+    {
+        return $this->owner->CountryCode == $code;
+    }
+
     public function getCountryName()
     {
         return  $this->owner->dbObject('CountryCode')->getCountryName();
