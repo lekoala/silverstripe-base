@@ -11,7 +11,6 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Config\Configurable;
 
 /**
- *
  * @link http://alertifyjs.com
  */
 class Alertify
@@ -22,7 +21,7 @@ class Alertify
      * @config
      * @var string
      */
-    private static $theme = 'bootstrap';
+    private static $theme = 'default';
 
     /**
      * @config

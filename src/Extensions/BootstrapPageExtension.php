@@ -14,6 +14,8 @@ use SilverStripe\ORM\DataExtension;
  * SilverStripe\CMS\Model\SiteTree:
  *   extensions:
  *     - LeKoala\Base\Extensions\BootstrapPageExtension
+ * LeKoala\Base\View\Alertify:
+ *   theme: 'bootstrap'
  *
  * @property \LeKoala\Base\Extensions\BootstrapPageExtension $owner
  */
