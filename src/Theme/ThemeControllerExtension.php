@@ -12,7 +12,7 @@ use LeKoala\Base\Controllers\HasLogger;
 /**
  * Class \LeKoala\Base\Theme\ThemeControllerExtension
  *
- * @property \PortfolioPageController|\LeKoala\Base\Blocks\BlocksPageController|\LeKoala\Base\Contact\ContactPageController|\LeKoala\Base\Controllers\BaseContentController|\LeKoala\Base\Controllers\RecordController|\LeKoala\Base\Dev\TypographyController|\LeKoala\Base\Faq\FaqPageController|\LeKoala\Base\News\NewsPageController|\LeKoala\Base\Privacy\CookiesRequiredPageController|\SilverStripe\ErrorPage\ErrorPageController|\SilverStripe\CMS\Model\RedirectorPageController|\LeKoala\Base\Theme\ThemeControllerExtension $owner
+ * @property \AccountPageController|\HomePageController|\PageController|\PaymentPageController|\WinePageController|\LeKoala\Base\Blocks\BlocksPageController|\LeKoala\Base\Contact\ContactPageController|\LeKoala\Base\Controllers\BaseContentController|\LeKoala\Base\Controllers\RecordController|\LeKoala\Base\Dev\TypographyController|\LeKoala\Base\Faq\FaqPageController|\LeKoala\Base\News\NewsPageController|\LeKoala\Base\Privacy\CookiesRequiredPageController|\SilverStripe\ErrorPage\ErrorPageController|\SilverStripe\CMS\Model\RedirectorPageController|\LeKoala\Base\Theme\ThemeControllerExtension $owner
  */
 class ThemeControllerExtension extends Extension
 {

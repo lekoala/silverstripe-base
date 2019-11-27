@@ -6,6 +6,16 @@ use SilverStripe\ORM\DataExtension;
 
 /**
  * An extension that make use of our geo tools
+ *
+ * @property \LeKoala\Base\Geo\Address|\LeKoala\Base\Geo\GeoExtension $owner
+ * @property float $Latitude
+ * @property float $Longitude
+ * @property string $StreetNumber
+ * @property string $StreetName
+ * @property string $StreetExtended
+ * @property string $PostalCode
+ * @property string $Locality
+ * @property string $CountryCode
  */
 class GeoExtension extends DataExtension
 {

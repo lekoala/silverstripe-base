@@ -10,6 +10,19 @@ use SilverStripe\ORM\DataObject;
  * Uses GeoExtension
  *
  * Useful for items with multiple addresses like home, delivery, invoicing or multiple locations
+ *
+ * @property float $Latitude
+ * @property float $Longitude
+ * @property string $StreetNumber
+ * @property string $StreetName
+ * @property string $StreetExtended
+ * @property string $PostalCode
+ * @property string $Locality
+ * @property string $CountryCode
+ * @property string $Phone
+ * @property string $Email
+ * @property string $Notes
+ * @mixin \LeKoala\Base\Geo\GeoExtension
  */
 class Address extends DataObject
 {

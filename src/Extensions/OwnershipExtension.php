@@ -8,6 +8,10 @@ use SilverStripe\Security\Permission;
 
 /**
  * Make a DataObject have a Member owner
+ *
+ * @property \LeKoala\Base\Extensions\OwnershipExtension $owner
+ * @property int $OwnerID
+ * @method \SilverStripe\Security\Member Owner()
  */
 class OwnershipExtension extends DataExtension
 {

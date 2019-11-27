@@ -23,6 +23,7 @@ use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
  * @property float $Latitude
  * @property float $Longitude
  * @property string $MapEmbed
+ * @property string $SuccessContent
  * @method \SilverStripe\ORM\DataList|\LeKoala\Base\Contact\ContactSubmission[] Submissions()
  */
 class ContactPage extends \Page

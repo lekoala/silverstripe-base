@@ -9,10 +9,13 @@ use LeKoala\Base\Faq\FaqItem;
 /**
  * Class \LeKoala\Base\Faq\FaqCategory
  *
+ * @property int $Sort
  * @property string $Title
  * @property int $PageID
  * @method \LeKoala\Base\Faq\FaqPage Page()
  * @method \SilverStripe\ORM\DataList|\LeKoala\Base\Faq\FaqItem[] Items()
+ * @mixin \LeKoala\Base\Extensions\SortableExtension
+ * @mixin \TractorCow\Fluent\Extension\FluentExtension
  */
 class FaqCategory extends DataObject
 {
