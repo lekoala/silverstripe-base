@@ -43,14 +43,14 @@ class Alertify
     {
         $theme = self::config()->theme;
 
-        Requirements::javascript('https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.11.1/alertify.min.js');
+        Requirements::javascript('https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.12.0/alertify.min.js');
         $dir = i18n::get_script_direction();
         if ($dir == 'rtl') {
-            Requirements::css('https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.11.1/css/alertify.rtl.min.css');
-            Requirements::css('https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.11.1/css/themes/' . $theme . '.rtl.min.css');
+            Requirements::css('https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.12.0/css/alertify.rtl.min.css');
+            Requirements::css('https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.12.0/css/themes/' . $theme . '.rtl.min.css');
         } else {
-            Requirements::css('https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.11.1/css/alertify.min.css');
-            Requirements::css('https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.11.1/css/themes/' . $theme . '.min.css');
+            Requirements::css('https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.12.0/css/alertify.min.css');
+            Requirements::css('https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.12.0/css/themes/' . $theme . '.min.css');
         }
         $settings = '';
         foreach (self::config()->defaults as $k => $v) {
