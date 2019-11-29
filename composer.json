@@ -19,6 +19,7 @@
         "axllent/silverstripe-minifier": "^1.0",
         "symbiote/silverstripe-gridfieldextensions": "^3.1",
         "bummzack/sortablefile": "^2.0",
+        "silvershop/silverstripe-hasonefield": "^3.0",
         "wilr/silverstripe-googlesitemaps": "^2.0"
     },
     "require-dev": {
@@ -32,7 +33,6 @@
         "predis/predis": "Use Redis as a cache",
         "colymba/gridfield-bulk-editing-tools": "Bulk editing",
         "unclecheese/display-logic": "Display and hide fields",
-        "silvershop/silverstripe-hasonefield": "Has one field",
         "giggsey/libphonenumber-for-php": "Usage for PhoneField"
     },
     "extra": {
