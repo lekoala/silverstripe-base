@@ -1,4 +1,5 @@
 <?php
+
 namespace LeKoala\Base\Dev\Tasks;
 
 use \Exception;
@@ -75,6 +76,9 @@ class FakeRecordGeneratorTask extends BuildTask
                             $rec->$name = $this->getRandomValueFromType($type, $name, $rec);
 
                             $field = $fields->dataFieldByName($name);
+                            if (!$field) {
+                                continue;
+                            }
 
                             // For dropdown fields and the likes, we might use the getSource thing
                             if ($field->hasMethod('getSource')) {
@@ -161,7 +165,7 @@ class FakeRecordGeneratorTask extends BuildTask
             case DBVarchar::class:
                 $length = 50;
                 if (count($type) > 1) {
-                    $length = (int)$type[1];
+                    $length = (int) $type[1];
                 }
                 if ($name == 'CountryCode' || $name == 'Nationality') {
                     return FakeDataProvider::countryCode();
