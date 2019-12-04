@@ -10,6 +10,7 @@ use LeKoala\Base\Dev\BuildTask;
 use SilverStripe\Control\Director;
 use Symfony\Component\Yaml\Parser;
 use LeKoala\Base\i18n\TextCollector;
+use LeKoala\ExcelImportExport\ExcelImportExport;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\i18n\Messages\Writer;
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -41,11 +42,13 @@ class TranslationsImportExportTask extends BuildTask
         $this->addOption("import", "Import translations", false);
         $this->addOption("export", "Export translations", false);
         $this->addOption("debug", "Show debug output and do not write files", false);
+        $this->addOption("excel", "Use excel if possible (require excel-import-export module)", true);
         $this->addOption("module", "Module", null, $modules);
         $options = $this->askOptions();
 
         $module = $options['module'];
         $import = $options['import'];
+        $excel = $options['excel'];
         $export = $options['export'];
 
         $this->debug = $options['debug'];
@@ -55,7 +58,7 @@ class TranslationsImportExportTask extends BuildTask
                 $this->importTranslations($module);
             }
             if ($export) {
-                $this->exportTranslations($module);
+                $this->exportTranslations($module, $excel);
             }
         } else {
             $this->message("Please select a module");
@@ -189,7 +192,7 @@ class TranslationsImportExportTask extends BuildTask
         return $row;
     }
 
-    protected function exportTranslations($module)
+    protected function exportTranslations($module, $excel = true)
     {
         $fullLangPath = $this->getLangPath($module);
 
@@ -228,25 +231,46 @@ class TranslationsImportExportTask extends BuildTask
             Debug::show($allMessages);
         }
 
-        // Write them to a csv file
+        // Write them to a file
+        if ($excel && class_exists(ExcelImportExport::class)) {
+            $ext = 'xlsx';
+            $destinationFilename = str_replace('/lang', '/lang.' . $ext, $fullLangPath);
+            if ($this->debug) {
+                Debug::show("Debug mode enabled : no output will be sent to $destinationFilename");
+                die();
+            }
+            if (is_file($destinationFilename)) {
+                unlink($destinationFilename);
+            }
+            // First row contains headers
+            $data = [$headers];
+            // Add a row per lang
+            foreach ($allMessages as $key => $translations) {
+                array_unshift($translations, $key);
+                $data[] = $translations;
+            }
+            ExcelImportExport::arrayToFile($data, $destinationFilename);
+        } else {
+            $ext = 'csv';
+            $destinationFilename = str_replace('/lang', '/lang.' . $ext, $fullLangPath);
+            if ($this->debug) {
+                Debug::show("Debug mode enabled : no output will be sent to $destinationFilename");
+                die();
+            }
+            if (is_file($destinationFilename)) {
+                unlink($destinationFilename);
+            }
+            $fp = fopen($destinationFilename, 'w');
+            // UTF 8 fix
+            fprintf($fp, "\xEF\xBB\xBF");
+            fputcsv($fp, $headers);
+            foreach ($allMessages as $key => $translations) {
+                array_unshift($translations, $key);
+                fputcsv($fp, $translations);
+            }
+            fclose($fp);
+        }
 
-        $destinationFilename = str_replace('/lang', '/lang.csv', $fullLangPath);
-        if ($this->debug) {
-            Debug::show("Debug mode enabled : no output will be sent to $destinationFilename");
-            die();
-        }
-        if (is_file($destinationFilename)) {
-            unlink($destinationFilename);
-        }
-        $fp = fopen($destinationFilename, 'w');
-        // UTF 8 fix
-        fprintf($fp, "\xEF\xBB\xBF");
-        fputcsv($fp, $headers);
-        foreach ($allMessages as $key => $translations) {
-            array_unshift($translations, $key);
-            fputcsv($fp, $translations);
-        }
-        fclose($fp);
         $this->message("Translations written to $destinationFilename");
     }
 

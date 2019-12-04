@@ -1,13 +1,28 @@
 <?php
+
 namespace LeKoala\Base\Forms;
 
 use SilverStripe\Forms\FieldGroup;
 
 /**
- * @link https://getbootstrap.com/docs/4.0/layout/grid/
+ * Display fields in column
+ *
+ * @link https://getbootstrap.com/docs/4.4/layout/grid/
+ * @link http://sassflexboxgrid.com/
  */
 class ColumnsField extends FieldGroup
 {
+    /**
+     * @config
+     * @var boolean
+     */
+    private static $autosize = true;
+    /**
+     * @config
+     * @var string
+     */
+    private static $column_class = 'col';
+
     /**
      * @var string
      */
@@ -18,6 +33,7 @@ class ColumnsField extends FieldGroup
      */
     protected $columnSizes = [];
 
+
     public function __construct($children = null)
     {
         parent::__construct($children);
@@ -25,14 +41,27 @@ class ColumnsField extends FieldGroup
     }
 
 
+    /**
+     * Called in template
+     * <div class="$Up.ColumnClass($Pos) $FirstLast $EvenOdd">
+     * $FieldHolder
+     * </div>
+     *
+     * @param int $pos
+     * @return string
+     */
     public function ColumnClass($pos)
     {
-        $class = 'col';
+        $col_class = self::config()->column_class;
+        $class = $col_class;
         if ($this->breakpoint) {
             $class .= '-' . $this->breakpoint;
-        }
-        if (isset($this->columnSizes[$pos])) {
-            $class .= '-' . $this->columnSizes[$pos];
+            if (isset($this->columnSizes[$pos])) {
+                $class .= '-' . $this->columnSizes[$pos];
+            } elseif (self::config()->autosize) {
+                $autoSize = round(12 / count($this->children));
+                $class .= '-' . $autoSize . ' ' . $col_class . '-xs-12';
+            }
         }
         return $class;
     }

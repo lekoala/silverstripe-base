@@ -7,6 +7,9 @@ use LeKoala\Base\Forms\BuildableFieldList;
 use SilverStripe\Forms\RequiredFields;
 use LeKoala\Base\Forms\GoogleRecaptchaField;
 
+/**
+ * A contact form
+ */
 class ContactForm extends BaseForm
 {
     protected $jsValidationEnabled = true;
@@ -22,6 +25,7 @@ class ContactForm extends BaseForm
             $fields->addEmail('Email');
             $fields->addText('Phone');
         });
+
         $fields->addText('Subject');
         $fields->addTextarea('Message');
 
