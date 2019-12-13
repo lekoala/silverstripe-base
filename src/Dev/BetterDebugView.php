@@ -199,12 +199,13 @@ class BetterDebugView extends DebugView
         $message = $exception->getMessage();
         if ($exception instanceof DatabaseException) {
             $sql = $exception->getSQL();
-            $parameters = $exception->getParameters();
-            $sql = DB::inline_parameters($sql, $parameters);
-
-            $formattedSQL = DatabaseHelper::formatSQL($sql);
-
-            $message = "Couldn't run query:<br/>" . $formattedSQL;
+            // Some database errors don't have sql
+            if ($sql) {
+                $parameters = $exception->getParameters();
+                $sql = DB::inline_parameters($sql, $parameters);
+                $formattedSQL = DatabaseHelper::formatSQL($sql);
+                $message .= "<br/><br/>Couldn't run query:<br/>" . $formattedSQL;
+            }
         }
         $output .= "<p>" . $message . "</p>";
         $output .= '</div>';
