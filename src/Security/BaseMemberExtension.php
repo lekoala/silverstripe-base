@@ -44,7 +44,18 @@ class BaseMemberExtension extends DataExtension
         "Audits" => MemberAudit::class . ".Member",
     ];
 
+    /**
+     * @var boolean
+     */
     public static $do_base_member_fields_update = true;
+
+    /**
+     * @return string
+     */
+    public function Fullname()
+    {
+        return trim($this->owner->FirstName . ' ' . $this->owner->Surname);
+    }
 
     public function canLogIn(ValidationResult $result)
     {
