@@ -60,7 +60,7 @@ class BaseI18n
     public static function get_lang($lang = null)
     {
         if (!$lang) {
-            $lang = i18n::get_locale();
+            $lang = self::get_locale();
         }
         if (is_object($lang)) {
             $lang = $lang->Locale;
@@ -104,5 +104,54 @@ class BaseI18n
         // Guess
         $localesData = i18n::getData();
         return $localesData->localeFromLang($lang);
+    }
+
+    /**
+     * Do we have the subsite module installed
+     * TODO: check if it might be better to use module manifest instead?
+     *
+     * @return bool
+     */
+    public static function usesFluent()
+    {
+        return class_exists(FluentState::class);
+    }
+
+    /**
+     * Execute the callback in given subsite
+     *
+     * @param string $locale
+     * @param callable $cb
+     * @return void
+     */
+    public static function withLocale($locale, $cb)
+    {
+        if (!self::usesFluent() || !$locale) {
+            $cb();
+            return;
+        }
+        $state = FluentState::singleton();
+        $state->withState(function ($state) use ($locale, $cb) {
+            $state->setLocale($locale->Locale);
+            $cb();
+        });
+    }
+
+    /**
+     * Execute the callback for all locales
+     *
+     * @param callable $cb
+     * @return void
+     */
+    public static function withLocales($cb)
+    {
+        if (!self::usesFluent()) {
+            $cb();
+            return;
+        }
+        $allLocales = Locale::get();
+        foreach ($allLocales as $locale) {
+            self::withLocale($locale, $cb);
+        }
     }
 }

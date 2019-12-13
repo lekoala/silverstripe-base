@@ -2,6 +2,7 @@
 
 namespace LeKoala\Base\Security;
 
+use Exception;
 use SilverStripe\ORM\DB;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FieldList;
@@ -177,7 +178,7 @@ class BaseMemberExtension extends DataExtension
             $fields->removeByName('FailedLoginCount');
         }
         // Some things should never be shown outside of SecurityAdmin
-        if (get_class($ctrl) != SecurityAdmin::class) {
+        if (get_class($ctrl) != SecurityAdmin::class && !Permission::check('ADMIN')) {
             $fields->removeByName([
                 'DirectGroups',
                 'Permissions',

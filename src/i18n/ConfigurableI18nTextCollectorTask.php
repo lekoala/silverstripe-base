@@ -46,7 +46,7 @@ class ConfigurableI18nTextCollectorTask extends BuildTask
 
         $modules = ArrayLib::valuekey(array_keys(ModuleLoader::inst()->getManifest()->getModules()));
 
-        $this->addOption("locale", "Locale to use", substr(i18n::get_locale(), 0, 2));
+        $this->addOption("locale", "Locale to use", BaseI18n::get_lang());
         $this->addOption("merge", "Merge with previous translations", true);
         $this->addOption("clear_unused", "Remove keys that are not used anymore", false);
         $this->addOption("debug", "Show debug messages and prevent write", false);

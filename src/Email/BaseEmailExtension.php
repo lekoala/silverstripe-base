@@ -55,11 +55,17 @@ class BaseEmailExtension extends Extension
      * Prefer to use this instead. Basically you can replace setBody calls with this method
      * URLs are rewritten by render process
      *
+     * Content is stored under EmailContent variable for consistency with base template
+     * \vendor\silverstripe\framework\templates\SilverStripe\Control\Email\Email.ss
+     * <div class="body">
+     * $EmailContent
+     * </div>
+     *
      * @param string $body
      * @return Email
      */
     public function addBody($body)
     {
-        return $this->owner->addData("Body", $body);
+        return $this->owner->addData("EmailContent", $body);
     }
 }

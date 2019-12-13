@@ -19,7 +19,7 @@ SilverStripe\Core\Injector\Injector:
     factory: SilverStripe\Core\Cache\CacheFactory
     constructor:
       namespace: "app"
-# Add this to your mysite/_config/cache.yml if you use redis
+# Add this to your app/_config/cache.yml if you use redis
 #   RedisCacheFactory:
 #     class: 'LeKoala\Base\Cache\RedisCacheFactory'
 #     constructor:

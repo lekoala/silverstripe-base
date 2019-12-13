@@ -115,7 +115,7 @@ abstract class BuildTask extends DefaultBuildTask
             // Nothing in CLI
         } else {
             $html = "<!DOCTYPE html><html><head><title>$taskTitle</title>";
-            $html .= '<link rel="stylesheet" type="text/css" href="/resources/base/css/buildtask.css" />';
+            $html .= '<link rel="stylesheet" type="text/css" href="/_resources/base/css/buildtask.css" />';
             $html .= '</head><body><div class="info header"><h1>Running Task ' . $taskTitle . '</h1></div><div class="build">';
             echo $html;
         }

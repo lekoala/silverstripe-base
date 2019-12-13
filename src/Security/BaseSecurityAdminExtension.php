@@ -1,4 +1,5 @@
 <?php
+
 namespace LeKoala\Base\Security;
 
 use SilverStripe\Forms\Tab;

@@ -8,6 +8,10 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Subsites\Model\Subsite;
 use SilverStripe\Subsites\State\SubsiteState;
 
+/**
+ * Helps providing base functionnalities where including
+ * subsite module is optional and yet provide a consistent api
+ */
 class SubsiteHelper
 {
     /**
@@ -54,6 +58,17 @@ class SubsiteHelper
     public static function usesSubsite()
     {
         return class_exists(SubsiteState::class);
+    }
+
+    /**
+     * @return bool
+     */
+    public static function subsiteFilterDisabled()
+    {
+        if (!self::usesSubsite()) {
+            return true;
+        }
+        return Subsite::$disable_subsite_filter;
     }
 
     /**
@@ -158,6 +173,17 @@ class SubsiteHelper
             return;
         }
         Subsite::changeSubsite(self::$previousSubsite);
+    }
+
+    /**
+     * @return array
+     */
+    public static function listSubsites()
+    {
+        if (!self::usesSubsite()) {
+            return [];
+        }
+        return  Subsite::get()->map();
     }
 
     /**

@@ -63,7 +63,7 @@
                         <td align="left" valign="top">
                             <font face="'Source Sans Pro', sans-serif" color="#868686" style="font-size: 17px; line-height: 20px;">
                             <div style="font-family: 'Source Sans Pro', Arial, Tahoma, Geneva, sans-serif; color: #868686; font-size: 17px; line-height: 20px;">
-                            $Body.RAW
+                            $EmailContent.RAW
                             </div>
                             </font>
                             <div style="height: 39px; line-height: 39px; font-size: 37px;">&nbsp;</div>

@@ -102,6 +102,16 @@ class GeoExtension extends DataExtension
     }
 
     /**
+     * Get location (city, country) with br as line return
+     *
+     * @return string
+     */
+    public function getLocationBr()
+    {
+        return trim($this->owner->PostalCode . ' ' . $this->owner->Locality . "<br/>" . $this->getCountryName(), ' ,');
+    }
+
+    /**
      * Full address on 1 line
      *
      * @return string
@@ -119,5 +129,15 @@ class GeoExtension extends DataExtension
     public function getAddressLines()
     {
         return trim($this->getStreet() . "\n" . $this->getLocationLines());
+    }
+
+    /**
+     * Full address with br as line return
+     *
+     * @return string
+     */
+    public function getAddressBr()
+    {
+        return trim($this->getStreet() . "<br/>" . $this->getLocationBr());
     }
 }
