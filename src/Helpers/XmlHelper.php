@@ -29,6 +29,52 @@ class XmlHelper
     }
 
     /**
+     * @link link https://stackoverflow.com/questions/8218230/php-domdocument-loadhtml-not-encoding-utf-8-correctly
+     * @param string $source
+     * @param bool $convertToUtf8
+     * @return DOMDocument
+     */
+    public static function loadDomDocument($source, $convertToUtf8 = true)
+    {
+        if ($convertToUtf8) {
+            $dom = new DomDocument('1.0', 'UTF-8');
+            $dom->loadHTML(mb_convert_encoding($source, 'HTML-ENTITIES', 'UTF-8'));
+        } else {
+            $dom = new DOMDocument();
+            $dom->loadHTML('<?xml encoding="utf-8" ?>' . $source);
+        }
+        return $dom;
+    }
+
+    /**
+     * Replace a div by ID in a given html
+     *
+     * @param string $xml
+     * @param string $nodeId
+     * @param string $content
+     * @return string
+     */
+    public static function replaceNode($xml, $nodeId, $content)
+    {
+        $doc = new DOMDocument('1.0', 'UTF-8');
+        libxml_use_internal_errors(true);
+        $doc->loadHTML($xml);
+        $contentNode = $doc->getElementById($nodeId);
+
+        $newContent = '<div id="' . $nodeId . '">' . $content . '</div>';
+        $newDoc = self::loadDomDocument($newContent);
+        $newNode = $doc->importNode($newDoc->documentElement, true);
+
+        // Replace
+        $contentNode->parentNode->replaceChild($newNode, $contentNode);
+
+        $doc->preserveWhiteSpace = false;
+        $doc->formatOutput = true;
+        $html = $doc->saveHTML($doc->documentElement);
+        return $html;
+    }
+
+    /**
      * Output headers suitable for xml
      *
      * @param string $title

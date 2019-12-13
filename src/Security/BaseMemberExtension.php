@@ -189,7 +189,7 @@ class BaseMemberExtension extends DataExtension
             $fields->removeByName('FailedLoginCount');
         }
         // Some things should never be shown outside of SecurityAdmin
-        if (get_class($ctrl) != SecurityAdmin::class && !Permission::check('ADMIN')) {
+        if (get_class($ctrl) != SecurityAdmin::class && !Permission::check('ADMIN', 'any', $this->owner)) {
             $fields->removeByName([
                 'DirectGroups',
                 'Permissions',
