@@ -1,8 +1,10 @@
 <?php
+
 namespace LeKoala\Base\Controllers;
 
 use \Exception;
 use SilverStripe\i18n\i18n;
+use Psr\Log\LoggerInterface;
 use SilverStripe\ORM\DataList;
 use LeKoala\Base\View\Alertify;
 use SilverStripe\ORM\ArrayList;
@@ -12,16 +14,18 @@ use SilverStripe\Control\Session;
 use SilverStripe\Security\Member;
 use SilverStripe\Control\Director;
 use LeKoala\Base\View\DeferBackend;
+use Psr\SimpleCache\CacheInterface;
 use SilverStripe\ORM\DatabaseAdmin;
 use SilverStripe\Security\Security;
 use SilverStripe\View\Requirements;
 use LeKoala\Base\View\CookieConsent;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Controller;
+use SilverStripe\Core\Config\Config;
+use LeKoala\Base\Dev\EnvironmentChecker;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\Connect\DatabaseException;
 use SilverStripe\CMS\Controllers\ContentController;
-use SilverStripe\Core\Config\Config;
 
 /**
  * A more opiniated base controller for your app
@@ -52,15 +56,15 @@ class BaseContentController extends ContentController
         'environmentChecker' => '%$LeKoala\Base\Dev\EnvironmentChecker',
     ];
     /**
-     * @var Psr\Log\LoggerInterface
+     * @var LoggerInterface
      */
     public $logger;
     /**
-     * @var Psr\SimpleCache\CacheInterface
+     * @var CacheInterface
      */
     public $cache;
     /**
-     * @var LeKoala\Base\Dev\EnvironmentChecker
+     * @var EnvironmentChecker
      */
     public $environmentChecker;
 
@@ -186,6 +190,11 @@ class BaseContentController extends ContentController
         return $class;
     }
 
+    /**
+     * A better logout url that supports masquerading
+     *
+     * @return string
+     */
     public function LogoutURL()
     {
         $member = Member::currentUser();
@@ -197,7 +206,7 @@ class BaseContentController extends ContentController
 
 
     /**
-     *  Allow lang to be set by the request. This must happen after parent::init()
+     * Allow lang to be set by the request. This must happen after parent::init()
      *
      * @return void
      */
@@ -221,7 +230,7 @@ class BaseContentController extends ContentController
      * Get the session for this app
      *
      * @link https://docs.silverstripe.org/en/4/developer_guides/cookies_and_sessions/sessions/
-     * @return SilverStripe\Control\Session
+     * @return Session
      */
     public function getSession()
     {
@@ -238,7 +247,7 @@ class BaseContentController extends ContentController
      * Get the cache for this app
      *
      * @link https://docs.silverstripe.org/en/4/developer_guides/performance/caching/
-     * @return Psr\SimpleCache\CacheInterface
+     * @return CacheInterface
      */
     public function getCache()
     {
@@ -249,7 +258,7 @@ class BaseContentController extends ContentController
      * Get logger
      *
      * @link https://docs.silverstripe.org/en/4/developer_guides/debugging/error_handling/
-     * @return  Psr\Log\LoggerInterface
+     * @return LoggerInterface
      */
     public function getLogger()
     {
