@@ -1,4 +1,5 @@
 <?php
+
 namespace LeKoala\Base\Controllers;
 
 use ReflectionMethod;
@@ -45,7 +46,7 @@ trait ImprovedActions
         }
         $id = $request->getHeader('X-RecordID');
         if (!$id) {
-            $id = (int)$request->requestVar('_RecordID');
+            $id = (int) $request->requestVar('_RecordID');
         }
         return DataObject::get_by_id($class, $id);
     }
@@ -85,10 +86,12 @@ trait ImprovedActions
      */
     protected function isActionWithRequest($action)
     {
+        $action = filter_var($action, FILTER_SANITIZE_STRING);
+
         // Keep in mind we can only create a reflection of action from the base class
         // and not those provided by extensions
         if (method_exists($this->owner, $action)) {
-            $refl = new ReflectionMethod($this, $action);
+            $refl = new ReflectionMethod($this->owner, $action);
             $params = $refl->getParameters();
             // Everything that gets a request as a parameter is a valid action
             if ($params && $params[0]->getName() == 'request') {
@@ -125,8 +128,7 @@ trait ImprovedActions
     {
         try {
             $result = parent::handleAction($request, $action);
-        }
-        catch (RedirectionException $ex) {
+        } catch (RedirectionException $ex) {
             return $this->redirect($ex->getRedirectUrl());
         } catch (ValidationException $ex) {
             $caller = $ex->getTrace();
