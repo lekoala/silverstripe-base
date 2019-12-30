@@ -7,6 +7,7 @@ use SilverStripe\View\Requirements;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Control\HTTPRequest;
 use LeKoala\Base\Contact\ContactSubmission;
+use LeKoala\Base\Forms\GoogleRecaptchaField;
 
 /**
  * Class \LeKoala\Base\Contact\ContactPageController
@@ -93,12 +94,15 @@ class ContactPageController extends \PageController
     public function doSend()
     {
         $request = $this->getRequest();
+        $data = $request->postVars();
+
         // Collect data
         $name = $request->postVar('name');
         $subject = $request->postVar('subject');
         $phone = $request->postVar('phone');
         $email = $request->postVar('email');
         $message = $request->postVar('message');
+
         // Validate data
         if (trim($name) == '') {
             return $this->returnMessage(_t("ContactPageController.ERR_ENTER_NAME", "Entrez votre nom"), true);
@@ -109,6 +113,16 @@ class ContactPageController extends \PageController
         } elseif (trim($message) == '') {
             return $this->returnMessage(_t("ContactPageController.ERR_ENTER_MESSAGE", "Entrez votre message"), true);
         }
+
+        // Recaptcha
+        if (GoogleRecaptchaField::isSetupReady()) {
+            try {
+                GoogleRecaptchaField::validateResponse($data);
+            } catch (Exception $ex) {
+                return $this->returnMessage($ex->getMessage(), false);
+            }
+        }
+
         // Register submission
         $submission = new ContactSubmission();
         $submission->PageID = $this->data()->ID;
@@ -118,6 +132,7 @@ class ContactPageController extends \PageController
         $submission->Email = $email;
         $submission->Phone = $phone;
         $submission->write();
+
         // Send by email
         $address = $this->data()->Email;
         $result = $submission->sendByEmail($address);

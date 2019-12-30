@@ -7,6 +7,7 @@ use LeKoala\Base\Contact\ContactPage;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\SiteConfig\SiteConfig;
 use LeKoala\Base\Controllers\HasLogger;
+use SilverStripe\Core\Convert;
 
 /**
  * Class \LeKoala\Base\Contact\ContactSubmission
@@ -42,6 +43,25 @@ class ContactSubmission extends DataObject
     private static $summary_fields = [
         "Name", "Email", "Created"
     ];
+
+    protected function onBeforeWrite()
+    {
+        if ($this->Email) {
+            $this->Email = filter_var($this->Email, FILTER_SANITIZE_EMAIL);
+        }
+        if ($this->Message) {
+            $this->Message = Convert::raw2xml(strip_tags($this->Message));
+        }
+        if ($this->Name) {
+            $this->Name = Convert::raw2xml(strip_tags($this->Name));
+        }
+        if ($this->Phone) {
+            $this->Phone = Convert::raw2xml(strip_tags($this->Phone));
+        }
+        if ($this->Company) {
+            $this->Company = Convert::raw2xml(strip_tags($this->Company));
+        }
+    }
 
     /**
      * @param string $address
