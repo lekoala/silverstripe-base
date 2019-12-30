@@ -2,6 +2,7 @@
 
 namespace LeKoala\Base\Contact;
 
+use Exception;
 use SilverStripe\Control\Director;
 use SilverStripe\View\Requirements;
 use SilverStripe\Control\Email\Email;

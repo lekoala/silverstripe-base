@@ -89,7 +89,7 @@ trait ImprovedActions
         $action = filter_var($action, FILTER_SANITIZE_STRING);
 
         // Keep in mind we can only create a reflection of action from the base class
-        // and not those provided by extensions
+        // and not those provided by extensions, eg: search
         if (method_exists($this->owner, $action)) {
             $refl = new ReflectionMethod($this->owner, $action);
             $params = $refl->getParameters();
