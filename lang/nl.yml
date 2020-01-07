@@ -66,6 +66,7 @@ nl:
     QUICKLY_FILTER: 'Quickly filter this list by keywords'
   Global:
     Address: Address
+    All: Alles
     Back: Terug
     CONFIRM_MESSAGE: 'Bent u zeker?'
     Company: Bedrijf

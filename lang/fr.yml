@@ -66,6 +66,7 @@ fr:
     QUICKLY_FILTER: 'Quickly filter this list by keywords'
   Global:
     Address: Adresse
+    All: Tous
     Back: Retourner
     CONFIRM_MESSAGE: 'Est-ce que vous êtes certain?'
     Company: Société
