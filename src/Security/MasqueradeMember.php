@@ -1,8 +1,11 @@
 <?php
+
 namespace LeKoala\Base\Security;
 
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPResponse;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Security\IdentityStore;
 
 /**
  * Controls masquerade related functions
@@ -45,7 +48,12 @@ trait MasqueradeMember
         $session = $request->getSession();
         $sessionData = $session->getAll();
         $session->clearAll();
-        $session->set("loggedInAs", $this->getOwner()->ID);
+
+        /** @var IdentityStore $identityStore */
+        $identityStore = Injector::inst()->get(IdentityStore::class);
+        $identityStore->logIn($this->getOwner(), false, $request);
+        // $session->set("loggedInAs", $this->getOwner()->ID);
+
         $session->set('Masquerade.Old', $sessionData);
         $session->set('Masquerade.BackURL', $controller->getReferer());
         $this->owner->extend('onMasquerade', $session);
