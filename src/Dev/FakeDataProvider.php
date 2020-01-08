@@ -2,11 +2,13 @@
 
 namespace LeKoala\Base\Dev;
 
+use Exception;
 use SilverStripe\Assets\Image;
 use SilverStripe\Assets\Folder;
 use SilverStripe\ORM\DataObject;
-use LeKoala\Base\Geo\CountriesList;
 use SilverStripe\Control\Director;
+use LeKoala\Base\Geo\CountriesList;
+use SilverStripe\Assets\FileNameFilter;
 
 /**
  * Provide fake data for random record generation
@@ -310,11 +312,11 @@ class FakeDataProvider
      * Store a fake image
      *
      * @param string $data
-     * @param string $name
-     * @param string $folder
+     * @param string $name The filename, including extension
+     * @param string $folder The sub folder where the fake image is stored (default folder is Faker/Uploads)
      * @return Image
      */
-    public static function storeFakeImage($data, $name, $folder)
+    public static function storeFakeImage($data, $name, $folder = 'Uploads')
     {
         $filter = new FileNameFilter;
         $name = $filter->filter($name);
