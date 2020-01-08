@@ -16,6 +16,8 @@ use LeKoala\Base\Actions\CustomAction;
 use LeKoala\Base\Security\MemberAudit;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\LoginAttempt;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Security\IdentityStore;
 use LeKoala\Base\Extensions\ValidationStatusExtension;
 use SilverStripe\Forms\GridField\GridFieldAddNewButton;
 use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
@@ -254,6 +256,21 @@ class BaseMemberExtension extends DataExtension
     public function IsAdmin()
     {
         return Permission::check('CMS_ACCESS', 'any', $this->owner);
+    }
+
+    /**
+     * Force member login
+     * (since Member::login has been deprecated but is really useful)
+     *
+     * @param HTTPRequest $request
+     * @param boolean $remember
+     * @return void
+     */
+    public function forceLogin($request, $remember = false)
+    {
+        Security::setCurrentUser($this->owner);
+        $identityStore = Injector::inst()->get(IdentityStore::class);
+        return $identityStore->logIn($this->owner, $remember, $request);
     }
 
     /**

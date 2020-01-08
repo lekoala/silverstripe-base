@@ -52,6 +52,10 @@ trait MasqueradeMember
         /** @var IdentityStore $identityStore */
         $identityStore = Injector::inst()->get(IdentityStore::class);
         $identityStore->logIn($this->getOwner(), false, $request);
+
+        // variable is configurable in framework/_config/security.yml
+        // SilverStripe\Security\MemberAuthenticator\SessionAuthenticationHandler:
+        //   SessionVariable: loggedInAs
         // $session->set("loggedInAs", $this->getOwner()->ID);
 
         $session->set('Masquerade.Old', $sessionData);
