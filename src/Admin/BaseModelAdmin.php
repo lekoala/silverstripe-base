@@ -2,15 +2,18 @@
 
 namespace LeKoala\Base\Admin;
 
-use LeKoala\Base\Extensions\SortableExtension;
 use SilverStripe\Forms\Form;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Admin\ModelAdmin;
 use LeKoala\Base\Helpers\ClassHelper;
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\HTTPResponse;
 use LeKoala\Base\Subsite\SubsiteHelper;
 use SilverStripe\Admin\AdminRootController;
 use SilverStripe\Forms\GridField\GridField;
+use LeKoala\Base\Extensions\SortableExtension;
+use SilverStripe\Control\HTTPResponse_Exception;
+use SilverStripe\Control\PjaxResponseNegotiator;
 use SilverStripe\Forms\GridField\GridFieldDeleteAction;
 use Symbiote\GridFieldExtensions\GridFieldOrderableRows;
 
@@ -30,12 +33,57 @@ abstract class BaseModelAdmin extends ModelAdmin
      */
     private static $can_delete_from_list = false;
 
+    private static $allowed_actions = array(
+        'customResponse',
+        'ImportForm',
+        'SearchForm'
+    );
+
     /**
      * @return int
      */
     public function getSubsiteId()
     {
         return SubsiteHelper::currentSubsiteID();
+    }
+
+    /**
+     * Allow rendering content with custom template
+     *
+     * Will look in templates/Includes/YourModelAdminClass_{fragment}.ss
+     *
+     * Typical usage is this : return $this->getCustomResponseNegotiator(__FUNCTION__)->respond($this->getRequest());
+     *
+     * @param string $fragment
+     * @return PjaxResponseNegotiator
+     */
+    public function getCustomResponseNegotiator($fragment)
+    {
+        return new PjaxResponseNegotiator(
+            array(
+                'CurrentForm' => function () {
+                    return $this->getEditForm()->forTemplate();
+                },
+                'Content' => function () use ($fragment) {
+                    return $this->renderWith($this->getTemplatesWithSuffix('_' . $fragment));
+                },
+                'Breadcrumbs' => function () {
+                    return $this->renderWith([
+                        'type' => 'Includes',
+                        'SilverStripe\\Admin\\CMSBreadcrumbs'
+                    ]);
+                },
+                'default' => function () use ($fragment) {
+                    return $this->renderWith(
+                        $this->getViewer($fragment),
+                        [
+                            'Content' =>  $this->renderWith($this->getTemplatesWithSuffix('_' . $fragment))
+                        ]
+                    );
+                }
+            ),
+            $this->getResponse()
+        );
     }
 
     public static function getRequiredPermissions()
