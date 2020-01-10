@@ -65,7 +65,14 @@ abstract class BaseModelAdmin extends ModelAdmin
                     return $this->getEditForm()->forTemplate();
                 },
                 'Content' => function () use ($fragment) {
-                    return $this->renderWith($this->getTemplatesWithSuffix('_' . $fragment));
+                    $fragmentTemplate = $this->renderWith(
+                        '\LeKoala\Base\BaseModelAdminFragment',
+                        [
+                            'Content' =>  $this->renderWith($this->getTemplatesWithSuffix('_' . $fragment)),
+                            'GoBackLink' => self::getBaseLink($this->modelClass),
+                        ]
+                    );
+                    return $fragmentTemplate;
                 },
                 'Breadcrumbs' => function () {
                     return $this->renderWith([
@@ -77,7 +84,8 @@ abstract class BaseModelAdmin extends ModelAdmin
                     $fragmentTemplate = $this->renderWith(
                         '\LeKoala\Base\BaseModelAdminFragment',
                         [
-                            'Content' =>  $this->renderWith($this->getTemplatesWithSuffix('_' . $fragment))
+                            'Content' =>  $this->renderWith($this->getTemplatesWithSuffix('_' . $fragment)),
+                            'GoBackLink' => self::getBaseLink($this->modelClass),
                         ]
                     );
                     return $this->renderWith(

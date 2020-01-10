@@ -1,7 +1,10 @@
 <div class="cms-content fill-height flexbox-area-grow cms-tabset center $BaseCSSClasses" data-layout-type="border" data-pjax-fragment="Content" id="ModelAdmin">
 
-	<div class="cms-content-header north">
-		<div class="cms-content-header-info vertical-align-items flexbox-area-grow">
+	<div class="toolbar toolbar--north cms-content-header vertical-align-items">
+		<div class="cms-content-header-info flexbox-area-grow vertical-align-items">
+            <a class="btn btn-secondary font-icon-left-open-big toolbar__back-button btn--no-text" href="$GoBackLink">
+                <span class="sr-only"><%t SilverStripe\Admin\LeftAndMain.NavigateUp "Navigate up a folder" %></span>
+            </a>
 			<div class="breadcrumbs-wrapper">
 				<span class="cms-panel-link crumb last">
 					<% if $SectionTitle %>
