@@ -109,6 +109,14 @@ class SiteConfigExtension extends DataExtension
     }
 
     /**
+     * @return string
+     */
+    public function CopyrightFull()
+    {
+        return '© ' . $this->CopyrightYear() . ' ' . $this->owner->LegalName;
+    }
+
+    /**
      * Use form spree to send forms
      *
      * Set this in your config to use
