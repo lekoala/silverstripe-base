@@ -25,6 +25,11 @@ class ThemeControllerExtension extends Extension
     protected static $customGoogleFont = null;
 
     /**
+     * @var boolean
+     */
+    protected static $preventLoadingThemeStyles = false;
+
+    /**
      * @return string
      */
     public static function getCustomGoogleFont()
@@ -41,6 +46,23 @@ class ThemeControllerExtension extends Extension
     public static function setCustomGoogleFont($googleFont)
     {
         self::$customGoogleFont = $googleFont;
+    }
+
+    /**
+     * @return string
+     */
+    public static function getPreventLoadingThemeStyles()
+    {
+        return self::$preventLoadingThemeStyles;
+    }
+
+    /**
+     * @param string $preventLoadingThemeStyles
+     * @return void
+     */
+    public static function setPreventLoadingThemeStyles($preventLoadingThemeStyles)
+    {
+        self::$preventLoadingThemeStyles = $preventLoadingThemeStyles;
     }
 
     public function onAfterInit()
@@ -65,8 +87,13 @@ class ThemeControllerExtension extends Extension
             Requirements::css('https://fonts.googleapis.com/css?family=' . $googleFont);
         }
     }
+
     protected function requireThemeStyles()
     {
+        if (self::$preventLoadingThemeStyles) {
+            return;
+        }
+
         $themeDir = $this->getThemeDir();
         $cssPath = Director::baseFolder() . '/' . $themeDir . '/css';
         $SiteConfig = $this->owner->SiteConfig();
