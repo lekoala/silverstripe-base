@@ -1,4 +1,5 @@
 <?php
+
 namespace LeKoala\Base\SiteConfig;
 
 use SilverStripe\Forms\FieldList;
@@ -31,6 +32,8 @@ class GoogleSiteConfigExtension extends DataExtension
         "GoogleAnalyticsWithoutCookies" => "Boolean",
         "GoogleMapsApiKey" => "Varchar(59)",
     ];
+
+    protected static $conversions = [];
 
     public function updateCMSFields(FieldList $fields)
     {
@@ -126,6 +129,19 @@ JS;
             }
         }
 
+        if (!empty(self::$conversions)) {
+            foreach (self::$conversions as $conversion) {
+                $sendTo = $conversion['send_to'];
+                $transactionId = $conversion['transaction_id'];
+                $script .= <<<JS
+gtag('event', 'conversion', {
+    'send_to': '{$sendTo}',
+    'transaction_id': '{$transactionId}'
+});
+JS;
+            }
+        }
+
         $conditionalAnalytics = $config->conditional_analytics;
 
         if ($gtag) {
@@ -139,5 +155,20 @@ JS;
         }
 
         return true;
+    }
+
+    /**
+     * Track conversion
+     *
+     * @param string $sendTo
+     * @param string $transactionId
+     * @return void
+     */
+    public static function addGoogleAnalyticsConversion($sendTo, $transactionId = '')
+    {
+        self::$conversions[] = [
+            'send_to' => $sendTo,
+            'transaction_id' => $transactionId,
+        ];
     }
 }
