@@ -2,6 +2,7 @@
 
 namespace LeKoala\Base\View;
 
+use Exception;
 use SilverStripe\i18n\i18n;
 use SilverStripe\Control\Cookie;
 use SilverStripe\Control\Session;
@@ -25,10 +26,17 @@ class Alertify
 
     /**
      * @config
+     * @var string
+     */
+    private static $version = '1.13.1';
+
+    /**
+     * @config
      * @var array
      */
     private static $defaults = [
         'notifier.position' => "top-center",
+        'notifier.delay' => "5",
         'transition' => "zoom",
         'theme.ok' => "btn btn-primary",
         'theme.cancel' => "btn btn-danger",
@@ -41,15 +49,16 @@ class Alertify
     public static function requirements()
     {
         $theme = self::config()->theme;
+        $version = self::config()->version;
 
-        Requirements::javascript('https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.12.0/alertify.min.js');
+        Requirements::javascript('https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/' . $version . '/alertify.min.js');
         $dir = i18n::get_script_direction();
         if ($dir == 'rtl') {
-            Requirements::css('https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.12.0/css/alertify.rtl.min.css');
-            Requirements::css('https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.12.0/css/themes/' . $theme . '.rtl.min.css');
+            Requirements::css('https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/' . $version . '/css/alertify.rtl.min.css');
+            Requirements::css('https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/' . $version . '/css/themes/' . $theme . '.rtl.min.css');
         } else {
-            Requirements::css('https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.12.0/css/alertify.min.css');
-            Requirements::css('https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.12.0/css/themes/' . $theme . '.min.css');
+            Requirements::css('https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/' . $version . '/css/alertify.min.css');
+            Requirements::css('https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/' . $version . '/css/themes/' . $theme . '.min.css');
         }
         $settings = '';
         foreach (self::config()->defaults as $k => $v) {
@@ -103,7 +112,7 @@ class Alertify
                 $type = 'warning';
                 break;
         }
-        $js = "alertify.notify('$msg', '$type', 0);";
+        $js = "alertify.notify('$msg', '$type', 0});";
         Requirements::customScript($js);
     }
 

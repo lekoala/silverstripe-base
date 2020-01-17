@@ -3,8 +3,8 @@
  *
  * Use applicationResponse in php to properly respond to these requests
  */
-(function ($) {
-    $(document).on('click', '[data-scope]', function (e) {
+(function($) {
+    $(document).on('click', '[data-scope]', function(e) {
         e.preventDefault();
 
         var $this = $(this);
@@ -25,13 +25,13 @@
         // Collect data. Any dynamic parameter should be stored as a data attribute on click event
         var data = $this.data();
 
-        $.getJSON(href, data, function (result) {
+        $.getJSON(href, data, function(result) {
             var messageType = 'success';
             if (!result.success) {
                 messageType = 'error';
             }
             if (result.message) {
-                alertify.notify(result.message, messageType, 0);
+                alertify.notify(result.message, messageType, alertify.defaults.notifier.delay);
             }
             if (result.manipulations) {
                 for (var i = 0; i < result.manipulations.length; i++) {
@@ -54,7 +54,7 @@
             }
             $this.trigger('ScopedRequests.complete', [$this, result]);
         });
-    }).error(function (err) {
+    }).error(function(err) {
         $this.trigger('ScopedRequests.error', [$this, err]);
     });
 })(jQuery);
