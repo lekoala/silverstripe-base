@@ -31,7 +31,7 @@
                 messageType = 'error';
             }
             if (result.message) {
-                alertify.notify(result.message, messageType, alertify.defaults.notifier.delay);
+                alertify.notify(result.message, messageType);
             }
             if (result.manipulations) {
                 for (var i = 0; i < result.manipulations.length; i++) {
