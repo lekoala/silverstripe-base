@@ -2,7 +2,7 @@
 
 ## Starter config
 
-Here is a sample starter config
+Here is a sample mysite.yml config
 
 Make sure you include the "after" part to make sure your config
 is not overriden by the base config
@@ -23,12 +23,6 @@ is not overriden by the base config
         removed_items:
             - SilverStripe-CampaignAdmin-CampaignAdmin
             - SilverStripe-VersionedAdmin-ArchiveAdmin
-    LeKoala\Base\Faq\FaqPageController:
-        theme_files: true
-    LeKoala\Base\Contact\ContactPageController:
-        theme_files: true
-    SilverStripe\SiteConfig\SiteConfig:
-        auto_include_css: false
     SilverStripe\Control\Email\Email:
         admin_email: admin@mywebsite.com
         tech_email: tech@agency.com
@@ -36,3 +30,22 @@ is not overriden by the base config
         default_locales:
             - en_US
             - fr_FR
+
+And here is a sample theme.yml
+
+    ---
+    Name: mytheme
+    After:
+    - '#base-theme'
+    ---
+    SilverStripe\View\SSViewer:
+        themes:
+        - '$public'
+        - 'mythemehere'
+        - '$default'
+    SilverStripe\SiteConfig\SiteConfig:
+        auto_include_css: false
+    LeKoala\Base\Faq\FaqPageController:
+        theme_files: true
+    LeKoala\Base\Contact\ContactPageController:
+        theme_files: true
