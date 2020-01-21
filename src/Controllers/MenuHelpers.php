@@ -33,6 +33,8 @@ trait MenuHelpers
     }
 
     /**
+     * You can include FooterMenu to use this
+     *
      * @return DataList
      */
     public function FooterMenu()
