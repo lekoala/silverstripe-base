@@ -120,7 +120,7 @@ class ThemeControllerExtension extends Extension
                 }
                 $name = basename($file);
                 // Skip editor.css
-                if ($name == 'editor.css') {
+                if ($name == 'editor.css' || $name == "editor.min.css") {
                     continue;
                 }
                 // themedCSS use filename without extension
