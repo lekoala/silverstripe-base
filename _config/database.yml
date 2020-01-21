@@ -26,6 +26,8 @@ SilverStripe\Core\Injector\Injector:
     class: LeKoala\Base\ORM\FieldType\DBJson
   Phone:
     class: LeKoala\Base\ORM\FieldType\DBPhone
+  Website:
+    class: LeKoala\Base\ORM\FieldType\DBWebsite
   NumericVarchar:
     class: LeKoala\Base\ORM\FieldType\DBNumericVarchar
   NiceEnum:

@@ -1,4 +1,5 @@
 <?php
+
 namespace LeKoala\Base\Forms;
 
 use SilverStripe\i18n\i18n;
@@ -52,7 +53,20 @@ class InputMaskField extends TextField
      * @config
      * @var string
      */
-    private static $version = '4.0.8';
+    private static $version = '4.0.9';
+
+    /**
+     * @config
+     * @var boolean
+     */
+    private static $use_v5 = true;
+
+    /**
+     * @config
+     * @var string
+     */
+    private static $version_v5 = '5.0.3';
+
 
     public function Type()
     {
@@ -71,7 +85,7 @@ class InputMaskField extends TextField
      */
     public function getLocale()
     {
-        return $this->locale ? : i18n::get_locale();
+        return $this->locale ?: i18n::get_locale();
     }
 
     /**
@@ -115,6 +129,23 @@ class InputMaskField extends TextField
         return $this->setConfig('alias', $value);
     }
 
+    public function getRegex()
+    {
+        return $this->getConfig('regex');
+    }
+
+    /**
+     * Use a regular expression as a mask
+     *
+     * @link https://github.com/RobinHerbots/Inputmask#regex
+     * @param string $value
+     * @return $this
+     */
+    public function setRegex($value)
+    {
+        return $this->setConfig('regex', $value);
+    }
+
     public function getMask()
     {
         return $this->getConfig('mask');
@@ -123,10 +154,7 @@ class InputMaskField extends TextField
     /**
      * Set the mask
      *
-     * 9: numeric
-     * a: alphabetical
-     * *: alphanumeric
-     * (aaa): optional part
+     * 9: numeric, a: alphabetical, *: alphanumeric, (aaa): optional part
      *
      * @param string $value
      * @return $this
@@ -188,8 +216,20 @@ class InputMaskField extends TextField
 
     public static function requirements()
     {
-        $version = self::config()->version;
-        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/inputmask/$version/jquery.inputmask.bundle.min.js");
+
+        $useV5 = self::config()->use_v5;
+        if ($useV5) {
+            $version = self::config()->version_v5;
+        } else {
+            $version = self::config()->version;
+        }
+
+        if ($useV5) {
+            Requirements::javascript("https://cdn.jsdelivr.net/npm/inputmask@$version/dist/jquery.inputmask.min.js");
+        } else {
+            Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/inputmask/$version/jquery.inputmask.bundle.min.js");
+        }
+
         // unpkg does not support beta version
         // Requirements::javascript("https://unpkg.com/inputmask@$version/dist/min/jquery.inputmask.bundle.min.js");
         // rawgit is best effort, might not be reliable
