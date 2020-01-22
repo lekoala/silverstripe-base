@@ -62,11 +62,12 @@ class BlocksPage extends Page
             if (!$title) {
                 $title = $block->Title;
             }
-            $list->push([
+            $item = [
                 'Link' => $this->Link() . '#' . $block->HTMLID,
                 'Title' => $title,
                 'MenuTitle' => $title,
-            ]);
+            ];
+            $list->push($item);
         }
         return $list;
     }

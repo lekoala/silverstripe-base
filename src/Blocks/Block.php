@@ -1,4 +1,5 @@
 <?php
+
 namespace LeKoala\Base\Blocks;
 
 use SilverStripe\Assets\File;
@@ -14,7 +15,6 @@ use LeKoala\Base\Blocks\BaseBlock;
 use LeKoala\Base\Blocks\BlocksPage;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\LiteralField;
-use LeKoala\Base\Blocks\BlockButton;
 use SilverStripe\Forms\DropdownField;
 use LeKoala\Base\Helpers\ClassHelper;
 use LeKoala\Base\ORM\FieldType\DBJson;
@@ -25,7 +25,6 @@ use LeKoala\Base\Extensions\SortableExtension;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 use Symbiote\GridFieldExtensions\GridFieldOrderableRows;
 use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
-use GuzzleHttp\Psr7\UploadedFile;
 use SilverStripe\Forms\TabSet;
 use SilverStripe\Forms\Tab;
 use SilverStripe\Forms\TextField;
@@ -101,6 +100,7 @@ final class Block extends DataObject
     ];
     private static $summary_fields = [
         'BlockType' => 'Block Type',
+        'MenuTitle' => 'Menu Title',
         'Summary' => 'Summary',
     ];
     private static $translate = [
@@ -201,7 +201,7 @@ final class Block extends DataObject
             if ($typeInst->hasMethod('disableAnchorRewriting')) {
                 SSViewer::setRewriteHashLinksDefault($typeInst->disableAnchorRewriting());
             }
-            $result = (string)$typeInst->renderWith($template, $arrayData);
+            $result = (string) $typeInst->renderWith($template, $arrayData);
             SSViewer::setRewriteHashLinksDefault(true);
         }
         // Restore themes just in case to prevent any side effect
