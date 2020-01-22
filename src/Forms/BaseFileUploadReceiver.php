@@ -1,23 +1,41 @@
 <?php
+
 namespace LeKoala\Base\Forms;
 
 use InvalidArgumentException;
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\Image;
-use SilverStripe\Assets\Folder;
 use SilverStripe\Assets\Upload;
 use LeKoala\Base\Helpers\ClassHelper;
 
 trait BaseFileUploadReceiver
 {
-    protected function setDefaultDescription($relation)
+    /**
+     * Set default description
+     *
+     * @param string $relation Type of relation, eg Image or File
+     * @param DataObject $record A related record
+     * @param string $name Relation name, eg "Logo"
+     * @return string
+     */
+    protected function setDefaultDescription($relation, $record = null, $name = null)
     {
         $desc = '';
         $size = File::format_size($this->getValidator()->getAllowedMaxFileSize());
         $desc = _t('BaseFileUploadReceiver.MAXSIZE', 'Max file size: {size}', ['size' => $size]);
         if ($relation == Image::class) {
             $desc .= '; ';
-            $desc .= _t('BaseFileUploadReceiver.MAXRESOLUTION', 'Max resolution: 2048x2048px');
+
+            // do we have a preferred size?
+            if ($record) {
+                $sizes = $record->config()->image_sizes;
+                if ($sizes && isset($sizes[$name])) {
+                    $size = $sizes[$name][0] . 'x' . $sizes[$name][1];
+                    $desc .= _t('BaseFileUploadReceiver.RECOMMENDEDSIZE', 'Recommended resolution: ' . $size . 'px');
+                }
+            } else {
+                $desc .= _t('BaseFileUploadReceiver.MAXRESOLUTION', 'Max resolution: 2048x2048px');
+            }
         }
         $extensions = $this->getAllowedExtensions();
         if (count($extensions) < 7) {

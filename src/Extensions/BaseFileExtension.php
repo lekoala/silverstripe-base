@@ -2,6 +2,7 @@
 
 namespace LeKoala\Base\Extensions;
 
+use Exception;
 use SilverStripe\ORM\DB;
 use SilverStripe\Assets\File;
 use SilverStripe\Core\Convert;

@@ -11,6 +11,9 @@ use LeKoala\Base\Blocks\Block;
  * Improves the default uploader by uploading to a consistent default location
  * Records should really have an ID before uploading to ensure we know where to place the file
  * Otherwise, files might be uploaded and attached to nothing
+ *
+ * You can define on your DataObject a static config $image_sizes = ['Name' => [width, height]]
+ * and it will be displayed in the description
  */
 class SmartUploadField extends UploadField
 {
@@ -62,7 +65,7 @@ class SmartUploadField extends UploadField
 
             // Set a default description
             if (!$this->description) {
-                $this->setDefaultDescription($relation);
+                $this->setDefaultDescription($relation, $record, $this->name);
             }
         }
         return parent::Field($properties);
