@@ -3,6 +3,7 @@
 namespace LeKoala\Base\Extensions;
 
 use Exception;
+use LeKoala\Base\View\Statically;
 use SilverStripe\ORM\DB;
 use SilverStripe\Assets\File;
 use SilverStripe\Core\Convert;
@@ -124,6 +125,16 @@ class BaseFileExtension extends DataExtension
         $w = $img->getWidth();
         $h = $img->getHeight();
         return '<img data-src="' . $url . '" class="lazy" alt="' . $title . '" width="' . $w . '" height="' . $h . '" />';
+    }
+
+    /**
+     * Get a cdn version of the image
+     *
+     * @return string
+     */
+    public function StaticallyLink()
+    {
+        return Statically::img($this->owner->AbsoluteLink());
     }
 
     /**
