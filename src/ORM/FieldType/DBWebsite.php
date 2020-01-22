@@ -7,6 +7,9 @@ use SilverStripe\ORM\FieldType\DBVarchar;
 
 /**
  * Website field type
+ *
+ * Allows better back end functionnalities (with input mask)
+ * and front end use with $Website.Nice to display user friendly urls
  */
 class DBWebsite extends DBVarchar
 {
@@ -32,5 +35,15 @@ class DBWebsite extends DBVarchar
             $domain = preg_replace('/^www\./', '', $urlParts['host']);
         }
         return $domain;
+    }
+
+    /**
+     * Alias for typical SilverStripe conventions
+     *
+     * @return string
+     */
+    public function Nice()
+    {
+        return $this->ShortUrl();
     }
 }
