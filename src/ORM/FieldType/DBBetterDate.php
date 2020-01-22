@@ -1,7 +1,9 @@
 <?php
+
 namespace LeKoala\Base\ORM\FieldType;
 
 use Exception;
+use InvalidArgumentException;
 use SilverStripe\ORM\FieldType\DBDate;
 
 /**
@@ -26,7 +28,7 @@ class DBBetterDate extends DBDate
             $day = 0;
         }
 
-        if ((int)$year === 0 && (int)$month === 0 && (int)$day === 0) {
+        if ((int) $year === 0 && (int) $month === 0 && (int) $day === 0) {
             return null;
         }
         // Validate date

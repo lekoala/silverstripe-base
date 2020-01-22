@@ -1,11 +1,11 @@
 <?php
+
 namespace LeKoala\Base\ORM\FieldType;
 
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\Image;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FileHandleField;
 use SilverStripe\Core\Injector\Injector;

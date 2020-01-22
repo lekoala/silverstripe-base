@@ -1,13 +1,11 @@
 <?php
+
 namespace LeKoala\Base\ORM\FieldType;
 
-use libphonenumber\PhoneNumber;
-use LeKoala\Base\Forms\PhoneField;
 use libphonenumber\PhoneNumberUtil;
 use libphonenumber\PhoneNumberFormat;
 use libphonenumber\NumberParseException;
 use LeKoala\Base\Forms\CountryPhoneField;
-use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\ORM\FieldType\DBVarchar;
 use Prophecy\Exception\InvalidArgumentException;
 

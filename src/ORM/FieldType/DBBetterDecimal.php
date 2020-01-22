@@ -1,4 +1,5 @@
 <?php
+
 namespace LeKoala\Base\ORM\FieldType;
 
 use SilverStripe\ORM\FieldType\DBDecimal;
