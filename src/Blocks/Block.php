@@ -31,6 +31,7 @@ use SilverStripe\Forms\TextField;
 use SilverStripe\View\Parsers\URLSegmentFilter;
 use SilverStripe\Control\Controller;
 use SilverStripe\Admin\LeftAndMain;
+use SilverStripe\Versioned\Versioned;
 
 /**
  * The block dataobject is used to actually store the data
@@ -122,6 +123,7 @@ final class Block extends DataObject
     {
         return $this->Content;
     }
+
     public function getTitle()
     {
         $type = $this->BlockType();
@@ -130,6 +132,7 @@ final class Block extends DataObject
         }
         return 'New ' . $type;
     }
+
     /**
      * Each block type can have one "collection" of items
      *
@@ -146,6 +149,7 @@ final class Block extends DataObject
             return $list->filter('BlockID', $this->ID);
         }
     }
+
     /**
      * Each block type can have one shared "collection" of items
      *
@@ -158,6 +162,7 @@ final class Block extends DataObject
         $inst = $this->getTypeInstance();
         return $inst->SharedCollection();
     }
+
     /**
      * Get sorted images
      *
@@ -167,6 +172,7 @@ final class Block extends DataObject
     {
         return $this->Images()->Sort('SortOrder');
     }
+
     /**
      * Get sorted files
      *
@@ -176,6 +182,7 @@ final class Block extends DataObject
     {
         return $this->Files()->Sort('SortOrder');
     }
+
     public function renderWithTemplate()
     {
         $template = 'Blocks/' . $this->BlockClass();
@@ -208,6 +215,7 @@ final class Block extends DataObject
         SSViewer::set_themes($themes);
         return $result;
     }
+
     /**
      * Class helper to use in your templates
      *
@@ -218,6 +226,7 @@ final class Block extends DataObject
     {
         return 'Block-' . $this->BlockType() . '-' . $name;
     }
+
     /**
      * Convert an indexed array to an ArrayList
      * This allows loops, etc in the template
@@ -256,11 +265,11 @@ final class Block extends DataObject
                         if ($lastChars == 'ID') {
                             $k = substr($k, 0, -2);
                         }
-                        $item[$k] = self::getPublishedImageByID($files[0]);
+                        $item[$k] = self::getPublishedFileByID($files[0]);
                     } else {
                         $imageList = new ArrayList();
                         foreach ($files as $fileID) {
-                            $imageList->push(self::getPublishedImageByID($fileID));
+                            $imageList->push(self::getPublishedFileByID($fileID));
                         }
                         $item[$k] = $imageList;
                     }
@@ -297,12 +306,36 @@ final class Block extends DataObject
      */
     public static function getPublishedImageByID($ID)
     {
-        $image = Image::get()->byID($ID);
+        if (class_exists(Versioned::class)) {
+            $image = Versioned::get_one_by_stage(Image::class, 'Stage', "ID = " . (int) $ID);
+        } else {
+            $image = Image::get()->byID($ID);
+        }
         // This is just annoying
         if ($image && !$image->isPublished()) {
             $image->doPublish();
         }
         return $image;
+    }
+
+    /**
+     * Make sure the file is published for the block
+     *
+     * @param int $ID
+     * @return File
+     */
+    public static function getPublishedFileByID($ID)
+    {
+        if (class_exists(Versioned::class)) {
+            $file = Versioned::get_one_by_stage(File::class, 'Stage', "ID = " . (int) $ID);
+        } else {
+            $file = File::get()->byID($ID);
+        }
+        // This is just annoying
+        if ($file && !$file->isPublished()) {
+            $file->doPublish();
+        }
+        return $file;
     }
 
     /**
@@ -363,6 +396,7 @@ final class Block extends DataObject
             $this->Page()->write();
         }
     }
+
     /**
      * Get a name for this type
      * Basically calling getBlockName with the Type
@@ -376,6 +410,7 @@ final class Block extends DataObject
         }
         return self::getBlockName($this->Type);
     }
+
     /**
      * Get unqualified class of the block's type
      *
@@ -385,6 +420,7 @@ final class Block extends DataObject
     {
         return ClassHelper::getClassWithoutNamespace($this->Type);
     }
+
     /**
      * Extend __get to allow loading data from Data store
      *
@@ -403,6 +439,7 @@ final class Block extends DataObject
         }
         return parent::__get($name);
     }
+
     /**
      * Extend hasField to allow loading data from Data store
      *
@@ -421,6 +458,7 @@ final class Block extends DataObject
         }
         return parent::hasField($name);
     }
+
     /**
      * Split Name[Input][Sub][Value] notation
      *
@@ -438,6 +476,7 @@ final class Block extends DataObject
         }
         return $matches;
     }
+
     /**
      * Get nested data
      *
@@ -458,6 +497,7 @@ final class Block extends DataObject
         }
         return $val;
     }
+
     /**
      * Hijack setCastedField to ensure form saving works properly
      *
@@ -483,6 +523,7 @@ final class Block extends DataObject
         }
         return parent::setCastedField($fieldName, $value);
     }
+
     /**
      * Consistently returns an array regardless of what is in BlockData
      *
@@ -492,6 +533,7 @@ final class Block extends DataObject
     {
         return $this->dbObject('BlockData')->decodeArray();
     }
+
     /**
      * Consistently returns an array regardless of what is in Settings
      *
@@ -501,6 +543,7 @@ final class Block extends DataObject
     {
         return $this->dbObject('Settings')->decodeArray();
     }
+
     /**
      * When looping in template, wrap the blocks content is wrapped in a
      * div with theses classes
@@ -509,8 +552,12 @@ final class Block extends DataObject
      */
     public function getClass()
     {
-        return 'Block Block-' . $this->BlockType();
+        $inst = $this->getTypeInstance();
+        $class = 'Block Block-' . $this->BlockType();
+        $inst->updateClass($class);
+        return $class;
     }
+
     /**
      * Get a viewable block instance wrapping this block
      *
@@ -548,11 +595,13 @@ final class Block extends DataObject
         $text->setValue($shortSummary);
         return $text;
     }
+
     public function getCMSActions()
     {
         $actions = parent::getCMSActions();
         return $actions;
     }
+
     public function getCMSFields()
     {
         // $fields = parent::getCMSFields();
@@ -560,7 +609,7 @@ final class Block extends DataObject
         $mainTab = new Tab("Main");
         $settingsTab = new Tab("Settings");
         $fields->push(new TabSet("Root", $mainTab, $settingsTab));
-        // ! Fields must be added to Root.Main to work properly
+        // (!) Fields must be added to Root.Main to work properly
         $mainTab->push(new HiddenField('ID'));
         $mainTab->push(new HiddenField('Data'));
         $mainTab->push(new HiddenField('Settings'));
@@ -646,11 +695,13 @@ final class Block extends DataObject
         }
         return $fields;
     }
+
     public function validate()
     {
         $result = parent::validate();
         return $result;
     }
+
     /**
      * List all classes extending BaseBlock
      *
@@ -663,6 +714,7 @@ final class Block extends DataObject
         \array_shift($blocks);
         return $blocks;
     }
+
     /**
      * Get a list of blocks mapped by class => name
      *
@@ -676,6 +728,7 @@ final class Block extends DataObject
         }
         return $list;
     }
+
     /**
      * Get a list of blocks mapped by unqualified class => class
      *
@@ -689,6 +742,7 @@ final class Block extends DataObject
         }
         return $list;
     }
+
     /**
      * Get a more human readable name
      * TODO: i18n

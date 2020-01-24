@@ -1,4 +1,5 @@
 <?php
+
 namespace LeKoala\Base\Blocks;
 
 use LeKoala\Base\Blocks\Block;
@@ -55,6 +56,10 @@ class BaseBlock extends ViewableData
 
 
     public function updateFields(BlockFieldList $fields)
+    {
+    }
+
+    public function updateClass(&$class)
     {
     }
 

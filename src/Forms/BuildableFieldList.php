@@ -84,6 +84,7 @@ class BuildableFieldList extends FieldList
     protected function normalizeTitle($name, $title = "")
     {
         if ($title === null) {
+            // For items list like [idx, name]
             if (is_array($name)) {
                 $name = $name[1];
             }

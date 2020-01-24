@@ -61,17 +61,19 @@ In this example, I add 3 items with Name, Email, Description and Image
         $fields->addText([$i, 'Name']);
         $fields->addText([$i, 'Email']);
         $fields->addEditor([$i,'Description']);
-        $fields->addUpload([$i, 'Image']);
+        $fields->addUpload([$i, 'ImageID'], "Image"); // don't forget the ID suffix
     }
 
 Please note the [] array notation we use. Instead of passing the name as a string, we pass and array with the index
 and the name as the second argument. Our BlockFieldList knows how to deal with this.
 
 And you can freely loop over them thanks to our special $Items (defined as a const ITEM_KEYS in Blocks.php)
+Assets (files and images) are automatically published if used in the block
 
     <% loop $Items %>
     $Name <$Email><br/>
     $Description
+    <img src="$Image.Link">
     <% end_loop %>
 
 Nice!
@@ -111,6 +113,39 @@ Please note of the difference between Collections and SharedCollections
 
 - Collection : data is filtered for the given block. It's specific and require a has_one relation from the DataObject to the Block
 - SharedCollection : data is the same for all blocks of this type
+
+## Other templating stuff
+
+### Menus
+
+you can generated anchored base menus with the following snippet. Each block can have it's own id (Settings tab, based on MenuTitle if empty)
+
+    <ul>
+    <% loop MenuAnchorsItems %>
+    <li><a href="$Link">$Title</a></li>
+    <% end_loop %>
+    </ul>
+
+### Pages
+
+All block content is rendered into the Content field of the page. This is needed in order to keep search working without adjustement.
+
+Each block represent a section, something like this
+
+    <section id="MyHTMLID" class="Block Block-MyBlock">
+    Here is the block content based on your template
+    </section>
+
+You can disable to prevent this automatic "section" stuff if you have a more custom need by disabling the wrap block config
+
+    LeKoala\Base\Blocks\BlocksPage:
+      wrap_blocks: false
+
+### Casting
+
+If you store html in your blocks, it's not going to be casted properly. So ensure to use .RAW in your templates
+
+    $Description.RAW
 
 ## Use Query
 
