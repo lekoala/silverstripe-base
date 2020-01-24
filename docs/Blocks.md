@@ -48,7 +48,7 @@ not convenient, feel free to remove it
     $fields->removeByName('Image');
 
 WARNING : as a safety measure, avoid naming conflicts with existing Block.php fields
-like Content. This is why the default value is "Description".
+like Content. This is why the default value is "Description" in addEditor().
 
 ## Data and settings
 
@@ -158,6 +158,26 @@ you can generated anchored base menus with the following snippet. Each block can
     <% end_loop %>
     </ul>
 
+### Overriding the default Content block
+
+You can easily override the default template by adding your own template in /app/templates/Blocks/ContentBlock.ss
+
+Default template is:
+
+    $Description.RAW
+
+    <% if Image %>
+    $Image
+    <% end_if %>
+
+    <% if ButtonID %>
+    <% include BlockButton %>
+    <% end_if %>
+
+### Buttons
+
+TODO
+
 ### Pages
 
 All block content is rendered into the Content field of the page. This is needed in order to keep search working without adjustement.
@@ -201,7 +221,7 @@ If you store html in your blocks, it's not going to be casted properly. So ensur
 
 ### Previewing blocks
 
-It can be a bit tedious to save and publish each time you change a block in order to refresh the $Content variable
+It can be a bit tedious to save and publish each time you change a block in order to refresh the $Content variable of the page
 This is why in Dev mode you can pass ?live=1 as a url parameter in order to fully refresh all blocks content
 when displaying the page
 

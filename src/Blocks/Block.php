@@ -367,6 +367,7 @@ final class Block extends DataObject
         }
 
         // Render template to content
+        // We need this for summary to work properly
         $Content = $this->renderWithTemplate();
         $this->Content = $Content;
 
@@ -612,8 +613,8 @@ final class Block extends DataObject
         $fields->push(new TabSet("Root", $mainTab, $settingsTab));
         // (!) Fields must be added to Root.Main to work properly
         $mainTab->push(new HiddenField('ID'));
-        $mainTab->push(new HiddenField('Data'));
-        $mainTab->push(new HiddenField('Settings'));
+        $mainTab->push(new HiddenField(self::DATA_KEY));
+        $mainTab->push(new HiddenField(self::SETTINGS_KEY));
         $mainTab->push(new HiddenField('PageID'));
         // Show debug infos
         if (Director::isDev() && isset($_GET['debug'])) {

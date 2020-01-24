@@ -165,6 +165,14 @@ class BlocksPage extends Page
         return $Content;
     }
 
+    /**
+     * Add a block to this page
+     * Useful for programmatic scaffolding
+     *
+     * @param string $content
+     * @param string $type
+     * @return void
+     */
     public function addBlock($content, $type = null)
     {
         $block = new Block();

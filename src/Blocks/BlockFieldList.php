@@ -7,6 +7,7 @@ use SilverStripe\Forms\FormField;
 use LeKoala\Base\Forms\BuildableFieldList;
 use LeKoala\Base\Blocks\Fields\BlockHTMLEditorField;
 use LeKoala\Base\Forms\SmartSortableUploadField;
+use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
 
 /**
  * Easily add fields to your blocks
