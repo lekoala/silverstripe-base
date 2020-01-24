@@ -197,7 +197,8 @@ final class Block extends DataObject
             $typeInst = $this->getTypeInstance();
             $data = $this->DataArray();
             $settings = $this->SettingsArray();
-            $data = array_merge($data, $settings);
+            $extra = $this->ExtraData();
+            $data = array_merge($data, $settings, $extra);
             // We have items to normalize
             if (isset($data[self::ITEMS_KEY])) {
                 $data[self::ITEMS_KEY] = self::normalizeIndexedList($data[self::ITEMS_KEY]);
@@ -679,18 +680,25 @@ final class Block extends DataObject
         $this->extend('updateCMSFields', $fields);
         // Adjust uploaders
         $uploadFolder = 'Blocks/' . $this->PageID;
+        // Adjust the single image field
         $Image = $fields->dataFieldByName('Image');
         if ($Image) {
             $Image->setFolderName($uploadFolder);
             $Image->setAllowedMaxFileNumber(1);
             $Image->setIsMultiUpload(false);
         }
+        // Adjust any items fields
         $dataFields = $fields->dataFields();
         foreach ($dataFields as $dataField) {
             if ($dataField instanceof UploadField) {
                 $dataField->setFolderName($uploadFolder . '/' . $this->BlockType());
-                $dataField->setAllowedMaxFileNumber(1);
-                $dataField->setIsMultiUpload(false);
+                $fieldName = $dataField->getName();
+
+                // Items uploader match only one file
+                if (strpos($fieldName, '[') !== false) {
+                    $dataField->setAllowedMaxFileNumber(1);
+                    $dataField->setIsMultiUpload(false);
+                }
             }
         }
         return $fields;

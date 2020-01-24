@@ -81,22 +81,40 @@ In this example, I add 3 items with Name, Email, Description and Image
 Please note the [] array notation we use. Instead of passing the name as a string, we pass and array with the index
 and the name as the second argument. Our BlockFieldList knows how to deal with this.
 
+Also please note that all items are always present, regardless of any data being set since there is no way
+to distinguish and empty item. You may need to guard against this by using ifs in your template if some
+items can be left empty.
+
 And you can freely loop over them thanks to our special $Items (defined as a const ITEM_KEYS in Blocks.php)
 Assets (files and images) are automatically published if used in the block
 
     <% loop $Items %>
+    <% if Name %>
     $Name <$Email><br/>
     $Description
     <img src="$Image.Link">
+    <% end_if %>
     <% end_loop %>
 
 Nice!
 
 ## Dealing with Files & Images
 
-By default, you have a many_many Files and Images on each blocks
+By default, you have a many_many Files and Images on each blocks. You can easily add these fields with
+
+    $fields->addImages();
+
+or
+
+    $fields->addFiles();
 
 Useful for sliders, attached documents...
+
+These are sortable by default thanks to bummzack/sortablefile and can be used in the templates with
+
+    <% loop $SortedImages %>
+
+    <% end_loop %>
 
 ## Dealing with relations
 
@@ -154,6 +172,26 @@ You can disable to prevent this automatic "section" stuff if you have a more cus
 
     LeKoala\Base\Blocks\BlocksPage:
       wrap_blocks: false
+
+### Extra data
+
+Since block types are not DataObjects, their methods are not exposed to the template, only their data
+
+Basically, we take all the data fields, all the settings and merge them together before calling "renderWith" function
+
+You can expose additionnal data to the template by using ExtraData
+
+    function ExtraData() {
+        return [
+            'Hello' => 'World
+        ];
+    }
+
+And then call
+
+    Hello $Hello
+
+in your templates
 
 ### Casting
 

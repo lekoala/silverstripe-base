@@ -63,6 +63,15 @@ class BaseBlock extends ViewableData
     {
     }
 
+    /**
+     * Extra data to feed to the template
+     * @return array
+     */
+    public function ExtraData()
+    {
+        return [];
+    }
+
     public function Collection()
     {
     }

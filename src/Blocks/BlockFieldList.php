@@ -2,16 +2,11 @@
 
 namespace LeKoala\Base\Blocks;
 
-use SilverStripe\Forms\TextField;
-use SilverStripe\Forms\TextareaField;
 use LeKoala\Base\Blocks\Fields\BlockButtonField;
-use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormField;
-use SilverStripe\AssetAdmin\Forms\UploadField;
-use SilverStripe\Forms\HeaderField;
-use SilverStripe\Forms\CheckboxField;
 use LeKoala\Base\Forms\BuildableFieldList;
 use LeKoala\Base\Blocks\Fields\BlockHTMLEditorField;
+use LeKoala\Base\Forms\SmartSortableUploadField;
 
 /**
  * Easily add fields to your blocks
@@ -60,6 +55,34 @@ class BlockFieldList extends BuildableFieldList
     {
         $name = str_replace([$this->defaultKey . '[', ']'], '', $name);
         return parent::normalizeTitle($name, $title);
+    }
+
+    /**
+     * Add a sortable Files uploader
+     *
+     * @param array $attributes
+     * @param string $title
+     * @return SmartSortableUploadField
+     */
+    public function addFiles($attributes = [], $title = null)
+    {
+        $class = SmartSortableUploadField::class;
+        $name = "Files";
+        return parent::addField($class, $name, $title, $attributes);
+    }
+
+    /**
+     * Add a sortable Images uploader
+     *
+     * @param array $attributes
+     * @param string $title
+     * @return SmartSortableUploadField
+     */
+    public function addImages($attributes = [], $title = null)
+    {
+        $class = SmartSortableUploadField::class;
+        $name = "Images";
+        return parent::addField($class, $name, $title, $attributes);
     }
 
     /**
