@@ -147,6 +147,12 @@ If you store html in your blocks, it's not going to be casted properly. So ensur
 
     $Description.RAW
 
+### Previewing blocks
+
+It can be a bit tedious to save and publish each time you change a block in order to refresh the $Content variable
+This is why in Dev mode you can pass ?live=1 as a url parameter in order to fully refresh all blocks content
+when displaying the page
+
 ## Use Query
 
 The blocks give you a powerful accessor: the $Query method. In your template
