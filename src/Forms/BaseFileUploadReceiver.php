@@ -27,13 +27,16 @@ trait BaseFileUploadReceiver
             $desc .= '; ';
 
             // do we have a preferred size?
+            $preferredSize = false;
             if ($record) {
                 $sizes = $record->config()->image_sizes;
                 if ($sizes && isset($sizes[$name])) {
                     $size = $sizes[$name][0] . 'x' . $sizes[$name][1];
                     $desc .= _t('BaseFileUploadReceiver.RECOMMENDEDSIZE', 'Recommended resolution: ' . $size . 'px');
+                    $preferredSize = true;
                 }
-            } else {
+            }
+            if (!$preferredSize) {
                 $desc .= _t('BaseFileUploadReceiver.MAXRESOLUTION', 'Max resolution: 2048x2048px');
             }
         }
