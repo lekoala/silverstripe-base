@@ -1,7 +1,7 @@
 <?php
+
 namespace LeKoala\Base\Blocks\Types;
 
-use SilverStripe\Forms\FieldList;
 use LeKoala\Base\Blocks\BaseBlock;
 use LeKoala\Base\Blocks\BlockFieldList;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;

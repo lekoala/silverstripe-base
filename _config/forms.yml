@@ -23,7 +23,7 @@ SilverStripe\Forms\FormField:
     # This makes graphql crash so don't use it
     # Title: 'HTMLFragment' # allow using html in field titles
   extensions:
-    - LeKoala\Base\Forms\Extensions\TooltipExtension
+    - LeKoala\Base\Forms\Extensions\BaseFieldExtension
 SilverStripe\Forms\GridField\GridField:
   extensions:
     - LeKoala\Base\Forms\GridField\GridFieldExtension

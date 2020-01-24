@@ -1,0 +1,122 @@
+# Blocks
+
+## Working with blocks
+
+We have a blocks page that allows managing content by block instead of the big "content thing"
+
+We have a default block, the "Content Block" that allow setting a title, a content and an image
+
+Blocks are all the same DataOBject : the Block.php
+Content is stored as json, so there is no need to create extension of this class. Instead,
+we simply create new Types of block that use different templates for rendering.
+
+## Creating new block types
+
+Typically, you want to integrate some new block based on a given html content
+
+Start to create a new block (it can be in your app or your theme) in:
+
+    /app/templates/Blocks/MyNewBlock.ss
+
+Then you can call the task
+
+    /dev/tasks/BlocksCreateTask
+
+It will create the php class if missing and scss styles in your theme provided you have a scss directory
+
+## Use the fluent field builder
+
+Given the data is stored in json blocks, adding field is not very convient
+
+You can do it manually with this
+
+     $fields->push(new TextField('BlockData[Title]', 'Title'));
+
+But it's really ugly to have to call this BlockData[Title] thing
+
+Instead, you can have a much nicer
+
+     $fields->addText('Title');
+
+Please refer to BlockFieldList for all available methods it should cover most common cases
+For advanced usage, you might need to extend it in your your project to deal with
+your custom field types
+
+By default, the Image field is visible (inherited from the BaseBlock). If you find this
+not convenient, feel free to remove it
+
+    $fields->removeByName('Image');
+
+WARNING : as a safety measure, avoid naming conflicts with existing Block.php fields
+like Content. This is why the default value is "Description".
+
+## Dealing with basic collections (aka Items)
+
+For basic collections, we can still store everything inside our json blob
+
+In this example, I add 3 items with Name, Email, Description and Image
+
+    foreach (range(1, 3) as $i) {
+        $fields->addHeader("Item $i");
+        $fields->addText([$i, 'Name']);
+        $fields->addText([$i, 'Email']);
+        $fields->addEditor([$i,'Description']);
+        $fields->addUpload([$i, 'Image']);
+    }
+
+Please note the [] array notation we use. Instead of passing the name as a string, we pass and array with the index
+and the name as the second argument. Our BlockFieldList knows how to deal with this.
+
+And you can freely loop over them thanks to our special $Items (defined as a const ITEM_KEYS in Blocks.php)
+
+    <% loop $Items %>
+    $Name <$Email><br/>
+    $Description
+    <% end_loop %>
+
+Nice!
+
+## Dealing with Files & Images
+
+By default, you have a many_many Files and Images on each blocks
+
+Useful for sliders, attached documents...
+
+## Dealing with relations
+
+You might wonder what are doing these
+
+    public function Collection()
+    {
+        return false;
+    }
+
+    public function SharedCollection()
+    {
+        return false;
+    }
+
+They return false by default to avoid any issue in the templates. But they
+can return any DataList or ArrayList that might be relevant depending
+on what your block does.
+
+Like a Block for displaying latest blog posts, it could be
+
+    public function SharedCollection()
+    {
+        return BlogPost::get()->limit(3);
+    }
+
+Please note of the difference between Collections and SharedCollections
+
+- Collection : data is filtered for the given block. It's specific and require a has_one relation from the DataObject to the Block
+- SharedCollection : data is the same for all blocks of this type
+
+## Use Query
+
+The blocks give you a powerful accessor: the $Query method. In your template
+you can loop over ANY DATAOBJECT. Please be very cautious with this.
+
+    <% loop Query(TeamMembers) %>
+    $Name
+    <% end_loop %>
