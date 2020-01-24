@@ -127,8 +127,9 @@ class BaseContentController extends ContentController
         }
 
         // Always helpful!
-        if (Director::isDev() && !Director::is_ajax()) {
-            // SSViewer::config()->set('source_file_comments', true);
+        $request = $this->getRequest();
+        if (Director::isDev() && !Director::is_ajax() && $request && !$request->isPOST()) {
+            SSViewer::config()->set('source_file_comments', true);
         }
 
         // Switch channel for clearer logs
@@ -219,7 +220,11 @@ class BaseContentController extends ContentController
      */
     protected function setLangFromRequest()
     {
-        $lang = $this->getRequest()->getVar('lang');
+        $request = $this->getRequest();
+        if (!$request) {
+            return;
+        }
+        $lang = $request->getVar('lang');
         if ($lang) {
             if (strlen($lang) == 2) {
                 $lang = i18n::get_closest_translation($lang);
