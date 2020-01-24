@@ -24,7 +24,6 @@ use SilverStripe\Forms\CheckboxSetField;
 use LeKoala\Base\Forms\YesNoOptionsetField;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\AssetAdmin\Forms\UploadField;
-use SilverStripe\Forms\GridField\GridFieldConfig;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
 use SilverStripe\Forms\FieldGroup;
 
@@ -579,6 +578,25 @@ class BuildableFieldList extends FieldList
     }
 
     /**
+     * Get the value of currentTab
+     */
+    public function getCurrentTab()
+    {
+        return $this->currentTab;
+    }
+
+    /**
+     * The current tab
+     *
+     * @return $this
+     */
+    public function setCurrentTab($currentTab)
+    {
+        $this->currentTab = $currentTab;
+        return $this;
+    }
+
+    /**
      * Get the value of defaultTab
      */
     public function getDefaultTab()
@@ -587,7 +605,9 @@ class BuildableFieldList extends FieldList
     }
 
     /**
-     * Set the value of defaultTab
+     * The default tab if there is no current tab
+     *
+     * This only apply before any field is added. After that it's better to use setCurrentTab
      *
      * @return $this
      */

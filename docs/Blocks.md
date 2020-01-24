@@ -50,6 +50,20 @@ not convenient, feel free to remove it
 WARNING : as a safety measure, avoid naming conflicts with existing Block.php fields
 like Content. This is why the default value is "Description".
 
+## Data and settings
+
+There are two tabs : the Main tab and the Settings tab. Basically, anything inside the main
+tab should be localizable and anything in the setting tab should be fixed.
+
+In order to add a setting, you can add fields to the setting tab like this
+
+        $fields->addSettings(function (BlockFieldList $fields) {
+            $fields->addCheckbox('MySetting');
+        });
+
+Basically, what this helper does is setting the fluent builder key to Settings and set the
+current tab to Settings and reset everything after.
+
 ## Dealing with basic collections (aka Items)
 
 For basic collections, we can still store everything inside our json blob

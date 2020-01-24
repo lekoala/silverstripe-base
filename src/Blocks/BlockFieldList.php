@@ -24,6 +24,8 @@ class BlockFieldList extends BuildableFieldList
     protected $defaultTab = 'Main';
 
     /**
+     * The key to store data to. Typically BlockData or Settings
+     *
      * @var string
      */
     protected $defaultKey = 'BlockData';
@@ -70,12 +72,12 @@ class BlockFieldList extends BuildableFieldList
     {
         $tab = $this->getDefaultTab();
         $key = $this->getDefaultKey();
-        $this->setDefaultTab('Settings');
+        $this->setCurrentTab('Settings');
         $this->setDefaultKey('Settings');
 
         $cb($this);
 
-        $this->setDefaultTab($tab);
+        $this->setCurrentTab($tab);
         $this->setDefaultKey($key);
     }
 
