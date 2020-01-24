@@ -2,6 +2,7 @@
 
 namespace LeKoala\Base\Dev;
 
+use Exception;
 use LeKoala\Base\Blocks\Block;
 use LeKoala\Base\Dev\BuildTask;
 use SilverStripe\Control\Director;
@@ -44,6 +45,13 @@ class BlocksCreateTask extends BuildTask
         $scssDir = dirname($this->getScssFolder(true));
 
         foreach ($files as $file) {
+            $content = file_get_contents($file);
+
+            // Check for lost $Content variable
+            if (strpos($content, '$Content') !== false) {
+                throw new Exception("Blocks cannot nest Content");
+            }
+
             $result = $this->createBlockClass($file, $classes);
             if ($result) {
                 $classCreated = true;
@@ -141,9 +149,8 @@ class $name extends BaseBlock
 {
     public function updateFields(BlockFieldList \$fields)
     {
-        // update your fields here using fluent interface
-        \$fields->addTextarea('MyTextArea');
-        \$fields->addText('MyTextField');
+        //\$fields->removeByName('Image');
+        \$fields->addText('Title');
     }
 
     public function Collection()
