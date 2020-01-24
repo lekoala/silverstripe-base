@@ -197,7 +197,7 @@ final class Block extends DataObject
             $typeInst = $this->getTypeInstance();
             $data = $this->DataArray();
             $settings = $this->SettingsArray();
-            $extra = $this->ExtraData();
+            $extra = $typeInst->ExtraData();
             $data = array_merge($data, $settings, $extra);
             // We have items to normalize
             if (isset($data[self::ITEMS_KEY])) {
