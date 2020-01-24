@@ -1,4 +1,5 @@
 <?php
+
 namespace LeKoala\Base\Admin;
 
 use SilverStripe\i18n\i18n;
@@ -60,7 +61,7 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
         $SiteConfig = SiteConfig::current_site_config();
 
         // Never have comments as it can break ajax requests
-        SSViewer::config()->set('source_file_comments', false);
+        Config::modify()->set(SSViewer::class, 'source_file_comments', false);
 
         $this->removeMenuItems();
         $this->reorderMenuItems();

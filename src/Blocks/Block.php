@@ -31,6 +31,7 @@ use SilverStripe\Forms\TextField;
 use SilverStripe\View\Parsers\URLSegmentFilter;
 use SilverStripe\Control\Controller;
 use SilverStripe\Admin\LeftAndMain;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Versioned\Versioned;
 
 /**
@@ -186,6 +187,13 @@ final class Block extends DataObject
     public function renderWithTemplate()
     {
         $template = 'Blocks/' . $this->BlockClass();
+
+        // turn off source_file_comments
+        // keep in mind that any cached template will have the source_file_comments if
+        // it was not disabled, regardless of this setting so it may be confusing
+        Config::nest();
+        Config::modify()->set(SSViewer::class, 'source_file_comments', false);
+
         // Make sure theme exists in the list (not set in cms)
         $themes = SSViewer::get_themes();
         $configThemes = SSViewer::config()->themes;
@@ -214,6 +222,10 @@ final class Block extends DataObject
         }
         // Restore themes just in case to prevent any side effect
         SSViewer::set_themes($themes);
+
+        // Restore flag
+        Config::unnest();
+
         return $result;
     }
 

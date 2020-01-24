@@ -128,7 +128,7 @@ class BaseContentController extends ContentController
 
         // Always helpful!
         if (Director::isDev() && !Director::is_ajax()) {
-            SSViewer::config()->set('source_file_comments', true);
+            // SSViewer::config()->set('source_file_comments', true);
         }
 
         // Switch channel for clearer logs
