@@ -257,6 +257,7 @@ final class Block extends DataObject
         // remove empty items
         foreach ($indexedList as $index => $item) {
             $vals = array_values($item);
+            $vals = array_filter($vals);
             if (empty($vals)) {
                 unset($indexedList[$index]);
             }
@@ -275,6 +276,7 @@ final class Block extends DataObject
             }
             $item['Pos'] = $index;
             $item['Total'] = $c;
+            $item['Columns'] = 12 / $c;
             $item['Counter'] = $counter;
             $item['FirstLast'] = $FirstLast;
             $item['EvenOdd'] = $i % 2 ? 'even' : 'odd';
