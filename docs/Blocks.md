@@ -85,12 +85,17 @@ And you can freely loop over them thanks to our special $Items (defined as a con
 Assets (files and images) are automatically published if used in the block
 
     <% loop $Items %>
-    <% if Name %>
+    <div class="col col-$Columns" id="item-$Counter">
     $Name <$Email><br/>
     $Description
     <img src="$Image.Link">
-    <% end_if %>
+    </div>
     <% end_loop %>
+
+It includes default iterator values (FirstLast, Pos) but also specials one (Total, Counter and Columns).
+- Total : the total number of items in the set
+- Counter : the total number of items in the page
+- Columns : a 12 columns based number (ideal for Bootstrap like usages)
 
 Nice!
 
