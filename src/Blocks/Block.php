@@ -249,9 +249,19 @@ final class Block extends DataObject
      */
     protected static function normalizeIndexedList($indexedList)
     {
+        // this is required to add a global counter that works if multiple blocks  of the same type are used
         static $counter = 0;
         $list = new ArrayList();
         $i = 0;
+
+        // remove empty items
+        foreach ($indexedList as $index => $item) {
+            $vals = array_values($item);
+            if (empty($vals)) {
+                unset($indexedList[$index]);
+            }
+        }
+
         $c = count($indexedList);
         foreach ($indexedList as $index => $item) {
             $i++;
@@ -264,6 +274,7 @@ final class Block extends DataObject
                 $FirstLast = 'last';
             }
             $item['Pos'] = $index;
+            $item['Total'] = $c;
             $item['Counter'] = $counter;
             $item['FirstLast'] = $FirstLast;
             $item['EvenOdd'] = $i % 2 ? 'even' : 'odd';

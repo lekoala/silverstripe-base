@@ -81,10 +81,6 @@ In this example, I add 3 items with Name, Email, Description and Image
 Please note the [] array notation we use. Instead of passing the name as a string, we pass and array with the index
 and the name as the second argument. Our BlockFieldList knows how to deal with this.
 
-Also please note that all items are always present, regardless of any data being set since there is no way
-to distinguish and empty item. You may need to guard against this by using ifs in your template if some
-items can be left empty.
-
 And you can freely loop over them thanks to our special $Items (defined as a const ITEM_KEYS in Blocks.php)
 Assets (files and images) are automatically published if used in the block
 

@@ -543,6 +543,13 @@ class BuildableFieldList extends FieldList
     /**
      * Group fields into a column field
      *
+     * Usage is something like this
+     *
+     *  $fields->group(function (BuildableFieldList $fields) {
+     *      $fields->addText('Item1');
+     *      $fields->addText('Item2');
+     * });
+     *
      * @param callable $callable
      * @param array $columnSizes Eg: [1 => 4, 2 => 8]
      * @return $this
