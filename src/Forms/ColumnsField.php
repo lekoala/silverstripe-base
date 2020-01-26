@@ -2,6 +2,7 @@
 
 namespace LeKoala\Base\Forms;
 
+use InvalidArgumentException;
 use SilverStripe\Forms\FieldGroup;
 
 /**
@@ -39,7 +40,6 @@ class ColumnsField extends FieldGroup
         parent::__construct($children);
         $this->setColumnCount(count($this->children));
     }
-
 
     /**
      * Called in template
@@ -105,8 +105,10 @@ class ColumnsField extends FieldGroup
      */
     public function setColumnSizes($columnSizes)
     {
+        if (!is_array($columnSizes)) {
+            throw new InvalidArgumentException("columnSizes should be an array, Eg: [1 => 4, 2 => 8]");
+        }
         $this->columnSizes = $columnSizes;
-
         return $this;
     }
 
@@ -130,5 +132,17 @@ class ColumnsField extends FieldGroup
     {
         $this->columnSizes[$col] = $size;
         return $this;
+    }
+
+    public function Field($properties = array())
+    {
+        $result = parent::Field($properties);
+        return $result;
+    }
+
+    public function FieldHolder($properties = array())
+    {
+        $result = parent::FieldHolder($properties);
+        return $result;
     }
 }

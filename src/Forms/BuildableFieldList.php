@@ -127,13 +127,15 @@ class BuildableFieldList extends FieldList
 
     protected function pushOrAddToTab($field)
     {
+        // if we have a default tab set, make sure it's set to active
         if (!$this->currentTab && $this->defaultTab) {
             $this->currentTab = $this->defaultTab;
         }
-        if ($this->currentTab) {
-            $this->addFieldToTab('Root.' . $this->currentTab, $field);
-        } elseif ($this->currentGroup) {
+        // Groups have priority
+        if ($this->currentGroup) {
             $this->currentGroup->push($field);
+        } elseif ($this->currentTab) {
+            $this->addFieldToTab('Root.' . $this->currentTab, $field);
         } else {
             $this->push($field);
         }
@@ -542,7 +544,7 @@ class BuildableFieldList extends FieldList
      * Group fields into a column field
      *
      * @param callable $callable
-     * @param array $columnSizes
+     * @param array $columnSizes Eg: [1 => 4, 2 => 8]
      * @return $this
      */
     public function group($callable, $columnSizes = null)
@@ -551,7 +553,9 @@ class BuildableFieldList extends FieldList
         if ($columnSizes !== null) {
             $group->setColumnSizes($columnSizes);
         }
+        // First push the group
         $this->pushOrAddToTab($group);
+        // Then set it as current (don't do the opposite, otherwise pushOrAddToTab doesn't work)
         $this->currentGroup = $group;
         $callable($this);
         $this->currentGroup = null;
