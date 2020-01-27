@@ -29,6 +29,21 @@ class XmlHelper
     }
 
     /**
+     * Xml to array
+     *
+     * Attributes are stored in @@attributes node
+     *
+     * @param string $xml
+     * @return array
+     */
+    public static function toArray($xml)
+    {
+        $sxml = simplexml_load_string($xml);
+        $json = json_encode($sxml);
+        return json_decode($json, true);
+    }
+
+    /**
      * @link link https://stackoverflow.com/questions/8218230/php-domdocument-loadhtml-not-encoding-utf-8-correctly
      * @param string $source
      * @param bool $convertToUtf8
