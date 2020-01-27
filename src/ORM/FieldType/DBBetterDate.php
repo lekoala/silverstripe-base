@@ -41,4 +41,12 @@ class DBBetterDate extends DBDate
         // Convert to y-m-d
         return sprintf('%d-%02d-%02d%s', $year, $month, $day, $time);
     }
+
+    /**
+     * @return string
+     */
+    public function UcMonth()
+    {
+        return ucfirst($this->Month());
+    }
 }
