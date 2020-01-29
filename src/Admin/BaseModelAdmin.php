@@ -39,6 +39,25 @@ abstract class BaseModelAdmin extends ModelAdmin
         'SearchForm'
     );
 
+    public function getManagedModels()
+    {
+        $models = parent::getManagedModels();
+
+        // Allow removing models through config
+        $unmodels = $this->config()->get('unmanaged_models');
+        if ($unmodels) {
+            if (is_string($unmodels)) {
+                $unmodels = array($unmodels);
+            }
+            foreach ($unmodels as $k => $v) {
+                unset($models[$v]);
+            }
+        }
+
+        return $models;
+    }
+
+
     /**
      * @return int
      */
