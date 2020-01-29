@@ -21,8 +21,8 @@ use LeKoala\Base\Privacy\CookiesRequiredPage;
  *   LeKoala\Base\View\CookieConsent:
  *     inline_css: true
  *
- * @link https://cookieconsent.insites.com
- * @link https://cookieconsent.insites.com/documentation/disabling-cookies/
+ * @link https://www.osano.com/cookieconsent
+ * @link https://www.osano.com/cookieconsent/documentation/disabling-cookies/
  * @link https://cookiesandyou.com/
  * @link https://www.cookiebot.com/en/gdpr-cookies/
  */
