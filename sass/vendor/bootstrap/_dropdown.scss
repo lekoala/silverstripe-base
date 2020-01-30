@@ -10,7 +10,7 @@
   white-space: nowrap;
 
   // Generate the caret automatically
-  @include caret;
+  @include caret();
 }
 
 // The dropdown menu
@@ -20,7 +20,6 @@
   left: 0;
   z-index: $zindex-dropdown;
   display: none; // none by default, but block on "open" of the menu
-  float: left;
   min-width: $dropdown-min-width;
   padding: $dropdown-padding-y 0;
   margin: $dropdown-spacer 0 0; // override default ul
@@ -114,7 +113,10 @@
 
 // Dividers (basically an `<hr>`) within the dropdown
 .dropdown-divider {
-  @include nav-divider($dropdown-divider-bg, $dropdown-divider-margin-y);
+  height: 0;
+  margin: $dropdown-divider-margin-y 0;
+  overflow: hidden;
+  border-top: 1px solid $dropdown-divider-bg;
 }
 
 // Links, buttons, and more within the dropdown menu
@@ -144,7 +146,8 @@
     }
   }
 
-  @include hover-focus {
+  &:hover,
+  &:focus {
     color: $dropdown-link-hover-color;
     text-decoration: none;
     @include gradient-bg($dropdown-link-hover-bg);

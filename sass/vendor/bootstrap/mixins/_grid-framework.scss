@@ -31,26 +31,24 @@
       .col#{$infix} {
         flex-basis: 0;
         flex-grow: 1;
+        min-width: 0; // See https://github.com/twbs/bootstrap/issues/25410
         max-width: 100%;
       }
+
+      @for $i from 1 through $grid-row-columns {
+        .row-cols#{$infix}-#{$i} {
+          @include row-cols($i);
+        }
+      }
+
       .col#{$infix}-auto {
-        flex: 0 0 auto;
-        width: auto;
-        max-width: 100%; // Reset earlier grid tiers
+        @include make-col-auto();
       }
 
       @for $i from 1 through $columns {
         .col#{$infix}-#{$i} {
           @include make-col($i, $columns);
         }
-      }
-
-      .order#{$infix}-first { order: -1; }
-
-      .order#{$infix}-last { order: $columns + 1; }
-
-      @for $i from 0 through $columns {
-        .order#{$infix}-#{$i} { order: $i; }
       }
 
       // `$columns - 1` because offsetting by the width of an entire row isn't possible
