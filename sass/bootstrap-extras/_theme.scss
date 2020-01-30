@@ -193,7 +193,7 @@ $btn-focus-width: $btn-focus-width/2;
 a {
     color: var(--primary-color);
 
-    @include hover {
+    &:hover {
         color: var(--primary-color-highlight);
     }
 
@@ -219,7 +219,7 @@ a {
 
 // Dropdowns
 .dropdown-item {
-    @include hover-focus {
+    &:hover, &:focus {
         color: var(--primary-color-highlight);
     }
 
