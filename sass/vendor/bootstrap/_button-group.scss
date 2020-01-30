@@ -13,7 +13,9 @@
 
     // Bring the hover, focused, and "active" buttons to the front to overlay
     // the borders properly
-    &:hover,
+    @include hover() {
+      z-index: 1;
+    }
     &:focus,
     &:active,
     &.active {

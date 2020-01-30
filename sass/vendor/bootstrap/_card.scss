@@ -39,16 +39,16 @@
   // Workaround for the image size bug in IE
   // See: https://github.com/twbs/bootstrap/pull/28855
   min-height: 1px;
-  padding: $card-spacer-y $card-spacer-x;
+  padding: $card-spacer-x;
   color: $card-color;
 }
 
 .card-title {
-  margin-bottom: $card-title-spacer-y;
+  margin-bottom: $card-spacer-y;
 }
 
 .card-subtitle {
-  margin-top: -$card-title-spacer-y / 2;
+  margin-top: -$card-spacer-y / 2;
   margin-bottom: 0;
 }
 
@@ -57,7 +57,7 @@
 }
 
 .card-link {
-  &:hover {
+  @include hover() {
     text-decoration: none;
   }
 
@@ -71,7 +71,7 @@
 //
 
 .card-header {
-  padding: $card-cap-padding-y $card-cap-padding-x;
+  padding: $card-spacer-y $card-spacer-x;
   margin-bottom: 0; // Removes the default margin-bottom of <hN>
   color: $card-cap-color;
   background-color: $card-cap-bg;
@@ -89,7 +89,7 @@
 }
 
 .card-footer {
-  padding: $card-cap-padding-y $card-cap-padding-x;
+  padding: $card-spacer-y $card-spacer-x;
   background-color: $card-cap-bg;
   border-top: $card-border-width solid $card-border-color;
 
@@ -104,22 +104,15 @@
 //
 
 .card-header-tabs {
-  margin-right: -$card-cap-padding-x / 2;
-  margin-bottom: -$card-cap-padding-y;
-  margin-left: -$card-cap-padding-x / 2;
+  margin-right: -$card-spacer-x / 2;
+  margin-bottom: -$card-spacer-y;
+  margin-left: -$card-spacer-x / 2;
   border-bottom: 0;
-
-  @if $nav-tabs-link-active-bg != $card-bg {
-    .nav-link.active {
-      background-color: $card-bg;
-      border-bottom-color: $card-bg;
-    }
-  }
 }
 
 .card-header-pills {
-  margin-right: -$card-cap-padding-x / 2;
-  margin-left: -$card-cap-padding-x / 2;
+  margin-right: -$card-spacer-x / 2;
+  margin-left: -$card-spacer-x / 2;
 }
 
 // Card image
@@ -232,6 +225,29 @@
           }
         }
       }
+    }
+  }
+}
+
+
+//
+// Columns
+//
+
+.card-columns {
+  .card {
+    margin-bottom: $card-columns-margin;
+  }
+
+  @include media-breakpoint-up(sm) {
+    column-count: $card-columns-count;
+    column-gap: $card-columns-gap;
+    orphans: 1;
+    widows: 1;
+
+    .card {
+      display: inline-block; // Don't let them vertically span multiple columns
+      width: 100%; // Don't let their width change
     }
   }
 }

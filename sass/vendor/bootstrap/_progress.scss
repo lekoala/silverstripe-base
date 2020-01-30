@@ -1,7 +1,8 @@
 // Disable animation if transitions are disabled
 @if $enable-transitions {
   @keyframes progress-bar-stripes {
-    0% { background-position-x: $progress-height; }
+    from { background-position: $progress-height 0; }
+    to { background-position: 0 0; }
   }
 }
 

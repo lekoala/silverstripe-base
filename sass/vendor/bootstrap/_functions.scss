@@ -30,29 +30,6 @@
   }
 }
 
-// Internal Bootstrap function to turn maps into its negative variant.
-// It prefixes the keys with `n` and makes the value negative.
-@function negativify-map($map) {
-  $result: ();
-  @each $key, $value in $map {
-    @if $key != 0 {
-      $result: map-merge($result, ("n" + $key: (-$value)));
-    }
-  }
-  @return $result;
-}
-
-// Get multiple keys from a sass map
-@function map-get-multiple($map, $values) {
-  $result: ();
-  @each $key, $value in $map {
-    @if (index($values, $key) != null) {
-      $result: map-merge($result, ($key: $value));
-    }
-  }
-  @return $result;
-}
-
 // Replace `$search` with `$replace` in `$string`
 // Used on our SVG icon backgrounds for custom forms.
 //
@@ -75,12 +52,7 @@
 @function escape-svg($string) {
   @if str-index($string, "data:image/svg+xml") {
     @each $char, $encoded in $escaped-characters {
-      // Do not escape the url brackets
-      @if str-index($string, "url(") == 1 {
-        $string: url("#{str-replace(str-slice($string, 6, -3), $char, $encoded)}");
-      } @else {
-        $string: str-replace($string, $char, $encoded);
-      }
+      $string: str-replace($string, $char, $encoded);
     }
   }
 
@@ -95,23 +67,33 @@
 
   $yiq: (($r * 299) + ($g * 587) + ($b * 114)) / 1000;
 
-  @return if($yiq >= $yiq-contrasted-threshold, $dark, $light);
+  @if ($yiq >= $yiq-contrasted-threshold) {
+    @return $dark;
+  } @else {
+    @return $light;
+  }
 }
 
-// Request a color level
-@function color-level($color: $primary, $level: 0) {
+// Retrieve color Sass maps
+@function color($key: "blue") {
+  @return map-get($colors, $key);
+}
+
+@function theme-color($key: "primary") {
+  @return map-get($theme-colors, $key);
+}
+
+@function gray($key: "100") {
+  @return map-get($grays, $key);
+}
+
+// Request a theme color level
+@function theme-color-level($color-name: "primary", $level: 0) {
+  $color: theme-color($color-name);
   $color-base: if($level > 0, $black, $white);
   $level: abs($level);
 
   @return mix($color-base, $color, $level * $theme-color-interval);
-}
-
-@function tint-color($color, $level) {
-  @return mix(white, $color, $level * $theme-color-interval);
-}
-
-@function shade-color($color, $level) {
-  @return mix(black, $color, $level * $theme-color-interval);
 }
 
 // Return valid calc
