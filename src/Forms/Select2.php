@@ -69,7 +69,7 @@ trait Select2
      * @config
      * @var string
      */
-    private static $version = '4.0.8';
+    private static $version = '4.0.12';
 
     public function Type()
     {
@@ -457,7 +457,7 @@ trait Select2
         if ($ctrl instanceof LeftAndMain) {
             Requirements::css('base/css/Select2Field.css');
         }
-        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/select2/$version/js/select2.js");
+        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/select2/$version/js/select2.min.js");
         if ($lang != 'en') {
             Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/select2/$version/js/i18n/$lang.js");
         }
