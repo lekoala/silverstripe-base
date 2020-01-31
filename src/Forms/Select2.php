@@ -281,9 +281,54 @@ trait Select2
 
         $class = $this->ajaxClass;
 
-        // Where
+        $sng = $class::singleton();
+        $baseTable = $sng->baseTable();
+
+        // Make a fast query to the table without orm overhead
+        $searchField = 'Title';
+
+        // Ensure field exists, this is really rudimentary
+        $db = $class::config()->db;
+        if (!isset($db[$searchField])) {
+            $searchField = 'Name';
+        }
+        if (!isset($db[$searchField])) {
+            $searchField = 'Surname';
+        }
+        if (!isset($db[$searchField])) {
+            $searchField = 'Email';
+        }
+        if (!isset($db[$searchField])) {
+            $searchField = 'ID';
+        }
+        $searchCols = [$searchField];
+
+        // For members, do something better
+        if ($baseTable == 'Member') {
+            $searchField = "CONCAT(FirstName,' ',Surname)";
+            $searchCols = ['FirstName', 'Surname', 'Email'];
+        }
+
+        $sql = 'SELECT ID AS id, ' . $searchField . ' AS text FROM ' . $baseTable . ' WHERE ';
+
+        // Make sure at least one field is not null...
+        $parts = [];
+        foreach ($searchCols as $searchCol) {
+            $parts[] = $searchCol . ' IS NOT NULL';
+        }
+        $sql .= '(' . implode(' OR ', $parts) . ')';
+        // ... and matches search term ...
+        $parts = [];
+        foreach ($searchCols as $searchCol) {
+            $parts[] = $searchCol . ' LIKE ?';
+        }
+        $sql .= ' AND (' . implode(' OR ', $parts) . ')';
+        // ... and any user set requirements
         $where = $this->ajaxWhere;
-        $params[] = $term;
+        foreach ($searchCols as $searchCol) {
+            // add one parameter per search col
+            $params[] = $term;
+        }
         if (is_array($where)) {
             if (ArrayLib::is_associative($where)) {
                 $newWhere = [];
@@ -305,29 +350,6 @@ trait Select2
             }
             $where = implode(' AND ', $where);
         }
-
-        $sng = $class::singleton();
-        $baseTable = $sng->baseTable();
-
-        // Make a fast query to the table without orm overhead
-        $searchField = 'Title';
-
-        // Ensure field exists, this is really rudimentary
-        $db = $class::config()->db;
-        if (!isset($db[$searchField])) {
-            $searchField = 'Name';
-        }
-        if (!isset($db[$searchField])) {
-            $searchField = 'Surname';
-        }
-        if (!isset($db[$searchField])) {
-            $searchField = 'Email';
-        }
-        if (!isset($db[$searchField])) {
-            $searchField = 'ID';
-        }
-
-        $sql = 'SELECT ID AS id, ' . $searchField . ' AS text FROM ' . $baseTable . ' WHERE ' . $searchField . ' IS NOT NULL AND ' . $searchField . ' LIKE ?';
         if ($where) {
             $sql .= " AND $where";
         }
