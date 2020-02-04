@@ -27,7 +27,7 @@ SilverStripe\Core\Injector\Injector:
   ErrorLogFileHandler:
     class: Monolog\Handler\StreamHandler
     constructor:
-      - "../errors.log"
+      - "../errors.log" # The log file will be relative to the main index.php file path (default: inside public/), so "../silverstripe.log" will create a file in your project root.
       - "notice"
     properties:
       Formatter: %$CustomLineFormatter
@@ -43,7 +43,7 @@ SilverStripe\Core\Injector\Injector:
   DebugLogFileHandler:
     class: Monolog\Handler\StreamHandler
     constructor:
-      - "../debug.log"
+      - "../debug.log" # The log file will be relative to the main index.php file path (default: inside public/), so "../silverstripe.log" will create a file in your project root.
       - "debug"
     properties:
       Formatter: %$CustomLineFormatter
