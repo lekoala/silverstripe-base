@@ -28,11 +28,14 @@ class DBWebsite extends DBVarchar
      */
     public function ShortUrl($removeWWW = true)
     {
-        $input = $this->value;
+        $domain = $input = $this->value;
         $urlParts = parse_url($input);
+        if (isset($urlParts['host'])) {
+            $domain = $urlParts['host'];
+        }
         // remove www
         if ($removeWWW) {
-            $domain = preg_replace('/^www\./', '', $urlParts['host']);
+            $domain = preg_replace('/^www\./', '', $domain);
         }
         return $domain;
     }
