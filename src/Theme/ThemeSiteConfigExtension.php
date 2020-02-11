@@ -2,6 +2,7 @@
 
 namespace LeKoala\Base\Theme;
 
+use Exception;
 use SilverStripe\Forms\Tab;
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\Image;
@@ -141,6 +142,7 @@ class ThemeSiteConfigExtension extends DataExtension
     {
         // If we don't have a css theme, our options won't be used anyway
         $values = [
+            'emptyTheme' => false,
             'allowFonts' => false,
             'allowColors' => true,
         ];
@@ -149,11 +151,15 @@ class ThemeSiteConfigExtension extends DataExtension
         }
         // If we have a css theme, allow everything by default
         $values = [
+            'emptyTheme' => false,
             'allowFonts' => true,
             'allowColors' => true,
         ];
         $themeFile = $this->getThemeCssPath() . '/' . $this->owner->CssTheme;
-        $contents = file_get_contents($themeFile);
+        $contents = @file_get_contents($themeFile);
+        if (!$contents) {
+            $values['emptyTheme'] = true;
+        }
         // If we disallow fonts or have imported styles
         if (strpos($contents, '@disallowFonts') !== false || strpos($contents, 'fonts.googleapis.com/css') !== false) {
             $values['allowFonts'] = false;
@@ -327,6 +333,9 @@ class ThemeSiteConfigExtension extends DataExtension
             if ($this->owner->MaskColor) {
                 $this->owner->MaskColor = null;
             }
+        }
+        if (!empty($themeOptions['emptyTheme'])) {
+            $this->owner->CssTheme = null;
         }
 
         // Generate palette if necessary
