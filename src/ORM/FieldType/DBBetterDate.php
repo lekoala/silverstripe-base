@@ -49,4 +49,22 @@ class DBBetterDate extends DBDate
     {
         return ucfirst($this->Month());
     }
+
+    /**
+     * @return string
+     */
+    public function ShortMonthNoDot()
+    {
+        return trim($this->ShortMonth(), '.');
+    }
+
+    /**
+     * Returns the year from the given date
+     *
+     * @return string
+     */
+    public function ShortYear()
+    {
+        return $this->Format('yy');
+    }
 }
