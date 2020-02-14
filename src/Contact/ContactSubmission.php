@@ -7,6 +7,7 @@ use LeKoala\Base\Contact\ContactPage;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\SiteConfig\SiteConfig;
 use LeKoala\Base\Controllers\HasLogger;
+use LeKoala\Base\ORM\FieldType\DBJson;
 use SilverStripe\Core\Convert;
 
 /**
@@ -34,6 +35,7 @@ class ContactSubmission extends DataObject
         "Email" => "Varchar",
         "Phone" => "Varchar",
         "Company" => "Varchar",
+        "ExtraData" => DBJson::class,
         "EmailResults" => "Text",
     ];
     private static $has_one = [
@@ -46,6 +48,8 @@ class ContactSubmission extends DataObject
 
     protected function onBeforeWrite()
     {
+        parent::onBeforeWrite();
+
         if ($this->Email) {
             $this->Email = filter_var($this->Email, FILTER_SANITIZE_EMAIL);
         }

@@ -226,6 +226,11 @@ It can be a bit tedious to save and publish each time you change a block in orde
 This is why in Dev mode you can pass ?live=1 as a url parameter in order to fully refresh all blocks content
 when displaying the page
 
+### Context
+
+Keep in mind that html for the blocks are generated on save, in the admin. That means that some context stuff (Sessions, Controller::curr)
+may not work as you may think. Try to be as stateless as possible to avoid surprises!
+
 ## Use Query
 
 The blocks give you a powerful accessor: the $Query method. In your template

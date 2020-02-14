@@ -9,6 +9,8 @@ use SilverStripe\Control\Email\Email;
 use SilverStripe\Control\HTTPRequest;
 use LeKoala\Base\Contact\ContactSubmission;
 use LeKoala\Base\Forms\GoogleRecaptchaField;
+use SilverStripe\Core\Convert;
+use SilverStripe\Security\SecurityToken;
 
 /**
  * Class \LeKoala\Base\Contact\ContactPageController
@@ -95,6 +97,12 @@ class ContactPageController extends \PageController
     public function doSend()
     {
         $request = $this->getRequest();
+
+        // SecurityID
+        if (!SecurityToken::inst()->checkRequest($request)) {
+            return $this->httpError(400);
+        }
+
         $data = $request->postVars();
 
         // Collect data
@@ -124,7 +132,18 @@ class ContactPageController extends \PageController
             }
         }
 
-        // Register submission
+        // Collect extra data
+        $ignore = ['name', 'subject', 'phone', 'email', 'message', 'SecurityID', 'g-recaptcha-response'];
+        $postVars = $request->postVars();
+        $extraData = [];
+        foreach ($postVars as $postVarKey => $postVarValue) {
+            if (in_array($postVarKey, $ignore)) {
+                continue;
+            }
+            $extraData[$postVarKey] = Convert::raw2xml($postVarValue);
+        }
+
+        // Register submission - see onBeforeWrite for sanitization
         $submission = new ContactSubmission();
         $submission->PageID = $this->data()->ID;
         $submission->Name = $name;
@@ -132,6 +151,7 @@ class ContactPageController extends \PageController
         $submission->Message = $message;
         $submission->Email = $email;
         $submission->Phone = $phone;
+        $submission->ExtraData = $extraData;
         $submission->write();
 
         // Send by email
@@ -141,6 +161,15 @@ class ContactPageController extends \PageController
             return $this->returnMessage(_t("ContactPageController.MESSAGE_ERROR", "Votre message n'a pas été envoyé"), true);
         }
         return $this->returnMessage(_t("ContactPageController.MESSAGE_SENT", "Votre message a bien été envoyé"));
+    }
+
+    /**
+     * Used in template if no success content is provided
+     * @return string
+     */
+    public function DefaultSuccessContent()
+    {
+        return _t("ContactPageController.MESSAGE_SENT", "Votre message a bien été envoyé");
     }
 
     /**
@@ -159,8 +188,10 @@ class ContactPageController extends \PageController
         }
         if (self::config()->use_distinct_succes_page) {
             $link = $this->Link('messageSent');
+            // in case of error, redirect back
             if ($error) {
-                $link .= "?error=1";
+                $this->sessionMessage($msg, $status);
+                return $this->redirectBack();
             }
             return $this->redirect($link);
         } else {
