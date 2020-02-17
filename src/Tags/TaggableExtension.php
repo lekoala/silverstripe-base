@@ -1,10 +1,10 @@
 <?php
+
 namespace LeKoala\Base\Tags;
 
 use LeKoala\Base\Tags\Tag;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\ORM\DataExtension;
-use LeKoala\Base\Forms\MultiSelect2Field;
 use LeKoala\Base\Forms\Select2MultiField;
 use SilverStripe\ORM\DB;
 
@@ -19,6 +19,7 @@ class TaggableExtension extends DataExtension
     private static $many_many = [
         "Tags" => Tag::class
     ];
+
     public function updateCMSFields(FieldList $fields)
     {
         $list = Tag::get()->map()->toArray();
@@ -30,8 +31,11 @@ class TaggableExtension extends DataExtension
             $new->write();
             return $new->ID;
         });
+        // Make sure we don't get an extra tab
+        $fields->removeByName('Tags');
         $fields->addFieldsToTab('Root.Main', $Tags);
     }
+
     public function UsedTags($where = null)
     {
         $class = get_class($this->owner);
