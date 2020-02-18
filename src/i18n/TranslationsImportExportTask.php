@@ -105,6 +105,9 @@ class TranslationsImportExportTask extends BuildTask
             $entities = [];
             foreach ($data as $row) {
                 $key = trim($row['key']);
+                if (!$key) {
+                    continue;
+                }
                 $value = $row[$lang];
                 if (is_string($value)) {
                     $value = trim($value);
