@@ -132,7 +132,7 @@ class TranslationsImportExportTask extends BuildTask
         $rows = [];
         foreach ($worksheet->getRowIterator() as $row) {
             $cellIterator = $row->getCellIterator();
-            $cellIterator->setIterateOnlyExistingCells(true);
+            // $cellIterator->setIterateOnlyExistingCells(true);
             $cells = [];
             foreach ($cellIterator as $cell) {
                 $cells[] = $cell->getValue();
