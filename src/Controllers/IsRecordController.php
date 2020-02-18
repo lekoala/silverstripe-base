@@ -5,6 +5,7 @@ namespace LeKoala\Base\Controllers;
 use Exception;
 use SilverStripe\ORM\DataObject;
 use LeKoala\Base\Extensions\URLSegmentExtension;
+use SilverStripe\ORM\PaginatedList;
 
 /**
  * Apply this trait to your controllers managing records
@@ -19,6 +20,8 @@ use LeKoala\Base\Extensions\URLSegmentExtension;
  * ];
  *
  * You can use onIndex and onView method to apply extra behaviour
+ *
+ * You can use updateList method to update list
  */
 trait IsRecordController
 {
@@ -39,11 +42,7 @@ trait IsRecordController
      */
     public function getRequestedRecord()
     {
-        $class = get_called_class();
-        if (!defined("$class::MODEL_CLASS")) {
-            throw new Exception("You must define a MODEL_CLASS constant in your controller");
-        }
-        $ModelClass = self::MODEL_CLASS;
+        $ModelClass = $this->getControllerModelClass();
         $ModelClass_SNG = $ModelClass::singleton();
         $ID = $this->getRequest()->param('ID');
         if ($ID) {
@@ -55,6 +54,38 @@ trait IsRecordController
             return DataObject::get_by_id($ModelClass, $ID);
         }
         return false;
+    }
+
+    public function getControllerModelClass()
+    {
+        $class = get_called_class();
+        if (!defined("$class::MODEL_CLASS")) {
+            throw new Exception("You must define a MODEL_CLASS constant in your controller");
+        }
+        return self::MODEL_CLASS;
+    }
+
+    public function getDefaultList()
+    {
+        $ModelClass = $this->getControllerModelClass();
+        return $ModelClass::get();
+    }
+
+    public function getPaginatedList()
+    {
+        $data = $this->data();
+        if ($data->hasMethod('VisibleItems')) {
+            $list = $data->VisibleItems();
+        } elseif ($data->hasMethod('Items')) {
+            $list = $data->Items();
+        } else {
+            $list = $this->getDefaultList();
+        }
+        if (method_exists($this, 'updateList')) {
+            $list = $this->updateList($list);
+        }
+        $paginatedList = new PaginatedList($list, $this->getRequest());
+        return $paginatedList;
     }
 
     public function getViewAction()

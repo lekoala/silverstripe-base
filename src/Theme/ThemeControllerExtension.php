@@ -104,11 +104,16 @@ class ThemeControllerExtension extends Extension
          * SilverStripe\SiteConfig\SiteConfig:
          *   auto_include_css: false
          */
+        $ignore = [];
         if (SiteConfig::config()->auto_include_css) {
             $files = glob($cssPath . '/*.css');
 
             // Files are included in order, please name them accordingly
             foreach ($files as $file) {
+                // Skip ignored files
+                if (in_array($file, $ignore)) {
+                    continue;
+                }
                 // Skip theme files, they should be included through SiteConfig
                 if (strpos($file, '-theme.css') !== false) {
                     continue;
@@ -116,7 +121,12 @@ class ThemeControllerExtension extends Extension
                 // Skip unminified files if we have a min file
                 $minFile = str_replace('.css', '.min.css', $file);
                 if (in_array($minFile, $files)) {
-                    continue;
+                    // in dev, favor non minified files
+                    if (Director::isDev()) {
+                        $ignore[] = $minFile;
+                    } else {
+                        continue;
+                    }
                 }
                 $name = basename($file);
                 // Skip editor.css
