@@ -154,6 +154,9 @@ class BasePageExtension extends DataExtension
         $imageLink = '';
         if ($sourceObject->hasMethod('getMetaImage')) {
             $imageLink = $sourceObject->getMetaImage();
+            if ($imageLink && !is_string($imageLink)) {
+                throw new Exception("getMetaImage should return a string");
+            }
         }
         $ogType = "website";
         if ($sourceObject->hasMethod('getOGType')) {

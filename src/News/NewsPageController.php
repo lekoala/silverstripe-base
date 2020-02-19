@@ -36,6 +36,7 @@ class NewsPageController extends \PageController
      * @var DataList
      */
     protected $list;
+
     public function init()
     {
         parent::init();
@@ -50,10 +51,12 @@ class NewsPageController extends \PageController
             Requirements::themedJavascript('news.js');
         }
     }
+
     public function index(HTTPRequest $request)
     {
         return $this->render();
     }
+
     public function search()
     {
         $ID = $this->getRequest()->getVar('q');
@@ -63,6 +66,7 @@ class NewsPageController extends \PageController
         }
         return $this->render(['Query' => $ID]);
     }
+
     public function archives()
     {
         $ID = $this->getRequest()->param('ID');
@@ -72,6 +76,7 @@ class NewsPageController extends \PageController
         }
         return $this->render();
     }
+
     public function category()
     {
         $ID = $this->getRequest()->param('ID');
@@ -85,6 +90,7 @@ class NewsPageController extends \PageController
         }
         return $this->render(['CurrentCategory' => $Category]);
     }
+
     public function tags()
     {
         $ID = $this->getRequest()->param('ID');
@@ -96,6 +102,7 @@ class NewsPageController extends \PageController
         }
         return $this->render();
     }
+
     public function read()
     {
         $ID = $this->getRequest()->param('ID');
@@ -108,12 +115,20 @@ class NewsPageController extends \PageController
         }
         return $this->render(['Item' => $Item]);
     }
+
+    /**
+     * @return PaginatedList
+     */
     public function PaginatedList()
     {
         $paginatedList = new PaginatedList($this->list, $this->getRequest());
         $paginatedList->setPageLength(6);
         return $paginatedList;
     }
+
+    /**
+     * @return ArrayList
+     */
     public function YearsList()
     {
         $ID = null;
@@ -135,6 +150,10 @@ class NewsPageController extends \PageController
         }
         return $result;
     }
+
+    /**
+     * @return ArrayList
+     */
     public function ArchivesList()
     {
         $format = '%Y-%m';
@@ -165,17 +184,29 @@ class NewsPageController extends \PageController
         }
         return $result;
     }
+
+     /**
+     * @return GroupedList
+     */
     public function GroupedList()
     {
         $list = $this->DisplayedItems();
         $groupedList = new GroupedList($list);
         return $groupedList;
     }
+
+     /**
+     * @return DataList|Tag[]
+     */
     public function TagsList()
     {
         $list = $this->DisplayedItems()->relation('Tags');
         return $list;
     }
+
+    /**
+     * @return DataList|NewsCategory[]
+     */
     public function CategoriesList()
     {
         $list = NewsCategory::get();

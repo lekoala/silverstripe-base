@@ -78,8 +78,11 @@ class TaggableExtension extends DataExtension
         $list = implode(',', $tagIds);
         // TODO: check a proper way to do this
         $idColumn = $class . 'ID';
-        $sql = "SELECT $idColumn FROM {$table}_Tags WHERE TagID IN ($list)";
+        $sql = "SELECT $idColumn FROM {$table}_Tags WHERE TagID IN ($list) AND $idColumn != " . $this->owner->ID;
         $IDs = DB::query($sql)->column();
+        if (empty($IDs)) {
+            return false;
+        }
         return $class::get()->filter('ID', $IDs)->limit($count);
     }
 }
