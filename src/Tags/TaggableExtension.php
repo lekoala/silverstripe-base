@@ -2,11 +2,12 @@
 
 namespace LeKoala\Base\Tags;
 
+use SilverStripe\ORM\DB;
 use LeKoala\Base\Tags\Tag;
+use SilverStripe\ORM\DataList;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\ORM\DataExtension;
 use LeKoala\Base\Forms\Select2MultiField;
-use SilverStripe\ORM\DB;
 
 /**
  * Provides cross objects tag functionnality
@@ -36,6 +37,12 @@ class TaggableExtension extends DataExtension
         $fields->addFieldsToTab('Root.Main', $Tags);
     }
 
+    /**
+     * Get all tags for objects of this class
+     *
+     * @param string|array $where
+     * @return DataList|Tag[]
+     */
     public function UsedTags($where = null)
     {
         $class = get_class($this->owner);
@@ -43,12 +50,36 @@ class TaggableExtension extends DataExtension
         $table = $singl->baseTable();
         $sql = "SELECT TagID FROM {$table}_Tags";
         if ($where) {
-            if (\is_array($where)) {
-                $where = \implode(' AND ', $where);
+            if (is_array($where)) {
+                $where = implode(' AND ', $where);
             }
             $sql .= ' WHERE ' . $where;
         }
         $IDs = DB::query($sql)->column();
         return Tag::get()->filter('ID', $IDs);
+    }
+
+
+    /**
+     * Get all items with the same tags
+     *
+     * @param integer $count
+     * @return DataList
+     */
+    public function RelatedItems($count = 4)
+    {
+        $class = get_class($this->owner);
+        $singl = $class::singleton();
+        $table = $singl->baseTable();
+        $tagIds = $this->owner->Tags()->column('ID');
+        if (empty($tagIds)) {
+            return false;
+        }
+        $list = implode(',', $tagIds);
+        // TODO: check a proper way to do this
+        $idColumn = $class . 'ID';
+        $sql = "SELECT $idColumn FROM {$table}_Tags WHERE TagID IN ($list)";
+        $IDs = DB::query($sql)->column();
+        return $class::get()->filter('ID', $IDs)->limit($count);
     }
 }
