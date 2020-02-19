@@ -85,6 +85,12 @@ trait IsRecordController
             $list = $this->updateList($list);
         }
         $paginatedList = new PaginatedList($list, $this->getRequest());
+        $ModelClass = $this->getControllerModelClass();
+        $pageLength = $ModelClass::config()->default_page_length;
+        if (!$pageLength) {
+            $pageLength = 12;
+        }
+        $paginatedList->setPageLength($pageLength);
         return $paginatedList;
     }
 
