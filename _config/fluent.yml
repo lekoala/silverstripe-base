@@ -29,21 +29,27 @@ SilverStripe\SiteConfig\SiteConfig:
 # Add extensions to our base classes
 LeKoala\Base\Tags\Tag:
   extensions:
+    - 'LeKoala\Base\Extensions\FluentCascadeDeleteExtension'
     - 'TractorCow\Fluent\Extension\FluentExtension'
 LeKoala\Base\News\NewsItem:
   extensions:
+    - 'LeKoala\Base\Extensions\FluentCascadeDeleteExtension'
     - 'TractorCow\Fluent\Extension\FluentExtension'
 LeKoala\Base\News\NewsCategory:
   extensions:
+    - 'LeKoala\Base\Extensions\FluentCascadeDeleteExtension'
     - 'TractorCow\Fluent\Extension\FluentExtension'
 LeKoala\Base\Faq\FaqItem:
   extensions:
+    - 'LeKoala\Base\Extensions\FluentCascadeDeleteExtension'
     - 'TractorCow\Fluent\Extension\FluentExtension'
 LeKoala\Base\Faq\FaqCategory:
   extensions:
+    - 'LeKoala\Base\Extensions\FluentCascadeDeleteExtension'
     - 'TractorCow\Fluent\Extension\FluentExtension'
 LeKoala\Base\Blocks\Block:
   extensions:
+    - 'LeKoala\Base\Extensions\FluentCascadeDeleteExtension'
     - 'TractorCow\Fluent\Extension\FluentExtension'
 # You may want to enable this if your records are not showing up!
 # SilverStripe\ORM\DataObject:
