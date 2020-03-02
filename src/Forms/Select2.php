@@ -148,7 +148,9 @@ trait Select2
         $field->setSource($this->getSource());
         $field->setReadonly(true);
         // Required to properly set value if no source set
-        $field->setAjaxClass($this->getAjaxClass());
+        if ($this->ajaxClass) {
+            $field->setAjaxClass($this->getAjaxClass());
+        }
         // This rely on styles in admin.css
         return $field;
     }
