@@ -66,6 +66,16 @@ trait Select2
     protected $ajaxWhere;
 
     /**
+     * @var string
+     */
+    protected $customSearchField;
+
+    /**
+     * @var array
+     */
+    protected $customSearchCols;
+
+    /**
      * @config
      * @var string
      */
@@ -309,6 +319,13 @@ trait Select2
             $searchCols = ['FirstName', 'Surname', 'Email'];
         }
 
+        if ($this->customSearchField) {
+            $searchField = $this->customSearchField;
+        }
+        if ($this->customSearchCols) {
+            $searchCols = $this->customSearchCols;
+        }
+
         $sql = 'SELECT ID AS id, ' . $searchField . ' AS text FROM ' . $baseTable . ' WHERE ';
 
         // Make sure at least one field is not null...
@@ -416,6 +433,55 @@ trait Select2
     public function setOnNewTag($callback)
     {
         $this->onNewTag = $callback;
+        return $this;
+    }
+
+
+    /**
+     * Get the value of customSearchField
+     *
+     * @return string
+     */
+    public function getCustomSearchField(): string
+    {
+        return $this->customSearchField;
+    }
+
+    /**
+     * Set the value of customSearchField
+     *
+     * It must be a valid sql expression like CONCAT(FirstName,' ',Surname)
+     *
+     * This will be the label returned by the autocomplete
+     *
+     * @param string $customSearchField
+     * @return $this
+     */
+    public function setCustomSearchField(string $customSearchField)
+    {
+        $this->customSearchField = $customSearchField;
+        return $this;
+    }
+
+    /**
+     * Get the value of customSearchCols
+     *
+     * @return array
+     */
+    public function getCustomSearchCols()
+    {
+        return $this->customSearchCols;
+    }
+
+    /**
+     * Set the value of customSearchCols
+     *
+     * @param array $customSearchCols
+     * @return $this
+     */
+    public function setCustomSearchCols(array $customSearchCols)
+    {
+        $this->customSearchCols = $customSearchCols;
         return $this;
     }
 
