@@ -1,4 +1,5 @@
 <?php
+
 namespace LeKoala\Base\Forms;
 
 use SilverStripe\ORM\SS_List;
@@ -25,6 +26,16 @@ class SmartUploadField extends UploadField
      * @var array
      */
     private static $default_image_ext = ['jpg', 'jpeg', 'png'];
+
+    /**
+     * Set a global limit for image size
+     * This is useful to prevent users to upload large image that GD
+     * won't be able to resize
+     *
+     * @config
+     * @var string
+     */
+    private static $max_image_size = '2M';
 
     public function __construct($name, $title = null, SS_List $items = null)
     {
@@ -60,6 +71,12 @@ class SmartUploadField extends UploadField
                 $allowedExtensions = $this->getAllowedExtensions();
                 if (in_array('zip', $allowedExtensions)) {
                     $this->setAllowedExtensions(self::config()->default_image_ext);
+                }
+
+                // Because who wants images that crash everything?
+                $maxSize = self::config()->max_image_size;
+                if ($maxSize) {
+                    $this->getValidator()->setAllowedMaxFileSize($maxSize);
                 }
             }
 
