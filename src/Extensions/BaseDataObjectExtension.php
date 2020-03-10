@@ -18,6 +18,7 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\ManyManyThroughList;
 use SilverStripe\ORM\UnsavedRelationList;
 use LeKoala\Base\Forms\BuildableFieldList;
+use LeKoala\Base\Forms\GridField\GridFieldHelper;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\Forms\GridField\GridFieldDeleteAction;
 use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
@@ -298,7 +299,7 @@ class BaseDataObjectExtension extends DataExtension
                 }
                 $config = $gridfield->getConfig();
                 $gridfield->addExtraClass('gridfield-gallery');
-                $GridFieldDataColumns = $config->getComponentByType(GridFieldDataColumns::class);
+                $GridFieldDataColumns = GridFieldHelper::getGridFieldDataColumns($config);
                 $display = [
                     'Name' => 'Name',
                     'LargeAssetThumbnail' => 'Thumbnail'
@@ -325,7 +326,7 @@ class BaseDataObjectExtension extends DataExtension
             }
             $config = $gridfield->getConfig();
 
-            $GridFieldDataColumns = $config->getComponentByType(GridFieldDataColumns::class);
+            $GridFieldDataColumns = GridFieldHelper::getGridFieldDataColumns($config);
             $display = $GridFieldDataColumns->getDisplayFields($gridfield);
             foreach ($data as $k => $v) {
                 $display[$k] = $k;
@@ -362,7 +363,7 @@ class BaseDataObjectExtension extends DataExtension
                 $config->addComponent(new GridFieldDeleteAction());
             }
 
-            $dataColumns = $config->getComponentByType(GridFieldDataColumns::class);
+            $dataColumns = GridFieldHelper::getGridFieldDataColumns($config);
             if ($dataColumns) {
                 $displayFields = $dataColumns->getDisplayFields($gridfield);
                 $newDisplayFields = [];
