@@ -1,11 +1,13 @@
 <?php
+
 namespace LeKoala\Base\Forms;
 
+use Exception;
 use SilverStripe\Forms\FieldGroup;
 use LeKoala\Base\Geo\CountriesList;
 use libphonenumber\PhoneNumberUtil;
-use SilverStripe\ORM\DataObjectInterface;
 use libphonenumber\PhoneNumberFormat;
+use SilverStripe\ORM\DataObjectInterface;
 
 /**
  *
@@ -60,11 +62,16 @@ class CountryPhoneField extends FieldGroup
         // It's an international number
         if (strpos($value, '+') === 0) {
             $util = $this->getPhoneNumberUtil();
-            $number = $util->parse($value);
-            $regionCode = $util->getRegionCodeForNumber($number);
-            $this->getCountryField()->setValue($regionCode);
-            $phone = $util->format($number, PhoneNumberFormat::NATIONAL);
-            $this->getPhoneField()->setValue($phone);
+            try {
+                $number = $util->parse($value);
+                $regionCode = $util->getRegionCodeForNumber($number);
+                $this->getCountryField()->setValue($regionCode);
+                $phone = $util->format($number, PhoneNumberFormat::NATIONAL);
+                $this->getPhoneField()->setValue($phone);
+            } catch (Exception $ex) {
+                // We were unable to parse, simply set the value as is
+                $this->getPhoneField()->setValue($phone);
+            }
         } else {
             $this->getPhoneField()->setValue($value);
         }

@@ -2,6 +2,7 @@
 
 namespace LeKoala\Base\Forms\GridField;
 
+use Exception;
 use SilverStripe\Core\Extension;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
 
