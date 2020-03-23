@@ -19,6 +19,7 @@ use SilverStripe\Security\LoginAttempt;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Security\IdentityStore;
 use LeKoala\Base\Extensions\ValidationStatusExtension;
+use LeKoala\Base\Helpers\IPHelper;
 use SilverStripe\Forms\GridField\GridFieldAddNewButton;
 use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
 
@@ -64,9 +65,9 @@ class BaseMemberExtension extends DataExtension
         // Ip whitelist for users with cms access (empty by default)
         $adminIps = Security::config()->admin_ip_whitelist;
         if (!empty($adminIps)) {
-            $currentIp = Controller::curr()->getRequest()->getIP();
+            $requestIp = Controller::curr()->getRequest()->getIP();
             $isCmsUser = Permission::check('CMS_Access', 'any', $this->owner);
-            if ($isCmsUser && !in_array($currentIp, $adminIps)) {
+            if ($isCmsUser && IPHelper::checkIp($requestIp, $adminIps)) {
                 $result->addError(_t('BaseMemberExtension.ADMIN_IP_INVALID', "Your ip address is not whitelisted for this account level"));
                 return;
             }
