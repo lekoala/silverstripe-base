@@ -15,6 +15,7 @@ use SilverStripe\Forms\LiteralField;
 use SilverStripe\Admin\SecurityAdmin;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Security\Permission;
+use LeKoala\Base\Security\MemberAudit;
 use SilverStripe\Security\LoginAttempt;
 use LeKoala\Base\Forms\CmsInlineFormAction;
 use SilverStripe\Forms\GridField\GridField;
@@ -110,6 +111,7 @@ class BaseSecurityAdminExtension extends Extension
         }
 
         if (Permission::check('ADMIN')) {
+            $this->addMemberAuditTab($form);
             $this->addLogTab($form);
         }
     }
@@ -200,6 +202,28 @@ class BaseSecurityAdminExtension extends Extension
         $recentPasswordFailuresGrid = new GridField('RecentPasswordFailures', _t('BaseSecurityAdminExtension.RecentPasswordFailures', "Recent Password Failures"), $recentPasswordFailures, $recentPasswordFailuresGridConfig);
         $recentPasswordFailuresGrid->setForm($form);
         $auditTab->push($recentPasswordFailuresGrid);
+    }
+
+    protected function addMemberAuditTab(Form $form)
+    {
+        $fields = $form->Fields();
+        $MemberAudit_SNG = MemberAudit::singleton();
+        $list = MemberAudit::get();
+        if ($list->count()) {
+            $auditTab = new Tab('MemberAuditTab', _t('BaseSecurityAdminExtension.MemberAuditTab', "Members Audit"));
+            $fields->addFieldsToTab('Root', $auditTab);
+
+            $MemberAuditGrid = new GridField('MemberAudit', _t('BaseSecurityAdminExtension.MemberAudit', "Members audit events"), $list, GridFieldConfig_RecordViewer::create());
+            $MemberAuditGrid->setForm($form);
+            $GridFieldDataColumns = $MemberAuditGrid->getConfig()->getComponentByType(GridFieldDataColumns::class);
+            $GridFieldDataColumns->setDisplayFields([
+                'Created' => $MemberAudit_SNG->fieldLabel('Created'),
+                'Member.Title' => $MemberAudit_SNG->fieldLabel('Member'),
+                'Event' => $MemberAudit_SNG->fieldLabel('Event'),
+                'AuditDataShort' => $MemberAudit_SNG->fieldLabel('AuditData'),
+            ]);
+            $auditTab->push($MemberAuditGrid);
+        }
     }
 
 

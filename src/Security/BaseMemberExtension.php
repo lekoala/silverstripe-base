@@ -63,11 +63,15 @@ class BaseMemberExtension extends DataExtension
     public function canLogIn(ValidationResult $result)
     {
         // Ip whitelist for users with cms access (empty by default)
+        // SilverStripe\Security\Security:
+        //   admin_ip_whitelist:
+        //     - 127.0.0.1/255
         $adminIps = Security::config()->admin_ip_whitelist;
         if (!empty($adminIps)) {
             $requestIp = Controller::curr()->getRequest()->getIP();
             $isCmsUser = Permission::check('CMS_Access', 'any', $this->owner);
-            if ($isCmsUser && IPHelper::checkIp($requestIp, $adminIps)) {
+            if ($isCmsUser && !IPHelper::checkIp($requestIp, $adminIps)) {
+                $this->owner->audit('invalid_ip_admin', ['ip' => $requestIp]);
                 $result->addError(_t('BaseMemberExtension.ADMIN_IP_INVALID', "Your ip address is not whitelisted for this account level"));
                 return;
             }
