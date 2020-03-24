@@ -1,6 +1,6 @@
 <ul class="SocialLinks $ExtraClasses">
     <% if SiteConfig.Facebook %>
-    <li class="SocialLinks-item SocialLinks-facebook">
+    <li class="SocialLinks-item SocialLinks-facebook" rel="noreferrer">
         <a href="$SiteConfig.FacebookLink" title="Facebook" target="_blank" ><span class="ei-social_facebook"></span></a>
     </li>
     <% end_if %>
