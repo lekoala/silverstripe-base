@@ -84,7 +84,7 @@ class ThemeControllerExtension extends Extension
         if ($googleFont) {
             //@link https://www.cdnplanet.com/blog/faster-google-webfonts-preconnect/
             Requirements::insertHeadTags('<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />');
-            Requirements::css('https://fonts.googleapis.com/css?family=' . $googleFont . "&display:swap");
+            Requirements::css('https://fonts.googleapis.com/css?family=' . $googleFont . "&display=swap");
         }
     }
 
