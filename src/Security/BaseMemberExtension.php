@@ -88,7 +88,22 @@ class BaseMemberExtension extends DataExtension
         if ($this->owner->Mobile) {
             $arr[] = 'text_message';
         }
+        if ($this->owner->TOTPToken) {
+            $arr[] = 'totp';
+        }
         return $arr;
+    }
+
+    /**
+     * @return string text_message, totp
+     */
+    public function PreferredTwoFactorAuth()
+    {
+        $arr = $this->AvailableTwoFactorMethod();
+        if (!empty($arr)) {
+            return $arr[0];
+        }
+        return false;
     }
 
     /**

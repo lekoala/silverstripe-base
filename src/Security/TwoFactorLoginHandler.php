@@ -2,6 +2,8 @@
 
 namespace LeKoala\Base\Security;
 
+use LeKoala\Base\Forms\AlertField;
+use LeKoala\Base\TextMessage\ProviderInterface;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\TextField;
@@ -26,12 +28,13 @@ class TwoFactorLoginHandler extends LoginHandler
 {
     private static $allowed_actions = [
         'step2',
-        'secondStepForm',
-        'twofactorsetup',
-        'twoFactorSetupFrom',
-        'verify_and_activate',
+        'totpStep',
+        'textStep',
         'twofactorcomplete',
-        'show_backup_tokens',
+        'completeTotpStep',
+        'completeTextStep',
+        'textStepForm',
+        'totpStepForm',
     ];
 
     public function doLogin($data, MemberLoginForm $form, HTTPRequest $request)
@@ -84,6 +87,9 @@ class TwoFactorLoginHandler extends LoginHandler
         return $form->getRequestHandler()->redirectBackToForm();
     }
 
+    /**
+     * @return Member
+     */
     protected function getTwoFactorMember()
     {
         $id = $this->getRequest()->getSession()->get('TwoFactorLoginHandler.MemberID');
@@ -94,16 +100,36 @@ class TwoFactorLoginHandler extends LoginHandler
 
     public function step2()
     {
+        $member = $this->getTwoFactorMember();
+        switch ($member->PreferredTwoFactorAuth()) {
+            case 'text_message':
+                $form = $this->textStepForm();
+
+                // Send text message with token if needed
+                $token = $this->getRequest()->getSession()->get('TwoFactorLoginHandler.TextToken');
+                if (!$token) {
+                    $token = (string) mt_rand(100000, 999999);
+                    $this->getRequest()->getSession()->set('TwoFactorLoginHandler.TextToken', $token);
+                    $message = _t('TwoFactorLoginHandler.YOUR_TOKEN_IS', "Your token is {token}", ['token' => $token]);
+                    $provider = $this->getTextMessageProvider();
+                    $provider->send($member, $message);
+                }
+                break;
+            case 'totp':
+                $form = $this->totpStepForm();
+                break;
+        }
         return [
-            "Form" => $this->secondStepForm(),
+            "Form" => $form,
         ];
     }
 
-    public function twofactorsetup()
+    /**
+     * @return ProviderInterface
+     */
+    protected function getTextMessageProvider()
     {
-        return [
-            "Form" => $this->twoFactorSetupFrom()
-        ];
+        return  Injector::inst()->get(ProviderInterface::class);
     }
 
     public function twofactorcomplete()
@@ -111,103 +137,64 @@ class TwoFactorLoginHandler extends LoginHandler
         return $this->redirectAfterSuccessfulLogin();
     }
 
-    public function twoFactorSetupFrom()
+    public function textStepForm()
     {
-        $session  = $this->request->getSession();
-        $memberID = $session->get('TwoFactorLoginHandler.MemberID');
-        $member   = Member::get()->byID($memberID);
-        $member->generateTOTPToken();
-        $member->write();
-
-        return $member
-            ->customise(array(
-                'CurrentController' => $this,
-            ))
-            ->renderWith('TokenInfoDialog');
+        $member = $this->getTwoFactorMember();
+        $end = substr($member->Mobile, -4);
+        $MessageSent =  new AlertField('MessageSent', _t('TwoFactorLoginHandler.MESSAGE_SENT', 'Your token has been sent to your phone ending with {end}', ['end' => $end]));
+        $SecondFactor =  new TextField('SecondFactor', _t('TwoFactorLoginHandler.ENTER_YOUR_ACCESS_TOKEN', 'Enter your access token'));
+        $validator = new RequiredFields('SecondFactor');
+        $action = new FormAction('completeTextStep', _t('TwoFactorLoginHandler.VALIDATE_TOKEN', 'Validate token'));
+        return new Form(
+            $this,
+            "textStepForm",
+            new FieldList([
+                $MessageSent,
+                $SecondFactor,
+            ]),
+            new FieldList([$action]),
+            $validator
+        );
     }
 
-    /**
-     * Function to allow verification & activation of two-factor-auth via Ajax
-     *
-     * @param $request
-     * @return \SS_HTTPResponse
-     */
-    public function verify_and_activate($request)
+    public function completeTextStep($data, Form $form, HTTPRequest $request)
     {
-        $session  = $this->request->getSession();
-        $memberID = $session->get('TwoFactorLoginHandler.MemberID');
-        $member   = Member::get()->byID($memberID);
-        if (!$member) {
-            return;
-        }
+        $session = $request->getSession();
+        $member = $this->getTwoFactorMember();
 
-        $TokenCorrect = $member->validateTOTP(
-            (string) $request->postVar('VerificationInput')
-        );
-
-        if ($TokenCorrect) {
-            $member->Has2FA = true;
-            $member->regenerateBackupTokens();
-            $member->write();
-
+        $token = $this->getRequest()->getSession()->get('TwoFactorLoginHandler.TextToken');
+        if ($data['SecondFactor'] == $token) {
             $data = $session->get('TwoFactorLoginHandler.Data');
             if (!$member) {
                 return $this->redirectBack();
             }
             $this->performLogin($member, $data, $request);
 
-            return $this->redirect($this->link('show_backup_tokens'));
+            return $this->redirectAfterSuccessfulLogin();
         }
 
-        // else: show feedback
-        return [
-            "Form" => $member
-                ->customise(
-                    [
-                        'CurrentController' => $this,
-                        'VerificationError' => true,
-                    ]
-                )
-                ->renderWith('TokenInfoDialog')
-        ];
+        // Fail to login redirects back to form
+        return $this->redirectBack();
     }
 
-    public function show_backup_tokens()
-    {
-        $member = Security::getCurrentUser();
-
-        if (!$member->BackupTokens()->count()) {
-            $member->regenerateBackupTokens();
-        }
-
-        return [
-            "Title" => 'Two Factor Back Up Tokens',
-            "Content" => $member->customise(array(
-                "backUrl" => $this->getBackURL()
-            ))
-                ->renderWith('ShowBackUpTokens')
-        ];
-    }
-
-    public function secondStepForm()
+    public function totpStepForm()
     {
         $SecondFactor =  new TextField('SecondFactor', _t('TwoFactorLoginHandler.ENTER_YOUR_ACCESS_TOKEN', 'Enter your access token'));
         $validator = new RequiredFields('SecondFactor');
-        $action = new FormAction('completeSecondStep', _t('TwoFactorLoginHandler.VALIDATE_TOKEN', 'Validate token'));
+        $action = new FormAction('completeTotpStep', _t('TwoFactorLoginHandler.VALIDATE_TOKEN', 'Validate token'));
         return new Form(
             $this,
-            "secondStepForm",
+            "totpStepForm",
             new FieldList([$SecondFactor]),
             new FieldList([$action]),
             $validator
         );
     }
 
-    public function completeSecondStep($data, Form $form, HTTPRequest $request)
+    public function completeTotpStep($data, Form $form, HTTPRequest $request)
     {
         $session = $request->getSession();
-        $memberID = $session->get('TwoFactorLoginHandler.MemberID');
-        $member = Member::get()->byID($memberID);
+        $member = $this->getTwoFactorMember();
         if ($member->validateTOTP($data['SecondFactor'])) {
             $data = $session->get('TwoFactorLoginHandler.Data');
             if (!$member) {
