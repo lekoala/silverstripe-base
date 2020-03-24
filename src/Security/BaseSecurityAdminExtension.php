@@ -190,10 +190,10 @@ class BaseSecurityAdminExtension extends Extension
 
         $LoginAttempt_SNG = LoginAttempt::singleton();
 
-        $adminEmailList = BaseMemberExtension::getMembersFromSecurityGroups()->colum('Email');
+        $getMembersFromSecurityGroupsIDs = BaseMemberExtension::getMembersFromSecurityGroupsIDs();
         $recentAdminLogins = LoginAttempt::get()->filter([
             'Status' => 'Success',
-            'Email' => $adminEmailList
+            'MemberID' => $getMembersFromSecurityGroupsIDs
         ])->limit(10)->sort('Created DESC');
         $recentAdminLoginsGridConfig = GridFieldConfig_RecordViewer::create();
         $GridFieldDataColumns = GridFieldHelper::getGridFieldDataColumns($recentAdminLoginsGridConfig);
@@ -203,7 +203,7 @@ class BaseSecurityAdminExtension extends Extension
             'Member.Title' => $Member_SNG->fieldLabel('Title'),
             'Member.Email' => $Member_SNG->fieldLabel('Email'),
         ]);
-        $recentAdminLoginsGrid = new GridField('RecentPasswordFailures', _t('BaseSecurityAdminExtension.RecentAdminLogins', "Recent Admin Logins"), $recentAdminLogins, $recentAdminLoginsGridConfig);
+        $recentAdminLoginsGrid = new GridField('RecentAdminLogins', _t('BaseSecurityAdminExtension.RecentAdminLogins', "Recent Admin Logins"), $recentAdminLogins, $recentAdminLoginsGridConfig);
         $recentAdminLoginsGrid->setForm($form);
         $auditTab->push($recentAdminLoginsGrid);
 
