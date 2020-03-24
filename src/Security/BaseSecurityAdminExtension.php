@@ -18,6 +18,7 @@ use SilverStripe\Security\Permission;
 use LeKoala\Base\Security\MemberAudit;
 use SilverStripe\Security\LoginAttempt;
 use LeKoala\Base\Forms\CmsInlineFormAction;
+use LeKoala\Base\Forms\GridField\GridFieldHelper;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\Forms\GridField\GridFieldConfig_RecordViewer;
@@ -98,7 +99,7 @@ class BaseSecurityAdminExtension extends Extension
         $form->Fields()->insertAfter('Members', $MembersOnlyGroups);
 
         // Show groups
-        $cols = $members->getConfig()->getComponentByType(GridFieldDataColumns::class);
+        $cols = GridFieldHelper::getGridFieldDataColumns($members->getConfig());
         $cols->setDisplayFields(array(
             'FirstName' => 'FirstName',
             'Surname' => 'Surname',
@@ -177,7 +178,7 @@ class BaseSecurityAdminExtension extends Extension
         if ($membersLocked->count()) {
             $membersLockedGrid = new GridField('MembersLocked', _t('BaseSecurityAdminExtension.LockedMembers', "Locked Members"), $membersLocked, GridFieldConfig_RecordViewer::create());
             $membersLockedGrid->setForm($form);
-            $GridFieldDataColumns = $membersLockedGrid->getConfig()->getComponentByType(GridFieldDataColumns::class);
+            $GridFieldDataColumns = GridFieldHelper::getGridFieldDataColumns($membersLockedGrid->getConfig());
             $GridFieldDataColumns->setDisplayFields([
                 'Title' => $Member_SNG->fieldLabel('Title'),
                 'Email' => $Member_SNG->fieldLabel('Email'),
@@ -187,11 +188,28 @@ class BaseSecurityAdminExtension extends Extension
             $auditTab->push($membersLockedGrid);
         }
 
+        $LoginAttempt_SNG = LoginAttempt::singleton();
+
+        $adminEmailList = BaseMemberExtension::getMembersFromSecurityGroups()->colum('Email');
+        $recentAdminLogins = LoginAttempt::get()->filter([
+            'Status' => 'Success',
+            'Email' => $adminEmailList
+        ])->limit(10)->sort('Created DESC');
+        $recentAdminLoginsGridConfig = GridFieldConfig_RecordViewer::create();
+        $GridFieldDataColumns = GridFieldHelper::getGridFieldDataColumns($recentAdminLoginsGridConfig);
+        $GridFieldDataColumns->setDisplayFields([
+            'Created' => $LoginAttempt_SNG->fieldLabel('Created'),
+            'IP' => $LoginAttempt_SNG->fieldLabel('IP'),
+            'Member.Title' => $Member_SNG->fieldLabel('Title'),
+            'Member.Email' => $Member_SNG->fieldLabel('Email'),
+        ]);
+        $recentAdminLoginsGrid = new GridField('RecentPasswordFailures', _t('BaseSecurityAdminExtension.RecentAdminLogins', "Recent Admin Logins"), $recentAdminLogins, $recentAdminLoginsGridConfig);
+        $recentAdminLoginsGrid->setForm($form);
+        $auditTab->push($recentAdminLoginsGrid);
+
         $recentPasswordFailures = LoginAttempt::get()->filter('Status', 'Failure')->limit(10)->sort('Created DESC');
         $recentPasswordFailuresGridConfig = GridFieldConfig_RecordViewer::create();
-        /* @var $GridFieldDataColumns GridFieldDataColumns */
-        $LoginAttempt_SNG = LoginAttempt::singleton();
-        $GridFieldDataColumns = $recentPasswordFailuresGridConfig->getComponentByType(GridFieldDataColumns::class);
+        $GridFieldDataColumns = GridFieldHelper::getGridFieldDataColumns($recentPasswordFailuresGridConfig);
         $GridFieldDataColumns->setDisplayFields([
             'Created' => $LoginAttempt_SNG->fieldLabel('Created'),
             'IP' => $LoginAttempt_SNG->fieldLabel('IP'),
@@ -215,7 +233,7 @@ class BaseSecurityAdminExtension extends Extension
 
             $MemberAuditGrid = new GridField('MemberAudit', _t('BaseSecurityAdminExtension.MemberAudit', "Members audit events"), $list, GridFieldConfig_RecordViewer::create());
             $MemberAuditGrid->setForm($form);
-            $GridFieldDataColumns = $MemberAuditGrid->getConfig()->getComponentByType(GridFieldDataColumns::class);
+            $GridFieldDataColumns = GridFieldHelper::getGridFieldDataColumns($MemberAuditGrid->getConfig());
             $GridFieldDataColumns->setDisplayFields([
                 'Created' => $MemberAudit_SNG->fieldLabel('Created'),
                 'Member.Title' => $MemberAudit_SNG->fieldLabel('Member'),
