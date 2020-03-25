@@ -123,21 +123,26 @@ class BaseMemberExtension extends DataExtension
         //     - 127.0.0.1/255
         $adminIps = Security::config()->admin_ip_whitelist;
         $need2Fa = $this->NeedTwoFactorAuth();
+        $hasTwoFaMethods = count($this->AvailableTwoFactorMethod()) > 0;
         if (!empty($adminIps)) {
             $requestIp = Controller::curr()->getRequest()->getIP();
             $isCmsUser = Permission::check('CMS_Access', 'any', $this->owner);
             if ($isCmsUser && !IPHelper::checkIp($requestIp, $adminIps)) {
-                $this->owner->audit('invalid_ip_admin', ['ip' => $requestIp]);
-                $result->addError(_t('BaseMemberExtension.ADMIN_IP_INVALID', "Your ip address is not whitelisted for this account level"));
+                // No two fa method to validate important account
+                if (!$hasTwoFaMethods) {
+                    $this->owner->audit('invalid_ip_admin', ['ip' => $requestIp]);
+                    $result->addError(_t('BaseMemberExtension.ADMIN_IP_INVALID', "Your ip address is not whitelisted for this account level"));
+                }
             } else {
+                // User has been whitelisted, no need for 2fa
                 if (Config::inst()->get(BaseAuthenticator::class, 'disable_2fa_whitelisted_ips')) {
-                    // $need2Fa = false;
+                    $need2Fa = false;
                 }
             }
         }
 
         // Member need two factor auth but has no available method
-        if ($need2Fa && empty($this->AvailableTwoFactorMethod())) {
+        if ($need2Fa && !$hasTwoFaMethods) {
             $result->addError(_t('BaseMemberExtension.YOU_NEED_2FA_METHOD', 'Your account needs two factor auth but does not have any available authentication method'));
         }
 
