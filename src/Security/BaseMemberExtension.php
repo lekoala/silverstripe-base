@@ -70,9 +70,19 @@ class BaseMemberExtension extends DataExtension
      */
     public function NeedTwoFactorAuth()
     {
+        //2fa is disabled globally
         if (!BaseAuthenticator::is2FAenabled()) {
             return false;
         }
+        // the ip is whitelisted
+        $adminIps = Security::config()->admin_ip_whitelist;
+        if (!empty($adminIps)) {
+            $requestIp = Controller::curr()->getRequest()->getIP();
+            if (IPHelper::checkIp($requestIp, $adminIps)) {
+                return false;
+            }
+        }
+        // we only required 2fa for admins
         if (BaseAuthenticator::is2FAenabledAdminOnly()) {
             return Permission::check('CMS_ACCESS', 'any', $this->owner);
         }
