@@ -118,6 +118,9 @@ class TwoFactorLoginHandler extends LoginHandler
             case 'totp':
                 $form = $this->totpStepForm();
                 break;
+            default:
+                return $this->redirectBack();
+                break;
         }
         return [
             "Form" => $form,

@@ -309,8 +309,8 @@ class BaseMemberExtension extends DataExtension
 
     public function doUnlock()
     {
-        if (!$this->owner->LockedOutUntil) {
-            return;
+        if (!$this->owner->isLockedOut()) {
+            return _t('BaseMemberExtension.MEMBER_NOT_LOCKED', 'Member is not locked');
         }
 
         $lastSuccess = LoginAttempt::get()->filter($filter = array(

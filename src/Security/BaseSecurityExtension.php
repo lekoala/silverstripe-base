@@ -1,8 +1,10 @@
 <?php
+
 namespace LeKoala\Base\Security;
 
 use SilverStripe\Core\Extension;
 use SilverStripe\Admin\AdminRootController;
+use SilverStripe\Security\DefaultAdminService;
 
 /**
  * Additionnal functionnalities
@@ -13,9 +15,24 @@ class BaseSecurityExtension extends Extension
 {
 
     private static $allowed_actions = array(
-        'end_masquerade'
+        'end_masquerade',
+        'unlock_default_admin',
     );
 
+    public function unlock_default_admin()
+    {
+        $member = DefaultAdminService::singleton()->findOrCreateDefaultAdmin();
+        if ($member->isLockedOut()) {
+            $username = $this->owner->getRequest()->getVar('username');
+            $password = $this->owner->getRequest()->getVar('password');
+            $check = DefaultAdminService::isDefaultAdminCredentials($username, $password);
+            if ($check) {
+                return $member->doUnlock();
+            }
+            return 'Invalid login/password';
+        }
+        return 'Admin is not locked';
+    }
     public function end_masquerade()
     {
         /* @var $session \SilverStripe\Control\Session */
