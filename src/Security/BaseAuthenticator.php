@@ -27,7 +27,6 @@ class BaseAuthenticator extends MemberAuthenticator
             return TwoFactorLoginHandler::create($link, $this);
         }
 
-
         return LoginHandler::create($link, $this);
     }
 

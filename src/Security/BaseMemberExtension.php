@@ -309,6 +309,10 @@ class BaseMemberExtension extends DataExtension
 
     public function doUnlock()
     {
+        if (!$this->owner->LockedOutUntil) {
+            return;
+        }
+
         $lastSuccess = LoginAttempt::get()->filter($filter = array(
             'MemberID' => $this->owner->ID
         ))->sort('Created', 'DESC')->filter('Status', 'Success')->first();
