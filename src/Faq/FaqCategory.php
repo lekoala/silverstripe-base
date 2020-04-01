@@ -15,6 +15,7 @@ use LeKoala\Base\Faq\FaqItem;
  * @method \LeKoala\Base\Faq\FaqPage Page()
  * @method \SilverStripe\ORM\DataList|\LeKoala\Base\Faq\FaqItem[] Items()
  * @mixin \LeKoala\Base\Extensions\SortableExtension
+ * @mixin \LeKoala\Base\Extensions\FluentCascadeDeleteExtension
  * @mixin \TractorCow\Fluent\Extension\FluentExtension
  */
 class FaqCategory extends DataObject

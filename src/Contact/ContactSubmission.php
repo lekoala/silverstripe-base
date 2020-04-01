@@ -19,6 +19,7 @@ use SilverStripe\Core\Convert;
  * @property string $Email
  * @property string $Phone
  * @property string $Company
+ * @property string $ExtraData
  * @property string $EmailResults
  * @property int $PageID
  * @method \LeKoala\Base\Contact\ContactPage Page()

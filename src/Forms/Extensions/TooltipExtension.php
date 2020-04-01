@@ -10,7 +10,7 @@ use SilverStripe\Forms\FormField;
  *
  * This is merged into BaseFieldExtension
  *
- * @property FormField $owner
+ * @property \LeKoala\Base\Forms\Extensions\TooltipExtension $owner
  */
 class TooltipExtension extends Extension
 {

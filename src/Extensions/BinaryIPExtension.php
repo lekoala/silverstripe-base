@@ -9,7 +9,7 @@ use LeKoala\Base\Geo\Services\Geolocator;
  * Store IP as binary
  *
  * @link https://stackoverflow.com/questions/22636912/store-both-ipv4-and-ipv6-address-in-a-single-column
- * @property \LeKoala\Base\Security\MemberAudit|\LeKoala\Base\Extensions\BinaryIPExtension $owner
+ * @property \BinaryIPExtension $owner
  * @property string $IP
  */
 class BinaryIPExtension extends DataExtension
