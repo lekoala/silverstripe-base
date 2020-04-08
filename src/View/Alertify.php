@@ -112,7 +112,7 @@ class Alertify
                 $type = 'warning';
                 break;
         }
-        $js = "alertify.notify('$msg', '$type', 0});";
+        $js = "alertify.notify('$msg', '$type', 0);";
         Requirements::customScript($js);
     }
 
