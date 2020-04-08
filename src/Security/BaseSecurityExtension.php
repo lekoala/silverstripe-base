@@ -4,7 +4,9 @@ namespace LeKoala\Base\Security;
 
 use SilverStripe\Core\Extension;
 use SilverStripe\Admin\AdminRootController;
+use SilverStripe\Control\Controller;
 use SilverStripe\Security\DefaultAdminService;
+use SilverStripe\Security\Member;
 
 /**
  * Additionnal functionnalities
@@ -18,6 +20,26 @@ class BaseSecurityExtension extends Extension
         'end_masquerade',
         'unlock_default_admin',
     );
+
+    public function onAfterInit()
+    {
+        $req = Controller::curr()->getRequest();
+        $url = $req->getURL();
+
+        $loginUrl = $this->owner->config()->login_url;
+        $loginFormUrl = str_replace('/login', '/LoginForm', $loginUrl);
+
+        // Cannot GET login form
+        if ($url == $loginFormUrl && $req->isGET()) {
+            header('Location: /' . $loginUrl);
+            exit();
+        }
+        // Already logged in
+        // if (Member::currentUserID() && ($loginUrl == $url || $loginFormUrl == $url)) {
+        //     header('Location: /');
+        //     exit();
+        // }
+    }
 
     public function unlock_default_admin()
     {
@@ -33,6 +55,7 @@ class BaseSecurityExtension extends Extension
         }
         return 'Admin is not locked';
     }
+
     public function end_masquerade()
     {
         /* @var $session \SilverStripe\Control\Session */
