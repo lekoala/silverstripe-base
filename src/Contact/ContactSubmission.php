@@ -2,6 +2,7 @@
 
 namespace LeKoala\Base\Contact;
 
+use LeKoala\Base\Actions\CustomAction;
 use SilverStripe\ORM\DataObject;
 use LeKoala\Base\Contact\ContactPage;
 use SilverStripe\Control\Email\Email;
@@ -38,6 +39,7 @@ class ContactSubmission extends DataObject
         "Company" => "Varchar",
         "ExtraData" => DBJson::class,
         "EmailResults" => "Text",
+        "EmailSent" => "Boolean",
     ];
     private static $has_one = [
         "Page" => ContactPage::class
@@ -66,6 +68,28 @@ class ContactSubmission extends DataObject
         if ($this->Company) {
             $this->Company = Convert::raw2xml(strip_tags($this->Company));
         }
+    }
+
+    public function getCMSActions()
+    {
+        $actions = parent::getCMSActions();
+
+        if (!$this->EmailSent) {
+            $send = new CustomAction("doSend", "Send");
+            $actions->push($send);
+        }
+
+        return $actions;
+    }
+
+    public function doSend()
+    {
+        $res = $this->sendByEmail();
+
+        if ($res) {
+            return 'Email sent';
+        }
+        return 'Failed to send';
     }
 
     /**
@@ -105,15 +129,19 @@ class ContactSubmission extends DataObject
         $msg = $e_body . $e_content;
         $ex = null;
         try {
-            $emailInst = new Email();
+            $emailInst = Email::create();
             $emailInst->setTo($address);
             $emailInst->setSubject($e_subject);
             // $emailInst->setBody($msg);
             $emailInst->addData(['EmailContent' => $msg]);
             $emailInst->setReplyTo($email, $name);
+
             $result = $emailInst->send();
+
+            $this->EmailSent = true;
         } catch (\Exception $e) {
             $result = $e->getMessage();
+            $this->EmailSent = false;
             $ex = $e;
             self::getLogger()->info($e);
             return false;
