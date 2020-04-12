@@ -117,3 +117,6 @@ fr:
     SEE: 'Un aperçu :'
   URLSegmentExtension:
     URLSEGMENT: 'URL Segment'
+  SilverStripe\Security\Security:
+    PASSWORDRESETSENTTEXT: 'Merci. Un lien pour réinitiliaser votre mot de passe vous a été envoyé à l''adresse indiquée'
+    PASSWORDRESETSENTHEADER: 'Votre mot de passe a été envoyé'
