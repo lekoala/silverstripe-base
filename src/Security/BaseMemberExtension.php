@@ -66,6 +66,22 @@ class BaseMemberExtension extends DataExtension
     }
 
     /**
+     * @return string
+     */
+    public function getResetPasswordLink()
+    {
+        // No token, create it
+        if (!$this->owner->AutoLoginHash) {
+            $token = $this->owner->generateAutologinTokenAndStoreHash();
+        } else {
+            $token = $this->owner->AutoLoginHash;
+            // Refresh expire date
+            $lifetime = $this->owner->config()->auto_login_token_lifetime;
+            $this->owner->AutoLoginExpired = date('Y-m-d H:i:s', time() + $lifetime);
+        }
+        return Security::getPasswordResetLink($this->owner, $token);
+    }
+    /**
      * @return boolean
      */
     public function NeedTwoFactorAuth()
