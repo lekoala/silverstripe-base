@@ -68,7 +68,7 @@ class BaseMemberExtension extends DataExtension
     /**
      * @return string
      */
-    public function getResetPasswordLink()
+    public function getPasswordResetLink()
     {
         // No token, create it
         if (!$this->owner->AutoLoginHash) {
