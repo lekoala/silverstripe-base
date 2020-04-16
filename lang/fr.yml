@@ -120,3 +120,4 @@ fr:
   SilverStripe\Security\Security:
     PASSWORDRESETSENTTEXT: 'Merci. Un lien pour réinitiliaser votre mot de passe vous a été envoyé à l''adresse indiquée'
     PASSWORDRESETSENTHEADER: 'Votre mot de passe a été envoyé'
+    NOTERESETLINKINVALID: '<p>Le lien de réinitialisation est invalide ou expiré.</p><p>Vous pouvez en <a href="{link1}">demander un nouveau</a> ou changer votre mot de passe après votre <a href="{link2}">connexion</a>.</p>'
