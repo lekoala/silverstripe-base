@@ -24,6 +24,7 @@ use SilverStripe\Security\Authenticator;
 use SilverStripe\Security\IdentityStore;
 use LeKoala\Base\Security\BaseAuthenticator;
 use LeKoala\Base\Extensions\ValidationStatusExtension;
+use SilverStripe\Control\Director;
 use SilverStripe\Forms\GridField\GridFieldAddNewButton;
 use SilverStripe\Security\MemberAuthenticator\MemberAuthenticator;
 use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
@@ -79,8 +80,9 @@ class BaseMemberExtension extends DataExtension
             $lifetime = $this->owner->config()->auto_login_token_lifetime;
             $this->owner->AutoLoginExpired = date('Y-m-d H:i:s', time() + $lifetime);
         }
-        return Security::getPasswordResetLink($this->owner, $token);
+        return Director::absoluteURL(Security::getPasswordResetLink($this->owner, $token));
     }
+
     /**
      * @return boolean
      */

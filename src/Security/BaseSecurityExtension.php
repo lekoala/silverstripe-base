@@ -28,6 +28,7 @@ class BaseSecurityExtension extends Extension
 
         $loginUrl = $this->owner->config()->login_url;
         $loginFormUrl = str_replace('/login', '/LoginForm', $loginUrl);
+        $defaultLoginUrl = $loginUrl . "/default";
 
         // Cannot GET login form
         if ($url == $loginFormUrl && $req->isGET()) {
@@ -35,10 +36,13 @@ class BaseSecurityExtension extends Extension
             exit();
         }
         // Already logged in
-        // if (Member::currentUserID() && ($loginUrl == $url || $loginFormUrl == $url)) {
-        //     header('Location: /');
-        //     exit();
-        // }
+        if (Member::currentUserID() && ($loginUrl == $url || $loginFormUrl == $url || $defaultLoginUrl == $url)) {
+            $member = Member::currentUser();
+            if ($member->hasMethod("redirectIfLoggedInLink")) {
+                header('Location: ' . $member->redirectIfLoggedInLink());
+                exit();
+            }
+        }
     }
 
     public function unlock_default_admin()
