@@ -22,7 +22,13 @@ class SweetAlert
      * @config
      * @var string
      */
-    private static $theme = 'Minimal';
+    private static $theme = 'borderless';
+
+    /**
+     * @config
+     * @var string
+     */
+    private static $theme_version = '3';
 
     /**
      * @config
@@ -36,9 +42,12 @@ class SweetAlert
     public static function requirements()
     {
         $theme = self::config()->theme;
+        $theme_version = self::config()->theme_version;
         $version = self::config()->version;
 
-        Requirements::javascript('https://cdn.jsdelivr.net/npm/sweetalert2@' . $version);
+        Requirements::javascript('https://cdn.jsdelivr.net/npm/sweetalert2@' . $version . '/dist/sweetalert2.min.js');
+        //https://cdn.jsdelivr.net/npm/@sweetalert2/themes@3.1.4/minimal/minimal.css
+        Requirements::css('https://cdn.jsdelivr.net/npm/@sweetalert2/themes@' . $theme_version . '/' . $theme . '/' . $theme . '.css');
     }
 
     /**
