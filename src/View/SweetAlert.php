@@ -12,43 +12,23 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Config\Configurable;
 
 /**
- * @link http://alertifyjs.com
+ * @link https://sweetalert2.github.io/
  */
-class Alertify
+class SweetAlert
 {
     use Configurable;
 
     /**
-     * default,bootstrap,semantic
      * @config
      * @var string
      */
-    private static $theme = 'default';
+    private static $theme = 'Minimal';
 
     /**
      * @config
      * @var string
      */
-    private static $version = '1.13.1';
-
-    /**
-     * @config
-     * @var bool
-     */
-    private static $use_alerts = false;
-
-    /**
-     * @config
-     * @var array
-     */
-    private static $defaults = [
-        'notifier.position' => "top-center",
-        'notifier.delay' => "5",
-        'transition' => "zoom",
-        'theme.ok' => "btn btn-primary",
-        'theme.cancel' => "btn btn-danger",
-        'theme.input' => "form-control",
-    ];
+    private static $version = '9';
 
     /**
      * Add AlertifyJS requirements
@@ -58,20 +38,7 @@ class Alertify
         $theme = self::config()->theme;
         $version = self::config()->version;
 
-        Requirements::javascript('https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/' . $version . '/alertify.min.js');
-        $dir = i18n::get_script_direction();
-        if ($dir == 'rtl') {
-            Requirements::css('https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/' . $version . '/css/alertify.rtl.min.css');
-            Requirements::css('https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/' . $version . '/css/themes/' . $theme . '.rtl.min.css');
-        } else {
-            Requirements::css('https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/' . $version . '/css/alertify.min.css');
-            Requirements::css('https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/' . $version . '/css/themes/' . $theme . '.min.css');
-        }
-        $settings = '';
-        foreach (self::config()->defaults as $k => $v) {
-            $settings .= "alertify.defaults.$k = '$v';\n";
-        }
-        Requirements::customScript($settings, 'AlertifySettings');
+        Requirements::javascript('https://cdn.jsdelivr.net/npm/sweetalert2@' . $version);
     }
 
     /**
@@ -104,11 +71,8 @@ class Alertify
         return true;
     }
 
-    public static function show($message, $type, $asAlert = null)
+    public static function show($message, $type)
     {
-        if ($asAlert === null) {
-            $asAlert = self::config()->use_alerts;
-        }
         $msg = addslashes($message);
         $type = $type;
         switch ($type) {
@@ -122,13 +86,7 @@ class Alertify
                 $type = 'warning';
                 break;
         }
-        if ($asAlert) {
-            $js = "alertify.alert('$msg').set(transition:'zoom', basic:true, movable:true);";
-            $js = "alertify.notify('$msg', '$type', 0);";
-        } else {
-            $js = "alertify.notify('$msg', '$type', 0);";
-        }
-
+        $js = "Swal.fire({text:'$msg',icon:'$type'})";
         Requirements::customScript($js);
     }
 
