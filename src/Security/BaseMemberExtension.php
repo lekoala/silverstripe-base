@@ -80,7 +80,15 @@ class BaseMemberExtension extends DataExtension
             $lifetime = $this->owner->config()->auto_login_token_lifetime;
             $this->owner->AutoLoginExpired = date('Y-m-d H:i:s', time() + $lifetime);
         }
-        return Director::absoluteURL(Security::getPasswordResetLink($this->owner, $token));
+        return Security::getPasswordResetLink($this->owner, $token);
+    }
+
+    /**
+     * @return string
+     */
+    public function getAbsolutePasswordResetLink()
+    {
+        return Director::absoluteURL($this->getPasswordResetLink());
     }
 
     /**
