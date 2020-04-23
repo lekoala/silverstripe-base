@@ -71,15 +71,7 @@ class BaseMemberExtension extends DataExtension
      */
     public function getPasswordResetLink()
     {
-        // No token, create it
-        if (!$this->owner->AutoLoginHash) {
-            $token = $this->owner->generateAutologinTokenAndStoreHash();
-        } else {
-            $token = $this->owner->AutoLoginHash;
-            // Refresh expire date
-            $lifetime = $this->owner->config()->auto_login_token_lifetime;
-            $this->owner->AutoLoginExpired = date('Y-m-d H:i:s', time() + $lifetime);
-        }
+        $token = $this->owner->generateAutologinTokenAndStoreHash();
         return Director::absoluteURL(Security::getPasswordResetLink($this->owner, $token));
     }
 
