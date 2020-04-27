@@ -3,7 +3,8 @@
     $.fn.ModularBehaviour.beforeHooks.inputmask = function (config) {
         var $this = $(this);
 
-        var name = $this.attr("name");
+        // raw name is irrelevant, use data attribute
+        var name = $this.data("name");
         var val = $this.val();
         var dataformat = $this.data("dataformat");
         var isDecimal = $this.data("isDecimal");
@@ -17,7 +18,7 @@
         $this.parent().append(hiddenInput);
 
         // Avoid original field being saved (but send the formatted data as a convenience)
-        $this.attr("name", $this.attr("name") + "Formatted");
+        $this.attr("name", name + "Formatted");
 
         // Update real hidden field with unmasked value
         $this.on('keyup blur', function () {

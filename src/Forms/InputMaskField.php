@@ -200,6 +200,11 @@ class InputMaskField extends TextField
 
         $attributes['lang'] = i18n::convert_rfc1766($this->getLocale());
 
+        // Make sure we don't submit invalid unformatted value if js fails somehow
+        // and hidden input is not added properly
+        $attributes['data-name'] = $attributes['name'];
+        $attributes['name'] = $attributes['name'] . 'Unformatted';
+
         return $attributes;
     }
 

@@ -22,7 +22,8 @@ class InputMaskCurrencyField extends InputMaskNumericField
     {
         // otherwise values like 84.4 will be interpreted as 844.00
         if (is_float($value)) {
-            $value = $this->formattedCurrency($value);
+            $value = number_format($value, 2, $this->getCurrencyDecimalSeparator(), "");
+            // $value = $this->formattedCurrency($value);
         }
         return parent::setValue($value, $data);
     }
