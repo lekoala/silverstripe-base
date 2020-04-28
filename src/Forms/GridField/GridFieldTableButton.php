@@ -1,4 +1,5 @@
 <?php
+
 namespace LeKoala\Base\Forms\GridField;
 
 use LeKoala\Base\Helpers\ClassHelper;
@@ -16,7 +17,6 @@ use SilverStripe\Control\Controller;
  */
 abstract class GridFieldTableButton implements GridField_HTMLProvider, GridField_ActionProvider, GridField_URLHandler
 {
-
     /**
      * Fragment to write the button to
      * @string
@@ -42,6 +42,11 @@ abstract class GridFieldTableButton implements GridField_HTMLProvider, GridField
      * @var string
      */
     protected $parentID;
+
+    /**
+     * @var string
+     */
+    protected $confirm;
 
     /**
      * @var string
@@ -109,6 +114,9 @@ abstract class GridFieldTableButton implements GridField_HTMLProvider, GridField
             if ($promptDefault) {
                 $button->setAttribute('data-prompt-default', $promptDefault);
             }
+        }
+        if ($this->confirm) {
+            $button->setAttribute('data-confirm', $this->confirm);
         }
         foreach ($this->attributes as $attributeName => $attributeValue) {
             $button->setAttribute($attributeName, $attributeValue);
@@ -224,6 +232,28 @@ abstract class GridFieldTableButton implements GridField_HTMLProvider, GridField
     public function setParentID($id)
     {
         $this->parentID = $id;
+        return $this;
+    }
+
+    /**
+     * Get the value of confirm
+     *
+     * @return string
+     */
+    public function getConfirm()
+    {
+        return $this->confirm;
+    }
+
+    /**
+     * Set the value of confirm
+     *
+     * @param string $confirm
+     * @return $this
+     */
+    public function setConfirm($confirm)
+    {
+        $this->confirm = $confirm;
         return $this;
     }
 
