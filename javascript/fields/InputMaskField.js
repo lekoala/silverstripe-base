@@ -20,7 +20,7 @@
     // Duplicate input field to store data value
     var hiddenInput = $("<input/>", {
       type: "hidden",
-      name: name,
+      name: name
     });
     $this.parent().append(hiddenInput);
 
@@ -51,7 +51,7 @@
       }
       hiddenInput.val(val);
     });
-    $.fn.ModularBehaviour.afterHooks.inputmask = function (config) {
+    $.fn.ModularBehaviourHooks.afterHooks.inputmask = function (config) {
       // Trigger blur to compute value
       $(this).trigger("blur");
     };
