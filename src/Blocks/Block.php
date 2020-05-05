@@ -52,8 +52,6 @@ use SilverStripe\Versioned\Versioned;
  * @method \SilverStripe\ORM\ManyManyList|\SilverStripe\Assets\File[] Files()
  * @mixin \LeKoala\Base\Extensions\SortableExtension
  * @mixin \LeKoala\Base\Extensions\SmartDataObjectExtension
- * @mixin \LeKoala\Base\Extensions\FluentCascadeDeleteExtension
- * @mixin \TractorCow\Fluent\Extension\FluentExtension
  */
 final class Block extends DataObject
 {

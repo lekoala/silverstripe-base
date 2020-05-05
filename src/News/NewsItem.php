@@ -28,28 +28,21 @@ use SilverStripe\Security\Permission;
  * @property string $Content
  * @property string $Published
  * @property int $ViewCount
- * @property int $FileFRID
- * @property int $FileENID
  * @property int $ImageID
  * @property int $FileID
  * @property int $PageID
  * @property int $CategoryID
- * @method \SilverStripe\Assets\File FileFR()
- * @method \SilverStripe\Assets\File FileEN()
  * @method \SilverStripe\Assets\Image Image()
  * @method \SilverStripe\Assets\File File()
  * @method \LeKoala\Base\News\NewsPage Page()
  * @method \LeKoala\Base\News\NewsCategory Category()
  * @method \SilverStripe\ORM\ManyManyList|\LeKoala\Base\Tags\Tag[] Tags()
  * @method \SilverStripe\ORM\ManyManyList|\SilverStripe\Assets\Image[] Images()
- * @mixin \NewsFileExtension
  * @mixin \LeKoala\Base\Extensions\URLSegmentExtension
  * @mixin \LeKoala\Base\Extensions\SmartDataObjectExtension
  * @mixin \LeKoala\Base\Tags\TaggableExtension
  * @mixin \LeKoala\Base\Extensions\SocialShareExtension
  * @mixin \LeKoala\Base\Extensions\EmbeddableExtension
- * @mixin \LeKoala\Base\Extensions\FluentCascadeDeleteExtension
- * @mixin \TractorCow\Fluent\Extension\FluentExtension
  */
 class NewsItem extends DataObject
 {

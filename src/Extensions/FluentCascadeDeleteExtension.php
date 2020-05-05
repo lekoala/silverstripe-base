@@ -26,7 +26,7 @@ use TractorCow\Fluent\Model\Locale;
  * This extension works for versioned and unversioned records.
  *
  * @link https://gist.github.com/bummzack/de3ebec9859101cfa7506b8fa43b21d8
- * @property \LeKoala\Base\Blocks\Block|\LeKoala\Base\Faq\FaqCategory|\LeKoala\Base\Faq\FaqItem|\LeKoala\Base\News\NewsCategory|\LeKoala\Base\News\NewsItem|\LeKoala\Base\Tags\Tag|\LeKoala\Base\Extensions\FluentCascadeDeleteExtension $owner
+ * @property \LeKoala\Base\Extensions\FluentCascadeDeleteExtension $owner
  */
 class FluentCascadeDeleteExtension extends DataExtension
 {

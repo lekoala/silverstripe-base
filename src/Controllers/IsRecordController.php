@@ -21,6 +21,8 @@ use SilverStripe\ORM\PaginatedList;
  *
  * You can use onIndex and onView method to apply extra behaviour
  *
+ * Important : make sure to implement canView on your records!!
+ *
  * You can use updateList method to update list
  */
 trait IsRecordController
@@ -123,7 +125,8 @@ trait IsRecordController
 
             $data = [
                 'Item' => $record,
-                "Title" => $record->getTitle(),
+                // Somehow this shadows all .Title ??
+                // "Title" => $record->getTitle(),
                 "MetaTitle" => $record->getTitle() . ' ' . $page->getPageTitleSeparator() . ' ' . $page->getTitle()
             ];
             if (method_exists($this, 'onView')) {
