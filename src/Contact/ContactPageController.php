@@ -136,7 +136,7 @@ class ContactPageController extends \PageController
             try {
                 GoogleRecaptchaField::validateResponse($data);
             } catch (Exception $ex) {
-                return $this->returnMessage($ex->getMessage(), false);
+                return $this->returnMessage($ex->getMessage(), true);
             }
         }
 
@@ -160,7 +160,10 @@ class ContactPageController extends \PageController
         $submission->Email = $email;
         $submission->Phone = $phone;
         $submission->ExtraData = $extraData;
-        $submission->write();
+        $submissionId = $submission->write();
+        if (!$submissionId) {
+            return $this->returnMessage(_t("ContactPageController.MESSAGE_ERROR", "Votre message n'a pas été envoyé"), true);
+        }
 
         // Send by email
         $address = $this->data()->Email;
@@ -187,7 +190,7 @@ class ContactPageController extends \PageController
      */
     public function returnMessage($msg, $error = false)
     {
-        $status = $error ? 'good' : 'bad';
+        $status = $error ? 'bad' : 'good';
         if (Director::is_ajax()) {
             if ($error) {
                 return $this->httpError(400, $msg);
@@ -195,12 +198,12 @@ class ContactPageController extends \PageController
             return $msg;
         }
         if (self::config()->use_distinct_succes_page) {
-            $link = $this->Link('messageSent');
             // in case of error, redirect back
             if ($error) {
                 $this->sessionMessage($msg, $status);
                 return $this->redirectBack();
             }
+            $link = $this->Link('messageSent');
             return $this->redirect($link);
         } else {
             $this->sessionMessage($msg, $status);
