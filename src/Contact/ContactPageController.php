@@ -90,6 +90,14 @@ class ContactPageController extends \PageController
         $emailInst->send();
     }
 
+    public function GoogleRecaptchaField()
+    {
+        if (GoogleRecaptchaField::isSetupReady()) {
+            return new GoogleRecaptchaField;
+        }
+        return false;
+    }
+
     /**
      * This handler is for plain html forms (eg if using a template instead of a Form object)
      * @return HTTPResponse
