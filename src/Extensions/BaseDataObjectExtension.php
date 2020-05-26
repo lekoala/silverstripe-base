@@ -283,13 +283,7 @@ class BaseDataObjectExtension extends DataExtension
                         if ($before != $after) {
                             $oldFile = File::get()->byID($before);
                             if ($oldFile && $oldFile->ID) {
-                                if ($oldFile->hasExtension(Versioned::class)) {
-                                    $oldFile->deleteFromStage(Versioned::LIVE);
-                                    $oldFile->deleteFromStage(Versioned::DRAFT);
-                                } else {
-                                    // Delete does not clean all stages :-(
-                                    $oldFile->delete();
-                                }
+                                $oldFile->deleteAll();
                             }
                         }
                     }
@@ -532,7 +526,7 @@ class BaseDataObjectExtension extends DataExtension
                         }
                         $rec = $this->owner->$name();
                         if ($rec && $rec->ID) {
-                            $rec->delete();
+                            $rec->deleteAll();
                         }
                     }
                     break;
@@ -544,7 +538,7 @@ class BaseDataObjectExtension extends DataExtension
                         }
                         foreach ($this->owner->$name() as $rec) {
                             if ($rec && $rec->ID) {
-                                $rec->delete();
+                                $rec->deleteAll();
                             }
                         }
                     }
