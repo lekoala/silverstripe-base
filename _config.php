@@ -1,5 +1,6 @@
 <?php
 
+use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Environment;
 
@@ -20,12 +21,19 @@ if (!function_exists('d')) {
             return;
         }
 
-        $debugView = \SilverStripe\Dev\Debug::create_debug_view();
+        $req = null;
+        $ctrl = Controller::curr();
+        if ($ctrl) {
+            $req = $ctrl->getRequest();
+        }
+        $debugView = \SilverStripe\Dev\Debug::create_debug_view($req);
         // Also show latest object in backtrace
-        foreach (debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT) as $row) {
-            if (!empty($row['object'])) {
-                $args[] = $row['object'];
-                break;
+        if (!Director::is_ajax()) {
+            foreach (debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT) as $row) {
+                if (!empty($row['object'])) {
+                    $args[] = $row['object'];
+                    break;
+                }
             }
         }
         // Show args
