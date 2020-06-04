@@ -75,7 +75,7 @@ class ContactPageController extends \PageController
      */
     public function ContactForm()
     {
-        $form = ContactForm::create($this);
+        $form = ContactForm::create($this, 'ContactForm');
         return $form;
     }
 
