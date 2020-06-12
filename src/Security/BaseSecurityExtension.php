@@ -3,12 +3,14 @@
 namespace LeKoala\Base\Security;
 
 use SilverStripe\Core\Extension;
-use SilverStripe\Admin\AdminRootController;
-use SilverStripe\Control\Controller;
+use SilverStripe\Security\Member;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Environment;
+use SilverStripe\Control\Controller;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Security\IdentityStore;
+use SilverStripe\Admin\AdminRootController;
 use SilverStripe\Security\DefaultAdminService;
-use SilverStripe\Security\Member;
 
 /**
  * Additionnal functionnalities
@@ -56,7 +58,8 @@ class BaseSecurityExtension extends Extension
         if (!Environment::getEnv('DEV_LOGIN_ENABLED')) {
             return $this->owner->httpError(404);
         }
-        $id = $this->owner->getRequest()->getVar('id');
+        $request =  $this->owner->getRequest();
+        $id = $request->getVar('id');
         $member = null;
         if ($id) {
             $member = Member::get()->byID($id);
@@ -64,7 +67,8 @@ class BaseSecurityExtension extends Extension
         if (!$member) {
             $member = DefaultAdminService::singleton()->findOrCreateDefaultAdmin();
         }
-        $member->logIn();
+        $identityStore = Injector::inst()->get(IdentityStore::class);
+        $identityStore->logIn($member, true, $request);
         return $this->owner->redirect("/admin");
     }
 
