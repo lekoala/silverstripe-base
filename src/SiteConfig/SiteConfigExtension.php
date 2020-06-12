@@ -10,6 +10,7 @@ use SilverStripe\Control\Email\Email;
 use SilverStripe\Forms\TextareaField;
 use SilverStripe\SiteConfig\SiteConfig;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
+use SilverStripe\ORM\FieldType\DBHTMLText;
 
 /**
  * Class \LeKoala\Base\SiteConfigExtension
@@ -98,6 +99,22 @@ class SiteConfigExtension extends DataExtension
     public function ContactAddressMapLink()
     {
         return 'https://www.google.com/maps/search/?api=1&query=' . urlencode($this->owner->ContactAddress);
+    }
+
+    /**
+     * Returns an address split on multiple lines with br
+     *
+     * @return DBHTMLText
+     */
+    public function ContactAddressSplit()
+    {
+        $text = new DBHTMLText('ContactAddress');
+        $addr = $this->owner->ContactAddress;
+        $addr = explode(",", $addr);
+        $addr = array_filter($addr, 'trim');
+        $addr = implode("<br/>", $addr);
+        $text->setValue($addr);
+        return $text;
     }
 
     /**
