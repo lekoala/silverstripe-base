@@ -3,10 +3,14 @@
 namespace LeKoala\Base\Security;
 
 use SilverStripe\Core\Extension;
-use SilverStripe\Admin\AdminRootController;
-use SilverStripe\Control\Controller;
-use SilverStripe\Security\DefaultAdminService;
 use SilverStripe\Security\Member;
+use SilverStripe\Control\Director;
+use SilverStripe\Core\Environment;
+use SilverStripe\Control\Controller;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Security\IdentityStore;
+use SilverStripe\Admin\AdminRootController;
+use SilverStripe\Security\DefaultAdminService;
 
 /**
  * Additionnal functionnalities
@@ -18,6 +22,7 @@ class BaseSecurityExtension extends Extension
 
     private static $allowed_actions = array(
         'end_masquerade',
+        'devlogin',
         'unlock_default_admin',
     );
 
@@ -43,6 +48,28 @@ class BaseSecurityExtension extends Extension
                 exit();
             }
         }
+    }
+
+    public function devlogin()
+    {
+        if (!Director::isDev()) {
+            return $this->owner->httpError(404);
+        }
+        if (!Environment::getEnv('DEV_LOGIN_ENABLED')) {
+            return $this->owner->httpError(404);
+        }
+        $request =  $this->owner->getRequest();
+        $id = $request->getVar('id');
+        $member = null;
+        if ($id) {
+            $member = Member::get()->byID($id);
+        }
+        if (!$member) {
+            $member = DefaultAdminService::singleton()->findOrCreateDefaultAdmin();
+        }
+        $identityStore = Injector::inst()->get(IdentityStore::class);
+        $identityStore->logIn($member, true, $request);
+        return $this->owner->redirect("/admin");
     }
 
     public function unlock_default_admin()
