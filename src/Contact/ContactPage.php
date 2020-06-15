@@ -71,11 +71,18 @@ class ContactPage extends \Page
         $SuccessContent->setRows(10);
         $SuccessContent->addExtraClass('stacked');
 
-        $SubmissionsConfig = GridFieldConfig_RecordEditor::create();
-        $Submissions = new GridField('Submissions', $this->fieldLabel('Submission'), $this->Submissions(), $SubmissionsConfig);
-        $fields->addFieldsToTab('Root.Submissions', $Submissions);
+        $SiteConfig = SiteConfig::current_site_config();
+        if ($SiteConfig->hasMethod("UseFormSpree") && $SiteConfig->UseFormSpree()) {
+            // Hide submissions
+        } else {
+            $SubmissionsConfig = GridFieldConfig_RecordEditor::create();
+            $Submissions = new GridField('Submissions', $this->fieldLabel('Submission'), $this->Submissions(), $SubmissionsConfig);
+            $fields->addFieldsToTab('Root.Submissions', $Submissions);
+        }
+
         return $fields;
     }
+
     protected function onBeforeWrite()
     {
         parent::onBeforeWrite();
