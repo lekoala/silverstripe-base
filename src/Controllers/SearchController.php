@@ -10,6 +10,7 @@ use LeKoala\Base\Helpers\ClassHelper;
 use SilverStripe\ErrorPage\ErrorPage;
 use SilverStripe\ORM\FieldType\DBField;
 use LeKoala\Base\Extensions\URLSegmentExtension;
+use SilverStripe\ORM\PaginatedList;
 
 /**
  * Class \LeKoala\Base\Controllers\SearchController
@@ -21,7 +22,8 @@ class SearchController extends PageController
      */
     public function index()
     {
-        $Query = $this->owner->getRequest()->getVar('q');
+        $request = $this->getRequest();
+        $Query = $request->getVar('q');
         $SearchList = new ArrayList();
         if ($Query) {
             $FullQuery = str_replace(' ', '%', $Query);
@@ -70,8 +72,10 @@ class SearchController extends PageController
                 }
             }
         }
+
+        $PaginatedList = new PaginatedList($SearchList, $request);
         $data = array(
-            'Results' => $SearchList,
+            'Results' => $PaginatedList,
             'Query' => DBField::create_field('Text', $Query),
             'Title' => _t('SimpleSearchControllerExtension.SearchResults', 'Search Results'),
             'YouSearchedFor' => _t('SimpleSearchControllerExtension.YouSearchFor', 'You searched for %s', [$Query]),
