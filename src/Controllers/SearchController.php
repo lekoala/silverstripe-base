@@ -35,7 +35,12 @@ class SearchController extends PageController
                 "Content:PartialMatch" => $FullQuery,
             ];
             $Results = SiteTree::get()->filterAny($filters)->exclude('ClassName', $excludedClasses);
-            $SearchList->merge($Results);
+            foreach ($Results as $Result) {
+                if ($Result->canView()) {
+                    $SearchList->push($Result);
+                }
+            }
+            // $SearchList->merge($Results);
 
             // also search dataobjects with an url segment
             $dataObjects = ClassHelper::extendedBy(URLSegmentExtension::class);
@@ -68,7 +73,12 @@ class SearchController extends PageController
 
                 $Results = $dataObject::get()->filterAny($filters);
                 if ($Results) {
-                    $SearchList->merge($Results);
+                    foreach ($Results as $Result) {
+                        if ($Result->canView()) {
+                            $SearchList->push($Result);
+                        }
+                    }
+                    // $SearchList->merge($Results);
                 }
             }
         }
