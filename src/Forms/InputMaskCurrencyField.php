@@ -1,4 +1,5 @@
 <?php
+
 namespace LeKoala\Base\Forms;
 
 use LeKoala\Base\Helpers\CurrencyFormatter;
@@ -19,6 +20,11 @@ class InputMaskCurrencyField extends InputMaskNumericField
 
     public function setValue($value, $data = null)
     {
+        // otherwise values like 84.4 will be interpreted as 844.00
+        if (is_float($value) && strlen($value)) {
+            $value = number_format($value, 2, $this->getCurrencyDecimalSeparator(), "");
+            // $value = $this->formattedCurrency($value);
+        }
         return parent::setValue($value, $data);
     }
 

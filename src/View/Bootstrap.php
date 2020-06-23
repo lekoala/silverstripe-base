@@ -28,20 +28,20 @@ class Bootstrap
      * @config
      * @var string
      */
-    private static $jquery_version = '3.3.1';
+    private static $jquery_version = '3.4.1';
 
     /**
      * @config
      * We use 4.3.0 and not 4.3.1 that has issues with IE11
      * @var string
      */
-    private static $bootstrap_version = '4.3.0';
+    private static $bootstrap_version = '4.4.1';
 
     /**
      * @config
      * @var string
      */
-    private static $bootstrap_native_version = '2.0.25';
+    private static $bootstrap_native_version = '2.0.27';
 
     /**
      * @config

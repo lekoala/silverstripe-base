@@ -10,7 +10,7 @@ use SilverStripe\ORM\DataExtension;
  * You might want to use a more complete company representation for situations where members can belong to multiple companies
  * or if you need more details about the company
  *
- * @property \SilverStripe\Security\Member|\LeKoala\Base\Extensions\SimpleCompanyExtension $owner
+ * @property \LeKoala\Base\Extensions\SimpleCompanyExtension $owner
  * @property string $CompanyName
  * @property string $VatNumber
  */

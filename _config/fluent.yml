@@ -55,3 +55,6 @@ LeKoala\Base\Blocks\Block:
 # SilverStripe\ORM\DataObject:
 #   cms_publish_required: false
 #   frontend_publish_required: false
+# Prevent duplicate siteconfigs when localised
+SilverStripe\SiteConfig\SiteConfig:
+  frontend_publish_required: false

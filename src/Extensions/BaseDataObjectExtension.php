@@ -32,7 +32,7 @@ use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
  * - non versioned class should publish their own assets
  * - declarative cms fields : removed_fields, ...
  *
- * @property DataObject $owner
+ * @property \AboutPage|\AvailableSpacesPage|\HomePage|\Page|\VisionPage|\PortfolioCategory|\PortfolioItem|\PortfolioPage|\TimelineItem|\LeKoala\Base\Blocks\Block|\LeKoala\Base\Blocks\BlocksPage|\LeKoala\Base\Contact\ContactPage|\LeKoala\Base\Contact\ContactSubmission|\LeKoala\Base\Faq\FaqCategory|\LeKoala\Base\Faq\FaqItem|\LeKoala\Base\Faq\FaqPage|\LeKoala\Base\Geo\Address|\LeKoala\Base\News\NewsCategory|\LeKoala\Base\News\NewsItem|\LeKoala\Base\News\NewsPage|\LeKoala\Base\Privacy\CookiesRequiredPage|\LeKoala\Base\Privacy\PrivacyNoticePage|\LeKoala\Base\Privacy\TermsAndConditionsPage|\LeKoala\Base\Security\MemberAudit|\LeKoala\Base\Tags\Tag|\SilverStripe\Assets\File|\SilverStripe\Assets\Folder|\SilverStripe\Assets\Image|\SilverStripe\ErrorPage\ErrorPage|\SilverStripe\SiteConfig\SiteConfig|\SilverStripe\Versioned\ChangeSet|\SilverStripe\Versioned\ChangeSetItem|\SilverStripe\Assets\Shortcodes\FileLink|\SilverStripe\CMS\Model\RedirectorPage|\SilverStripe\CMS\Model\SiteTree|\SilverStripe\CMS\Model\SiteTreeLink|\SilverStripe\CMS\Model\VirtualPage|\SilverStripe\ORM\DataObject|\SilverStripe\Security\Group|\SilverStripe\Security\LoginAttempt|\SilverStripe\Security\Member|\SilverStripe\Security\MemberPassword|\SilverStripe\Security\Permission|\SilverStripe\Security\PermissionRole|\SilverStripe\Security\PermissionRoleCode|\SilverStripe\Security\RememberLoginHash|\LeKoala\Base\Extensions\BaseDataObjectExtension $owner
  */
 class BaseDataObjectExtension extends DataExtension
 {
@@ -204,7 +204,7 @@ class BaseDataObjectExtension extends DataExtension
      * Find file relations in a relation list
      *
      * @param array $arr list of relations
-     * @return array
+     * @return array An array like [Relation, Relation2, ...]
      */
     public function findFileRelations($arr)
     {
@@ -214,7 +214,7 @@ class BaseDataObjectExtension extends DataExtension
         $fileTypes = $this->listFileTypes();
         $res = [];
         foreach ($arr as $name => $type) {
-            if (\in_array($type, $fileTypes)) {
+            if (in_array($type, $fileTypes)) {
                 $res[] = $name;
             }
         }
@@ -228,6 +228,11 @@ class BaseDataObjectExtension extends DataExtension
     protected function isAssetClass($class)
     {
         return $class === Image::class || $class === File::class;
+    }
+
+    public function onBeforeWrite()
+    {
+        $this->assignAssets();
     }
 
     public function onBeforeDelete()
@@ -247,16 +252,43 @@ class BaseDataObjectExtension extends DataExtension
 
     protected function publishOwnAssets()
     {
+        // Let Versioned class do its things
         if ($this->isVersioned()) {
             return;
         }
 
+        // Publish owned files automatically
         $owns = $this->owner->config()->owns;
         foreach ($owns as $componentName => $componentClass) {
             if ($this->isAssetClass($componentClass)) {
                 $component = $this->owner->getComponent($componentName);
                 if ($component->isInDB() && !$component->isPublished()) {
                     $component->publishSingle();
+                }
+            }
+        }
+
+        // Cleanup assets
+        $relations = $this->owner->getAllFileRelations();
+        $changedFields = $this->owner->getChangedFields(true);
+        foreach ($relations as $type => $names) {
+            foreach ($names as $name) {
+                if ($type == 'has_one') {
+                    $field = $name . 'ID';
+                    // Check if we need to delete previous file
+                    if (isset($changedFields[$field])) {
+                        $before = $changedFields[$field]['before'];
+                        $after = $changedFields[$field]['after'];
+                        // Clean old file
+                        if ($before != $after) {
+                            $oldFile = File::get()->byID($before);
+                            if ($oldFile && $oldFile->ID) {
+                                $oldFile->deleteAll();
+                            }
+                        }
+                    }
+                } else {
+                    //  How to handle has_many and many_many because they are not visible in changedFields ?
                 }
             }
         }
@@ -411,6 +443,62 @@ class BaseDataObjectExtension extends DataExtension
         }
     }
 
+    protected function assignAssets()
+    {
+        $rel = $this->getAllFileRelations();
+        $owns =  $this->owner->config()->owns;
+
+        // No ownership!
+        if (!$owns) {
+            return;
+        }
+
+        foreach ($rel as $relType => $list) {
+            switch ($relType) {
+                case 'has_one':
+                    foreach ($list as $name) {
+                        // owns match has_one name (without id)
+                        // if not owned, don't assign
+                        if (!in_array($name, $owns)) {
+                            continue;
+                        }
+                        $field = $name . "ID";
+                        // no file, skip
+                        if (!$this->owner->$field) {
+                            continue;
+                        }
+                        // not changed, skip
+                        if (!$this->owner->isChanged($field)) {
+                            continue;
+                        }
+                        $rec = $this->owner->$name();
+                        // only write if necessary
+                        if ($rec && $rec->ID && $rec->ObjectID != $this->owner->ID) {
+                            $rec->ObjectID = $this->owner->ID;
+                            $rec->ObjectClass = get_class($this->owner);
+                            $rec->write();
+                        }
+                    }
+                    break;
+                case 'has_many':
+                case 'many_many':
+                    foreach ($list as $name) {
+                        if (!in_array($name, $owns)) {
+                            continue;
+                        }
+                        // foreach ($this->owner->$name() as $rec) {
+                        //     if ($rec && $rec->ID && $rec->ObjectID != $this->owner->ID) {
+                        //         $rec->ObjectID = $this->owner->ID;
+                        //         $rec->ObjectClass = get_class($this->owner);
+                        //         $rec->write();
+                        //     }
+                        // }
+                    }
+                    break;
+            }
+        }
+    }
+
     protected function cleanupAssets()
     {
         // We should not cleanup tables on versioned items because they can be restored
@@ -418,7 +506,7 @@ class BaseDataObjectExtension extends DataExtension
             return;
         }
         $rel = $this->getAllFileRelations();
-        $owns =  $this->owner->owns;
+        $owns =  $this->owner->config()->owns;
 
         if (!$owns) {
             return;
@@ -427,21 +515,31 @@ class BaseDataObjectExtension extends DataExtension
         foreach ($rel as $relType => $list) {
             switch ($relType) {
                 case 'has_one':
-                    foreach ($list as $name => $class) {
+                    foreach ($list as $name) {
                         if (!in_array($name, $owns)) {
                             continue;
                         }
-                        $this->$name->delete();
+                        $field = $name . "ID";
+                        // no file, skip
+                        if (!$this->owner->$field) {
+                            continue;
+                        }
+                        $rec = $this->owner->$name();
+                        if ($rec && $rec->ID) {
+                            $rec->deleteAll();
+                        }
                     }
                     break;
                 case 'has_many':
                 case 'many_many':
-                    foreach ($list as $name => $class) {
+                    foreach ($list as $name) {
                         if (!in_array($name, $owns)) {
                             continue;
                         }
-                        foreach ($this->$name as $rec) {
-                            $rec->delete();
+                        foreach ($this->owner->$name() as $rec) {
+                            if ($rec && $rec->ID) {
+                                $rec->deleteAll();
+                            }
                         }
                     }
                     break;

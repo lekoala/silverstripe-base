@@ -96,7 +96,7 @@ class FlatpickrField extends TextField
      * @config
      * @var string
      */
-    private static $version = '4.6.2';
+    private static $version = '4.6.3';
 
     /**
      * @config
@@ -550,8 +550,10 @@ class FlatpickrField extends TextField
         if ($theme) {
             Requirements::css("$cdnBase/themes/$theme.css");
         }
-        Requirements::javascript('base/javascript/ModularBehaviour.js');
+
+        // Order matters for hooks ! Otherwise ready may fire before hooks are defined!
         Requirements::javascript('base/javascript/fields/FlatpickrField.js');
+        Requirements::javascript('base/javascript/ModularBehaviour.js');
     }
 
     /**

@@ -1,7 +1,14 @@
 ---
 Name: base-security
+After:
+  - '#coresecurity'
 ---
 # Global settings
+LeKoala\Base\Security\BaseAuthenticator:
+  enable_2fa: false
+  # need enable_2fa set to true => will only check users with cms permission
+  enable_2fa_admin_only: false
+  disable_2fa_whitelisted_ips: true
 SilverStripe\Security\Security:
   login_recording: true
   extensions:
@@ -20,9 +27,6 @@ LeKoala\Base\Security\MemberAudit:
 SilverStripe\Assets\FileMigrationHelper:
   delete_invalid_files: false
 # Extensions for login/logout actions
-SilverStripe\Core\Injector\Injector:
-  SilverStripe\Security\MemberAuthenticator\MemberLoginForm:
-    class: 'LeKoala\Base\Security\MemberLoginForm'
 SilverStripe\Security\MemberAuthenticator\LoginHandler:
   extensions:
     - LeKoala\Base\Security\LoginHandlerExtension
@@ -32,3 +36,15 @@ SilverStripe\Security\MemberAuthenticator\LogoutHandler:
 SilverStripe\Security\MemberAuthenticator\LostPasswordHandler:
   extensions:
     - LeKoala\Base\Security\LostPasswordHandlerExtension
+# Injector
+SilverStripe\Core\Injector\Injector:
+  SilverStripe\Security\MemberAuthenticator\MemberLoginForm:
+    class: 'LeKoala\Base\Security\MemberLoginForm'
+  SilverStripe\Security\Security:
+    properties:
+      Authenticators:
+        default: '%$LeKoala\Base\Security\BaseAuthenticator'
+  # SilverStripe\Security\CMSSecurity:
+  #    properties:
+  #    Authenticators:
+  #      cms: '%$LeKoala\Base\Security\BaseAuthenticator'

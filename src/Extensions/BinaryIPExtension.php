@@ -1,24 +1,21 @@
 <?php
 
-namespace LeKoala\Base\Extensions;
-
 use SilverStripe\ORM\DataExtension;
-use LeKoala\Base\Geo\Models\Address;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Injector\Injector;
 use LeKoala\Base\Geo\Services\Geolocator;
 
 /**
- * Store IP v4 in plain text (easier to read from the db)
- * For IP v4 + v6 and more efficient storage, use BinaryIPExtension
+ * Store IP as binary
  *
- * @property \LeKoala\Base\Security\MemberAudit|\LeKoala\Base\Extensions\IPExtension $owner
+ * @link https://stackoverflow.com/questions/22636912/store-both-ipv4-and-ipv6-address-in-a-single-column
+ * @property \BinaryIPExtension $owner
  * @property string $IP
  */
-class IPExtension extends DataExtension
+class BinaryIPExtension extends DataExtension
 {
     private static $db = [
-        "IP" => "Varchar(45)"
+        "IP" => "BinaryIP"
     ];
 
     public function onBeforeWrite()

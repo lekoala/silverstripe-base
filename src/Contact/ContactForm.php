@@ -9,6 +9,12 @@ use LeKoala\Base\Forms\GoogleRecaptchaField;
 
 /**
  * A contact form
+ *
+ * Easily inject your own
+ *
+ * SilverStripe\Core\Injector\Injector:
+ *   LeKoala\Base\Contact\ContactForm:
+ *     class: MyContactForm
  */
 class ContactForm extends BaseForm
 {

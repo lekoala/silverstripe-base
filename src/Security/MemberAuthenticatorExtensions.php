@@ -1,10 +1,9 @@
 <?php
 namespace LeKoala\Base\Security;
 
-use SilverStripe\Control\Controller;
-
 /**
  * Add extensions point for MemberAuthenticator
+ * It's disabled by default in SilverStripe, but enabled by default in our Base module
  *
  * forgotPassword is on LostPasswordHandler and NOT on the member class
  */

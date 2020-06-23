@@ -18,7 +18,7 @@ use LeKoala\Base\Forms\SmartSortableUploadField;
  * Automatically publish files and images related to this data object
  *
  * @link https://github.com/bratiask/own-assets
- * @property \LeKoala\Base\Blocks\Block|\LeKoala\Base\News\NewsItem|\LeKoala\Base\Extensions\SmartDataObjectExtension $owner
+ * @property \PortfolioCategory|\PortfolioItem|\TimelineItem|\LeKoala\Base\Blocks\Block|\LeKoala\Base\News\NewsItem|\LeKoala\Base\Extensions\SmartDataObjectExtension $owner
  */
 class SmartDataObjectExtension extends DataExtension
 {
@@ -30,47 +30,29 @@ class SmartDataObjectExtension extends DataExtension
         if ($ownerIsVersioned) {
             return;
         }
-        $relations = $this->owner->getAllFileRelations();
-        $changedFields = $this->owner->getChangedFields(true);
-        foreach ($relations as $type => $names) {
-            foreach ($names as $name) {
-                if ($type == 'has_one') {
-                    $field = $name . 'ID';
-                    // Check state
-                    if ($this->owner->$field) {
-                        $file = $this->owner->$name();
-                        if (!$file->isPublished() && $file->ID) {
-                            $file->doPublish();
-                        }
-                    }
-                    // Check if we need to delete previous file
-                    if (isset($changedFields[$field])) {
-                        $before = $changedFields[$field]['before'];
-                        $after = $changedFields[$field]['after'];
-
-                        // Clean old file
-                        if ($before != $after) {
-                            $oldFile = File::get()->byID($before);
-                            if ($oldFile && $oldFile->ID) {
-                                if ($oldFile->hasExtension(Versioned::class)) {
-                                    $oldFile->deleteFromStage(Versioned::LIVE);
-                                    $oldFile->deleteFromStage(Versioned::DRAFT);
-                                } else {
-                                    // Delete does not clean all stages :-(
-                                    $oldFile->delete();
-                                }
-                            }
-                        }
-                    }
-                } else {
-                    foreach ($this->owner->$name() as $file) {
-                        if (!$file->isPublished() && $file->ID) {
-                            $file->doPublish();
-                        }
-                    }
-                }
-            }
-        }
+        // This is taken care of in BaseDataObjectExtension::publishOwnAssets
+        // $relations = $this->owner->getAllFileRelations();
+        // $changedFields = $this->owner->getChangedFields(true);
+        // foreach ($relations as $type => $names) {
+        //     foreach ($names as $name) {
+        //         if ($type == 'has_one') {
+        //             $field = $name . 'ID';
+        //             // Check state
+        //             if ($this->owner->$field) {
+        //                 $file = $this->owner->$name();
+        //                 if (!$file->isPublished() && $file->ID) {
+        //                     $file->doPublish();
+        //                 }
+        //             }
+        //         } else {
+        //             foreach ($this->owner->$name() as $file) {
+        //                 if (!$file->isPublished() && $file->ID) {
+        //                     $file->doPublish();
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
     }
     public function onBeforeDelete()
     {

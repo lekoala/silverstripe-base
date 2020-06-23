@@ -2,6 +2,7 @@
 
 namespace LeKoala\Base\Forms;
 
+use Exception;
 use SilverStripe\Forms\Form;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Forms\FieldList;
