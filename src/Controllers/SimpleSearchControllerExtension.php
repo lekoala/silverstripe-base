@@ -8,20 +8,22 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\Control\Director;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\ErrorPage\ErrorPage;
 use SilverStripe\ORM\FieldType\DBField;
 
 /**
  * A simple alternative to full text search
  *
- * @property \AboutPageController|\AvailableSpacesPageController|\HomePageController|\PageController|\VisionPageController|\PortfolioPageController|\LeKoala\Base\Blocks\BlocksPageController|\LeKoala\Base\Contact\ContactPageController|\LeKoala\Base\Controllers\BaseContentController|\LeKoala\Base\Controllers\RecordController|\LeKoala\Base\Dev\TypographyController|\LeKoala\Base\Faq\FaqPageController|\LeKoala\Base\News\NewsPageController|\LeKoala\Base\Privacy\CookiesRequiredPageController|\SilverStripe\ErrorPage\ErrorPageController|\SilverStripe\CMS\Controllers\ContentController|\SilverStripe\CMS\Model\RedirectorPageController|\LeKoala\Base\Controllers\SimpleSearchControllerExtension $owner
+ * @property \PageController|\LeKoala\Base\Controllers\SimpleSearchControllerExtension $owner
  */
 class SimpleSearchControllerExtension extends Extension
 {
     private static $allowed_actions = [
         'SimpleSearchForm',
-        'search'
     ];
+
     /**
      * Simple site search form
      *
@@ -31,8 +33,9 @@ class SimpleSearchControllerExtension extends Extension
     {
         $placeholder = _t('SimpleSearchControllerExtension.SEARCH', 'Search');
         $searchText = '';
-        if ($this->owner->getRequest() && $this->owner->getRequest()->getVar('Search')) {
-            $searchText = $this->owner->getRequest()->getVar('Search');
+        $request = $this->owner->getRequest();
+        if ($request) {
+            $searchText = $request->getVar('q');
         }
         $fieldsList = [];
 
@@ -52,36 +55,18 @@ class SimpleSearchControllerExtension extends Extension
 
         $actions = new FieldList($actionsList);
 
+        $directorRules = Config::inst()->get(Director::class, 'rules');
+        $searchControllerLink = '/sitesearch';
+        foreach ($directorRules as $segment => $controller) {
+            if ($controller == SearchController::class) {
+                $searchControllerLink = '/' . $segment;
+            }
+        }
         $form = Form::create($this->owner, __FUNCTION__, $fields, $actions);
         $form->setFormMethod('GET');
-        $form->setFormAction($this->owner->Link('search'));
+        $form->setFormAction($searchControllerLink);
         $form->disableSecurityToken();
 
         return $form;
-    }
-    /**
-     * Process and render search results.
-     */
-    public function search()
-    {
-        $Query = $this->owner->getRequest()->getVar('q');
-        $Results = null;
-        if ($Query) {
-            $FullQuery = \str_replace(' ', '%', $Query);
-            $excludedClasses = [
-                ErrorPage::class,
-            ];
-            $Results = SiteTree::get()->filterAny([
-                "Title:PartialMatch" => $FullQuery,
-                "Content:PartialMatch" => $FullQuery,
-            ])->exclude('ClassName', $excludedClasses);
-        }
-        $data = array(
-            'Results' => $Results,
-            'Query' => DBField::create_field('Text', $Query),
-            'Title' => _t('SimpleSearchControllerExtension.SearchResults', 'Search Results'),
-            'YouSearchedFor' => _t('SimpleSearchControllerExtension.YouSearchFor', 'You searched for %s', [$Query]),
-        );
-        return $this->owner->customise($data)->renderWith(array('Page_results', 'Page'));
     }
 }

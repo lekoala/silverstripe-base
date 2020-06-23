@@ -55,6 +55,14 @@ class URLSegmentExtension extends DataExtension
     }
 
     /**
+     * @return boolean
+     */
+    public function isSearchable()
+    {
+        return $this->owner->hasMethod('Page');
+    }
+
+    /**
      * We have this link method by default that allows us to define
      * a link for this record
      *
