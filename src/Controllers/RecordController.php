@@ -2,6 +2,7 @@
 
 namespace LeKoala\Base\Controllers;
 
+use Exception;
 use SilverStripe\ORM\DataObject;
 use LeKoala\Base\Extensions\URLSegmentExtension;
 
@@ -44,8 +45,12 @@ class RecordController extends BaseContentController
         if (!$ModelClass) {
             throw new Exception("You must define a model_class static");
         }
+        $request = $this->getRequest();
         $ModelClass_SNG = $ModelClass::singleton();
-        $ID = $this->getRequest()->param('ID');
+        $ID = $request->getHeader('X-RecordID');
+        if (!$ID) {
+            $ID = (int) $request->requestVar('_RecordID');
+        }
         if ($ID) {
             if ($ModelClass_SNG->hasExtension(URLSegmentExtension::class)) {
                 return URLSegmentExtension::getByURLSegment($ModelClass, $ID);

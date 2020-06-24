@@ -234,7 +234,7 @@ class FilePondField extends BaseFileUploadField
     public function getExistingUploadsData()
     {
         // Both Value() & dataValue() seem to return an array eg: ['Files' => [258, 259, 257]]
-        $fileIDarray = $this->Value() ? : ['Files' => []];
+        $fileIDarray = $this->Value() ?: ['Files' => []];
         if (!isset($fileIDarray['Files']) || !count($fileIDarray['Files'])) {
             return [];
         }
@@ -254,14 +254,14 @@ class FilePondField extends BaseFileUploadField
             // }
             $existingUploads[] = [
                 // the server file reference
-                'source' => (int)$fileID,
+                'source' => (int) $fileID,
                 // set type to local to indicate an already uploaded file
                 'options' => [
                     'type' => 'local',
                     // file information
                     'file' => [
                         'name' => $file->Name,
-                        'size' => (int)$file->getAbsoluteSize(),
+                        'size' => (int) $file->getAbsoluteSize(),
                         'type' => $file->getMimeType(),
                     ],
                     // poster
@@ -379,6 +379,15 @@ class FilePondField extends BaseFileUploadField
 
         if ($file instanceof DataObject && $file->hasExtension(BaseFileExtension::class)) {
             $file->IsTemporary = true;
+            // We can also track the record
+            $RecordID = $request->getHeader('X-RecordID');
+            $RecordClassName = $request->getHeader('X-RecordClassName');
+            if (!$file->ObjectID) {
+                $file->ObjectID = $RecordID;
+            }
+            if (!$file->ObjectClass) {
+                $file->ObjectClass = $RecordClassName;
+            }
             // If possible, prevent creating a version for no reason
             // @link https://docs.silverstripe.org/en/4/developer_guides/model/versioning/#writing-changes-to-a-versioned-dataobject
             if ($file->hasExtension(Versioned::class)) {
