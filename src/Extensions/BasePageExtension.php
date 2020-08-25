@@ -167,6 +167,10 @@ class BasePageExtension extends DataExtension
             $shareTitle = $sourceObject->getShareTitle();
         }
         $tags = '';
+        // Regular tags
+        if ($descriptionText) {
+            $tags .= $this->createMetaTag("description", $descriptionText);
+        }
         // OpenGraph
         $tags .= "\n<!-- OpenGraph Meta Tags -->\n";
         // og:type
