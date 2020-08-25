@@ -194,7 +194,7 @@ abstract class BaseModelAdmin extends ModelAdmin
 
         $singl = singleton($this->modelClass);
 
-        $gridField = $this->getGridField($form);
+        $gridField = $this->getGridFieldFrom($form);
         $gridField->getConfig()->removeComponentsByType(GridFieldDeleteAction::class);
         if (self::config()->can_delete_from_list) {
             $gridField->getConfig()->addComponent(new GridFieldDeleteAction(false));
@@ -218,10 +218,13 @@ abstract class BaseModelAdmin extends ModelAdmin
      * Get gridfield for current model
      * Makes it easy for your ide
      *
+     * In SS 4.6 there is a getGridField method that create the gridfield..
+     * this method fetches the actual gridfield from the fields
+     *
      * @param Form $form
      * @return GridField
      */
-    public function getGridField(Form $form)
+    public function getGridFieldFrom(Form $form)
     {
         return $form->Fields()->dataFieldByName($this->getSanitisedModelClass());
     }
