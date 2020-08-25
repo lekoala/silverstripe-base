@@ -130,9 +130,12 @@ class BaseI18n
             $cb();
             return;
         }
+        if (!is_string($locale)) {
+            $locale = $locale->Locale;
+        }
         $state = FluentState::singleton();
         return $state->withState(function ($state) use ($locale, $cb) {
-            $state->setLocale($locale->Locale);
+            $state->setLocale($locale);
             return $cb();
         });
     }
