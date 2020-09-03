@@ -464,6 +464,8 @@ class FilePondField extends BaseFileUploadField
             }
         }
 
+
+
         // Move files out of temporary folder
         foreach ($IDs as $ID) {
             $file = $this->getFileByID($ID);
@@ -484,6 +486,7 @@ class FilePondField extends BaseFileUploadField
                 // File was uploaded earlier, no need to do anything
             }
         }
+
         // Proceed
         return parent::saveInto($record);
     }
