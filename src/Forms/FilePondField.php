@@ -464,8 +464,6 @@ class FilePondField extends BaseFileUploadField
             }
         }
 
-
-
         // Move files out of temporary folder
         foreach ($IDs as $ID) {
             $file = $this->getFileByID($ID);
@@ -482,6 +480,16 @@ class FilePondField extends BaseFileUploadField
                 $file->ObjectID = $record->ID;
                 $file->ObjectClass = get_class($record);
                 $file->write();
+
+                // Do we need to relocate the asset?
+                // if ($record->hasMethod('getFolderName')) {
+                //     $recordFolder = $record->getFolderName();
+                //     $fileFolder = dirname($file->getFilename());
+                //     if ($recordFolder != $fileFolder) {
+                //         $newName = $recordFolder . '/' . basename($file->getFilename());
+                //         $file->renameFile($newName);
+                //     }
+                // }
             } else {
                 // File was uploaded earlier, no need to do anything
             }
