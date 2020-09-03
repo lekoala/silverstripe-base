@@ -310,19 +310,19 @@ class FilePondField extends BaseFileUploadField
         // Polyfill to ensure max compatibility
         Requirements::javascript("https://unpkg.com/filepond-polyfill@1.0.4/dist/filepond-polyfill.min.js");
         // File validation plugins
-        Requirements::javascript("https://unpkg.com/filepond-plugin-file-validate-type@1.2.4/dist/filepond-plugin-file-validate-type.min.js");
-        Requirements::javascript("https://unpkg.com/filepond-plugin-file-validate-size@2.1.3/dist/filepond-plugin-file-validate-size.min.js");
+        Requirements::javascript("https://unpkg.com/filepond-plugin-file-validate-type@1.2.5/dist/filepond-plugin-file-validate-type.min.js");
+        Requirements::javascript("https://unpkg.com/filepond-plugin-file-validate-size@2.2.1/dist/filepond-plugin-file-validate-size.min.js");
         // Poster plugins
         // Requirements::javascript("https://unpkg.com/filepond-plugin-file-metadata@1.0.2/dist/filepond-plugin-file-metadata.min.js");
         // Requirements::css("https://unpkg.com/filepond-plugin-file-poster@1.0.0/dist/filepond-plugin-file-poster.min.css");
         // Requirements::javascript("https://unpkg.com/filepond-plugin-file-poster@1.0.0/dist/filepond-plugin-file-poster.min.js");
         // Image plugins
-        Requirements::javascript("https://unpkg.com/filepond-plugin-image-exif-orientation@1.0.6/dist/filepond-plugin-image-exif-orientation.js");
+        Requirements::javascript("https://unpkg.com/filepond-plugin-image-exif-orientation@1.0.9/dist/filepond-plugin-image-exif-orientation.js");
         // Requirements::css("https://unpkg.com/filepond-plugin-image-preview@2.0.1/dist/filepond-plugin-image-preview.min.css");
         // Requirements::javascript("https://unpkg.com/filepond-plugin-image-preview@2.0.1/dist/filepond-plugin-image-preview.min.js");
         // Base elements
-        Requirements::css("https://unpkg.com/filepond@4.4.2/dist/filepond.css");
-        Requirements::javascript("https://unpkg.com/filepond@4.4.2/dist/filepond.js");
+        Requirements::css("https://unpkg.com/filepond@4.20.1/dist/filepond.css");
+        Requirements::javascript("https://unpkg.com/filepond@4.20.1/dist/filepond.js");
         Requirements::javascript("https://unpkg.com/jquery-filepond@1.0.0/filepond.jquery.js");
         // Our custom init
         Requirements::javascript('base/javascript/ModularBehaviour.js');

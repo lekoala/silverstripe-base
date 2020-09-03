@@ -26,6 +26,7 @@ use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
 use SilverStripe\Forms\FieldGroup;
+use SilverStripe\Forms\FileField;
 
 /**
  * A field list that can create it its fields
@@ -266,6 +267,17 @@ class BuildableFieldList extends FieldList
     public function addUpload($name = "Image", $title = null, $attributes = [])
     {
         return $this->addField(UploadField::class, $name, $title, $attributes);
+    }
+
+    /**
+     * @param string $name Name without id since it's used as $record->{"{$fieldname}ID"} = $id;
+     * @param string $title
+     * @param array $attributes
+     * @return FileField
+     */
+    public function addFile($name = "Image", $title = null, $attributes = [])
+    {
+        return $this->addField(FileField::class, $name, $title, $attributes);
     }
 
     /**
