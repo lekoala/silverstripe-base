@@ -2,6 +2,8 @@
 
 namespace LeKoala\Base\Helpers;
 
+use SilverStripe\Security\Member;
+
 class PasswordHelper
 {
     /**
@@ -30,5 +32,52 @@ class PasswordHelper
         $password .= random_int(10, 99);
         $newpass = ucfirst($password);
         return $newpass;
+    }
+
+    public static function getPasswordRules()
+    {
+        $validator =  Member::password_validator();
+
+        $rules = [];
+        if ($validator->getMinLength()) {
+            $rules[] = _t(
+                'PasswordHelper.PasswordMinLength',
+                '{minimum} or more characters long',
+                ['minimum' => $validator->getMinLength()]
+            );
+        }
+        if (count($validator->getTests())) {
+            $translatedRules = self::translatePasswordRules($validator->getTestNames());
+            $rules[] = _t(
+                'PasswordHelper.PasswordTests',
+                'must contain {rules}',
+                ['rules' => implode(', ', $translatedRules)]
+            );
+        }
+        return implode("; ", $rules);
+    }
+
+    protected static function translatePasswordRules(array $rules)
+    {
+        foreach ($rules as $rule) {
+            switch ($rule) {
+                case 'lowercase':
+                    $translate[] = _t('PasswordHelper.RuleLowercase', 'one lowercase character');
+                    break;
+                case 'uppercase':
+                    $translate[] = _t('PasswordHelper.RuleUppercase', 'one uppercase character');
+                    break;
+                case 'digits':
+                    $translate[] = _t('PasswordHelper.RuleDigits', 'one digit');
+                    break;
+                case 'punctuation':
+                    $translate[] = _t('PasswordHelper.RulePunctuation', 'one special character');
+                    break;
+                default:
+                    $translate[] = $rule;
+                    break;
+            }
+        }
+        return $translate;
     }
 }

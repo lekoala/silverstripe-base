@@ -6,17 +6,24 @@ fr:
     MAXRESOLUTION: 'Résolution max.: 2048x2048px'
     MAXSIZE: 'Format max fichier: {size}'
   BaseForm:
+    DOEDIT: 'Save changes'
     DOSUBMIT: Envoyer
   BaseMemberExtension:
     ACCOUNT_DISABLED: 'Votre compte a été supprimé.'
     ACCOUNT_PENDING: 'Votre compte est en cours d''approbation.'
+    ADMIN_IP_INVALID: 'Your ip address is not whitelisted for this account level'
+    MEMBER_NOT_LOCKED: 'Member is not locked'
     MEMBER_UNLOCKED: 'Member unlocked'
+    YOU_NEED_2FA_METHOD: 'Your account needs two factor auth but does not have any available authentication method'
   BaseSecurityAdminExtension:
     LockedMembers: 'Locked Members'
     LogAlert: 'Dernière mise à jour le {updated}'
     LogSize: 'Taille totale {size}'
     Logs: Logs
+    MemberAudit: 'Members audit events'
+    MemberAuditTab: 'Members Audit'
     MembersOnlyGroups: 'Only group members are shown. To add a user to a group, link it from an existing group.'
+    RecentAdminLogins: 'Recent Admin Logins'
     RecentPasswordFailures: 'Recent Password Failures'
     SecurityAudit: 'Security Audit'
     doClearLogs: 'Clear Logs'
@@ -79,21 +86,15 @@ fr:
     EmailSettings: 'Email settings'
     LegalCourt: 'Legal Court'
     LegalName: 'Legal Name'
-    NO: 'Non'
+    'NO': Non
     Name: Nom
     Phone: Téléphone
     Subject: Sujet
     UNDEFINED_ERROR: 'Une erreur s''est produite.'
     View: Visualiser
-    YES: 'Oui'
-  ValidationStatusExtension:
-    APPROVE: Approuver
-    APPROVED: 'Approuvé'
-    DISABLE: Désactiver
-    DISABLED: 'Désactivé'
-    VALIDATION_STATUS_APPROVED: Approuvé
-    VALIDATION_STATUS_DISABLED: désactivé
-    VALIDATION_STATUS_PENDING: 'en cours d''approbation'
+    'YES': Oui
+  GridFieldQuickFiltesrs:
+    DO_FILTER: Filter
   NewsItem:
     READ_MORE: 'Savoir plus'
   NewsPage:
@@ -104,9 +105,37 @@ fr:
     POPULAR_POSTS: 'Articles populaires'
     SEARCH: Chercher
     TAGS: Tags
+  Page_results:
+    NORESULTS: 'Aucun résultat pour cette recherche.'
+    READMORE: 'Lire plus à propos de ''{Title}''...'
+    YOUSEARCHEDFOR: 'Vous avez cherché ''{Query}'''
+  PasswordHelper:
+    PasswordMinLength: '{minimum} caractères ou plus'
+    PasswordTests: 'doit contenir {rules}'
+    RuleDigits: 'un chiffre'
+    RuleLowercase: 'une minuscule'
+    RulePunctuation: 'un caractère spécial'
+    RuleUppercase: 'une majuscule'
   PrivacyForm:
     IAGREE: 'Je confirme avoir lu et accepté'
     PLEASEREVIEW: 'Veuillez lire les documents suivants afin de continuer'
+  SilverStripe\Admin\LeftAndMain:
+    CollapsePanel: 'Collapse panel'
+    ExpandPanel: 'Expand panel'
+    HelpMenu: 'Help menu'
+    MenuToggleAuto: Auto
+    MenuToggleStickyNav: 'Sticky nav'
+    NavigateUp: 'Navigate up a folder'
+    PreviewButton: Preview
+    Version: Version
+  SilverStripe\Admin\ModelAdmin:
+    Title: 'Data Models'
+  SilverStripe\Forms\Form:
+    CSRF_FAILED_MESSAGE: 'There seems to have been a technical problem. Please click the back button, refresh your browser, and try again.'
+  SilverStripe\Security\Security:
+    NOTERESETLINKINVALID: '<p>Le lien de réinitialisation est invalide ou expiré.</p><p>Vous pouvez en <a href="{link1}">demander un nouveau</a> ou changer votre mot de passe après votre <a href="{link2}">connexion</a>.</p>'
+    PASSWORDRESETSENTHEADER: 'Votre mot de passe a été envoyé'
+    PASSWORDRESETSENTTEXT: 'Merci. Un lien pour réinitiliaser votre mot de passe vous a été envoyé à l''adresse indiquée'
   SimpleSearchControllerExtension:
     GO: Go
     SEARCH: Chercher
@@ -115,9 +144,18 @@ fr:
   SocialExtension:
     DISCOVER: 'J''ai découvert'
     SEE: 'Un aperçu :'
+  TwoFactorLoginHandler:
+    ENTER_YOUR_ACCESS_TOKEN: 'Enter your access token'
+    MESSAGE_SENT: 'Your token has been sent to your phone ending with {end}'
+    VALIDATE_TOKEN: 'Validate token'
+    YOUR_TOKEN_IS: 'Your token is {token}'
   URLSegmentExtension:
     URLSEGMENT: 'URL Segment'
-  SilverStripe\Security\Security:
-    PASSWORDRESETSENTTEXT: 'Merci. Un lien pour réinitiliaser votre mot de passe vous a été envoyé à l''adresse indiquée'
-    PASSWORDRESETSENTHEADER: 'Votre mot de passe a été envoyé'
-    NOTERESETLINKINVALID: '<p>Le lien de réinitialisation est invalide ou expiré.</p><p>Vous pouvez en <a href="{link1}">demander un nouveau</a> ou changer votre mot de passe après votre <a href="{link2}">connexion</a>.</p>'
+  ValidationStatusExtension:
+    APPROVE: Approuver
+    APPROVED: Approuvé
+    DISABLE: Désactiver
+    DISABLED: Désactivé
+    VALIDATION_STATUS_APPROVED: Approuvé
+    VALIDATION_STATUS_DISABLED: désactivé
+    VALIDATION_STATUS_PENDING: 'en cours d''approbation'
