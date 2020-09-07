@@ -111,7 +111,10 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
             foreach ($removedItems as $item) {
                 CMSMenu::remove_menu_item($item);
                 $itemParts = explode('-', $item);
-                $css .= 'li.valCMS_ACCESS_' . end($itemParts) . '{display:none}' . "\n";
+                // asset admin is required for upload field details
+                if ($item != 'SilverStripe-AssetAdmin-Controller-AssetAdmin') {
+                    $css .= 'li.valCMS_ACCESS_' . end($itemParts) . '{display:none}' . "\n";
+                }
             }
             Requirements::customCSS($css, 'HidePermissions');
         }
