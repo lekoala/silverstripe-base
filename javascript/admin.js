@@ -215,7 +215,8 @@
                 var files = state.data.files;
                 for (var i = 0; i < files.length; i++) {
                     var item = files[i];
-                    if (item.id == id) {
+                    console.log(item);
+                    if (item.id == id && item.url) {
                         window.open(item.url);
                     }
                 }

@@ -2,13 +2,16 @@
 Name: base-cms
 ---
 SilverStripe\CMS\Model\SiteTree:
-  meta_generator: ''
-  page_title_separator: '|'
+  meta_generator: ""
+  page_title_separator: "|"
 SilverStripe\Admin\LeftAndMain:
   extra_requirements_css:
-    - 'base/css/admin.css'
+    - "base/css/admin.css"
   extensions:
     - LeKoala\Base\Admin\BaseLeftAndMainExtension
     - LeKoala\Base\Blocks\BlocksLeftAndMainExtension
 SilverStripe\View\SSViewer:
   source_file_comments: false
+SilverStripe\AssetAdmin\Controller\AssetAdmin:
+  extensions:
+    - LeKoala\Base\Admin\AssetAdminLinksExtension
