@@ -245,6 +245,23 @@ JS;
     }
 
     /**
+     * Catches everyting from the first ( to the final ;
+     * @param string $path The path to the file like app/templates/MyScript.ss
+     * @return void
+     */
+    public static function addScriptFromTemplate($path)
+    {
+        $name = pathinfo($path, PATHINFO_FILENAME);
+        $filename = Director::baseFolder() . '/' . trim($path, '/');
+        $script = file_get_contents($filename);
+        $start = strpos($script, '(');
+        $end = strrpos($script, ';');
+        $length = $end - $start + 1;
+        $script = substr($script, $start, $length);
+        self::addScript($script, $name);
+    }
+
+    /**
      * @param string $message
      * @return void
      */
