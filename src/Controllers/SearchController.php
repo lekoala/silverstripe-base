@@ -4,13 +4,14 @@ namespace LeKoala\Base\Controllers;
 
 use PageController;
 use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\PaginatedList;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Core\Config\Config;
 use LeKoala\Base\Helpers\ClassHelper;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\ErrorPage\ErrorPage;
 use SilverStripe\ORM\FieldType\DBField;
 use LeKoala\Base\Extensions\URLSegmentExtension;
-use SilverStripe\ORM\PaginatedList;
 
 /**
  * Class \LeKoala\Base\Controllers\SearchController
@@ -20,7 +21,7 @@ class SearchController extends PageController
     /**
      * Process and render search results.
      */
-    public function index()
+    public function index(HTTPRequest $request = null)
     {
         $request = $this->getRequest();
         $Query = $request->getVar('q');

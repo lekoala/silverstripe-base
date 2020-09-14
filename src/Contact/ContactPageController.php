@@ -50,7 +50,7 @@ class ContactPageController extends \PageController
         }
     }
 
-    public function index(HTTPRequest $request)
+    public function index(HTTPRequest $request = null)
     {
         // $this->sendDummyEmail();
         $this->SiteConfig()->requireGoogleMaps();

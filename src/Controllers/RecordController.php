@@ -4,6 +4,7 @@ namespace LeKoala\Base\Controllers;
 
 use Exception;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Control\HTTPRequest;
 use LeKoala\Base\Extensions\URLSegmentExtension;
 
 /**
@@ -60,7 +61,7 @@ class RecordController extends BaseContentController
         return false;
     }
 
-    public function index()
+    public function index(HTTPRequest $request = null)
     {
         $ID = $this->getRequest()->param('ID');
         if ($ID) {

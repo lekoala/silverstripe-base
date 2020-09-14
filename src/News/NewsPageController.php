@@ -52,7 +52,7 @@ class NewsPageController extends \PageController
         }
     }
 
-    public function index(HTTPRequest $request)
+    public function index(HTTPRequest $request = null)
     {
         return $this->render();
     }
@@ -185,7 +185,7 @@ class NewsPageController extends \PageController
         return $result;
     }
 
-     /**
+    /**
      * @return GroupedList
      */
     public function GroupedList()
@@ -195,7 +195,7 @@ class NewsPageController extends \PageController
         return $groupedList;
     }
 
-     /**
+    /**
      * @return DataList|Tag[]
      */
     public function TagsList()

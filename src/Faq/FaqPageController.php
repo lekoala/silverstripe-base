@@ -32,7 +32,7 @@ class FaqPageController extends \PageController
         }
     }
 
-    public function index(HTTPRequest $request)
+    public function index(HTTPRequest $request = null)
     {
         // Use non namespaced name
         return $this->renderWith(['FaqPage', 'Page']);

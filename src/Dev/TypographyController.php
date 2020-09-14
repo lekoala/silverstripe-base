@@ -1,4 +1,5 @@
 <?php
+
 namespace LeKoala\Base\Dev;
 
 use PageController;
@@ -32,7 +33,7 @@ use SilverStripe\Forms\CheckboxSetField;
  */
 class TypographyController extends PageController
 {
-    public function index(HTTPRequest $request)
+    public function index(HTTPRequest $request = null)
     {
         $this->Title = 'Typography test page';
         $this->ExtraMeta .= '<meta name="robots" content="noindex, nofollow" />';
@@ -45,7 +46,7 @@ class TypographyController extends PageController
     }
     public function TypoForm()
     {
-        $array= array('green', 'yellow', 'blue', 'pink', 'orange');
+        $array = array('green', 'yellow', 'blue', 'pink', 'orange');
         $form = new Form(
             $this,
             'TestForm',
@@ -67,7 +68,7 @@ class TypographyController extends PageController
                     ->setRightTitle('This is the right title'),
                 EmailField::create('EmailField', 'Email address'),
                 HeaderField::create('HeaderField2c', 'HeaderField Level 2', 2),
-                DropdownField::create('DropdownField', 'Dropdown Field', array( 0 => '-- please select --', 1 => 'test AAAA', 2 => 'test BBBB')),
+                DropdownField::create('DropdownField', 'Dropdown Field', array(0 => '-- please select --', 1 => 'test AAAA', 2 => 'test BBBB')),
                 OptionsetField::create('OptionSF', 'Optionset Field', $array),
                 CheckboxSetField::create('CheckboxSF', 'Checkbox Set Field', $array),
                 CurrencyField::create('CurrencyField', 'Bling bling', '$123.45'),
