@@ -5,10 +5,13 @@ namespace LeKoala\Base\Security;
 use Exception;
 use SilverStripe\ORM\DB;
 use SilverStripe\Forms\Form;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Security\Member;
+use LeKoala\Base\Helpers\IPHelper;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\Security\Security;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\GraphQL\Controller;
 use SilverStripe\Admin\SecurityAdmin;
 use SilverStripe\Security\Permission;
@@ -17,9 +20,13 @@ use LeKoala\Base\Security\MemberAudit;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\LoginAttempt;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Security\Authenticator;
 use SilverStripe\Security\IdentityStore;
+use LeKoala\Base\Security\BaseAuthenticator;
 use LeKoala\Base\Extensions\ValidationStatusExtension;
+use SilverStripe\Control\Director;
 use SilverStripe\Forms\GridField\GridFieldAddNewButton;
+use SilverStripe\Security\MemberAuthenticator\MemberAuthenticator;
 use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
 
 /**
@@ -59,8 +66,106 @@ class BaseMemberExtension extends DataExtension
         return trim($this->owner->FirstName . ' ' . $this->owner->Surname);
     }
 
+    /**
+     * @return string
+     */
+    public function getPasswordResetLink()
+    {
+        $token = $this->owner->generateAutologinTokenAndStoreHash();
+        return Director::absoluteURL(Security::getPasswordResetLink($this->owner, $token));
+    }
+
+    /**
+     * @return boolean
+     */
+    public function NeedTwoFactorAuth()
+    {
+        //2fa is disabled globally
+        if (!BaseAuthenticator::is2FAenabled()) {
+            return false;
+        }
+        // the ip is whitelisted
+        $adminIps = Security::config()->admin_ip_whitelist;
+        if (!empty($adminIps)) {
+            $requestIp = Controller::curr()->getRequest()->getIP();
+            if (IPHelper::checkIp($requestIp, $adminIps)) {
+                return false;
+            }
+        }
+        // we only required 2fa for admins
+        if (BaseAuthenticator::is2FAenabledAdminOnly()) {
+            return Permission::check('CMS_ACCESS', 'any', $this->owner);
+        }
+        return true;
+    }
+
+    /**
+     * @return array
+     */
+    public function AvailableTwoFactorMethod()
+    {
+        $arr = [];
+        if ($this->owner->Mobile) {
+            $arr[] = 'text_message';
+        }
+        if ($this->owner->TOTPToken) {
+            $arr[] = 'totp';
+        }
+        return $arr;
+    }
+
+    /**
+     * @return string text_message, totp
+     */
+    public function PreferredTwoFactorAuth()
+    {
+        $arr = $this->AvailableTwoFactorMethod();
+        if (!empty($arr)) {
+            return $arr[0];
+        }
+        return false;
+    }
+
+    /**
+     * This is called by Member::validateCanLogin which is typically called in MemberAuthenticator::authenticate::authenticateMember
+     * which is used in LoginHandler::doLogin::checkLogin
+     *
+     * This means canLogIn is called before 2FA, for instance
+     *
+     * @param ValidationResult $result
+     * @return void
+     */
     public function canLogIn(ValidationResult $result)
     {
+        // Ip whitelist for users with cms access (empty by default)
+        // SilverStripe\Security\Security:
+        //   admin_ip_whitelist:
+        //     - 127.0.0.1/255
+        $adminIps = Security::config()->admin_ip_whitelist;
+        $need2Fa = $this->NeedTwoFactorAuth();
+        $hasTwoFaMethods = count($this->AvailableTwoFactorMethod()) > 0;
+        if (!empty($adminIps)) {
+            $requestIp = Controller::curr()->getRequest()->getIP();
+            $isCmsUser = Permission::check('CMS_Access', 'any', $this->owner);
+            if ($isCmsUser && !IPHelper::checkIp($requestIp, $adminIps)) {
+                // No two fa method to validate important account
+                if (!$hasTwoFaMethods) {
+                    $this->owner->audit('invalid_ip_admin', ['ip' => $requestIp]);
+                    $result->addError(_t('BaseMemberExtension.ADMIN_IP_INVALID', "Your ip address is not whitelisted for this account level"));
+                }
+            } else {
+                // User has been whitelisted, no need for 2fa
+                if (Config::inst()->get(BaseAuthenticator::class, 'disable_2fa_whitelisted_ips')) {
+                    $need2Fa = false;
+                }
+            }
+        }
+
+        // Member need two factor auth but has no available method
+        if ($need2Fa && !$hasTwoFaMethods) {
+            $result->addError(_t('BaseMemberExtension.YOU_NEED_2FA_METHOD', 'Your account needs two factor auth but does not have any available authentication method'));
+        }
+
         // Admin can always log in
         if (Permission::check('ADMIN', 'any', $this->owner)) {
             return;
@@ -214,6 +319,10 @@ class BaseMemberExtension extends DataExtension
 
     public function doUnlock()
     {
+        if (!$this->owner->isLockedOut()) {
+            return _t('BaseMemberExtension.MEMBER_NOT_LOCKED', 'Member is not locked');
+        }
+
         $lastSuccess = LoginAttempt::get()->filter($filter = array(
             'MemberID' => $this->owner->ID
         ))->sort('Created', 'DESC')->filter('Status', 'Success')->first();
@@ -313,7 +422,7 @@ class BaseMemberExtension extends DataExtension
 
     /**
      * @param array $extraIDs
-     * @return Member[]
+     * @return Member[]|ArrayList
      */
     public static function getMembersFromSecurityGroups($extraIDs = [])
     {

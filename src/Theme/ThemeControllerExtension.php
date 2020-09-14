@@ -12,7 +12,7 @@ use LeKoala\Base\Controllers\HasLogger;
 /**
  * Class \LeKoala\Base\Theme\ThemeControllerExtension
  *
- * @property \AccountPageController|\HomePageController|\PageController|\PaymentPageController|\WinePageController|\LeKoala\Base\Blocks\BlocksPageController|\LeKoala\Base\Contact\ContactPageController|\LeKoala\Base\Controllers\BaseContentController|\LeKoala\Base\Controllers\RecordController|\LeKoala\Base\Dev\TypographyController|\LeKoala\Base\Faq\FaqPageController|\LeKoala\Base\News\NewsPageController|\LeKoala\Base\Privacy\CookiesRequiredPageController|\SilverStripe\ErrorPage\ErrorPageController|\SilverStripe\CMS\Model\RedirectorPageController|\LeKoala\Base\Theme\ThemeControllerExtension $owner
+ * @property \AboutPageController|\AvailableSpacesPageController|\HomePageController|\PageController|\VisionPageController|\PortfolioPageController|\LeKoala\Base\Blocks\BlocksPageController|\LeKoala\Base\Contact\ContactPageController|\LeKoala\Base\Controllers\BaseContentController|\LeKoala\Base\Controllers\RecordController|\LeKoala\Base\Dev\TypographyController|\LeKoala\Base\Faq\FaqPageController|\LeKoala\Base\News\NewsPageController|\LeKoala\Base\Privacy\CookiesRequiredPageController|\SilverStripe\ErrorPage\ErrorPageController|\SilverStripe\CMS\Model\RedirectorPageController|\LeKoala\Base\Theme\ThemeControllerExtension $owner
  */
 class ThemeControllerExtension extends Extension
 {
@@ -84,7 +84,7 @@ class ThemeControllerExtension extends Extension
         if ($googleFont) {
             //@link https://www.cdnplanet.com/blog/faster-google-webfonts-preconnect/
             Requirements::insertHeadTags('<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />');
-            Requirements::css('https://fonts.googleapis.com/css?family=' . $googleFont);
+            Requirements::css('https://fonts.googleapis.com/css?family=' . $googleFont . "&display=swap");
         }
     }
 
@@ -122,11 +122,11 @@ class ThemeControllerExtension extends Extension
                 $minFile = str_replace('.css', '.min.css', $file);
                 if (in_array($minFile, $files)) {
                     // in dev, favor non minified files
-                    if (Director::isDev()) {
-                        $ignore[] = $minFile;
-                    } else {
+                    // if (Director::isDev()) {
+                    //     $ignore[] = $minFile;
+                    // } else {
                         continue;
-                    }
+                    // }
                 }
                 $name = basename($file);
                 // Skip editor.css

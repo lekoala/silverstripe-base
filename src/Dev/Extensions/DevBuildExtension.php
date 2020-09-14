@@ -130,7 +130,7 @@ SQL;
             foreach ($fields as $oldName => $newName) {
                 if ($dbSchema->hasField($tableName, $oldName)) {
                     if ($dbSchema->hasField($tableName, $newName)) {
-                        $this->displayMessage("<li>$oldName is already exist in $newName in $tableName. Data will be migrated and old column dropped.</li>");
+                        $this->displayMessage("<li>$oldName still exists in $tableName. Data will be migrated to $newName and old column $oldName will be dropped.</li>");
                         // Migrate data
                         DB::query("UPDATE $tableName SET $newName = $oldName WHERE $newName IS NULL");
                         // Remove column
@@ -141,6 +141,25 @@ SQL;
                     }
                 } else {
                     $this->displayMessage("<li>$oldName does not exist anymore in $tableName</li>");
+                }
+
+                // Look for fluent
+                $fluentTable = $tableName . '_Localised';
+                if ($dbSchema->hasTable($fluentTable)) {
+                    if ($dbSchema->hasField($fluentTable, $oldName)) {
+                        if ($dbSchema->hasField($fluentTable, $newName)) {
+                            $this->displayMessage("<li>$oldName still exists in $fluentTable. Data will be migrated to $newName and old column $oldName will be dropped.</li>");
+                            // Migrate data
+                            DB::query("UPDATE $fluentTable SET $newName = $oldName WHERE $newName IS NULL");
+                            // Remove column
+                            DB::query("ALTER TABLE $fluentTable DROP COLUMN $oldName");
+                        } else {
+                            $this->displayMessage("<li>Renaming $oldName to $newName in $fluentTable</li>");
+                            $dbSchema->renameField($fluentTable, $oldName, $newName);
+                        }
+                    } else {
+                        $this->displayMessage("<li>$oldName does not exist anymore in $fluentTable</li>");
+                    }
                 }
             }
         }

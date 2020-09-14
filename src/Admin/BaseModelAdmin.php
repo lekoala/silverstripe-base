@@ -9,6 +9,7 @@ use LeKoala\Base\Helpers\ClassHelper;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use LeKoala\Base\Subsite\SubsiteHelper;
+use SilverStripe\ORM\ValidationException;
 use SilverStripe\Admin\AdminRootController;
 use SilverStripe\Forms\GridField\GridField;
 use LeKoala\Base\Extensions\SortableExtension;
@@ -136,12 +137,30 @@ abstract class BaseModelAdmin extends ModelAdmin
     public function getRequestedRecord()
     {
         $request = $this->getRequest();
-        $ModelClass = $request->getVar('ModelClass');
-        $ID = $request->getVar('ID');
-        if ($ID) {
-            return DataObject::get_by_id($ModelClass, $ID);
+
+        // Look first in headers
+        $class = $request->getHeader('X-RecordClassName');
+        if (!$class) {
+            $class = $request->requestVar('_RecordClassName');
         }
-        return false;
+        $ID = $request->param('ID');
+        if (!$class) {
+            // Help our fellow developpers
+            if ($ID == 'field') {
+                throw new ValidationException("Attempt to post on a FormField often result in loosing request params. No record class could be found");
+            }
+            throw new ValidationException("No class in request");
+        }
+        if (!ClassHelper::isValidDataObject($class)) {
+            throw new ValidationException("$class is not valid");
+        }
+        if (!$ID || $ID == 'field') {
+            $ID = $request->getHeader('X-RecordID');
+        }
+        if (!$ID || $ID == 'field') {
+            $ID = (int) $request->requestVar('_RecordID');
+        }
+        return DataObject::get_by_id($class, $ID);
     }
 
     public function handleRequest(HTTPRequest $request)
@@ -175,7 +194,7 @@ abstract class BaseModelAdmin extends ModelAdmin
 
         $singl = singleton($this->modelClass);
 
-        $gridField = $this->getGridField($form);
+        $gridField = $this->getGridFieldFrom($form);
         $gridField->getConfig()->removeComponentsByType(GridFieldDeleteAction::class);
         if (self::config()->can_delete_from_list) {
             $gridField->getConfig()->addComponent(new GridFieldDeleteAction(false));
@@ -199,10 +218,13 @@ abstract class BaseModelAdmin extends ModelAdmin
      * Get gridfield for current model
      * Makes it easy for your ide
      *
+     * In SS 4.6 there is a getGridField method that create the gridfield..
+     * this method fetches the actual gridfield from the fields
+     *
      * @param Form $form
      * @return GridField
      */
-    public function getGridField(Form $form)
+    public function getGridFieldFrom(Form $form)
     {
         return $form->Fields()->dataFieldByName($this->getSanitisedModelClass());
     }

@@ -1,4 +1,5 @@
 <?php
+
 namespace LeKoala\Base\Tags;
 
 use SilverStripe\ORM\DataObject;
@@ -9,7 +10,6 @@ use SilverStripe\ORM\DataObject;
  * @property string $URLSegment
  * @property string $Title
  * @mixin \LeKoala\Base\Extensions\URLSegmentExtension
- * @mixin \TractorCow\Fluent\Extension\FluentExtension
  */
 class Tag extends DataObject
 {

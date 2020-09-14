@@ -6,17 +6,24 @@ nl:
     MAXRESOLUTION: 'Max resolutie: 2048x2048px'
     MAXSIZE: 'Max documentgrootte: {size}'
   BaseForm:
+    DOEDIT: 'Save changes'
     DOSUBMIT: Verzenden
   BaseMemberExtension:
     ACCOUNT_DISABLED: 'Uw account werd afgesloten.'
     ACCOUNT_PENDING: 'Uw account wordt momenteel gevalideerd.'
+    ADMIN_IP_INVALID: 'Your ip address is not whitelisted for this account level'
+    MEMBER_NOT_LOCKED: 'Member is not locked'
     MEMBER_UNLOCKED: 'Member unlocked'
+    YOU_NEED_2FA_METHOD: 'Your account needs two factor auth but does not have any available authentication method'
   BaseSecurityAdminExtension:
     LockedMembers: 'Locked Members'
     LogAlert: 'Laatste update op {updated}'
     LogSize: 'Totale grootte {size}'
     Logs: Logs
+    MemberAudit: 'Members audit events'
+    MemberAuditTab: 'Members Audit'
     MembersOnlyGroups: 'Only group members are shown. To add a user to a group, link it from an existing group.'
+    RecentAdminLogins: 'Recent Admin Logins'
     RecentPasswordFailures: 'Recent Password Failures'
     SecurityAudit: 'Security Audit'
     doClearLogs: 'Clear Logs'
@@ -79,21 +86,15 @@ nl:
     EmailSettings: 'Email settings'
     LegalCourt: 'Legal Court'
     LegalName: 'Legal Name'
-    NO: 'Nee'
+    'NO': Nee
     Name: Naam
     Phone: Telefoon
     Subject: Onderwerp
     UNDEFINED_ERROR: 'Er deed zich een fout voor.'
     View: Bekijken
-    YES: 'Ja'
-  ValidationStatusExtension:
-    APPROVE: Goedkeuren
-    APPROVED: 'Goedgekeurd'
-    DISABLE: Disable
-    DISABLED: 'Disabled'
-    VALIDATION_STATUS_APPROVED: goedgekeurd
-    VALIDATION_STATUS_DISABLED: disabled
-    VALIDATION_STATUS_PENDING: 'in afwachting van goedkeuring'
+    'YES': Ja
+  GridFieldQuickFiltesrs:
+    DO_FILTER: Filter
   NewsItem:
     READ_MORE: 'Meer weten'
   NewsPage:
@@ -104,9 +105,33 @@ nl:
     POPULAR_POSTS: 'Populaire posts'
     SEARCH: Zoeken
     TAGS: Tags
+  Page_results:
+    NORESULTS: 'Aucun résultat pour cette recherche.'
+    READMORE: 'Lire plus à propos de ''{Title}''...'
+    YOUSEARCHEDFOR: 'Vous avez cherché ''{Query}'''
+  PasswordHelper:
+    PasswordMinLength: '{minimum} or more characters long'
+    PasswordTests: 'must contain {rules}'
+    RuleDigits: 'one digit'
+    RuleLowercase: 'one lowercase character'
+    RulePunctuation: 'one special character'
+    RuleUppercase: 'one uppercase character'
   PrivacyForm:
     IAGREE: 'Ik heb gelezen en goedgekeurd'
     PLEASEREVIEW: 'Gelieve onze voorwaarden te accepteren alvorens verder te gaan'
+  SilverStripe\Admin\LeftAndMain:
+    CollapsePanel: 'Collapse panel'
+    ExpandPanel: 'Expand panel'
+    HelpMenu: 'Help menu'
+    MenuToggleAuto: Auto
+    MenuToggleStickyNav: 'Sticky nav'
+    NavigateUp: 'Navigate up a folder'
+    PreviewButton: Preview
+    Version: Version
+  SilverStripe\Admin\ModelAdmin:
+    Title: 'Data Models'
+  SilverStripe\Forms\Form:
+    CSRF_FAILED_MESSAGE: 'There seems to have been a technical problem. Please click the back button, refresh your browser, and try again.'
   SimpleSearchControllerExtension:
     GO: Go
     SEARCH: Zoeken
@@ -115,5 +140,18 @@ nl:
   SocialExtension:
     DISCOVER: 'Ik vond'
     SEE: 'Je kan het hier zien :'
+  TwoFactorLoginHandler:
+    ENTER_YOUR_ACCESS_TOKEN: 'Enter your access token'
+    MESSAGE_SENT: 'Your token has been sent to your phone ending with {end}'
+    VALIDATE_TOKEN: 'Validate token'
+    YOUR_TOKEN_IS: 'Your token is {token}'
   URLSegmentExtension:
     URLSEGMENT: 'URL Segment'
+  ValidationStatusExtension:
+    APPROVE: Goedkeuren
+    APPROVED: Goedgekeurd
+    DISABLE: Disable
+    DISABLED: Disabled
+    VALIDATION_STATUS_APPROVED: goedgekeurd
+    VALIDATION_STATUS_DISABLED: disabled
+    VALIDATION_STATUS_PENDING: 'in afwachting van goedkeuring'

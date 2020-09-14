@@ -6,7 +6,6 @@ use \Exception;
 use SilverStripe\i18n\i18n;
 use Psr\Log\LoggerInterface;
 use SilverStripe\ORM\DataList;
-use LeKoala\Base\View\Alertify;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\View\SSViewer;
 use SilverStripe\Control\Cookie;
@@ -14,6 +13,7 @@ use SilverStripe\Control\Session;
 use SilverStripe\Security\Member;
 use SilverStripe\Control\Director;
 use LeKoala\Base\View\DeferBackend;
+use LeKoala\Base\View\FlashMessage;
 use Psr\SimpleCache\CacheInterface;
 use SilverStripe\ORM\DatabaseAdmin;
 use SilverStripe\Security\Security;
@@ -121,7 +121,7 @@ class BaseContentController extends ContentController
         $this->environmentChecker->check($this);
 
         try {
-            Alertify::checkFlashMessage($this->getSession());
+            FlashMessage::checkFlashMessage($this->getSession());
         } catch (Exception $ex) {
             // There might not be a session
         }

@@ -19,6 +19,7 @@ class Alertify
     use Configurable;
 
     /**
+     * default,bootstrap,semantic
      * @config
      * @var string
      */
@@ -29,6 +30,12 @@ class Alertify
      * @var string
      */
     private static $version = '1.13.1';
+
+    /**
+     * @config
+     * @var bool
+     */
+    private static $use_alerts = false;
 
     /**
      * @config
@@ -97,8 +104,11 @@ class Alertify
         return true;
     }
 
-    public static function show($message, $type)
+    public static function show($message, $type, $asAlert = null)
     {
+        if ($asAlert === null) {
+            $asAlert = self::config()->use_alerts;
+        }
         $msg = addslashes($message);
         $type = $type;
         switch ($type) {
@@ -112,7 +122,13 @@ class Alertify
                 $type = 'warning';
                 break;
         }
-        $js = "alertify.notify('$msg', '$type', 0});";
+        if ($asAlert) {
+            $js = "alertify.alert('$msg').set(transition:'zoom', basic:true, movable:true);";
+            $js = "alertify.notify('$msg', '$type', 0);";
+        } else {
+            $js = "alertify.notify('$msg', '$type', 0);";
+        }
+
         Requirements::customScript($js);
     }
 

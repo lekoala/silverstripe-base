@@ -9,6 +9,8 @@ use SilverStripe\i18n\i18n;
  * Serves as a base field for all date field since we need datetime alias
  *
  * Locale conversion cannot be done by InputMask and should be provided by a third party service
+ *
+ * @link https://github.com/RobinHerbots/Inputmask/blob/5.x/README_date.md
  */
 class InputMaskDateTimeField extends InputMaskField
 {

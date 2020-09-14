@@ -1,4 +1,5 @@
 <?php
+
 namespace LeKoala\Base\Security;
 
 use SilverStripe\ORM\DataObject;
@@ -63,5 +64,10 @@ class MemberAudit extends DataObject
     public function canDelete($member = null)
     {
         return false;
+    }
+
+    public function AuditDataShort()
+    {
+        return substr($this->AuditData, 0, 100) . '...';
     }
 }

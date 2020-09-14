@@ -1,10 +1,12 @@
 <?php
+
 namespace LeKoala\Base\Forms;
 
 use SilverStripe\ORM\DataObjectInterface;
 
 /**
  * Format time field
+ * @link https://github.com/RobinHerbots/Inputmask/blob/5.x/README_date.md
  */
 class InputMaskTimeField extends InputMaskDateTimeField
 {
@@ -19,24 +21,29 @@ class InputMaskTimeField extends InputMaskDateTimeField
     {
         parent::__construct($name, $title, $value);
 
+        $this->setAlias(self::ALIAS_DATETIME);
         $this->setInputFormat('HH:MM:ss');
     }
 
     public function setValue($value, $data = null)
     {
         if ($this->isNumeric && is_numeric($value)) {
+            $old = $value;
             $value = self::secondsToTime($value);
         }
-        return parent::setValue($value, $data);
+        // Don't call parent that can set locale formatted date
+        $this->value = $value;
+        return $this;
     }
 
     public function dataValue()
     {
-        $val = parent::dataValue();
+        $value = parent::dataValue();
+        // Value is stored in database in seconds
         if ($this->isNumeric) {
-            return self::timeToSeconds($val);
+            return self::timeToSeconds($value);
         }
-        return $val;
+        return $value;
     }
 
     public function saveInto(DataObjectInterface $record)

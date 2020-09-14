@@ -24,7 +24,7 @@ use LeKoala\Base\Privacy\TermsAndConditionsPage;
  *
  * Should be applied to SiteTree. Always applied in base-extensions
  *
- * @property \AccountPage|\HomePage|\Page|\PaymentPage|\WinePage|\LeKoala\Base\Blocks\BlocksPage|\LeKoala\Base\Contact\ContactPage|\LeKoala\Base\Faq\FaqPage|\LeKoala\Base\News\NewsPage|\LeKoala\Base\Privacy\CookiesRequiredPage|\LeKoala\Base\Privacy\PrivacyNoticePage|\LeKoala\Base\Privacy\TermsAndConditionsPage|\SilverStripe\ErrorPage\ErrorPage|\SilverStripe\CMS\Model\RedirectorPage|\SilverStripe\CMS\Model\SiteTree|\SilverStripe\CMS\Model\VirtualPage|\LeKoala\Base\Extensions\BasePageExtension $owner
+ * @property \AboutPage|\AvailableSpacesPage|\HomePage|\Page|\VisionPage|\PortfolioPage|\LeKoala\Base\Blocks\BlocksPage|\LeKoala\Base\Contact\ContactPage|\LeKoala\Base\Faq\FaqPage|\LeKoala\Base\News\NewsPage|\LeKoala\Base\Privacy\CookiesRequiredPage|\LeKoala\Base\Privacy\PrivacyNoticePage|\LeKoala\Base\Privacy\TermsAndConditionsPage|\SilverStripe\ErrorPage\ErrorPage|\SilverStripe\CMS\Model\RedirectorPage|\SilverStripe\CMS\Model\SiteTree|\SilverStripe\CMS\Model\VirtualPage|\LeKoala\Base\Extensions\BasePageExtension $owner
  * @property boolean $ShowInFooter
  */
 class BasePageExtension extends DataExtension
@@ -167,6 +167,10 @@ class BasePageExtension extends DataExtension
             $shareTitle = $sourceObject->getShareTitle();
         }
         $tags = '';
+        // Regular tags
+        if ($descriptionText) {
+            $tags .= $this->createMetaTag("description", $descriptionText);
+        }
         // OpenGraph
         $tags .= "\n<!-- OpenGraph Meta Tags -->\n";
         // og:type

@@ -200,6 +200,11 @@ class InputMaskField extends TextField
 
         $attributes['lang'] = i18n::convert_rfc1766($this->getLocale());
 
+        // Make sure we don't submit invalid unformatted value if js fails somehow
+        // and hidden input is not added properly
+        $attributes['data-name'] = $attributes['name'];
+        $attributes['name'] = $attributes['name'] . 'Unformatted';
+
         return $attributes;
     }
 
@@ -216,7 +221,6 @@ class InputMaskField extends TextField
 
     public static function requirements()
     {
-
         $useV5 = self::config()->use_v5;
         if ($useV5) {
             $version = self::config()->version_v5;
@@ -235,7 +239,9 @@ class InputMaskField extends TextField
         // rawgit is best effort, might not be reliable
         // Requirements::javascript("https://cdn.rawgit.com/RobinHerbots/Inputmask/$version/dist/min/jquery.inputmask.bundle.min.js");
         // Requirements::javascript("https://cdn.jsdelivr.net/npm/inputmask@$version/dist/min/jquery.inputmask.bundle.min.js");
-        Requirements::javascript('base/javascript/ModularBehaviour.js');
+
+        // Order matters for hooks ! Otherwise ready may fire before hooks are defined!
         Requirements::javascript('base/javascript/fields/InputMaskField.js');
+        Requirements::javascript('base/javascript/ModularBehaviour.js');
     }
 }

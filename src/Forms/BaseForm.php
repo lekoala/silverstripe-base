@@ -2,6 +2,7 @@
 
 namespace LeKoala\Base\Forms;
 
+use Exception;
 use SilverStripe\Forms\Form;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Forms\FieldList;
@@ -91,6 +92,7 @@ class BaseForm extends Form
         }
         // Attach record as hidden fields, these can be used by the controller
         // To properly restore the record on POST if it was depending on url params or query string
+        // This must be done after fields are set therefore we cannot use setRecord
         if ($this->record) {
             $this->addHiddenRecordFields($fields);
         }
@@ -123,9 +125,15 @@ class BaseForm extends Form
     {
         $request = $this->getRequest();
         $class = $request->requestVar('_RecordClassName');
-        $id = (int) $request->requestVar('_RecordID');
-        if ($class && $id) {
-            return DataObject::get_by_id($class, $id);
+        if (!$class) {
+            $class = $request->getHeader('X-RecordClassName');
+        }
+        $ID = (int) $request->requestVar('_RecordID');
+        if (!$ID) {
+            $ID = (int) $request->getHeader('X-RecordID');
+        }
+        if ($class && $ID) {
+            return DataObject::get_by_id($class, $ID);
         }
         return null;
     }
@@ -138,6 +146,9 @@ class BaseForm extends Form
     public function setRecord(DataObject $record)
     {
         $recordType = $this->recordType;
+        if (!$recordType) {
+            $recordType = DataObject::class;
+        }
         if ($recordType) {
             if (!$record instanceof $recordType) {
                 throw new Exception("Object must be an instance of $recordType, it is: " . get_class($record));
@@ -257,6 +268,10 @@ class BaseForm extends Form
      */
     public function redirectTo($link)
     {
-        return $this->getController()->redirect($this->getController()->Link($link));
+        // Convert plain actions to link on controller
+        if (strpos($link, '/') === false) {
+            $link = $this->getController()->Link($link);
+        }
+        return $this->getController()->redirect($link);
     }
 }

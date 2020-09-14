@@ -3,13 +3,14 @@
 namespace LeKoala\Base\Forms;
 
 use SilverStripe\ORM\SS_List;
+use SilverStripe\Assets\Image;
 use SilverStripe\Assets\Folder;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Forms\FormField;
-use SilverStripe\Forms\FileHandleField;
-use SilverStripe\Forms\FileUploadReceiver;
-use SilverStripe\Control\NullHTTPRequest;
 use SilverStripe\Control\Controller;
+use SilverStripe\Forms\FileHandleField;
+use SilverStripe\Control\NullHTTPRequest;
+use SilverStripe\Forms\FileUploadReceiver;
 
 /**
  * A base class that use file upload receiver
@@ -96,7 +97,7 @@ abstract class BaseFileUploadField extends FormField implements FileHandleField
     {
         $state = parent::getSchemaStateDefaults();
         $state['data']['files'] = $this->getItemIDs();
-        $state['value'] = $this->Value() ? : ['Files' => []];
+        $state['value'] = $this->Value() ?: ['Files' => []];
         return $state;
     }
 
