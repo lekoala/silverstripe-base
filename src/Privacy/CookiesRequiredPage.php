@@ -3,8 +3,9 @@
 namespace LeKoala\Base\Privacy;
 
 use Page;
-use LeKoala\Base\Extensions\BasePageExtension;
 use LeKoala\Base\View\CookieConsent;
+use SilverStripe\Control\HTTPRequest;
+use LeKoala\Base\Extensions\BasePageExtension;
 
 /**
  * Class \LeKoala\Base\Privacy\CookiesRequiredPage
@@ -13,6 +14,12 @@ use LeKoala\Base\View\CookieConsent;
 class CookiesRequiredPage extends Page
 {
     private static $table_name = 'CookiesRequiredPage'; // When using namespace, specify table name
+
+    public function index(HTTPRequest $request = null)
+    {
+        $this->ExtraMeta .= '<meta name="robots" content="noindex, nofollow" />';
+        return $this;
+    }
 
     public function requireDefaultRecords()
     {
