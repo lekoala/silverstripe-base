@@ -4,8 +4,9 @@ namespace LeKoala\Base\Controllers;
 
 use Exception;
 use SilverStripe\ORM\DataObject;
-use LeKoala\Base\Extensions\URLSegmentExtension;
 use SilverStripe\ORM\PaginatedList;
+use SilverStripe\Control\HTTPRequest;
+use LeKoala\Base\Extensions\URLSegmentExtension;
 
 /**
  * Apply this trait to your controllers managing records
@@ -105,7 +106,7 @@ trait IsRecordController
         return 'view';
     }
 
-    public function index()
+    public function index(HTTPRequest $request = null)
     {
         $url_handlers = $this->config()->url_handlers;
         if (!isset($url_handlers['$ID/$Action'])) {

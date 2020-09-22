@@ -44,11 +44,11 @@ trait ImprovedActions
         if (!ClassHelper::isValidDataObject($class)) {
             throw new ValidationException("$class is not valid");
         }
-        $id = $request->getHeader('X-RecordID');
-        if (!$id) {
-            $id = (int) $request->requestVar('_RecordID');
+        $ID = $request->getHeader('X-RecordID');
+        if (!$ID) {
+            $ID = (int) $request->requestVar('_RecordID');
         }
-        return DataObject::get_by_id($class, $id);
+        return DataObject::get_by_id($class, $ID);
     }
 
 

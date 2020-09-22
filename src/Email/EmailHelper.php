@@ -14,9 +14,11 @@ class EmailHelper
     /**
      * Get an email with base template and data
      *
+     * @param string subject
+     * @param string body
      * @return Email
      */
-    public static function createEmail()
+    public static function createEmail($subject = null, $body = null)
     {
         $email = Email::create();
         $email->setHTMLTemplate('Email\\BaseEmail');
@@ -26,6 +28,13 @@ class EmailHelper
             'PrimaryColor' => $sc->PrimaryColor ?? '#1a1a1a',
         ];
         $email->setData($data);
+
+        if ($subject) {
+            $email->setSubject($subject);
+        }
+        if ($body) {
+            $email->addData("EmailContent", $body);
+        }
 
         return $email;
     }

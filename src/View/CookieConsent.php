@@ -10,6 +10,7 @@ use SilverStripe\Control\Cookie;
 use SilverStripe\ORM\DataObject;
 use LeKoala\Base\Privacy\PrivacyNoticePage;
 use LeKoala\Base\Privacy\CookiesRequiredPage;
+use SilverStripe\Control\Director;
 
 /**
  * Add cookie consent to your website
@@ -74,6 +75,11 @@ class CookieConsent
     protected static $scripts = [];
 
     /**
+     * @var string
+     */
+    protected static $customMessage;
+
+    /**
      * Add requirements
      *
      * Make sure to call this AFTER you have define scripts that should be loaded conditionally
@@ -101,6 +107,9 @@ class CookieConsent
         $message = _t('CookieConsent.MESSAGE', "This website uses cookies to ensure you get the best experience on your website");
         if (self::config()->cookies_required) {
             $message = _t('CookieConsent.MESSAGE_REQUIRED', "This website require the usage of cookies. Please accept them to continue");
+        }
+        if (self::$customMessage) {
+            $message = self::$customMessage;
         }
 
         $PrimaryColor = $SiteConfig->dbObject('PrimaryColor');
@@ -236,6 +245,32 @@ JS;
     }
 
     /**
+     * Catches everyting from the first ( to the final ;
+     * @param string $path The path to the file like app/templates/MyScript.ss
+     * @return void
+     */
+    public static function addScriptFromTemplate($path)
+    {
+        $name = pathinfo($path, PATHINFO_FILENAME);
+        $filename = Director::baseFolder() . '/' . trim($path, '/');
+        $script = file_get_contents($filename);
+        $start = strpos($script, '(');
+        $end = strrpos($script, ';');
+        $length = $end - $start + 1;
+        $script = substr($script, $start, $length);
+        self::addScript($script, $name);
+    }
+
+    /**
+     * @param string $message
+     * @return void
+     */
+    public static function setCustomMessage($message)
+    {
+        self::$customMessage = $message;
+    }
+
+    /**
      * Clear requirements, useful if you don't want any popup on a specific page after init
      *
      * @return void
@@ -264,6 +299,33 @@ JS;
     public static function Status()
     {
         return Cookie::get('cookieconsent_status');
+    }
+
+    /**
+     * @return bool
+     */
+    public static function IsAllowed()
+    {
+        return self::Status() == self::STATUS_ALLOW;
+    }
+
+    /**
+     * Helper method to set cookies if accepted
+     *
+     * @param string $name
+     * @param string $value
+     * @param integer $expiry
+     * @return void
+     */
+    public static function setCookie($name, $value, $expiry = 90)
+    {
+        if (self::IsAllowed()) {
+            $httpOnly = true;
+            $secure = Director::is_https();
+            $path = $domain = null;
+            return Cookie::set($name, $value, $expiry, $path, $domain, $secure, $httpOnly);
+        }
+        return false;
     }
 
     /**

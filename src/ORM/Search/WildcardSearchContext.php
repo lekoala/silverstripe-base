@@ -101,9 +101,18 @@ class WildcardSearchContext extends SearchContext
         $this->setSearchParams($searchParams);
 
         $count = count($searchParams);
+        $isWildcardSearch = true;
+        if (!empty($this->wildcardFilters)) {
+            $isWildcardSearch = false;
+            foreach ($this->wildcardFilters as $wf) {
+                if (isset($searchParams[$wf])) {
+                    $isWildcardSearch = true;
+                }
+            }
+        }
 
         // If we search only one value, assume we do a wildcard match
-        if ($count === 1) {
+        if ($count === 1 && $isWildcardSearch) {
             $values = array_values($searchParams);
             $value = $values[0];
             $anyFilter = [];

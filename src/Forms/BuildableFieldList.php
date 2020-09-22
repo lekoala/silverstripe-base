@@ -26,6 +26,7 @@ use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
 use SilverStripe\Forms\FieldGroup;
+use SilverStripe\Forms\FileField;
 
 /**
  * A field list that can create it its fields
@@ -258,34 +259,45 @@ class BuildableFieldList extends FieldList
     }
 
     /**
-     * @param string $name
+     * @param string $name Name without id since it's used as $record->{"{$fieldname}ID"} = $id;
      * @param string $title
      * @param array $attributes
      * @return UploadField
      */
-    public function addUpload($name = "ImageID", $title = null, $attributes = [])
+    public function addUpload($name = "Image", $title = null, $attributes = [])
     {
         return $this->addField(UploadField::class, $name, $title, $attributes);
     }
 
     /**
-     * @param string $name
+     * @param string $name Name without id since it's used as $record->{"{$fieldname}ID"} = $id;
+     * @param string $title
+     * @param array $attributes
+     * @return FileField
+     */
+    public function addFile($name = "Image", $title = null, $attributes = [])
+    {
+        return $this->addField(FileField::class, $name, $title, $attributes);
+    }
+
+    /**
+     * @param string $name Name without id since it's used as $record->{"{$fieldname}ID"} = $id;
      * @param string $title
      * @param array $attributes
      * @return FilePondField
      */
-    public function addFilePond($name = "ImageID", $title = null, $attributes = [])
+    public function addFilePond($name = "Image", $title = null, $attributes = [])
     {
         return $this->addField(FilePondField::class, $name, $title, $attributes);
     }
 
     /**
-     * @param string $name
+     * @param string $name Name without id since it's used as $record->{"{$fieldname}ID"} = $id;
      * @param string $title
      * @param array $attributes
      * @return FilePondField
      */
-    public function addSingleFilePond($name = "ImageID", $title = null, $attributes = [])
+    public function addSingleFilePond($name = "Image", $title = null, $attributes = [])
     {
         $fp = $this->addField(FilePondField::class, $name, $title, $attributes);
         $fp->setAllowedMaxFileNumber(1);

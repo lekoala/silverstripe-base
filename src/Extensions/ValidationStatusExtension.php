@@ -75,6 +75,10 @@ class ValidationStatusExtension extends DataExtension
         $this->owner->ValidationStatus = self::VALIDATION_STATUS_APPROVED;
         $this->owner->write();
 
+        if ($this->owner->hasMethod('onValidationApprove')) {
+            $this->owner->onValidationApprove();
+        }
+
         $auditID = $this->owner->audit('Validation Status Changed', ['Status' => self::VALIDATION_STATUS_APPROVED]);
 
         return _t('ValidationStatusExtension.APPROVED', 'Approved');
@@ -84,6 +88,10 @@ class ValidationStatusExtension extends DataExtension
     {
         $this->owner->ValidationStatus = self::VALIDATION_STATUS_DISABLED;
         $this->owner->write();
+
+        if ($this->owner->hasMethod('onValidationDisable')) {
+            $this->owner->onValidationDisable();
+        }
 
         $auditID =  $this->owner->audit('Validation Status Changed', ['Status' => self::VALIDATION_STATUS_DISABLED]);
 

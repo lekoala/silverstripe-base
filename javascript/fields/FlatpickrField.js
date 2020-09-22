@@ -26,6 +26,15 @@
   };
   $.fn.ModularBehaviourHooks.afterHooks.flatpickr = function () {
     var $this = $(this);
+    var $alt = $this.parent().find(".flatpickr-alt");
+    $alt.on("change", function () {
+      var val = $alt.val();
+      // without this, alternative input won't be cleared
+      if (!val) {
+        $this.val('');
+      }
+    });
+
     if ($this.data("rangeStart")) {
       var $other = $($this.data("rangeStart"));
       var isUpdating = false;

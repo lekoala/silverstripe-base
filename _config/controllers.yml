@@ -5,6 +5,7 @@ After: '#rootroutes'
 SilverStripe\Control\Director:
   rules:
     '__time': 'LeKoala\Base\Controllers\TimeController'
+    'sitesearch': 'LeKoala\Base\Controllers\SearchController'
 # ---
 # Name: base-controllers-live
 # Only:

@@ -11,6 +11,7 @@ use LeKoala\Base\Contact\ContactSubmission;
 use LeKoala\Base\Forms\GoogleRecaptchaField;
 use SilverStripe\Core\Convert;
 use SilverStripe\Security\SecurityToken;
+use SilverStripe\SiteConfig\SiteConfig;
 
 /**
  * Class \LeKoala\Base\Contact\ContactPageController
@@ -49,7 +50,7 @@ class ContactPageController extends \PageController
         }
     }
 
-    public function index(HTTPRequest $request)
+    public function index(HTTPRequest $request = null)
     {
         // $this->sendDummyEmail();
         $this->SiteConfig()->requireGoogleMaps();
@@ -76,6 +77,10 @@ class ContactPageController extends \PageController
     public function ContactForm()
     {
         $form = ContactForm::create($this, 'ContactForm');
+        $SiteConfig = SiteConfig::current_site_config();
+        if ($SiteConfig->hasMethod("UseFormSpree") && $SiteConfig->UseFormSpree()) {
+            $form->setFormAction($SiteConfig->FormSpreeFormAction());
+        }
         return $form;
     }
 
@@ -108,6 +113,12 @@ class ContactPageController extends \PageController
 
         // SecurityID
         if (!SecurityToken::inst()->checkRequest($request)) {
+            return $this->httpError(400);
+        }
+
+        // Formspree is used as form action, don't store!
+        $SiteConfig = SiteConfig::current_site_config();
+        if ($SiteConfig->hasMethod("UseFormSpree") && $SiteConfig->UseFormSpree()) {
             return $this->httpError(400);
         }
 

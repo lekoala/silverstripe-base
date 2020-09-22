@@ -1,4 +1,5 @@
 <?php
+
 namespace LeKoala\Base\Controllers;
 
 use SilverStripe\Control\Director;
@@ -40,8 +41,8 @@ trait Messaging
         // If we have an array, it only applies to json response
         if ($link === true || is_array($link)) {
             $link = $this->getBackURL()
-                ? : $this->getReturnReferer()
-                ? : '/';
+                ?: $this->getReturnReferer()
+                ?: '/';
 
             if (strpos($link, '/' . $this->getRequest()->getURL()) !== false) {
                 $link = $this->Link();
@@ -63,7 +64,14 @@ trait Messaging
     public function redirectWithAlert($message, $linkOrManipulations = true, $alert = "info")
     {
         if (Director::is_ajax()) {
-            return $this->applicationResponse($message, $linkOrManipulations, [], true);
+            $isSuccess = true;
+            if ($alert == 'bad' || $alert == 'error') {
+                $isSuccess = false;
+            }
+            if (is_bool($linkOrManipulations)) {
+                $linkOrManipulations = [];
+            }
+            return $this->applicationResponse($message, $linkOrManipulations, [], $isSuccess);
         }
         // No point in sending too large message
         if (strlen($message) > 500) {

@@ -22,9 +22,8 @@ if (!function_exists('d')) {
         }
 
         $req = null;
-        $ctrl = Controller::curr();
-        if ($ctrl) {
-            $req = $ctrl->getRequest();
+        if (Controller::has_curr()) {
+            $req = Controller::curr()->getRequest();
         }
         $debugView = \SilverStripe\Dev\Debug::create_debug_view($req);
         // Also show latest object in backtrace

@@ -17,6 +17,17 @@ use SilverStripe\Forms\GridField\GridFieldDataColumns;
  */
 class GridFieldExtension extends Extension
 {
+    /**
+     * See admin.css
+     *
+     * green,blue,amber,red
+     *
+     * @param string $classes
+     * @param int $total
+     * @param int $index
+     * @param DataObject $record
+     * @return void
+     */
     public function updateNewRowClasses(&$classes, $total, $index, $record)
     {
         // Use the extension point to forward the color decision to the record

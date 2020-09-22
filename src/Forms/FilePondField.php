@@ -234,7 +234,7 @@ class FilePondField extends BaseFileUploadField
     public function getExistingUploadsData()
     {
         // Both Value() & dataValue() seem to return an array eg: ['Files' => [258, 259, 257]]
-        $fileIDarray = $this->Value() ? : ['Files' => []];
+        $fileIDarray = $this->Value() ?: ['Files' => []];
         if (!isset($fileIDarray['Files']) || !count($fileIDarray['Files'])) {
             return [];
         }
@@ -254,14 +254,14 @@ class FilePondField extends BaseFileUploadField
             // }
             $existingUploads[] = [
                 // the server file reference
-                'source' => (int)$fileID,
+                'source' => (int) $fileID,
                 // set type to local to indicate an already uploaded file
                 'options' => [
                     'type' => 'local',
                     // file information
                     'file' => [
                         'name' => $file->Name,
-                        'size' => (int)$file->getAbsoluteSize(),
+                        'size' => (int) $file->getAbsoluteSize(),
                         'type' => $file->getMimeType(),
                     ],
                     // poster
@@ -310,19 +310,19 @@ class FilePondField extends BaseFileUploadField
         // Polyfill to ensure max compatibility
         Requirements::javascript("https://unpkg.com/filepond-polyfill@1.0.4/dist/filepond-polyfill.min.js");
         // File validation plugins
-        Requirements::javascript("https://unpkg.com/filepond-plugin-file-validate-type@1.2.4/dist/filepond-plugin-file-validate-type.min.js");
-        Requirements::javascript("https://unpkg.com/filepond-plugin-file-validate-size@2.1.3/dist/filepond-plugin-file-validate-size.min.js");
+        Requirements::javascript("https://unpkg.com/filepond-plugin-file-validate-type@1.2.5/dist/filepond-plugin-file-validate-type.min.js");
+        Requirements::javascript("https://unpkg.com/filepond-plugin-file-validate-size@2.2.1/dist/filepond-plugin-file-validate-size.min.js");
         // Poster plugins
         // Requirements::javascript("https://unpkg.com/filepond-plugin-file-metadata@1.0.2/dist/filepond-plugin-file-metadata.min.js");
         // Requirements::css("https://unpkg.com/filepond-plugin-file-poster@1.0.0/dist/filepond-plugin-file-poster.min.css");
         // Requirements::javascript("https://unpkg.com/filepond-plugin-file-poster@1.0.0/dist/filepond-plugin-file-poster.min.js");
         // Image plugins
-        Requirements::javascript("https://unpkg.com/filepond-plugin-image-exif-orientation@1.0.6/dist/filepond-plugin-image-exif-orientation.js");
+        Requirements::javascript("https://unpkg.com/filepond-plugin-image-exif-orientation@1.0.9/dist/filepond-plugin-image-exif-orientation.js");
         // Requirements::css("https://unpkg.com/filepond-plugin-image-preview@2.0.1/dist/filepond-plugin-image-preview.min.css");
         // Requirements::javascript("https://unpkg.com/filepond-plugin-image-preview@2.0.1/dist/filepond-plugin-image-preview.min.js");
         // Base elements
-        Requirements::css("https://unpkg.com/filepond@4.4.2/dist/filepond.css");
-        Requirements::javascript("https://unpkg.com/filepond@4.4.2/dist/filepond.js");
+        Requirements::css("https://unpkg.com/filepond@4.20.1/dist/filepond.css");
+        Requirements::javascript("https://unpkg.com/filepond@4.20.1/dist/filepond.js");
         Requirements::javascript("https://unpkg.com/jquery-filepond@1.0.0/filepond.jquery.js");
         // Our custom init
         Requirements::javascript('base/javascript/ModularBehaviour.js');
@@ -379,6 +379,15 @@ class FilePondField extends BaseFileUploadField
 
         if ($file instanceof DataObject && $file->hasExtension(BaseFileExtension::class)) {
             $file->IsTemporary = true;
+            // We can also track the record
+            $RecordID = $request->getHeader('X-RecordID');
+            $RecordClassName = $request->getHeader('X-RecordClassName');
+            if (!$file->ObjectID) {
+                $file->ObjectID = $RecordID;
+            }
+            if (!$file->ObjectClass) {
+                $file->ObjectClass = $RecordClassName;
+            }
             // If possible, prevent creating a version for no reason
             // @link https://docs.silverstripe.org/en/4/developer_guides/model/versioning/#writing-changes-to-a-versioned-dataobject
             if ($file->hasExtension(Versioned::class)) {
@@ -471,10 +480,21 @@ class FilePondField extends BaseFileUploadField
                 $file->ObjectID = $record->ID;
                 $file->ObjectClass = get_class($record);
                 $file->write();
+
+                // Do we need to relocate the asset?
+                // if ($record->hasMethod('getFolderName')) {
+                //     $recordFolder = $record->getFolderName();
+                //     $fileFolder = dirname($file->getFilename());
+                //     if ($recordFolder != $fileFolder) {
+                //         $newName = $recordFolder . '/' . basename($file->getFilename());
+                //         $file->renameFile($newName);
+                //     }
+                // }
             } else {
                 // File was uploaded earlier, no need to do anything
             }
         }
+
         // Proceed
         return parent::saveInto($record);
     }

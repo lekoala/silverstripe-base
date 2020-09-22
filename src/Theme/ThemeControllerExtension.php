@@ -122,11 +122,11 @@ class ThemeControllerExtension extends Extension
                 $minFile = str_replace('.css', '.min.css', $file);
                 if (in_array($minFile, $files)) {
                     // in dev, favor non minified files
-                    if (Director::isDev()) {
-                        $ignore[] = $minFile;
-                    } else {
+                    // if (Director::isDev()) {
+                    //     $ignore[] = $minFile;
+                    // } else {
                         continue;
-                    }
+                    // }
                 }
                 $name = basename($file);
                 // Skip editor.css
