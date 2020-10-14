@@ -135,34 +135,52 @@ class CommonRequirements
     private static $swiper_version = '5.4.5';
 
     /**
-     * config
+     * @config
      * @var string
      */
     private static $rellax_version = '1.10.0';
 
     /**
-     * config
+     * @config
      * @var string
      */
     private static $rangeslider_version = '2.3.2';
 
     /**
-     * config
+     * @config
      * @var string
      */
     private static $nouislider_version = '14.0.2';
 
     /**
-     * config
+     * @config
      * @var string
      */
     private static $wnumb_version = '1.1.0';
 
     /**
-     * config
+     * @config
      * @var string
      */
     private static $slick_version = '1.8.1';
+
+    /**
+     * @config
+     * @var string
+     */
+    private static $fullcalendar_version = "5.3.2";
+
+    /**
+     * @config
+     * @var string
+     */
+    private static $tippy_version = "6.2.6";
+
+    /**
+     * @config
+     * @var string
+     */
+    private static $popper_version = "2.4.4";
 
     /**
      * Include all files in a given path
@@ -540,6 +558,51 @@ JS;
         Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/$version/slick.min.js");
         if ($css) {
             Requirements::css("https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/$version/slick.min.css");
+        }
+    }
+
+    /**
+     * @link https://fullcalendar.io/
+     * @param bool $css
+     * @param string $lang
+     * @return void
+     */
+    public static function fullcalendar($css = true, $lang = null)
+    {
+        $version = self::config()->fullcalendar_version;
+        Requirements::javascript("https://cdn.jsdelivr.net/npm/fullcalendar@$version/main.min.js");
+        if ($lang === null) {
+            $lang = substr(i18n::get_locale(), 0, 2);
+        }
+        if ($lang != 'en') {
+            Requirements::javascript("https://cdn.jsdelivr.net/npm/fullcalendar@$version/locales/$lang.min.js");
+        }
+        if ($css) {
+            Requirements::css("https://cdn.jsdelivr.net/npm/fullcalendar@$version/main.min.css");
+        }
+    }
+
+    /**
+     * @return void
+     */
+    public static function popper()
+    {
+        $version = self::config()->popper_version;
+        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/popper.js/$version/umd/popper.min.js");
+    }
+
+    /**
+     * @link https://atomiks.github.io/tippyjs/
+     * @param bool $css
+     * @return void
+     */
+    public static function tippy($css = true)
+    {
+        self::popper();
+        $version = self::config()->tippy_version;
+        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/tippy.js/$version/tippy.umd.min.js");
+        if ($css) {
+            Requirements::css("https://cdnjs.cloudflare.com/ajax/libs/tippy.js/$version/tippy.min.css");
         }
     }
 }
