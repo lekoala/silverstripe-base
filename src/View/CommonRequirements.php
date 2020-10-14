@@ -36,13 +36,13 @@ class CommonRequirements
      * @config
      * @var string
      */
-    private static $moment_version = '2.23.0';
+    private static $moment_version = '2.29.1';
 
     /**
      * @config
      * @var string
      */
-    private static $moment_timezone_version = '0.5.23';
+    private static $moment_timezone_version = '0.5.31';
 
     /**
      * @config
