@@ -35,7 +35,7 @@ class SmartUploadField extends UploadField
      * @config
      * @var string
      */
-    private static $max_image_size = '2M';
+    private static $max_image_size = '3M';
 
     public function __construct($name, $title = null, SS_List $items = null)
     {

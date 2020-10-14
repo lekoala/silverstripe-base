@@ -151,7 +151,7 @@ class BaseMemberExtension extends DataExtension
                 // No two fa method to validate important account
                 if (!$hasTwoFaMethods) {
                     $this->owner->audit('invalid_ip_admin', ['ip' => $requestIp]);
-                    $result->addError(_t('BaseMemberExtension.ADMIN_IP_INVALID', "Your ip address is not whitelisted for this account level"));
+                    $result->addError(_t('BaseMemberExtension.ADMIN_IP_INVALID', "Your ip address {address} is not whitelisted for this account level", ['address' => $requestIp]));
                 }
             } else {
                 // User has been whitelisted, no need for 2fa

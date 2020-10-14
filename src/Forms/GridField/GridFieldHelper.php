@@ -2,11 +2,12 @@
 
 namespace LeKoala\Base\Forms\GridField;
 
+use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldConfig;
+use SilverStripe\Forms\GridField\GridFieldPaginator;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\Forms\GridField\GridFieldFilterHeader;
-use SilverStripe\Forms\ReadonlyField;
 use Symbiote\GridFieldExtensions\GridFieldEditableColumns;
 
 /**
@@ -33,6 +34,14 @@ class GridFieldHelper
         return $config->getComponentByType(GridFieldDataColumns::class);
     }
 
+    /**
+     * @param GridFieldConfig $config
+     * @return GridFieldPaginator
+     */
+    public static function getGridFieldPaginator(GridFieldConfig $config)
+    {
+        return $config->getComponentByType(GridFieldPaginator::class);
+    }
 
     /**
      * @param GridFieldConfig $config
