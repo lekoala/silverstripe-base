@@ -65,7 +65,7 @@ class InputMaskField extends TextField
      * @config
      * @var string
      */
-    private static $version_v5 = '5.0.3';
+    private static $version_v5 = '5.0.5';
 
 
     public function Type()
@@ -229,7 +229,9 @@ class InputMaskField extends TextField
         }
 
         if ($useV5) {
-            Requirements::javascript("https://cdn.jsdelivr.net/npm/inputmask@$version/dist/jquery.inputmask.min.js");
+            // Requirements::javascript("https://cdn.jsdelivr.net/npm/inputmask@$version/dist/jquery.inputmask.min.js");
+            // in v5, lib name is jquery.inputmask
+            Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/$version/jquery.inputmask.min.js");
         } else {
             Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/inputmask/$version/jquery.inputmask.bundle.min.js");
         }
