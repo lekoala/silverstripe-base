@@ -30,7 +30,7 @@ class FacebookSiteConfigExtension extends DataExtension
         "FacebookPixelId" => "Varchar(59)",
     ];
 
-    protected $events = [];
+    protected static $events = [];
 
     public function updateCMSFields(FieldList $fields)
     {
