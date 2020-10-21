@@ -11,6 +11,9 @@
   'https://connect.facebook.net/en_US/fbevents.js');
   fbq('init', '$SiteConfig.FacebookPixelId');
   fbq('track', 'PageView');
+<% loop SiteConfig.FacebookEvents %>
+  fbq('track', '$Name', $JsonParams);
+<% end_loop %>
 </script>
 <noscript>
   <img height="1" width="1" style="display:none"

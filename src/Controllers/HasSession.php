@@ -2,6 +2,7 @@
 
 namespace LeKoala\Base\Controllers;
 
+use Exception;
 use SilverStripe\Control\Session;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Injector\Injector;
