@@ -28,14 +28,13 @@ class Bootstrap
      * @config
      * @var string
      */
-    private static $jquery_version = '3.4.1';
+    private static $jquery_version = '3.5.1';
 
     /**
      * @config
-     * We use 4.3.0 and not 4.3.1 that has issues with IE11
      * @var string
      */
-    private static $bootstrap_version = '4.4.1';
+    private static $bootstrap_version = '4.5.3';
 
     /**
      * @config
@@ -47,13 +46,13 @@ class Bootstrap
      * @config
      * @var string
      */
-    private static $js_cookie_version = '2.2.0';
+    private static $js_cookie_version = '2.2.1';
 
     /**
      * @config
      * @var string
      */
-    private static $bootstrap_multiselect = '0.9.15';
+    private static $bootstrap_multiselect = '0.9.16';
 
     /**
      * Require defaults js requirements for bootstrap
