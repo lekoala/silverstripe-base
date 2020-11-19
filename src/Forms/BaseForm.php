@@ -217,6 +217,7 @@ class BaseForm extends Form
      * Manually enable RequiredFields javascript validation
      *
      * You can also use JsRequiredFields class
+     * You must use JsRequiredFields if using conditonal validation
      *
      * @return void
      */
