@@ -109,6 +109,8 @@ class BaseForm extends Form
             }
         }
         parent::__construct($controller, $name, $fields, $actions, $validator);
+
+        // Always require after the field inclusion to avoid loading order issues
         $this->requirements();
         if ($this->record) {
             $this->loadDataFrom($this->record);
