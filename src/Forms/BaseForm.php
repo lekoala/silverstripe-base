@@ -56,6 +56,8 @@ class BaseForm extends Form
         FieldList $actions = null,
         Validator $validator = null
     ) {
+        // We set the controller early so that it's available in build*** methods
+        $this->setController($controller);
         $this->addExtraClass($this->Type());
         if ($this->jsValidationEnabled) {
             $this->enableJsValidation();
