@@ -378,6 +378,7 @@ class CommonRequirements
     }
 
     /**
+     * @deprecated
      * @link https://github.com/verlok/lazyload
      * @return void
      */
