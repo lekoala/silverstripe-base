@@ -166,6 +166,7 @@ class BaseContentController extends ContentController
         if ($config->enable_hsts && Director::is_https()) {
             $response->addHeader('Strict-Transport-Security', 'max-age=300; includeSubDomains; preload; always;');
         }
+        // enable content security policy
         if ($config->enable_cst && Director::is_https()) {
             $deferBackend = DeferBackend::getDeferBackend();
             $response = $deferBackend->updateResponseWithCSP($response);
