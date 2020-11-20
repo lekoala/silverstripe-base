@@ -40,7 +40,11 @@
 
       // Simple conditional validation
       $el.find("[data-show-if]").each(function () {
-        var $holder = $(this).parents(".field");
+        var tagName = $(this)[0].tagName.toLowerCase();
+        var $holder = $(this);
+        if (tagName == "input" || tagName == "select" || tagName == "textarea") {
+          $holder = $(this).parents(".field");
+        }
         var expr = $(this).data("show-if");
         var parts = expr.split("=");
         var $target = $(this)
@@ -51,6 +55,12 @@
         $holder.hide();
         $target
           .on("change", function () {
+            var type = $(this).attr("type");
+            if (type == "radio" || type == "checkbox") {
+              if (!$(this).is(":checked")) {
+                return;
+              }
+            }
             if ($(this).val() == val) {
               $holder.show();
             } else {
