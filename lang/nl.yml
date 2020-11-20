@@ -31,7 +31,13 @@ nl:
   BootstrapModal:
     Close: Sluiten
   ContactForm:
+    Company: Company
+    Email3: Email
+    Message: Message
+    Name: Name
+    Phone: Phone
     SEND: 'Uw bericht versturen'
+    Subject: Subject
   ContactPage:
     Address: ADRES
     Email: E-MAIL
@@ -132,6 +138,7 @@ nl:
     Title: 'Data Models'
   SilverStripe\Forms\Form:
     CSRF_FAILED_MESSAGE: 'There seems to have been a technical problem. Please click the back button, refresh your browser, and try again.'
+    FIELDISREQUIRED: '{name} is required'
   SimpleSearchControllerExtension:
     GO: Go
     SEARCH: Zoeken
