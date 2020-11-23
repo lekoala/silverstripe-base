@@ -12,6 +12,9 @@
 
     // raw name is irrelevant, use data attribute
     var name = $this.data("name");
+    if (name == undefined) {
+      name = $this.attr("name");
+    }
     var val = $this.val();
     var dataformat = $this.data("dataformat");
     var isDecimal = $this.data("isDecimal");
@@ -20,12 +23,17 @@
     // Duplicate input field to store data value
     var hiddenInput = $("<input/>", {
       type: "hidden",
-      name: name
+      name: name,
     });
     $this.parent().append(hiddenInput);
 
     // Avoid original field being saved (but send the formatted data as a convenience)
-    $this.attr("name", name + "Formatted");
+    var formattedName = name + "Formatted";
+    // Support array notation
+    if (name.indexOf("[") !== -1) {
+      formattedName = name + "[Formatted]";
+    }
+    $this.attr("name", formattedName);
 
     // Update real hidden field with unmasked value
     $this.on("keyup blur", function () {
@@ -46,7 +54,7 @@
         val = val / 100;
       }
       // Otherwise unmasked value is not using proper decimal separator
-      if (config.radixPoint && config.radixPoint === ",") {
+      if (config && config.radixPoint === ",") {
         val = val.replace(",", ".");
       }
       hiddenInput.val(val);
