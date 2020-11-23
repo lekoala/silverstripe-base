@@ -131,7 +131,7 @@
 
           // Check if needs polling (no within last 2 seconds or above 5 minutes)
           poll--;
-          if (poll <= 0 && data.diff > settings.serverPollDisabledBelow  * 1000 && data.diff < settings.serverPollDisabledAbove * 1000) {
+          if (poll <= 0 && data.diff > settings.serverPollDisabledBelow * 1000 && data.diff < settings.serverPollDisabledAbove * 1000) {
             poll = settings.serverPoll;
 
             $.getJSON(settings.serverSyncUrl, function (result) {
