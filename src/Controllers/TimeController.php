@@ -17,7 +17,7 @@ class TimeController extends Controller
     {
         $time = time();
         if (class_exists(\Cake\Chronos\Chronos::class)) {
-            $time = \Cake\Chronos\Chronos::now();
+            $time = \Cake\Chronos\Chronos::now()->timestamp;
         }
         return $this->jsonResponse([
             'time' => $time,
