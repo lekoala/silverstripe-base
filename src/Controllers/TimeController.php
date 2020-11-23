@@ -6,8 +6,8 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
 
 /**
- * Class \LeKoala\Base\Controllers\TimeController
- *
+ * Send the server current time
+ * Useful for server based countdown/time counters
  */
 class TimeController extends Controller
 {
@@ -15,9 +15,13 @@ class TimeController extends Controller
 
     public function index(HTTPRequest $request = null)
     {
+        $time = time();
+        if (class_exists(\Cake\Chronos\Chronos::class)) {
+            $time = \Cake\Chronos\Chronos::now();
+        }
         return $this->jsonResponse([
-            'time' => time(),
-            'date' => date('Y-m-d H:i:s'),
+            'time' => $time,
+            'date' => date('Y-m-d H:i:s', $time),
             'tz' => date_default_timezone_get(),
         ]);
     }
