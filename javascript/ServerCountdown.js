@@ -40,8 +40,8 @@
         interval: 1000,
         serverSyncUrl: "/__time",
         // in seconds
-        serverPoll: 10,
-        serverPollDisabledAbove: 500000,
+        serverPoll: 30,
+        serverPollDisabledAbove: 300,
         serverPollDisabledBelow: 3,
       };
 
@@ -131,7 +131,6 @@
 
           // Check if needs polling (no within last 2 seconds or above 5 minutes)
           poll--;
-          console.log(poll, data.diff);
           if (poll <= 0 && data.diff > settings.serverPollDisabledBelow  * 1000 && data.diff < settings.serverPollDisabledAbove * 1000) {
             poll = settings.serverPoll;
 

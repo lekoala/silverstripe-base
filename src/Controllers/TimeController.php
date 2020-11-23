@@ -12,11 +12,16 @@ use SilverStripe\Control\HTTPRequest;
 class TimeController extends Controller
 {
     use WithJsonResponse;
+    use HasSession;
 
     public function index(HTTPRequest $request = null)
     {
         $time = time();
         if (class_exists(\Cake\Chronos\Chronos::class)) {
+            // somehow make this configurable
+            if ($this->getSession()->get('test_now')) {
+                \Cake\Chronos\Chronos::setTestNow($this->getSession()->get('test_now'));
+            }
             $time = \Cake\Chronos\Chronos::now()->timestamp;
         }
         return $this->jsonResponse([
