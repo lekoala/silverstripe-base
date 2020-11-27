@@ -137,11 +137,17 @@ abstract class BaseModelAdmin extends ModelAdmin
     public function getRequestedRecord()
     {
         $request = $this->getRequest();
+        $modelClass = true;
 
         // Look first in headers
         $class = $request->getHeader('X-RecordClassName');
         if (!$class) {
             $class = $request->requestVar('_RecordClassName');
+        }
+        // ModelClass can be forwarded in a get var from CustomLink
+        if (!$class) {
+            $class = $request->getVar('ModelClass');
+            $modelClass = true;
         }
         $ID = $request->param('ID');
         if (!$class) {
@@ -154,12 +160,20 @@ abstract class BaseModelAdmin extends ModelAdmin
         if (!ClassHelper::isValidDataObject($class)) {
             throw new ValidationException("$class is not valid");
         }
-        if (!$ID || $ID == 'field') {
-            $ID = $request->getHeader('X-RecordID');
+        if ($modelClass) {
+            // Record ID can be forwarded in a get var from CustomLink
+            if (!$ID) {
+                $ID = $request->getVar('ID');
+            }
+        } else {
+            if (!$ID || $ID == 'field') {
+                $ID = $request->getHeader('X-RecordID');
+            }
+            if (!$ID || $ID == 'field') {
+                $ID = (int) $request->requestVar('_RecordID');
+            }
         }
-        if (!$ID || $ID == 'field') {
-            $ID = (int) $request->requestVar('_RecordID');
-        }
+
         return DataObject::get_by_id($class, $ID);
     }
 
