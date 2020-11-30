@@ -23,6 +23,7 @@ use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Config\Config;
 use LeKoala\Base\Helpers\ThemeHelper;
+use SilverStripe\SiteConfig\SiteConfig;
 use LeKoala\Base\Dev\EnvironmentChecker;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\Connect\DatabaseException;
@@ -134,6 +135,32 @@ class BaseContentController extends ContentController
 
         // Switch channel for clearer logs
         $this->logger = $this->logger->withName('app');
+
+        if ($SiteConfig->LogoID) {
+            Requirements::insertHeadTags('<script type="application/ld+json">' . $this->LogoSchemaMarkup() . '</script>', 'LogoSchemaMarkup');
+        }
+    }
+
+    /**
+     * @link https://developers.google.com/search/docs/guides/intro-structured-data#markup-formats-and-placement
+     * @link https://developers.google.com/search/docs/data-types/logo
+     * @link https://schema.org/Organization
+     * @return string
+     */
+    public function LogoSchemaMarkup()
+    {
+        $page = $this->dataRecord;
+        $sc = SiteConfig::current_site_config();
+        $logoLink = Director::absoluteURL($sc->Logo()->Link());
+
+        $arr = [];
+        $arr['@context'] = "https://schema.org";
+        $arr['@type'] = "Organization";
+        $arr['url'] = Director::absoluteBaseURL();
+        $arr['logo'] = $logoLink;
+        $arr['name'] = $sc->getTitle();
+
+        return json_encode($arr);
     }
 
     /**

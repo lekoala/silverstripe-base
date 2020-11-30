@@ -112,6 +112,14 @@ class BasePageExtension extends DataExtension
         return "<meta property=\"{$property}\" content=\"{$content}\" />\n";
     }
 
+    public function getShareDescription()
+    {
+        if ($this->owner->MetaDescription) {
+            return $this->owner->MetaDescription;
+        }
+        return preg_replace('/\s+/', ' ', $this->owner->dbObject('Content')->Summary());
+    }
+
     /**
      * Update meta tags
      * @link https://github.com/tractorcow/silverstripe-opengraph
