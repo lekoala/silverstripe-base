@@ -6,17 +6,24 @@ en:
     MAXRESOLUTION: 'Max resolution: 2048x2048px'
     MAXSIZE: 'Max file size: {size}'
   BaseForm:
+    DOEDIT: 'Save changes'
     DOSUBMIT: Submit
   BaseMemberExtension:
     ACCOUNT_DISABLED: 'Your account has been disabled'
     ACCOUNT_PENDING: 'Your account is currently pending'
+    ADMIN_IP_INVALID: 'Your ip address {address} is not whitelisted for this account level'
+    MEMBER_NOT_LOCKED: 'Member is not locked'
     MEMBER_UNLOCKED: 'Member unlocked'
+    YOU_NEED_2FA_METHOD: 'Your account needs two factor auth but does not have any available authentication method'
   BaseSecurityAdminExtension:
     LockedMembers: 'Locked Members'
     LogAlert: 'Last updated on {updated}'
     LogSize: 'Total size is {size}'
     Logs: Logs
+    MemberAudit: 'Members audit events'
+    MemberAuditTab: 'Members Audit'
     MembersOnlyGroups: 'Only group members are shown. To add a user to a group, link it from an existing group.'
+    RecentAdminLogins: 'Recent Admin Logins'
     RecentPasswordFailures: 'Recent Password Failures'
     SecurityAudit: 'Security Audit'
     doClearLogs: 'Clear Logs'
@@ -24,7 +31,13 @@ en:
   BootstrapModal:
     Close: Close
   ContactForm:
+    Company: Company
+    Email: Email
+    Message: Message
+    Name: Name
+    Phone: Phone
     SEND: 'Send your message'
+    Subject: Subject
   ContactPage:
     Address: ADDRESS
     Email: E-MAIL
@@ -79,21 +92,15 @@ en:
     EmailSettings: 'Email settings'
     LegalCourt: 'Legal Court'
     LegalName: 'Legal Name'
-    NO: 'No'
+    'NO': 'No'
     Name: Name
     Phone: Phone
     Subject: Subject
     UNDEFINED_ERROR: 'Something went wrong'
     View: View
-    YES: 'Yes'
-  ValidationStatusExtension:
-    APPROVE: Approve
-    APPROVED: 'Approved'
-    DISABLE: Disable
-    DISABLED: 'Disabled'
-    VALIDATION_STATUS_APPROVED: approved
-    VALIDATION_STATUS_DISABLED: disabled
-    VALIDATION_STATUS_PENDING: pending
+    'YES': 'Yes'
+  GridFieldQuickFiltesrs:
+    DO_FILTER: Filter
   NewsItem:
     READ_MORE: 'Read more'
   NewsPage:
@@ -104,9 +111,34 @@ en:
     POPULAR_POSTS: 'Popular posts'
     SEARCH: Search
     TAGS: Tags
+  Page_results:
+    NORESULTS: 'Aucun résultat pour cette recherche.'
+    READMORE: 'Lire plus à propos de ''{Title}''...'
+    YOUSEARCHEDFOR: 'Vous avez cherché ''{Query}'''
+  PasswordHelper:
+    PasswordMinLength: '{minimum} or more characters long'
+    PasswordTests: 'must contain {rules}'
+    RuleDigits: 'one digit'
+    RuleLowercase: 'one lowercase character'
+    RulePunctuation: 'one special character'
+    RuleUppercase: 'one uppercase character'
   PrivacyForm:
     IAGREE: 'I read and I agree with the'
     PLEASEREVIEW: 'Please review the following agreements to continue'
+  SilverStripe\Admin\LeftAndMain:
+    CollapsePanel: 'Collapse panel'
+    ExpandPanel: 'Expand panel'
+    HelpMenu: 'Help menu'
+    MenuToggleAuto: Auto
+    MenuToggleStickyNav: 'Sticky nav'
+    NavigateUp: 'Navigate up a folder'
+    PreviewButton: Preview
+    Version: Version
+  SilverStripe\Admin\ModelAdmin:
+    Title: 'Data Models'
+  SilverStripe\Forms\Form:
+    CSRF_FAILED_MESSAGE: 'There seems to have been a technical problem. Please click the back button, refresh your browser, and try again.'
+    FIELDISREQUIRED: '{name} is required'
   SimpleSearchControllerExtension:
     GO: Go
     SEARCH: Search
@@ -115,5 +147,18 @@ en:
   SocialExtension:
     DISCOVER: 'I discovered'
     SEE: 'You can see it here :'
+  TwoFactorLoginHandler:
+    ENTER_YOUR_ACCESS_TOKEN: 'Enter your access token'
+    MESSAGE_SENT: 'Your token has been sent to your phone ending with {end}'
+    VALIDATE_TOKEN: 'Validate token'
+    YOUR_TOKEN_IS: 'Your token is {token}'
   URLSegmentExtension:
     URLSEGMENT: 'URL Segment'
+  ValidationStatusExtension:
+    APPROVE: Approve
+    APPROVED: Approved
+    DISABLE: Disable
+    DISABLED: Disabled
+    VALIDATION_STATUS_APPROVED: approved
+    VALIDATION_STATUS_DISABLED: disabled
+    VALIDATION_STATUS_PENDING: pending

@@ -375,8 +375,11 @@ class BaseMemberExtension extends DataExtension
      * @param boolean $remember
      * @return void
      */
-    public function forceLogin($request, $remember = false)
+    public function forceLogin($request = null, $remember = false)
     {
+        if ($request === null) {
+            $request = Controller::curr()->getRequest();
+        }
         Security::setCurrentUser($this->owner);
         $identityStore = Injector::inst()->get(IdentityStore::class);
         return $identityStore->logIn($this->owner, $remember, $request);

@@ -6,6 +6,7 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Security\IdentityStore;
+use SilverStripe\Security\Member;
 
 /**
  * Controls masquerade related functions
@@ -69,5 +70,18 @@ trait MasqueradeMember
     public function IsMasquerading()
     {
         return Controller::curr()->getRequest()->getSession()->get('Masquerade.Old');
+    }
+
+    /**
+     * @return MasqueradingMember
+     */
+    public function MasqueradingMember()
+    {
+        if ($this->IsMasquerading()) {
+            $old = Controller::curr()->getRequest()->getSession()->get('Masquerade.Old');
+            $ID = $old['loggedInAs'];
+            return Member::get()->byID($ID);
+        }
+        return false;
     }
 }

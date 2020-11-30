@@ -56,6 +56,8 @@ class BaseForm extends Form
         FieldList $actions = null,
         Validator $validator = null
     ) {
+        // We set the controller early so that it's available in build*** methods
+        $this->setController($controller);
         $this->addExtraClass($this->Type());
         if ($this->jsValidationEnabled) {
             $this->enableJsValidation();
@@ -107,6 +109,8 @@ class BaseForm extends Form
             }
         }
         parent::__construct($controller, $name, $fields, $actions, $validator);
+
+        // Always require after the field inclusion to avoid loading order issues
         $this->requirements();
         if ($this->record) {
             $this->loadDataFrom($this->record);
@@ -213,6 +217,7 @@ class BaseForm extends Form
      * Manually enable RequiredFields javascript validation
      *
      * You can also use JsRequiredFields class
+     * You must use JsRequiredFields if using conditonal validation
      *
      * @return void
      */

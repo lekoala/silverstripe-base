@@ -24,16 +24,16 @@ class ContactForm extends BaseForm
     {
         $fields->setPlaceholderAsLabel(true);
         $fields->group(function (BuildableFieldList $fields) {
-            $fields->addText('Name');
-            $fields->addText('Company');
+            $fields->addText('Name', _t('ContactForm.Name', 'Name'));
+            $fields->addText('Company', _t('ContactForm.Company', 'Company'));
         });
         $fields->group(function (BuildableFieldList $fields) {
-            $fields->addEmail('Email');
-            $fields->addText('Phone');
+            $fields->addEmail('Email', _t('ContactForm.Email3', 'Email'));
+            $fields->addText('Phone', _t('ContactForm.Phone', 'Phone'));
         });
 
-        $fields->addText('Subject');
-        $fields->addTextarea('Message');
+        $fields->addText('Subject', _t('ContactForm.Subject', 'Subject'));
+        $fields->addTextarea('Message', _t('ContactForm.Message', 'Message'));
 
         if (GoogleRecaptchaField::isSetupReady()) {
             $fields->push(new GoogleRecaptchaField);

@@ -31,6 +31,10 @@ $btn-focus-width: $btn-focus-width/2;
 
     &:focus,
     &.focus {
+        color: var(--#{$color}-contrast);
+        background-color: var(--#{$color});
+        border-color: var(--#{$color});
+
         @if $enable-shadows {
             box-shadow: $btn-box-shadow,
             0 0 $btn-focus-blur $btn-focus-width var(--#{$color}-muted);

@@ -1,7 +1,9 @@
 <?php
+
 namespace LeKoala\Base\i18n;
 
 use Exception;
+use LeKoala\Base\Helpers\GoogleTranslateHelper;
 use SilverStripe\Dev\Debug;
 use SilverStripe\Core\Manifest\Module;
 use SilverStripe\i18n\Messages\Reader;
@@ -43,6 +45,10 @@ class TextCollector extends i18nTextCollector
      * @var boolean
      */
     protected $preventWrite = false;
+    /**
+     * @var boolean
+     */
+    protected $autoTranslate = false;
 
     /**
      * @param $locale
@@ -173,6 +179,21 @@ class TextCollector extends i18nTextCollector
                 throw new Exception("No existing messages were found in $masterFile. Please collect without merge first.");
             }
 
+            $newMessages = array_diff_key($messages, $existingMessages);
+
+            // attempt auto translation
+            if ($this->autoTranslate) {
+                foreach ($newMessages as $newMessageKey => $newMessageVal) {
+                    try {
+                        $result = GoogleTranslateHelper::translate($newMessageVal, $this->defaultLocale);
+                        sleep(1);
+                        $messages[$newMessageKey] = $result;
+                    } catch (Exception $ex) {
+                        Debug::dump($ex->getMessage());
+                    }
+                }
+            }
+
             if ($this->debug) {
                 Debug::dump($existingMessages);
             }
@@ -228,7 +249,7 @@ class TextCollector extends i18nTextCollector
 
             // in mysite, collect theme as well
             if ($moduleName == 'mysite' || $moduleName == 'app') {
-                $themeEntities = $this->collectFromTheme();
+                $themeEntities = $this->collectFromTheme($module);
                 $processedEntities = array_merge($processedEntities, $themeEntities);
                 ksort($processedEntities);
             }
@@ -275,9 +296,10 @@ class TextCollector extends i18nTextCollector
     }
 
     /**
+     * @param Module $module
      * @return array
      */
-    public function collectFromTheme()
+    public function collectFromTheme(Module $module)
     {
         $themeDir = $this->getThemeDir();
         $themeFolder = Director::baseFolder() . '/' . $themeDir . '/Templates';
@@ -287,7 +309,7 @@ class TextCollector extends i18nTextCollector
         $entities = [];
         foreach ($files as $file) {
             $fileContent = file_get_contents($file);
-            $entities = array_merge($entities, $this->collectFromTemplate($fileContent, $file));
+            $entities = array_merge($entities, $this->collectFromTemplate($fileContent, $file, $module));
         }
 
         return $entities;
@@ -302,7 +324,7 @@ class TextCollector extends i18nTextCollector
      * @param array $parsedFiles
      * @return array $entities An array of entities representing the extracted template function calls
      */
-    public function collectFromTemplate($content, $fileName, Module $module = null, &$parsedFiles = array())
+    public function collectFromTemplate($content, $fileName, Module $module, &$parsedFiles = [])
     {
         // Get namespace either from $fileName or $module fallback
         $namespace = $fileName ? basename($fileName) : $module->getName();
@@ -417,6 +439,27 @@ class TextCollector extends i18nTextCollector
     {
         $this->debug = $debug;
 
+        return $this;
+    }
+
+    /**
+     * Get the value of autoTranslate
+     * @return boolean
+     */
+    public function getAutoTranslate()
+    {
+        return $this->autoTranslate;
+    }
+
+    /**
+     * Set the value of autoTranslate
+     *
+     * @param boolean $autoTranslate
+     * @return $this
+     */
+    public function setAutoTranslate($autoTranslate)
+    {
+        $this->autoTranslate = $autoTranslate;
         return $this;
     }
 }

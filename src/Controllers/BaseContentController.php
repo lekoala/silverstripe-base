@@ -28,6 +28,7 @@ use LeKoala\Base\Dev\EnvironmentChecker;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\Connect\DatabaseException;
 use SilverStripe\CMS\Controllers\ContentController;
+use SilverStripe\Control\HTTPRequest;
 
 /**
  * A more opiniated base controller for your app
@@ -57,6 +58,21 @@ class BaseContentController extends ContentController
         'cache' => '%$Psr\SimpleCache\CacheInterface.app', // see _config/cache.yml,
         'environmentChecker' => '%$LeKoala\Base\Dev\EnvironmentChecker',
     ];
+    /**
+     * @config
+     * @var string
+     */
+    private static $default_referrer_policy;
+    /**
+     * @config
+     * @var string
+     */
+    private static $enable_hsts;
+    /**
+     * @config
+     * @var string
+     */
+    private static $enable_csp;
     /**
      * @var LoggerInterface
      */
@@ -97,6 +113,7 @@ class BaseContentController extends ContentController
             if (strpos($dbMessage, 'Unknown column') !== false) {
                 $dbAdmin = new DatabaseAdmin();
                 $dbAdmin->doBuild(true);
+                sleep(5);
             }
             // Rethrow the exception
             throw $ex;
@@ -161,6 +178,28 @@ class BaseContentController extends ContentController
         $arr['name'] = $sc->getTitle();
 
         return json_encode($arr);
+    }
+
+    public function handleRequest(HTTPRequest $request)
+    {
+        $response = parent::handleRequest($request);
+
+        $config = self::config();
+        // @link https://web.dev/referrer-best-practices/
+        if ($config->default_referrer_policy) {
+            $response->addHeader('Referrer-Policy', $config->default_referrer_policy);
+        }
+        // enable HTTP Strict Transport Security
+        if ($config->enable_hsts && Director::is_https()) {
+            $response->addHeader('Strict-Transport-Security', 'max-age=300; includeSubDomains; preload; always;');
+        }
+        // enable content security policy
+        if ($config->enable_cst && Director::is_https()) {
+            $deferBackend = DeferBackend::getDeferBackend();
+            $response = $deferBackend->updateResponseWithCSP($response);
+        }
+
+        return $response;
     }
 
     /**

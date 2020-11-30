@@ -118,6 +118,9 @@ class ThemeControllerExtension extends Extension
                 if (strpos($file, '-theme.css') !== false) {
                     continue;
                 }
+                if (strpos($file, '-theme.min.css') !== false) {
+                    continue;
+                }
                 // Skip unminified files if we have a min file
                 $minFile = str_replace('.css', '.min.css', $file);
                 if (in_array($minFile, $files)) {

@@ -101,6 +101,14 @@ class SiteConfigExtension extends DataExtension
         return 'https://www.google.com/maps/search/?api=1&query=' . urlencode($this->owner->ContactAddress);
     }
 
+    public function LegalNameOrTitle()
+    {
+        if ($this->owner->LegalName) {
+            return $this->owner->LegalName;
+        }
+        return $this->owner->Title;
+    }
+
     /**
      * Returns an address split on multiple lines with br
      *

@@ -24,7 +24,7 @@ class CommonRequirements
      * @config
      * @var string
      */
-    private static $jquery_version = '3.4.1';
+    private static $jquery_version = '3.5.1';
 
     /**
      * @config
@@ -66,13 +66,13 @@ class CommonRequirements
      * @config
      * @var string
      */
-    private static $boxicons_version = '2.0.4';
+    private static $boxicons_version = '2.0.7';
 
     /**
      * @config
      * @var string
      */
-    private static $plyr_version = '3.4.5';
+    private static $plyr_version = '3.6.2';
 
     /**
      * @config
@@ -90,7 +90,7 @@ class CommonRequirements
      * @config
      * @var string
      */
-    private static $lazyload_version = '10.19.0';
+    private static $lazyload_version = '17.1.3';
 
     /**
      * @config
@@ -138,7 +138,7 @@ class CommonRequirements
      * @config
      * @var string
      */
-    private static $rellax_version = '1.10.0';
+    private static $rellax_version = '1.12.1';
 
     /**
      * @config
@@ -150,7 +150,7 @@ class CommonRequirements
      * @config
      * @var string
      */
-    private static $nouislider_version = '14.0.2';
+    private static $nouislider_version = '14.6.3';
 
     /**
      * @config
@@ -180,7 +180,7 @@ class CommonRequirements
      * @config
      * @var string
      */
-    private static $popper_version = "2.4.4";
+    private static $popper_version = "2.5.4";
 
     /**
      * Include all files in a given path
@@ -378,6 +378,7 @@ class CommonRequirements
     }
 
     /**
+     * @deprecated
      * @link https://github.com/verlok/lazyload
      * @return void
      */
