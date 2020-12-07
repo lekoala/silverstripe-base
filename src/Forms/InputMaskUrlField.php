@@ -12,7 +12,7 @@ class InputMaskUrlField extends InputMaskField
         parent::__construct($name, $title, $value);
         // The alias doesn't work too well it's missing a :
         // $this->setAlias(self::ALIAS_URL);
-        $this->setRegex('(https?|ftp)://.*');
+        $this->setRegex('(http|https|ftp)://.*');
     }
 
     public function setValue($value, $data = null)
