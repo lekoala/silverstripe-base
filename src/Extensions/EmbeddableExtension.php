@@ -28,6 +28,7 @@ class EmbeddableExtension extends DataExtension
         $EmbedURL = $fields->dataFieldByName('EmbedURL');
         if ($EmbedURL) {
             $EmbedURL->setTitle(_t('EmbeddableExtension.EMBEDURL', 'Embed from URL'));
+            $EmbedURL->setDescription(_t('EmbeddableExtension.EMBEDURLDESC', 'Copy the url of a compatible ressource (eg: a Youtube video)'));
 
             // Position properly
             $Content = $fields->dataFieldByName('Content');
