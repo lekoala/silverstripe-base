@@ -48,6 +48,7 @@ class ConfigurableI18nTextCollectorTask extends BuildTask
 
         $this->addOption("locale", "Locale to use", BaseI18n::get_lang());
         $this->addOption("merge", "Merge with previous translations", true);
+        $this->addOption("auto_translate", "Translate new strings using google api (1s per translation)", false);
         $this->addOption("clear_unused", "Remove keys that are not used anymore", false);
         $this->addOption("debug", "Show debug messages and prevent write", false);
         $this->addOption("module", "Module", null, $modules);
@@ -59,6 +60,7 @@ class ConfigurableI18nTextCollectorTask extends BuildTask
         $module = $options['module'];
         $clearUnused = $options['clear_unused'];
         $debug = $options['debug'];
+        $auto_translate = $options['auto_translate'];
 
         if ($locale && $module) {
             $this->message("Proceeding with locale $locale for module $module");
@@ -66,6 +68,7 @@ class ConfigurableI18nTextCollectorTask extends BuildTask
             $collector->setMergeWithExisting($merge);
             $collector->setClearUnused($clearUnused);
             $collector->setDebug($debug);
+            $collector->setAutoTranslate($auto_translate);
             $result = $collector->run([$module], $merge);
             if ($result) {
                 foreach ($result as $module => $entities) {

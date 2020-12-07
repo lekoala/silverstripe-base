@@ -2,6 +2,8 @@
 
 namespace LeKoala\Base\Controllers;
 
+use Cake\Chronos\Chronos;
+
 trait TimeHelpers
 {
     /**
@@ -9,6 +11,9 @@ trait TimeHelpers
      */
     public function CurrentDate()
     {
+        if (class_exists(\Cake\Chronos\Chronos::class)) {
+            return Chronos::now()->toDateTimeString();
+        }
         return date('Y-m-d H:i:s');
     }
 
@@ -17,6 +22,9 @@ trait TimeHelpers
      */
     public function CurrentTime()
     {
+        if (class_exists(\Cake\Chronos\Chronos::class)) {
+            return Chronos::now()->timestamp;
+        }
         return time();
     }
 }

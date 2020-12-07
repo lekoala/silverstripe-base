@@ -115,6 +115,8 @@ class BuildableFieldList extends FieldList
                 $object->setSource($v);
             } elseif ($k == 'empty') {
                 $object->setHasEmptyDefault($v);
+            } elseif ($k == 'value') {
+                $object->setValue($v);
             } else {
                 $object->setAttribute($k, $v);
             }

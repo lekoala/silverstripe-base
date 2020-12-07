@@ -3,10 +3,14 @@
 
 namespace LeKoala\Base\View;
 
+use Exception;
 use SilverStripe\View\HTML;
 use SilverStripe\View\SSViewer;
+use SilverStripe\Control\HTTPResponse;
+use SilverStripe\View\Requirements;
 use SilverStripe\View\ThemeResourceLoader;
 use SilverStripe\View\Requirements_Backend;
+use SilverStripe\View\TemplateGlobalProvider;
 
 /**
  * A backend that defers everything by default
@@ -15,10 +19,100 @@ use SilverStripe\View\Requirements_Backend;
  *
  * @link https://flaviocopes.com/javascript-async-defer/
  */
-class DeferBackend extends Requirements_Backend
+class DeferBackend extends Requirements_Backend implements TemplateGlobalProvider
 {
     // It's better to write to the head with defer
     public $writeJavascriptToBody = false;
+
+    /**
+     * @var string
+     */
+    protected static $csp_nonce = null;
+
+    /**
+     * @var array|null
+     */
+    protected $cspReport = null;
+
+    /**
+     * @return $this
+     */
+    public static function getDeferBackend()
+    {
+        $backend = Requirements::backend();
+        if (!$backend instanceof self) {
+            throw new Exception("Requirements backend is currently of class " . get_class($backend));
+        }
+        return $backend;
+    }
+
+    /**
+     * Allows calling getCspNonce in the template for script inclusion
+     *
+     * @return array
+     */
+    public static function get_template_global_variables()
+    {
+        return [
+            'getCspNonce'
+        ];
+    }
+
+    /**
+     * @link https://content-security-policy.com/nonce/
+     * @return string
+     */
+    public static function getCspNonce()
+    {
+        if (!self::$csp_nonce) {
+            self::$csp_nonce = str_replace(["/", "+"], "", base64_encode(random_bytes(18)));
+        }
+        return self::$csp_nonce;
+    }
+
+    /**
+     * Call this before updateResponseWithCSP
+     *
+     * @param string $uri
+     * @param boolean $reportOnly
+     * @return void
+     */
+    public function setCspReport($uri, $reportOnly = false)
+    {
+        $this->cspReport = [$uri, $reportOnly];
+    }
+
+    /**
+     * Add CSP to the response using a flexible strict dynamic way
+     *
+     * @param HTTPResponse $response
+     * @return void
+     */
+    public function updateResponseWithCSP(HTTPResponse $response)
+    {
+        $csp = "default-src 'self' data:";
+
+        $csp .= ';';
+        // @link https://websec.be/blog/cspstrictdynamic/
+        $csp .= "script-src 'nonce-" . self::getCspNonce() . "' 'strict-dynamic' 'unsafe-inline' 'unsafe-eval' https: http:;";
+        $csp .= "style-src * 'unsafe-inline';";
+        $csp .= "object-src 'self';";
+        $csp .= "img-src * data:;";
+        $csp .= "font-src * data:;";
+
+        $report = $this->cspReport;
+
+        if ($report) {
+            $csp .= "report-uri "  . $report[0];
+        }
+
+        $headerName = 'Content-Security-Policy';
+        if ($report && $report[1]) {
+            $headerName = 'Content-Security-Policy-Report-Only';
+        }
+        $response->addHeader($headerName, $csp);
+        return $response;
+    }
 
     public function javascript($file, $options = array())
     {
@@ -88,6 +182,7 @@ class DeferBackend extends Requirements_Backend
             $htmlAttributes = [
                 'type' => isset($attributes['type']) ? $attributes['type'] : "application/javascript",
                 'src' => $this->pathForFile($file),
+                'nonce' => self::getCspNonce(),
             ];
             if (!empty($attributes['async'])) {
                 $htmlAttributes['async'] = 'async';
@@ -103,7 +198,10 @@ class DeferBackend extends Requirements_Backend
         foreach ($this->getCustomScripts() as $script) {
             $jsRequirements .= HTML::createTag(
                 'script',
-                ['type' => 'application/javascript'],
+                [
+                    'type' => 'application/javascript',
+                    'nonce' => self::getCspNonce(),
+                ],
                 "//<![CDATA[\n{$script}\n//]]>"
             );
             $jsRequirements .= "\n";

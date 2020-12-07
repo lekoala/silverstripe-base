@@ -31,7 +31,13 @@ fr:
   BootstrapModal:
     Close: Fermer
   ContactForm:
+    Company: Société
+    Email3: Email
+    Message: Message
+    Name: Nom
+    Phone: Téléphone
     SEND: 'Envoyez votre message'
+    Subject: Sujet
   ContactPage:
     Address: ADDRESSE
     Email: E-MAIL
@@ -132,6 +138,7 @@ fr:
     Title: 'Data Models'
   SilverStripe\Forms\Form:
     CSRF_FAILED_MESSAGE: 'There seems to have been a technical problem. Please click the back button, refresh your browser, and try again.'
+    FIELDISREQUIRED: '{name} is required'
   SilverStripe\Security\Security:
     NOTERESETLINKINVALID: '<p>Le lien de réinitialisation est invalide ou expiré.</p><p>Vous pouvez en <a href="{link1}">demander un nouveau</a> ou changer votre mot de passe après votre <a href="{link2}">connexion</a>.</p>'
     PASSWORDRESETSENTHEADER: 'Votre mot de passe a été envoyé'

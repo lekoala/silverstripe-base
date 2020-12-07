@@ -207,11 +207,25 @@ form {
 
   .error {
     color: $danger;
+
+    input,
+    textarea,
+    select {
+      border-color: $danger;
+    }
   }
 
   // use this to align checkboxes to other regular inputs in a row
   .field.field-aligned {
     margin-top: 2.375rem;
+  }
+
+  span.message {
+    padding-left: 0;
+    padding-right: 0;
+    &.required {
+      color: $danger;
+    }
   }
 
   &.form-inline {

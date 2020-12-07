@@ -118,6 +118,25 @@ class BaseI18n
     }
 
     /**
+     * @return array
+     */
+    public static function get_available_langs()
+    {
+        if (!self::usesFluent()) {
+            return [
+                self::get_lang()
+            ];
+        }
+
+        $allLocales = Locale::get();
+        $results = [];
+        foreach ($allLocales as $locale) {
+            $results[] = $locale->URLSegment;
+        }
+        return $results;
+    }
+
+    /**
      * Execute the callback in given subsite
      *
      * @param string $locale
