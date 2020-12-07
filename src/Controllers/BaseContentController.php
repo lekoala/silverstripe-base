@@ -25,6 +25,7 @@ use SilverStripe\Core\Config\Config;
 use LeKoala\Base\Helpers\ThemeHelper;
 use SilverStripe\SiteConfig\SiteConfig;
 use LeKoala\Base\Dev\EnvironmentChecker;
+use LeKoala\Base\i18n\BaseI18n;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\Connect\DatabaseException;
 use SilverStripe\CMS\Controllers\ContentController;
@@ -293,12 +294,12 @@ class BaseContentController extends ContentController
         $lang = $request->getVar('lang');
         if ($lang) {
             if (strlen($lang) == 2) {
-                $lang = i18n::get_closest_translation($lang);
+                $lang = BaseI18n::get_locale_from_lang($lang);
             }
             Cookie::set('ChosenLocale', $lang);
-            i18n::set_locale($lang);
         }
         $chosenLocale = Cookie::get('ChosenLocale');
+        // Only set if locale has a valid format
         if ($chosenLocale && preg_match('/^[a-z]{2}_[A-Z]{2}$/', $chosenLocale)) {
             i18n::set_locale($chosenLocale);
         }
