@@ -14,7 +14,8 @@ class InputMaskPercentageField extends InputMaskNumericField
     public function __construct($name, $title = null, $value = null)
     {
         parent::__construct($name, $title, $value);
-        $this->setAlias(self::ALIAS_PERCENTAGE);
+        // $this->setAlias(self::ALIAS_PERCENTAGE);
+        $this->setSuffix(' %');
     }
 
     public function setValue($value, $data = null)
