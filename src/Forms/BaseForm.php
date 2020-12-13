@@ -196,7 +196,7 @@ class BaseForm extends Form
         // If we have a doSubmit method, add the action automatically
         if (method_exists($this, 'doSubmit')) {
             $label =  _t('BaseForm.DOSUBMIT', "Submit");
-            if ($this->record) {
+            if ($this->record && $this->record->ID) {
                 $label = _t('BaseForm.DOEDIT', "Save changes");
             }
             $actions->addAction("doSubmit", $label);
