@@ -265,43 +265,6 @@ body.cms {
     display: table-cell;
 }
 
-/* Actions */
-#Form_ItemEditForm_action_doDelete {
-    position: absolute;
-    right: 1.5385rem;
-}
-
-#Form_ItemEditForm_action_doDelete.default-position {
-    position: inherit;
-    right: 0;
-}
-
-.cms-content-header-utils {
-    padding-right: 1.5385rem;
-}
-
-#action_doSaveAndNext:before, .btn-icon-end:before {
-    float: right;
-    margin-right: 0;
-    margin-left: 6px;
-}
-
-.btn-toolbar .bb-align {
-    display: inline-block;
-    line-height: 32px;
-    padding-left: 1.5385rem;
-    padding-right: 1.5385rem;
-}
-
-label.btn {
-    margin-bottom: 0;
-}
-
-table .btn-link {
-    padding: 0;
-    margin: 0;
-}
-
 /* UI fixes */
 /* Looks broken otherwise */
 .cms .grid-field .add-existing-autocompleter button.action_gridfield_relationadd span {
