@@ -2,7 +2,7 @@
 
 use SilverStripe\Control\Controller;
 use SilverStripe\Forms\GridField\GridField;
-use LeKoala\Base\Forms\GridField\GridFieldTableButton;
+use LeKoala\CmsActions\GridFieldTableButton;
 
 /**
  * A button that does nothing except reloading the data

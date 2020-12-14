@@ -2,17 +2,18 @@
 
 namespace LeKoala\Base\Extensions;
 
+use SilverStripe\ORM\DataObject;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Security\Member;
 use SilverStripe\ORM\DataExtension;
+use LeKoala\CmsActions\CustomAction;
 use SilverStripe\Security\Permission;
-use LeKoala\Base\Actions\CustomAction;
 
 /**
  * Allow to enable/disable login for your objects based on status
  * See BaseMemberExtension for usage
  *
- * @property \LeKoala\Base\Extensions\ValidationStatusExtension $owner
+ * @property \LeKoala\Base\Extensions\ValidationStatusExtension|BaseMember|DataObject $owner
  * @property string $ValidationStatus
  */
 class ValidationStatusExtension extends DataExtension

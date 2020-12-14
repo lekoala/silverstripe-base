@@ -2,9 +2,10 @@
 
 namespace LeKoala\Base\Extensions;
 
+use SilverStripe\ORM\DataObject;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\ORM\DataExtension;
-use LeKoala\Base\Actions\CustomAction;
+use LeKoala\CmsActions\CustomAction;
 use SilverStripe\Forms\GridField\GridField;
 
 /**
@@ -12,7 +13,7 @@ use SilverStripe\Forms\GridField\GridField;
  *
  * Unlocking require special action
  *
- * @property \LeKoala\Base\Extensions\LockableExtension $owner
+ * @property \LeKoala\Base\Extensions\LockableExtension|DataObject $owner
  * @property boolean $IsLocked
  */
 class LockableExtension extends DataExtension

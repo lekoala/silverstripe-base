@@ -8,15 +8,11 @@ use SilverStripe\Assets\Image;
 use LeKoala\Base\News\NewsPage;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Control\Director;
-use SilverStripe\Forms\FormAction;
 use LeKoala\Base\News\NewsCategory;
-use LeKoala\Base\Actions\CustomAction;
-use LeKoala\Base\Forms\FlatpickrField;
-use LeKoala\Base\Forms\InputMaskField;
+use LeKoala\CmsActions\CustomAction;
 use SilverStripe\ORM\FieldType\DBDate;
 use LeKoala\Base\VideoEmbed\VideoEmbed;
 use LeKoala\Base\Forms\SmartUploadField;
-use LeKoala\Base\Forms\InputMaskDateField;
 use SilverStripe\Security\Permission;
 
 /**
