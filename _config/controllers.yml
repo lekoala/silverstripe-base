@@ -6,10 +6,6 @@ SilverStripe\Control\Director:
   rules:
     '__time': 'LeKoala\Base\Controllers\TimeController'
     'sitesearch': 'LeKoala\Base\Controllers\SearchController'
-LeKoala\Base\Controllers\BaseContentController:
-  default_referrer_policy: 'no-referrer-when-downgrade'
-  enable_hsts: true
-  enable_cst: false
 # ---
 # Name: base-controllers-live
 # Only:

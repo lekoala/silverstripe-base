@@ -24,7 +24,8 @@
     "bummzack/sortablefile": "^2.0",
     "silvershop/silverstripe-hasonefield": "^3.0",
     "wilr/silverstripe-googlesitemaps": "^2.0",
-    "lekoala/silverstripe-cms-actions": "*"
+    "lekoala/silverstripe-cms-actions": "*",
+    "lekoala/silverstripe-defer-backend": "*"
   },
   "require-dev": {
     "sminnee/phpunit": "^5.7",
