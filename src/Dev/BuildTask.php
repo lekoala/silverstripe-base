@@ -3,9 +3,7 @@
 namespace LeKoala\Base\Dev;
 
 use Exception;
-use SilverStripe\ORM\DB;
 use Psr\Log\LoggerInterface;
-use SilverStripe\Dev\Backtrace;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Control\Director;
@@ -14,9 +12,7 @@ use LeKoala\Base\Helpers\ClassHelper;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Manifest\ClassLoader;
-use SilverStripe\ORM\Connect\DatabaseException;
 use SilverStripe\Dev\BuildTask as DefaultBuildTask;
-use SilverStripe\Logging\DetailedErrorFormatter;
 
 /**
  * This is an improved BuildTask
@@ -338,7 +334,7 @@ abstract class BuildTask extends DefaultBuildTask
     }
 
     /**
-     * @return LoggerInterface
+     * @return Monolog\Logger
      */
     public function getLogger()
     {

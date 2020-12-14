@@ -183,7 +183,7 @@ CSS;
     }
 
     /**
-     * @return LoggerInterface
+     * @return Monolog\Logger
      */
     public function getLogger()
     {

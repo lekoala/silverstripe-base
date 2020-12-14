@@ -5,8 +5,6 @@ namespace LeKoala\Base\Controllers;
 use \Exception;
 use SilverStripe\i18n\i18n;
 use Psr\Log\LoggerInterface;
-use SilverStripe\ORM\DataList;
-use SilverStripe\ORM\ArrayList;
 use SilverStripe\View\SSViewer;
 use SilverStripe\Control\Cookie;
 use SilverStripe\Control\Session;
@@ -18,7 +16,6 @@ use SilverStripe\ORM\DatabaseAdmin;
 use SilverStripe\Security\Security;
 use SilverStripe\View\Requirements;
 use LeKoala\Base\View\CookieConsent;
-use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Config\Config;
 use LeKoala\Base\Helpers\ThemeHelper;
@@ -76,7 +73,7 @@ class BaseContentController extends ContentController
      */
     private static $enable_csp;
     /**
-     * @var LoggerInterface
+     * @var Monolog\Logger
      */
     public $logger;
     /**
@@ -324,7 +321,7 @@ class BaseContentController extends ContentController
      * Get logger
      *
      * @link https://docs.silverstripe.org/en/4/developer_guides/debugging/error_handling/
-     * @return LoggerInterface
+     * @return Monolog\Logger
      */
     public function getLogger()
     {

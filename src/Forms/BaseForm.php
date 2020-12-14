@@ -237,7 +237,7 @@ class BaseForm extends Form
     }
 
     /**
-     * @return  Psr\Log\LoggerInterface
+     * @return Monolog\Logger
      */
     public function getLogger()
     {
