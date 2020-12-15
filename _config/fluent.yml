@@ -24,6 +24,8 @@ TractorCow\Fluent\Extension\FluentExtension:
     - LeKoala\Base\ORM\FieldType\UntranslatedVarchar
 # Add extensions to SilverStripe
 SilverStripe\SiteConfig\SiteConfig:
+  # Prevent duplicate siteconfigs when localised
+  frontend_publish_required: false
   extensions:
     - 'TractorCow\Fluent\Extension\FluentExtension'
 # Add extensions to our base classes
@@ -55,6 +57,3 @@ LeKoala\Base\Blocks\Block:
 # SilverStripe\ORM\DataObject:
 #   cms_publish_required: false
 #   frontend_publish_required: false
-# Prevent duplicate siteconfigs when localised
-SilverStripe\SiteConfig\SiteConfig:
-  frontend_publish_required: false
