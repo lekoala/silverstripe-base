@@ -9,7 +9,6 @@ SilverStripe\Admin\LeftAndMain:
     - "base/css/admin.css"
   extensions:
     - LeKoala\Base\Admin\BaseLeftAndMainExtension
-    - LeKoala\Base\Blocks\BlocksLeftAndMainExtension
 SilverStripe\View\SSViewer:
   source_file_comments: false
 SilverStripe\AssetAdmin\Controller\AssetAdmin:

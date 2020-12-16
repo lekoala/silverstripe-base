@@ -1,9 +1,0 @@
----
-Name: base-actions
----
-SilverStripe\ORM\DataObject:
-  extensions:
-    - LeKoala\Base\Actions\DataObjectActionsExtension
-SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest:
-  extensions:
-    - LeKoala\Base\Actions\ActionsGridFieldItemRequest

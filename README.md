@@ -66,12 +66,6 @@ This also applies to your theme.yml
 - FAQ Page
 - Simple News system (if you need a more complex solution, use the Blog module)
 
-### Block pages
-
-Allows to modularize pages with "blocks" content. This aims to be a simple alternative to elemental module.
-
-All the content is saved into the Content field and therefore can be used with no performance penality.
-
 ### Extended DataObject actions
 
 Now provided by lekoala/silverstripe-cms-actions

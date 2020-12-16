@@ -2,7 +2,7 @@
 
 namespace LeKoala\Base\Contact;
 
-use LeKoala\Base\Actions\CustomAction;
+use LeKoala\CmsActions\CustomAction;
 use SilverStripe\ORM\DataObject;
 use LeKoala\Base\Contact\ContactPage;
 use SilverStripe\Control\Email\Email;

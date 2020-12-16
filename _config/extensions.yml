@@ -23,10 +23,6 @@ SilverStripe\SiteConfig\SiteConfig:
 SilverStripe\CMS\Controllers\ContentController:
   extensions:
     - LeKoala\Base\Controllers\SimpleSearchControllerExtension
-LeKoala\Base\Blocks\Block:
-  extensions:
-    - LeKoala\Base\Extensions\SortableExtension
-    - LeKoala\Base\Extensions\SmartDataObjectExtension
 LeKoala\Base\News\NewsItem:
   extensions:
     - LeKoala\Base\Extensions\URLSegmentExtension

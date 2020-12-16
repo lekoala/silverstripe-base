@@ -13,7 +13,7 @@ use SilverStripe\Core\Injector\Injector;
 trait HasLogger
 {
     /**
-     * @return LoggerInterface
+     * @return Monolog\Logger
      */
     public static function getLogger()
     {

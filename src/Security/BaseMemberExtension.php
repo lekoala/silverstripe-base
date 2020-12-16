@@ -15,7 +15,7 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\GraphQL\Controller;
 use SilverStripe\Admin\SecurityAdmin;
 use SilverStripe\Security\Permission;
-use LeKoala\Base\Actions\CustomAction;
+use LeKoala\CmsActions\CustomAction;
 use LeKoala\Base\Security\MemberAudit;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\LoginAttempt;

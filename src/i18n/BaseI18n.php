@@ -6,7 +6,6 @@ use SilverStripe\i18n\i18n;
 use TractorCow\Fluent\Model\Locale;
 use TractorCow\Fluent\State\FluentState;
 use SilverStripe\Core\Config\Configurable;
-use TractorCow\Fluent\Extension\FluentExtension;
 
 /**
  * i18n helper class

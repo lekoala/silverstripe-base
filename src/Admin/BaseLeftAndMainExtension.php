@@ -6,7 +6,6 @@ use SilverStripe\i18n\i18n;
 use Psr\Log\LoggerInterface;
 use SilverStripe\Admin\CMSMenu;
 use SilverStripe\View\SSViewer;
-use SilverStripe\Control\Director;
 use SilverStripe\View\Requirements;
 use SilverStripe\SiteConfig\SiteConfig;
 use SilverStripe\Core\Injector\Injector;
@@ -184,7 +183,7 @@ CSS;
     }
 
     /**
-     * @return LoggerInterface
+     * @return Monolog\Logger
      */
     public function getLogger()
     {

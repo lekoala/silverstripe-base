@@ -159,6 +159,7 @@ class BasePageExtension extends DataExtension
         if (!$descriptionText && $sourceObject->hasField('Content')) {
             $descriptionText = preg_replace('/\s+/', ' ', $sourceObject->dbObject('Content')->Summary());
         }
+        $descriptionText = trim($descriptionText);
         $imageLink = '';
         if ($sourceObject->hasMethod('getMetaImage')) {
             $imageLink = $sourceObject->getMetaImage();

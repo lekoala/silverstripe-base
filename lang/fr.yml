@@ -4,7 +4,7 @@ fr:
     MAXRESOLUTION: 'Résolution max.: 2048x2048px'
     MAXSIZE: 'Format max fichier: {size}'
   BaseForm:
-    DOEDIT: 'Save changes'
+    DOEDIT: 'Mettre à jour'
     DOSUBMIT: Envoyer
   BaseMemberExtension:
     ACCOUNT_DISABLED: 'Votre compte a été supprimé.'

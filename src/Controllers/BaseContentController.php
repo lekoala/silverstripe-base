@@ -5,31 +5,29 @@ namespace LeKoala\Base\Controllers;
 use \Exception;
 use SilverStripe\i18n\i18n;
 use Psr\Log\LoggerInterface;
-use SilverStripe\ORM\DataList;
-use SilverStripe\ORM\ArrayList;
 use SilverStripe\View\SSViewer;
 use SilverStripe\Control\Cookie;
 use SilverStripe\Control\Session;
 use SilverStripe\Security\Member;
 use SilverStripe\Control\Director;
-use LeKoala\Base\View\DeferBackend;
 use LeKoala\Base\View\FlashMessage;
 use Psr\SimpleCache\CacheInterface;
 use SilverStripe\ORM\DatabaseAdmin;
 use SilverStripe\Security\Security;
 use SilverStripe\View\Requirements;
 use LeKoala\Base\View\CookieConsent;
-use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Config\Config;
 use LeKoala\Base\Helpers\ThemeHelper;
 use SilverStripe\SiteConfig\SiteConfig;
 use LeKoala\Base\Dev\EnvironmentChecker;
 use LeKoala\Base\i18n\BaseI18n;
+use LeKoala\DeferBackend\CspProvider;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\Connect\DatabaseException;
 use SilverStripe\CMS\Controllers\ContentController;
 use SilverStripe\Control\HTTPRequest;
+use LeKoala\DeferBackend\DeferBackend;
 
 /**
  * A more opiniated base controller for your app
@@ -75,7 +73,7 @@ class BaseContentController extends ContentController
      */
     private static $enable_csp;
     /**
-     * @var LoggerInterface
+     * @var Monolog\Logger
      */
     public $logger;
     /**
@@ -95,8 +93,6 @@ class BaseContentController extends ContentController
             return;
         }
 
-        // Ensure you load with "defer" your libs!
-        // @link https://flaviocopes.com/javascript-async-defer/#tldr-tell-me-whats-the-best
         Requirements::set_backend(new DeferBackend);
 
         // Maybe we could add dynamically the url handler??
@@ -185,20 +181,8 @@ class BaseContentController extends ContentController
     {
         $response = parent::handleRequest($request);
 
-        $config = self::config();
-        // @link https://web.dev/referrer-best-practices/
-        if ($config->default_referrer_policy) {
-            $response->addHeader('Referrer-Policy', $config->default_referrer_policy);
-        }
-        // enable HTTP Strict Transport Security
-        if ($config->enable_hsts && Director::is_https()) {
-            $response->addHeader('Strict-Transport-Security', 'max-age=300; includeSubDomains; preload; always;');
-        }
-        // enable content security policy
-        if ($config->enable_cst && Director::is_https()) {
-            $deferBackend = DeferBackend::getDeferBackend();
-            $response = $deferBackend->updateResponseWithCSP($response);
-        }
+        CspProvider::addSecurityHeaders($response);
+        CspProvider::addCspHeaders($response);
 
         return $response;
     }
@@ -337,7 +321,7 @@ class BaseContentController extends ContentController
      * Get logger
      *
      * @link https://docs.silverstripe.org/en/4/developer_guides/debugging/error_handling/
-     * @return LoggerInterface
+     * @return Monolog\Logger
      */
     public function getLogger()
     {

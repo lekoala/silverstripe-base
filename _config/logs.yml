@@ -16,7 +16,7 @@ Name: base-errors
 SilverStripe\Core\Injector\Injector:
   Psr\Log\LoggerInterface:
     calls:
-      ErrorLogFileHandler: [ pushHandler, [ %$ErrorLogFileHandler ] ]
+      ErrorLogFileHandler: [ pushHandler, [ '%$ErrorLogFileHandler' ] ]
   CustomLineFormatter:
     class: Monolog\Formatter\LineFormatter
     constructor:
@@ -30,7 +30,7 @@ SilverStripe\Core\Injector\Injector:
       - "../errors.log" # The log file will be relative to the main index.php file path (default: inside public/), so "../silverstripe.log" will create a file in your project root.
       - "notice"
     properties:
-      Formatter: %$CustomLineFormatter
+      Formatter: '%$CustomLineFormatter'
 ---
 Name: base-dev-errors
 Except:
@@ -39,19 +39,19 @@ Except:
 SilverStripe\Core\Injector\Injector:
   Psr\Log\LoggerInterface:
     calls:
-      DebugLogFileHandler: [ pushHandler, [ %$DebugFilteredLogFileHandler ] ]
+      DebugLogFileHandler: [ pushHandler, [ '%$DebugFilteredLogFileHandler' ] ]
   DebugLogFileHandler:
     class: Monolog\Handler\StreamHandler
     constructor:
       - "../debug.log" # The log file will be relative to the main index.php file path (default: inside public/), so "../silverstripe.log" will create a file in your project root.
       - "debug"
     properties:
-      Formatter: %$CustomLineFormatter
+      Formatter: '%$CustomLineFormatter'
   # A filtered log that only logs debug && notices messages
   DebugFilteredLogFileHandler:
     class: Monolog\Handler\FilterHandler
     constructor:
-      - %$DebugLogFileHandler
+      - '%$DebugLogFileHandler'
       - "debug"
       - "notice"
 ---
@@ -62,7 +62,7 @@ Only:
 SilverStripe\Core\Injector\Injector:
   Psr\Log\LoggerInterface:
     calls:
-      SysLogHandler: [ pushHandler, [ %$SysLogHandler ]]
+      SysLogHandler: [ pushHandler, [ '%$SysLogHandler' ]]
   # Syslog should be used for major events and handled accordingly
   SysLogHandler:
       class: Monolog\Handler\SyslogHandler
@@ -71,4 +71,4 @@ SilverStripe\Core\Injector\Injector:
         - "user"
         - "error"
       properties:
-          Formatter: %$CustomLineFormatter
+          Formatter: '%$CustomLineFormatter'

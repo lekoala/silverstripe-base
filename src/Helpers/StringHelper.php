@@ -34,6 +34,17 @@ class StringHelper
     }
 
     /**
+     * Add a / slash at the end for happy SEO
+     *
+     * @param string $url
+     * @return string
+     */
+    public static function trailingSlash($url)
+    {
+        return rtrim($url, '/') . '/';
+    }
+
+    /**
      * @param string $text
      * @return string
      */
