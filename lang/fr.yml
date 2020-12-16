@@ -1,6 +1,4 @@
 fr:
-  ActionsGridFieldItemRequest:
-    DONE: 'Action {action} was done on {name}'
   BaseFileUploadReceiver:
     ALLOWEXTENSION: 'Extensions autorisées: {ext}'
     MAXRESOLUTION: 'Résolution max.: 2048x2048px'
@@ -60,9 +58,6 @@ fr:
     COOKIES_ARE_REQUIRED: 'Ce site utilise des cookies.'
   CountryDropdownField:
     TITLE: Pays
-  DataObjectActionsExtension:
-    CREATEANDCLOSE: 'Créer et fermer'
-    SAVEANDCLOSE: 'Sauver et fermer'
   EmbeddableExtension:
     EMBEDURL: 'Embed from URL'
   FilePondField:

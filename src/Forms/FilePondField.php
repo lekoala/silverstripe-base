@@ -448,6 +448,9 @@ class FilePondField extends BaseFileUploadField
         return [];
     }
 
+    /**
+     * @inheritDoc
+     */
     public function saveInto(DataObjectInterface $record)
     {
         // Note that the list of IDs is based on the value sent by the user
@@ -500,6 +503,8 @@ class FilePondField extends BaseFileUploadField
     }
 
     /**
+     * IDE friendly getter
+     *
      * @param int $ID
      * @return File
      */
@@ -510,6 +515,8 @@ class FilePondField extends BaseFileUploadField
 
     /**
      * Convert an array of file to a single file
+     *
+     * Useful for multi uploads where one file is handled at a time
      *
      * @param array $tmpFile
      * @return array
