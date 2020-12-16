@@ -1,3 +1,0 @@
-$Content
-$Form
-$CommentsForm
