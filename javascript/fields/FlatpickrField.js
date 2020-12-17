@@ -27,11 +27,20 @@
   $.fn.ModularBehaviourHooks.afterHooks.flatpickr = function () {
     var $this = $(this);
     var $alt = $this.parent().find(".flatpickr-alt");
+    var orgVal = $this.val();
+
     $alt.on("change", function () {
-      var val = $alt.val();
+      var val = $(this).val();
       // without this, alternative input won't be cleared
       if (!val) {
-        $this.val('');
+        $this.val("");
+      }
+    });
+
+    $this.on("change", function () {
+      var val = $(this).val();
+      if (val && val != orgVal) {
+        $this.parents("form").addClass("changed");
       }
     });
 
