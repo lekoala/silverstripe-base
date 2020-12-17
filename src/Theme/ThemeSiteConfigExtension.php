@@ -236,6 +236,8 @@ class ThemeSiteConfigExtension extends DataExtension
         $Favicon->setAllowedExtensions('zip');
         $Favicon->setDescription("Upload the zip file generated with <a href=\"https://realfavicongenerator.net/\" target=\"_blank\">Real Favicon Generator</a>. Theme Color will be used as background for your icon.");
         $themeTab->push($Favicon);
+
+        $this->owner->extend("updateThemeTab", $themeTab);
     }
 
     /**

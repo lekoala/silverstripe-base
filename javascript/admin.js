@@ -87,41 +87,6 @@
     });
 
     $.entwine('ss', function($) {
-        // Load tab if set in url
-        var tabLoaded = false;
-        $('ul.ui-tabs-nav a').entwine({
-            onmatch: function() {
-                this._super();
-
-                if (tabLoaded) {
-                    return;
-                }
-
-                var url = this.attr('href'),
-                    hash = url.split('#')[1];
-
-                if (window.location.hash) {
-                    var currHash = location.hash.substring(1);
-                    if (currHash == hash) {
-                        this.trigger('click');
-                        tabLoaded = true;
-                    }
-                }
-            },
-            onclick: function() {
-                // Track active tab on submit
-                var input = $('#js-form-active-tab');
-                if (!input.length) {
-                    input = $('<input type="hidden" name="_activetab" class="no-change-track" id="js-form-active-tab" />');
-                    $('#Form_ItemEditForm').append(input);
-                }
-                var url = this.attr('href'),
-                    hash = url.split('#')[1];
-
-                input.val(hash);
-            }
-        });
-
         // Bulk manager shortcuts
         $('.col-bulkSelect').entwine({
             oncontextmenu: function(e) {
@@ -164,15 +129,6 @@
                     $(this).hide();
                 });
                 e.preventDefault();
-            }
-        });
-
-        // Prevent navigation for no ajax
-        $('.grid-field__icon-action.no-ajax').entwine({
-            onmatch: function() {},
-            onunmatch: function() {},
-            onclick: function(e) {
-                e.stopPropagation();
             }
         });
 
