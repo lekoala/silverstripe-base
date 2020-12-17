@@ -1,6 +1,4 @@
 nl:
-  ActionsGridFieldItemRequest:
-    DONE: 'Action {action} was done on {name}'
   BaseFileUploadReceiver:
     ALLOWEXTENSION: 'Toegestane extensies: {ext}'
     MAXRESOLUTION: 'Max resolutie: 2048x2048px'
@@ -60,9 +58,6 @@ nl:
     COOKIES_ARE_REQUIRED: 'Er worden cookies gebruikt op deze website'
   CountryDropdownField:
     TITLE: Land
-  DataObjectActionsExtension:
-    CREATEANDCLOSE: 'Creëren en sluiten'
-    SAVEANDCLOSE: 'Sauver et fermer'
   EmbeddableExtension:
     EMBEDURL: 'Embed from URL'
   FilePondField:

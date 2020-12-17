@@ -68,12 +68,7 @@ This also applies to your theme.yml
 
 ### Extended DataObject actions
 
-If you find that adding the "betterbuttons" module just to add a couple of actions and a Save and Close functionnality
-on your DataObject is too much, I got you covered. Simply use default getCMSActions and see them working just fine!
-
-Also refactor basic UI stuff that SilverStripe should already do (like having the delete button on the right).
-
-See [docs/Actions.md](docs/Actions.md) for documentation.
+Now provided by lekoala/silverstripe-cms-actions
 
 ### Themable sites
 

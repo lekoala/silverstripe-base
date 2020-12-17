@@ -185,7 +185,14 @@ class TextCollector extends i18nTextCollector
             if ($this->autoTranslate) {
                 foreach ($newMessages as $newMessageKey => $newMessageVal) {
                     try {
-                        $result = GoogleTranslateHelper::translate($newMessageVal, $this->defaultLocale);
+                        if (is_array($newMessageVal)) {
+                            $result = [];
+                            foreach ($newMessageVal as $newMessageValItem) {
+                                $result[] = GoogleTranslateHelper::translate($newMessageValItem, $this->defaultLocale);
+                            }
+                        } else {
+                            $result = GoogleTranslateHelper::translate($newMessageVal, $this->defaultLocale);
+                        }
                         sleep(1);
                         $messages[$newMessageKey] = $result;
                     } catch (Exception $ex) {
