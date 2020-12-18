@@ -17,9 +17,9 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Security\Permission;
 use LeKoala\Base\Security\MemberAudit;
 use SilverStripe\Security\LoginAttempt;
-use LeKoala\Base\Forms\CmsInlineFormAction;
-use LeKoala\Base\Forms\GridField\GridFieldHelper;
+use LeKoala\CmsActions\CmsInlineFormAction;
 use SilverStripe\Forms\GridField\GridField;
+use LeKoala\Base\Forms\GridField\GridFieldHelper;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\Forms\GridField\GridFieldConfig_RecordViewer;
 
