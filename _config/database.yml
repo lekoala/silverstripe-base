@@ -26,8 +26,6 @@ SilverStripe\Core\Injector\Injector:
     class: LeKoala\Base\ORM\FieldType\DBCountry
   Json:
     class: LeKoala\Base\ORM\FieldType\DBJson
-  Phone:
-    class: LeKoala\Base\ORM\FieldType\DBPhone
   Timezone:
     class: LeKoala\Base\ORM\FieldType\DBTimezone
   Website:
