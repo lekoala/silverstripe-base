@@ -2,7 +2,7 @@
 
 namespace LeKoala\Base\Controllers;
 
-use LeKoala\Base\i18n\BaseI18n;
+use LeKoala\Multilingual\LangHelper;
 
 trait LangHelpers
 {
@@ -31,7 +31,7 @@ trait LangHelpers
      */
     public function LangLink($lang)
     {
-        $locale = BaseI18n::get_locale_from_lang($lang);
+        $locale = LangHelper::get_locale_from_lang($lang);
         return $this->LocaleLink($locale);
     }
 }

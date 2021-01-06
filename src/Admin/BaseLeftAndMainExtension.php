@@ -2,7 +2,6 @@
 
 namespace LeKoala\Base\Admin;
 
-use SilverStripe\i18n\i18n;
 use Psr\Log\LoggerInterface;
 use SilverStripe\Admin\CMSMenu;
 use SilverStripe\View\SSViewer;
@@ -80,10 +79,6 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
                 CommonRequirements::boxIcons();
             }
         }
-
-        // if (isset($_GET['locale'])) {
-        //     i18n::set_locale($_GET['locale']);
-        // }
 
         if (self::config()->dark_theme) {
             Requirements::css('base/css/admin-dark.css');
