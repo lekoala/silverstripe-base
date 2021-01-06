@@ -26,10 +26,6 @@ is not overriden by the base config
     SilverStripe\Control\Email\Email:
         admin_email: admin@mywebsite.com
         tech_email: tech@agency.com
-    LeKoala\Base\i18n\BaseI18n:
-        default_locales:
-            - en_US
-            - fr_FR
 
 And here is a sample theme.yml
 
