@@ -91,7 +91,7 @@ class BaseContentController extends ContentController
             return;
         }
 
-        Requirements::set_backend(new DeferBackend);
+        DeferBackend::replaceBackend();
 
         // Maybe we could add dynamically the url handler??
         // $traits = class_uses($this);
