@@ -101,7 +101,7 @@ class TwoFactorLoginHandler extends LoginHandler
     public function step2()
     {
         $member = $this->getTwoFactorMember();
-        if(!$member) {
+        if (!$member) {
             return $this->redirectBack();
         }
         switch ($member->PreferredTwoFactorAuth()) {
