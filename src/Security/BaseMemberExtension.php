@@ -88,16 +88,8 @@ class BaseMemberExtension extends DataExtension
         $adminTrustedHeaders = Security::config()->admin_trusted_headers;
         if (!empty($adminIps)) {
             $request = Controller::curr()->getRequest();
-            $isTrusted = false;
-            if (!empty($adminTrustedHeaders)) {
-                foreach ($adminTrustedHeaders as $trustedHeader) {
-                    if ($request->getHeader($trustedHeader)) {
-                        $isTrusted = true;
-                    }
-                }
-            }
             $requestIp = $request->getIP();
-            if (!$isTrusted && IPHelper::checkIp($requestIp, $adminIps)) {
+            if (IPHelper::checkIp($requestIp, $adminIps)) {
                 return false;
             }
         }
@@ -154,11 +146,20 @@ class BaseMemberExtension extends DataExtension
         $need2Fa = $this->NeedTwoFactorAuth();
         $hasTwoFaMethods = count($this->AvailableTwoFactorMethod()) > 0;
         if (!empty($adminIps)) {
-            $requestIp = Controller::curr()->getRequest()->getIP();
+            $request = Controller::curr()->getRequest();
+            $isTrusted = false;
+            if (!empty($adminTrustedHeaders)) {
+                foreach ($adminTrustedHeaders as $trustedHeader) {
+                    if ($request->getHeader($trustedHeader)) {
+                        $isTrusted = true;
+                    }
+                }
+            }
+            $requestIp = $request->getIP();
             $isCmsUser = Permission::check('CMS_Access', 'any', $this->owner);
             if ($isCmsUser && !IPHelper::checkIp($requestIp, $adminIps)) {
                 // No two fa method to validate important account
-                if (!$hasTwoFaMethods) {
+                if (!$hasTwoFaMethods && !$isTrusted) {
                     $this->owner->audit('invalid_ip_admin', ['ip' => $requestIp]);
                     $result->addError(_t('BaseMemberExtension.ADMIN_IP_INVALID', "Your ip address {address} is not whitelisted for this account level", ['address' => $requestIp]));
                 }
