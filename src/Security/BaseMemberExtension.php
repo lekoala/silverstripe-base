@@ -4,7 +4,6 @@ namespace LeKoala\Base\Security;
 
 use Exception;
 use SilverStripe\ORM\DB;
-use SilverStripe\Forms\Form;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Security\Member;
@@ -20,7 +19,6 @@ use LeKoala\Base\Security\MemberAudit;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\LoginAttempt;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Security\Authenticator;
 use SilverStripe\Security\IdentityStore;
 use LeKoala\Base\Security\BaseAuthenticator;
 use LeKoala\Base\Extensions\ValidationStatusExtension;
@@ -48,6 +46,7 @@ class BaseMemberExtension extends DataExtension
     private static $db = [
         'LastVisited' => 'Datetime',
         'NumVisit' => 'Int',
+        'EnableTwoFactorAuth' => 'Boolean',
     ];
     private static $has_many = [
         "Audits" => MemberAudit::class . ".Member",
@@ -96,7 +95,7 @@ class BaseMemberExtension extends DataExtension
         if (BaseAuthenticator::is2FAenabledAdminOnly()) {
             return Permission::check('CMS_ACCESS', 'any', $this->owner);
         }
-        return true;
+        return $this->owner->EnableTwoFactorAuth;
     }
 
     /**
