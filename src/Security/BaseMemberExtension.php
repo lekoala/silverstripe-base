@@ -85,7 +85,6 @@ class BaseMemberExtension extends DataExtension
         }
         // the ip is whitelisted
         $adminIps = Security::config()->admin_ip_whitelist;
-        $adminTrustedHeaders = Security::config()->admin_trusted_headers;
         if (!empty($adminIps)) {
             $request = Controller::curr()->getRequest();
             $requestIp = $request->getIP();
@@ -148,6 +147,7 @@ class BaseMemberExtension extends DataExtension
         if (!empty($adminIps)) {
             $request = Controller::curr()->getRequest();
             $isTrusted = false;
+            $adminTrustedHeaders = Security::config()->admin_trusted_headers;
             if (!empty($adminTrustedHeaders)) {
                 foreach ($adminTrustedHeaders as $trustedHeader) {
                     if ($request->getHeader($trustedHeader)) {
