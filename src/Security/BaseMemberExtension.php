@@ -92,7 +92,7 @@ class BaseMemberExtension extends DataExtension
             }
         }
         // we only required 2fa for admins
-        if (BaseAuthenticator::is2FAenabledAdminOnly()) {
+        if (BaseAuthenticator::is2FAenabledAdminOnly() && $this->owner->EnableTwoFactorAuth) {
             return Permission::check('CMS_ACCESS', 'any', $this->owner);
         }
         return $this->owner->EnableTwoFactorAuth;
