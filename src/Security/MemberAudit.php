@@ -5,6 +5,7 @@ namespace LeKoala\Base\Security;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Member;
 use LeKoala\Base\ORM\FieldType\DBJson;
+use SilverStripe\Forms\TextField;
 
 /**
  * Audit specific events that may require more attention
@@ -49,6 +50,15 @@ class MemberAudit extends DataObject
         parent::onBeforeWrite();
 
         $this->SourceMemberID = Member::currentUserID();
+    }
+
+    public function getCMSFields()
+    {
+        $fields =  parent::getCMSFields();
+
+        $fields->replaceField("AuditData", new TextField("AuditData"));
+
+        return $fields;
     }
 
     public function forTemplate()

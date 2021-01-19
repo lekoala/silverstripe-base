@@ -160,7 +160,7 @@ class BaseMemberExtension extends DataExtension
             if ($isCmsUser && !IPHelper::checkIp($requestIp, $adminIps)) {
                 // No two fa method to validate important account
                 if (!$hasTwoFaMethods && !$isTrusted) {
-                    $this->owner->audit('invalid_ip_admin', ['ip' => $requestIp]);
+                    $this->owner->audit('invalid_ip_admin', ['ip' => $requestIp, 'headers' => $request->getHeaders()]);
                     $result->addError(_t('BaseMemberExtension.ADMIN_IP_INVALID', "Your ip address {address} is not whitelisted for this account level", ['address' => $requestIp]));
                 }
             } else {
