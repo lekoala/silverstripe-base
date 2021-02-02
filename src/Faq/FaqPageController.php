@@ -2,7 +2,7 @@
 
 namespace LeKoala\Base\Faq;
 
-use LeKoala\Base\i18n\BaseI18n;
+use LeKoala\Multilingual\LangHelper;
 use SilverStripe\Control\Director;
 use SilverStripe\View\Requirements;
 use SilverStripe\Control\HTTPRequest;
@@ -56,7 +56,7 @@ class FaqPageController extends \PageController
         $arr['@context'] = "https://schema.org";
         $arr['@type'] = "FAQPage";
         $arr['@id'] = Director::absoluteURL($this->Link());
-        $arr["inLanguage"] = BaseI18n::get_locale();
+        $arr["inLanguage"] = LangHelper::get_locale();
         $arr['name'] = $page->getTitle();
         $arr['description'] = $page->getShareDescription();
 

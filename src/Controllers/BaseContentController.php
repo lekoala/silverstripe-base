@@ -4,7 +4,6 @@ namespace LeKoala\Base\Controllers;
 
 use \Exception;
 use SilverStripe\i18n\i18n;
-use Psr\Log\LoggerInterface;
 use SilverStripe\View\SSViewer;
 use SilverStripe\Control\Cookie;
 use SilverStripe\Control\Session;
@@ -21,13 +20,12 @@ use SilverStripe\Core\Config\Config;
 use LeKoala\Base\Helpers\ThemeHelper;
 use SilverStripe\SiteConfig\SiteConfig;
 use LeKoala\Base\Dev\EnvironmentChecker;
-use LeKoala\Base\i18n\BaseI18n;
 use LeKoala\DeferBackend\CspProvider;
-use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\Connect\DatabaseException;
 use SilverStripe\CMS\Controllers\ContentController;
 use SilverStripe\Control\HTTPRequest;
 use LeKoala\DeferBackend\DeferBackend;
+use LeKoala\Multilingual\LangHelper;
 
 /**
  * A more opiniated base controller for your app
@@ -93,7 +91,7 @@ class BaseContentController extends ContentController
             return;
         }
 
-        Requirements::set_backend(new DeferBackend);
+        DeferBackend::replaceBackend();
 
         // Maybe we could add dynamically the url handler??
         // $traits = class_uses($this);
@@ -278,7 +276,7 @@ class BaseContentController extends ContentController
         $lang = $request->getVar('lang');
         if ($lang) {
             if (strlen($lang) == 2) {
-                $lang = BaseI18n::get_locale_from_lang($lang);
+                $lang = LangHelper::get_locale_from_lang($lang);
             }
             Cookie::set('ChosenLocale', $lang);
         }

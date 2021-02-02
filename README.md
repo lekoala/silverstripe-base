@@ -78,7 +78,7 @@ See [docs/Theming.md](docs/Theming.md) for documentation.
 
 ### New or improved db field types
 
-Need for phone, country, color fields? Yes!
+Need for country, color fields? Yes!
 Should your enums map labels to a static method? Yes!
 Should your scaffolding use better input fields? Sure!
 :-)

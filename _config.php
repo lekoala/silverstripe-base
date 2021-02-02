@@ -58,13 +58,6 @@ if (!function_exists('l')) {
         \SilverStripe\Core\Injector\Injector::inst()->get(\Psr\Log\LoggerInterface::class)->log($priority, $message, $extras);
     }
 }
-// Add global translation helper
-if (!function_exists('_g')) {
-    function _g($entity)
-    {
-        return \LeKoala\Base\i18n\BaseI18n::globalTranslation($entity);
-    }
-}
 
 // Timezone setting
 $SS_TIMEZONE = Environment::getEnv('SS_TIMEZONE');

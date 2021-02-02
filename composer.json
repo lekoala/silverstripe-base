@@ -25,7 +25,8 @@
     "silvershop/silverstripe-hasonefield": "^3.0",
     "wilr/silverstripe-googlesitemaps": "^2.0",
     "lekoala/silverstripe-cms-actions": "*",
-    "lekoala/silverstripe-defer-backend": "*"
+    "lekoala/silverstripe-defer-backend": "*",
+    "lekoala/silverstripe-multilingual": "*"
   },
   "require-dev": {
     "sminnee/phpunit": "^5.7",
@@ -38,8 +39,8 @@
     "predis/predis": "Use Redis as a cache",
     "colymba/gridfield-bulk-editing-tools": "Bulk editing",
     "unclecheese/display-logic": "Display and hide fields",
-    "giggsey/libphonenumber-for-php": "Usage for PhoneField",
-    "lekoala/silverstripe-blocks": "Blocks page"
+    "lekoala/silverstripe-blocks": "Blocks page",
+    "lekoala/silverstripe-phonenumber": "Phone number field type"
   },
   "extra": {
     "installer-name": "base",

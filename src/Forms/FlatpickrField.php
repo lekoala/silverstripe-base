@@ -5,7 +5,6 @@ use IntlDateFormatter;
 use SilverStripe\i18n\i18n;
 use SilverStripe\Forms\TextField;
 use SilverStripe\View\Requirements;
-use SilverStripe\Control\Controller;
 use SilverStripe\ORM\FieldType\DBDatetime;
 
 /**
@@ -524,6 +523,9 @@ class FlatpickrField extends TextField
         } else {
             $this->setAttribute('placeholder', _t('FlatpickrField.SELECT_A_DATE', 'Select a date...'));
         }
+
+        // Time formatting can cause value change for no reasons
+        $this->addExtraClass('no-change-track');
 
         return parent::Field($properties);
     }

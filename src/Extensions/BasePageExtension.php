@@ -10,21 +10,17 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Controller;
-use LeKoala\Base\Contact\ContactPage;
 use SilverStripe\ErrorPage\ErrorPage;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Versioned\Versioned;
 use LeKoala\Base\Subsite\SubsiteHelper;
 use SilverStripe\SiteConfig\SiteConfig;
-use LeKoala\Base\Privacy\PrivacyNoticePage;
-use LeKoala\Base\Privacy\TermsAndConditionsPage;
 
 /**
  * Useful utilities for pages
  *
  * Should be applied to SiteTree. Always applied in base-extensions
  *
- * @property \AboutPage|\AvailableSpacesPage|\HomePage|\Page|\VisionPage|\PortfolioPage|\LeKoala\Base\Blocks\BlocksPage|\LeKoala\Base\Contact\ContactPage|\LeKoala\Base\Faq\FaqPage|\LeKoala\Base\News\NewsPage|\LeKoala\Base\Privacy\CookiesRequiredPage|\LeKoala\Base\Privacy\PrivacyNoticePage|\LeKoala\Base\Privacy\TermsAndConditionsPage|\SilverStripe\ErrorPage\ErrorPage|\SilverStripe\CMS\Model\RedirectorPage|\SilverStripe\CMS\Model\SiteTree|\SilverStripe\CMS\Model\VirtualPage|\LeKoala\Base\Extensions\BasePageExtension $owner
  * @property boolean $ShowInFooter
  */
 class BasePageExtension extends DataExtension

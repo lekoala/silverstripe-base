@@ -4,9 +4,12 @@ namespace LeKoala\Base\Forms;
 
 use SilverStripe\Forms\DateField;
 use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\FileField;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\TextField;
+use LeKoala\PhoneNumber\PhoneField;
 use SilverStripe\Forms\EmailField;
+use SilverStripe\Forms\FieldGroup;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\HiddenField;
@@ -25,8 +28,6 @@ use LeKoala\Base\Forms\YesNoOptionsetField;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
-use SilverStripe\Forms\FieldGroup;
-use SilverStripe\Forms\FileField;
 
 /**
  * A field list that can create it its fields

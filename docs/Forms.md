@@ -28,8 +28,6 @@ Below is the list of fields provided by the module. Documentation is WIP.
 
 ### Alert
 
-### Phone
-
 ### Range
 
 ### Country
