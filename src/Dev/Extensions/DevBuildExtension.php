@@ -22,7 +22,6 @@ use LeKoala\Multilingual\LangHelper;
  * - truncateSiteTree
  *
  * Allow the following functions after dev build:
- * - generateRepository
  * - generateQueryTraits
  * - clearCache
  * - clearEmptyFolders
@@ -178,10 +177,9 @@ SQL;
 
         // Dev helpers - only accessible in dev mode
         $envIsAllowed = Director::isDev();
-        $generateRepository = $this->owner->getRequest()->getVar('generateRepository');
         $generateQueryTraits = $this->owner->getRequest()->getVar('generateQueryTraits');
 
-        if ($generateQueryTraits || $generateRepository) {
+        if ($generateQueryTraits) {
             $this->displayMessage("<div class='build'><p><b>Generating ide helpers</b></p><ul>\n\n");
             if (!$envIsAllowed) {
                 $this->displayMessage("<strong>Env is not allowed</strong>\n");
@@ -189,11 +187,6 @@ SQL;
         }
         if ($generateQueryTraits) {
             $this->generateQueryTraits();
-        }
-        if ($generateRepository) {
-            $this->generateRepository();
-        }
-        if ($generateQueryTraits || $generateRepository) {
             $this->displayMessage("</ul>\n<p><b>Generating ide helpers finished!</b></p></div>");
         }
 
@@ -411,54 +404,6 @@ CODE;
         $classes = ClassInfo::subclassesFor(DataObject::class);
         array_shift($classes); // remove dataobject
         return $classes;
-    }
-
-    /**
-     * Generate the repository class
-     *
-     * @return void
-     */
-    protected function generateRepository()
-    {
-        $classes = $this->getDataObjects();
-
-        $code = <<<CODE
-<?php
-// phpcs:ignoreFile -- this is a generated file
-class Repository {
-
-CODE;
-        foreach ($classes as $lcClass => $class) {
-            $classWithoutNS = ClassHelper::getClassWithoutNamespace($class);
-
-            $method = <<<CODE
-
-    /**
-     * @params int|string|array \$idOrWhere numeric ID or where clause (as string or array)
-     * @return $class
-     */
-    public static function $classWithoutNS(\$idOrWhere) {
-        return \LeKoala\Base\ORM\QueryHelper::findOne(\\$class::class, \$idOrWhere);
-    }
-
-    /**
-     * @params array \$filters
-     * @return \SilverStripe\ORM\DataList|{$class}
-     */
-    public static function {$classWithoutNS}List(\$filters = null) {
-        return \LeKoala\Base\ORM\QueryHelper::find(\\$class::class, \$filters);
-    }
-
-CODE;
-            $code .= $method;
-        }
-
-        $code .= "\n}\n";
-
-        $dest = Director::baseFolder() . '/app/src/Repository.php';
-        file_put_contents($dest, $code);
-
-        $this->displayMessage("<li>Repository class generated</li>");
     }
 
     /**

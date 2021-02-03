@@ -1,15 +1,5 @@
 # Dev
 
-## IDE helper for DataObject
-
-When you run a dev/build, we generate a Repository class on app/src.
-
-This class allows you to statically access all your DataObjects and return a
-properly typehinted record, so that you can use all your IDE features with ease.
-
-The api also make proper use of caching when possible so that you get the
-maximum performance without having to think about it.
-
 ## Tasks
 
 - DropUnusedDatabaseObjectsTask : drop outdated tables and fields from your tables
