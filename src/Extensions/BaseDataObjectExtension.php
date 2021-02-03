@@ -2,6 +2,7 @@
 
 namespace LeKoala\Base\Extensions;
 
+use GridFieldSoftDeleteAction;
 use SilverStripe\ORM\DB;
 use Psr\Log\LoggerInterface;
 use SilverStripe\Assets\File;
@@ -392,7 +393,12 @@ class BaseDataObjectExtension extends DataExtension
             $deleteAction = $config->getComponentByType(GridFieldDeleteAction::class);
             if ($deleteAction) {
                 $config->removeComponentsByType(GridFieldDeleteAction::class);
-                $config->addComponent(new GridFieldDeleteAction());
+                if($this->owner->hasExtension(\SoftDeletable::class)) {
+                    $config->addComponent(new GridFieldSoftDeleteAction());
+                }
+                else {
+                    $config->addComponent(new GridFieldDeleteAction());
+                }
             }
 
             $dataColumns = GridFieldHelper::getGridFieldDataColumns($config);
