@@ -393,10 +393,9 @@ class BaseDataObjectExtension extends DataExtension
             $deleteAction = $config->getComponentByType(GridFieldDeleteAction::class);
             if ($deleteAction) {
                 $config->removeComponentsByType(GridFieldDeleteAction::class);
-                if($this->owner->hasExtension(\SoftDeletable::class)) {
+                if ($this->owner->hasExtension(\SoftDeletable::class)) {
                     $config->addComponent(new GridFieldSoftDeleteAction());
-                }
-                else {
+                } else {
                     $config->addComponent(new GridFieldDeleteAction());
                 }
             }
