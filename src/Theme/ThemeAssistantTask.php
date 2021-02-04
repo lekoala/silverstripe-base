@@ -1,7 +1,9 @@
 <?php
+
 namespace LeKoala\Base\Theme;
 
-use LeKoala\Base\Dev\BuildTask;
+use LeKoala\DevToolkit\BuildTaskTools;
+use SilverStripe\Dev\BuildTask;
 use SilverStripe\Control\Director;
 
 /**
@@ -10,6 +12,7 @@ use SilverStripe\Control\Director;
 class ThemeAssistantTask extends BuildTask
 {
     use KnowsThemeDir;
+    use BuildTaskTools;
 
     protected $description = 'Helps you building themes';
     private static $segment = 'ThemeAssistantTask';
@@ -19,7 +22,7 @@ class ThemeAssistantTask extends BuildTask
         return Director::isDev();
     }
 
-    public function init()
+    public function run($request)
     {
         $componentsFolder = $this->getComponentsScssFolder();
         if (is_dir($componentsFolder)) {

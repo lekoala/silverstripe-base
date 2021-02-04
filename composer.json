@@ -26,7 +26,8 @@
     "wilr/silverstripe-googlesitemaps": "^2.0",
     "lekoala/silverstripe-cms-actions": "*",
     "lekoala/silverstripe-defer-backend": "*",
-    "lekoala/silverstripe-multilingual": "*"
+    "lekoala/silverstripe-multilingual": "*",
+    "lekoala/silverstripe-devtoolkit": "*"
   },
   "require-dev": {
     "sminnee/phpunit": "^5.7",

@@ -19,7 +19,6 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Core\Config\Config;
 use LeKoala\Base\Helpers\ThemeHelper;
 use SilverStripe\SiteConfig\SiteConfig;
-use LeKoala\Base\Dev\EnvironmentChecker;
 use LeKoala\DeferBackend\CspProvider;
 use SilverStripe\ORM\Connect\DatabaseException;
 use SilverStripe\CMS\Controllers\ContentController;
@@ -53,7 +52,6 @@ class BaseContentController extends ContentController
     private static $dependencies = [
         'logger' => '%$Psr\Log\LoggerInterface',
         'cache' => '%$Psr\SimpleCache\CacheInterface.app', // see _config/cache.yml,
-        'environmentChecker' => '%$LeKoala\Base\Dev\EnvironmentChecker',
     ];
     /**
      * @config
@@ -78,10 +76,6 @@ class BaseContentController extends ContentController
      * @var CacheInterface
      */
     public $cache;
-    /**
-     * @var EnvironmentChecker
-     */
-    public $environmentChecker;
 
     protected function init()
     {
@@ -130,8 +124,6 @@ class BaseContentController extends ContentController
         }
 
         $this->setLangFromRequest();
-
-        $this->environmentChecker->check($this);
 
         try {
             FlashMessage::checkFlashMessage($this->getSession());

@@ -101,9 +101,7 @@ Define sessionMessage on your controller and display messages using Alertify lib
 
 ### Dev tools
 
-A few useful tools to make your DX more pleasant.
-
-See [docs/Dev.md](docs/Dev.md) for documentation.
+Now provided by lekoala/silverstripe-devtoolkit
 
 ## Maintainer
 

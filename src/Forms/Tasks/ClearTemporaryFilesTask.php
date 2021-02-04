@@ -1,20 +1,22 @@
 <?php
+
 namespace LeKoala\Base\Forms\Tasks;
 
-use LeKoala\Base\Dev\BuildTask;
-use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Dev\BuildTask;
 use LeKoala\Base\Extensions\BaseFileExtension;
+use LeKoala\DevToolkit\BuildTaskTools;
 
 /**
  */
 class ClearTemporaryFilesTask extends BuildTask
 {
+    use BuildTaskTools;
+
     protected $description = 'Clear all temporary files from ajax uploads that didn\'t get attached to a record.';
     private static $segment = 'ClearTemporaryFilesTask';
 
-    public function init()
+    public function run($request)
     {
-        $request = $this->getRequest();
         $this->addOption("go", "Tick this to remove the files", false);
         $options = $this->askOptions();
 
