@@ -29,7 +29,7 @@ class Address extends DataObject
     private static $table_name = 'Address'; // When using namespace, specify table name
 
     private static $db = [
-        "Phone" => "Phone", // contact phone...
+        "Phone" => "Varchar(51)",
         "Email" => "Varchar", // contact email in case of notification
         "Notes" => "Text", // delivery notes etc
     ];

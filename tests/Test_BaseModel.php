@@ -10,7 +10,7 @@ use LeKoala\Base\ORM\FieldType\DBCountry;
 class Test_BaseModel extends DataObject implements TestOnly
 {
     private static $db = [
-        "Phone" => 'Varchar',
+        "Phone" => "Varchar(51)",
         "CountryCode" => DBCountry::class,
     ];
     private static $table_name = 'BaseModel';
