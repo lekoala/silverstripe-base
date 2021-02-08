@@ -85,6 +85,10 @@ class GoogleSiteConfigExtension extends DataExtension
      */
     public function requireGoogleAnalytics()
     {
+        if (!$this->shouldRequireGoogleAnalytics()) {
+            return false;
+        }
+
         $config = SiteConfig::config();
 
         $gtag =  $config->gtag_manager;
