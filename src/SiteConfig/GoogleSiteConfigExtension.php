@@ -85,10 +85,6 @@ class GoogleSiteConfigExtension extends DataExtension
      */
     public function requireGoogleAnalytics()
     {
-        if (!$this->shouldRequireGoogleAnalytics()) {
-            // return false;
-        }
-
         $config = SiteConfig::config();
 
         $gtag =  $config->gtag_manager;
@@ -150,11 +146,17 @@ JS;
         if ($gtag) {
             Requirements::javascript('https://www.googletagmanager.com/gtag/js?id=' . $this->owner->GoogleAnalyticsCode);
         }
+
+        $uniquenessID = 'ga-tracking';
+        // If we don't use cookie, no need to advertise them
+        if ($this->owner->GoogleAnalyticsWithoutCookies) {
+            $uniquenessID = 'ga';
+        }
         // If we use cookies and require cookie consent
         if (CookieConsent::IsEnabled() && !$this->owner->GoogleAnalyticsWithoutCookies && $conditionalAnalytics) {
-            CookieConsent::addScript($script, "ga-tracking");
+            CookieConsent::addScript($script, $uniquenessID);
         } else {
-            Requirements::customScript($script, "ga-tracking");
+            Requirements::customScript($script, $uniquenessID);
         }
 
         return true;
