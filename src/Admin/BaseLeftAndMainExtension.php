@@ -9,6 +9,7 @@ use SilverStripe\View\Requirements;
 use SilverStripe\SiteConfig\SiteConfig;
 use SilverStripe\Core\Injector\Injector;
 use LeKoala\Base\View\CommonRequirements;
+use LeKoala\Multilingual\LangHelper;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Admin\LeftAndMainExtension;
 use SilverStripe\Core\Config\Config;
@@ -60,6 +61,8 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
 
         // Never have comments as it can break ajax requests
         Config::modify()->set(SSViewer::class, 'source_file_comments', false);
+
+        LangHelper::persistLocale();
 
         $this->removeMenuItems();
         $this->reorderMenuItems();
