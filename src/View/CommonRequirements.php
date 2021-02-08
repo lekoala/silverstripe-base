@@ -72,7 +72,7 @@ class CommonRequirements
      * @config
      * @var string
      */
-    private static $plyr_version = '3.6.2';
+    private static $plyr_version = '3.6.3';
 
     /**
      * @config
@@ -237,6 +237,8 @@ class CommonRequirements
     }
 
     /**
+     * Make sure to set dnt config flag according to cookieconsent value
+     *
      * @link https://github.com/sampotts/plyr
      * @param bool $css Include css, defaults to true
      * @param bool $polyfilled Use polyfilled version, defaults to false
