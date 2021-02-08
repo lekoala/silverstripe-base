@@ -86,7 +86,7 @@ class GoogleSiteConfigExtension extends DataExtension
     public function requireGoogleAnalytics()
     {
         if (!$this->shouldRequireGoogleAnalytics()) {
-            return false;
+            // return false;
         }
 
         $config = SiteConfig::config();
@@ -152,9 +152,9 @@ JS;
         }
         // If we use cookies and require cookie consent
         if (CookieConsent::IsEnabled() && !$this->owner->GoogleAnalyticsWithoutCookies && $conditionalAnalytics) {
-            CookieConsent::addScript($script, "GoogleAnalytics");
+            CookieConsent::addScript($script, "ga-tracking");
         } else {
-            Requirements::customScript($script, "GoogleAnalytics");
+            Requirements::customScript($script, "ga-tracking");
         }
 
         return true;
