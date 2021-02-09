@@ -50,6 +50,9 @@ class DBNumericVarchar extends DBVarchar
         if ($this->value == 0) {
             return '';
         }
+        if (!is_numeric($this->value)) {
+            return '';
+        }
         return number_format($this->value, $this->decimalSize, $this->getCurrencyDecimalSeparator(), $this->getCurrencyGroupingSeparator());
     }
 
