@@ -72,7 +72,7 @@ class CommonRequirements
      * @config
      * @var string
      */
-    private static $plyr_version = '3.6.2';
+    private static $plyr_version = '3.6.3';
 
     /**
      * @config
@@ -96,7 +96,7 @@ class CommonRequirements
      * @config
      * @var string
      */
-    private static $fingerprintjs_version = '0.5.3';
+    private static $fingerprintjs_version = '3';
 
     /**
      * @config
@@ -237,6 +237,8 @@ class CommonRequirements
     }
 
     /**
+     * Make sure to set dnt config flag according to cookieconsent value
+     *
      * @link https://github.com/sampotts/plyr
      * @param bool $css Include css, defaults to true
      * @param bool $polyfilled Use polyfilled version, defaults to false
@@ -338,13 +340,13 @@ class CommonRequirements
     }
 
     /**
-     * @link https://github.com/valve/fingerprintjs/
+     * @link https://github.com/fingerprintjs/fingerprintjs
      * @return void
      */
     public static function fingerprintjs()
     {
         $version = self::config()->fingerprintjs_version;
-        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/fingerprintjs/$version/fingerprint.min.js");
+        Requirements::javascript("https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@$version/dist/fp.min.js");
     }
 
     /**

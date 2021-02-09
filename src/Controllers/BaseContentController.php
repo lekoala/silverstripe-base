@@ -122,6 +122,7 @@ class BaseContentController extends ContentController
         if (CookieConsent::IsEnabled()) {
             CookieConsent::requirements();
         }
+        LangHelper::persistLocaleIfCookiesAreAllowed();
 
         $this->setLangFromRequest();
 

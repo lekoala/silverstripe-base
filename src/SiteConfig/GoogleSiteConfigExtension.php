@@ -93,21 +93,24 @@ class GoogleSiteConfigExtension extends DataExtension
 
         $gtag =  $config->gtag_manager;
 
-        // TODO: upgrade to fingerprintjs2 and check ad blockers issues
-        // @link https://github.com/Foture/cookieless-google-analytics
         if ($this->owner->GoogleAnalyticsWithoutCookies) {
             CommonRequirements::fingerprintjs();
             $script = <<<JS
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-ga('create', '{$this->owner->GoogleAnalyticsCode}', {
-'storage': 'none',
-'clientId': new Fingerprint().get()
+FingerprintJS.load().then(function (fp) {
+  fp.get().then(function (result) {
+    var visitorId = result.visitorId;
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', '{$this->owner->GoogleAnalyticsCode}', {
+        'storage': 'none',
+        'clientId': visitorId
+    });
+    ga('set', 'anonymizeIp', true);
+    ga('send', 'pageview');
+  });
 });
-ga('set', 'anonymizeIp', true);
-ga('send', 'pageview');
 JS;
         } else {
             if ($gtag) {
@@ -147,11 +150,17 @@ JS;
         if ($gtag) {
             Requirements::javascript('https://www.googletagmanager.com/gtag/js?id=' . $this->owner->GoogleAnalyticsCode);
         }
+
+        $uniquenessID = 'ga-tracking';
+        // If we don't use cookie, no need to advertise them
+        if ($this->owner->GoogleAnalyticsWithoutCookies) {
+            $uniquenessID = 'ga';
+        }
         // If we use cookies and require cookie consent
         if (CookieConsent::IsEnabled() && !$this->owner->GoogleAnalyticsWithoutCookies && $conditionalAnalytics) {
-            CookieConsent::addScript($script, "GoogleAnalytics");
+            CookieConsent::addScript($script, $uniquenessID);
         } else {
-            Requirements::customScript($script, "GoogleAnalytics");
+            Requirements::customScript($script, $uniquenessID);
         }
 
         return true;
