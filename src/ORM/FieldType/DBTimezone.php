@@ -20,6 +20,7 @@ class DBTimezone extends DBVarchar
     public function scaffoldFormField($title = null, $params = null)
     {
         $field = TimezoneDropdown::create($this->name, $title);
+        $field->setHasEmptyDefault(true);
         return $field;
     }
 }
