@@ -27,7 +27,9 @@
     "lekoala/silverstripe-cms-actions": "*",
     "lekoala/silverstripe-defer-backend": "*",
     "lekoala/silverstripe-multilingual": "*",
-    "lekoala/silverstripe-devtoolkit": "*"
+    "lekoala/silverstripe-devtoolkit": "*",
+    "lekoala/silverstripe-geotools": "*",
+    "lekoala/silverstripe-common-extension": "*"
   },
   "require-dev": {
     "sminnee/phpunit": "^5.7",

@@ -89,12 +89,6 @@ Lots of new form fields.
 
 See [docs/Forms.md](docs/Forms.md) for documentation.
 
-### Extensions
-
-- Social media
-- Sortable
-- Smart uploads
-
 ### Alerts
 
 Define sessionMessage on your controller and display messages using Alertify library

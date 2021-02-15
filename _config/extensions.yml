@@ -9,7 +9,7 @@ SilverStripe\Assets\File:
     - LeKoala\Base\Extensions\BaseFileExtension
 SilverStripe\CMS\Model\SiteTree:
   extensions:
-    - LeKoala\Base\Extensions\SocialShareExtension
+    - LeKoala\CommonExtensions\SocialShareExtension
     - LeKoala\Base\Extensions\BasePageExtension
     #- LeKoala\Base\Extensions\BootstrapPageExtension
 SilverStripe\SiteConfig\SiteConfig:
@@ -19,29 +19,29 @@ SilverStripe\SiteConfig\SiteConfig:
   extensions:
     - LeKoala\Base\SiteConfig\SiteConfigExtension
     - LeKoala\Base\SiteConfig\GoogleSiteConfigExtension
-    - LeKoala\Base\Extensions\SocialExtension
+    - LeKoala\CommonExtensions\SocialExtension
 SilverStripe\CMS\Controllers\ContentController:
   extensions:
     - LeKoala\Base\Controllers\SimpleSearchControllerExtension
 LeKoala\Base\News\NewsItem:
   extensions:
-    - LeKoala\Base\Extensions\URLSegmentExtension
+    - LeKoala\CommonExtensions\URLSegmentExtension
     - LeKoala\Base\Extensions\SmartDataObjectExtension
     - LeKoala\Base\Tags\TaggableExtension
-    - LeKoala\Base\Extensions\SocialShareExtension
-    - LeKoala\Base\Extensions\EmbeddableExtension
+    - LeKoala\CommonExtensions\SocialShareExtension
+    - LeKoala\CommonExtensions\EmbeddableExtension
 LeKoala\Base\News\NewsCategory:
   extensions:
-    - LeKoala\Base\Extensions\URLSegmentExtension
+    - LeKoala\CommonExtensions\URLSegmentExtension
 LeKoala\Base\Faq\FaqItem:
   extensions:
-    - LeKoala\Base\Extensions\SortableExtension
+    - LeKoala\CommonExtensions\SortableExtension
 LeKoala\Base\Faq\FaqCategory:
   extensions:
-    - LeKoala\Base\Extensions\SortableExtension
+    - LeKoala\CommonExtensions\SortableExtension
 LeKoala\Base\Tags\Tag:
   extensions:
-    - LeKoala\Base\Extensions\URLSegmentExtension
+    - LeKoala\CommonExtensions\URLSegmentExtension
 SilverStripe\Security\Member:
   extensions:
     - LeKoala\Base\Privacy\PrivacyMemberExtension
@@ -51,14 +51,3 @@ SilverStripe\Control\Email\Email:
 LeKoala\Base\Geo\Address:
   extensions:
     - LeKoala\Base\Geo\GeoExtension
----
-Name: base-extensions-versioned
-After:
-  - 'silverstripe/versioned'
-Only:
-  moduleexists:
-    - 'silverstripe/versioned'
----
-#SilverStripe\Core\Injector\Injector:
-#  SilverStripe\Versioned\RecursivePublishable:
-#    class: LeKoala\Base\Extensions\RecursivePublishable
