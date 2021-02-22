@@ -18,16 +18,10 @@ Name: base-fieldtypes
 After: '#corefieldtypes'
 ---
 SilverStripe\Core\Injector\Injector:
-  BinaryIP:
-    class: LeKoala\Base\ORM\FieldType\DBBinaryIP
   Color:
     class: LeKoala\Base\ORM\FieldType\DBColor
-  Country:
-    class: LeKoala\Base\ORM\FieldType\DBCountry
   Json:
     class: LeKoala\Base\ORM\FieldType\DBJson
-  Timezone:
-    class: LeKoala\Base\ORM\FieldType\DBTimezone
   Website:
     class: LeKoala\Base\ORM\FieldType\DBWebsite
   NumericVarchar:

@@ -2,10 +2,10 @@
 
 namespace LeKoala\Base\Test;
 
-use SilverStripe\ORM\DataObject;
 use SilverStripe\Dev\TestOnly;
-use LeKoala\Base\Extensions\IPExtension;
-use LeKoala\Base\ORM\FieldType\DBCountry;
+use SilverStripe\ORM\DataObject;
+use LeKoala\CommonExtensions\IPExtension;
+use LeKoala\GeoTools\FieldType\DBCountry;
 
 class Test_BaseModel extends DataObject implements TestOnly
 {
