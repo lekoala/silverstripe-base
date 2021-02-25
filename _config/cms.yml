@@ -1,5 +1,7 @@
 ---
 Name: base-cms
+After:
+  - '#assetadmin'
 ---
 SilverStripe\CMS\Model\SiteTree:
   meta_generator: ""

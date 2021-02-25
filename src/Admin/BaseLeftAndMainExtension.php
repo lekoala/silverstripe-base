@@ -6,13 +6,16 @@ use Psr\Log\LoggerInterface;
 use SilverStripe\Admin\CMSMenu;
 use SilverStripe\View\SSViewer;
 use SilverStripe\View\Requirements;
+use LeKoala\Multilingual\LangHelper;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\SiteConfig\SiteConfig;
 use SilverStripe\Core\Injector\Injector;
 use LeKoala\Base\View\CommonRequirements;
-use LeKoala\Multilingual\LangHelper;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Admin\LeftAndMainExtension;
-use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Manifest\ModuleLoader;
+use SilverStripe\Forms\HTMLEditor\HTMLEditorConfig;
+use SilverStripe\Forms\HTMLEditor\TinyMCECombinedGenerator;
 
 /**
  * Available config
@@ -86,6 +89,11 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
         if (self::config()->dark_theme) {
             Requirements::css('base/css/admin-dark.css');
         }
+
+        // This needs to be loaded after #assetadmin because it depends on InsertMediaModal to be defined
+        $cmsConfig = HTMLEditorConfig::get('cms');
+        $generator = Injector::inst()->get(TinyMCECombinedGenerator::class);
+        Requirements::javascript($generator->getScriptURL($cmsConfig));
 
         Requirements::javascript("base/javascript/admin.js");
         $this->requireAdminStyles();
