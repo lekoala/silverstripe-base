@@ -11,6 +11,7 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\SiteConfig\SiteConfig;
 use SilverStripe\Core\Injector\Injector;
 use LeKoala\Base\View\CommonRequirements;
+use LeKoala\DeferBackend\DeferBackend;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Admin\LeftAndMainExtension;
 use SilverStripe\Core\Manifest\ModuleLoader;
@@ -90,13 +91,22 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
             Requirements::css('base/css/admin-dark.css');
         }
 
+        Requirements::javascript("base/javascript/admin.js");
+        $this->requireAdminStyles();
+    }
+
+    /**
+     * This can be required if some resources are loaded from a cdn
+     * and you get tinymce is undefined
+     *
+     * @return void
+     */
+    public static function forceTinyMCELoad()
+    {
         // This needs to be loaded after #assetadmin because it depends on InsertMediaModal to be defined
         $cmsConfig = HTMLEditorConfig::get('cms');
         $generator = Injector::inst()->get(TinyMCECombinedGenerator::class);
         Requirements::javascript($generator->getScriptURL($cmsConfig));
-
-        Requirements::javascript("base/javascript/admin.js");
-        $this->requireAdminStyles();
     }
 
     /**

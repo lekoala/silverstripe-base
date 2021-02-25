@@ -19,7 +19,6 @@ class CommonRequirements
 {
     use Configurable;
 
-
     /**
      * @config
      * @var string
