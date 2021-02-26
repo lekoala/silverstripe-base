@@ -87,6 +87,9 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
             }
         }
 
+        // otherwise it may show artefacts when loading
+        self::forceTinyMCELoad();
+
         if (self::config()->dark_theme) {
             Requirements::css('base/css/admin-dark.css');
         }
