@@ -248,6 +248,11 @@ class BaseFileExtension extends DataExtension
         return Director::publicFolder() . '/assets/' . $this->getRelativePath();
     }
 
+    public function getProtectedFullPath()
+    {
+        return Director::publicFolder() . '/assets/.protected/' . $this->getRelativePath();
+    }
+
     /**
      * Get the path relative to the asset folder
      *
@@ -256,7 +261,15 @@ class BaseFileExtension extends DataExtension
     public function getRelativePath()
     {
         if ($this->owner instanceof Folder) {
-            throw new Exception("This method is not supported for folders");
+            $obj = $this->owner;
+            $parts = [];
+            while ($obj->ParentID) {
+                $parts[] = $obj->Name;
+                $obj = $obj->Parent();
+            }
+            $parts[] = $obj->Name;
+            $parts = array_reverse($parts);
+            return implode("/", $parts);
         }
         $Filename = $this->owner->FileFilename;
         $Dir = dirname($Filename);
