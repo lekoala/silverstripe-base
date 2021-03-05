@@ -1,9 +1,12 @@
 <?php
 namespace LeKoala\Base\Forms\FullGridField;
 
+use Exception;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\View\Requirements;
+use SilverStripe\Forms\LiteralField;
+use LeKoala\Base\Helpers\ClassHelper;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\ORM\Queries\SQLSelect;
 use SilverStripe\ORM\DataObjectInterface;
@@ -12,8 +15,6 @@ use SilverStripe\Forms\GridField\GridField_SaveHandler;
 use SilverStripe\Forms\GridField\GridField_HTMLProvider;
 use SilverStripe\Forms\GridField\GridField_ColumnProvider;
 use SilverStripe\Forms\GridField\GridField_DataManipulator;
-use SilverStripe\Forms\LiteralField;
-use LeKoala\Base\Helpers\ClassHelper;
 
 /**
  * The checkbox handles adding or removing the record to the relation

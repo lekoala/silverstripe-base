@@ -1,6 +1,7 @@
 <?php
 namespace LeKoala\Base\Forms\FullGridField;
 
+use Exception;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\Control\Controller;
 use LeKoala\Base\Helpers\ClassHelper;
