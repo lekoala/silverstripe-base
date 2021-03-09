@@ -92,11 +92,21 @@ class BaseFileExtension extends DataExtension
         return $size;
     }
 
-    public static function findLargeImages() {
+    public static function findLargeImages($size = null)
+    {
         $mem = FileHelper::memoryLimit();
+        if (!$size) {
+            $size = $mem;
+        }
+        if (!is_numeric($size)) {
+            $size = FileHelper::convertToByte($size);
+        }
+        if ($size > $mem) {
+            $size = $mem;
+        }
         $files = Image::get()->where("FileSize > '$mem'")->toArray();
 
-        d($files, $mem, FileHelper::humanFilesize($mem));
+        d($files, $size, FileHelper::humanFilesize($size));
     }
 
     public static function moveFilesWithoutParent()
