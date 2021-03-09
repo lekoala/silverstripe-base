@@ -6,7 +6,7 @@ use Exception;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\PaginatedList;
 use SilverStripe\Control\HTTPRequest;
-use LeKoala\Base\Extensions\URLSegmentExtension;
+use LeKoala\CommonExtensions\URLSegmentExtension;
 
 /**
  * Apply this trait to your controllers managing records

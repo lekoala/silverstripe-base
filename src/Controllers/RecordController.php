@@ -5,7 +5,7 @@ namespace LeKoala\Base\Controllers;
 use Exception;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Control\HTTPRequest;
-use LeKoala\Base\Extensions\URLSegmentExtension;
+use LeKoala\CommonExtensions\URLSegmentExtension;
 
 /**
  * This controller helps dealing with DataObject based records

@@ -1,4 +1,5 @@
 <?php
+
 namespace LeKoala\Base\Helpers;
 
 use RecursiveIteratorIterator;
@@ -130,5 +131,36 @@ class FileHelper
         }
         $factor = floor(log($bytes, 1024));
         return sprintf("%.{$decimals}f ", $bytes / pow(1024, $factor)) . ['B', 'KB', 'MB', 'GB', 'TB', 'PB'][$factor];
+    }
+
+    public static function convertToByte($val)
+    {
+        $val  = trim($val);
+
+        if (is_numeric($val)) {
+            return $val;
+        }
+
+        $last = strtolower($val[strlen($val) - 1]);
+        $val  = substr($val, 0, -1);
+
+        switch ($last) {
+            case 'g':
+                $val *= 1024;
+                // keep processing
+            case 'm':
+                $val *= 1024;
+                // keep processing
+            case 'k':
+                $val *= 1024;
+                // keep processing
+        }
+
+        return $val;
+    }
+
+    public static function memoryLimit()
+    {
+        return self::convertToByte(ini_get("memory_limit"));
     }
 }

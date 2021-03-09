@@ -29,7 +29,7 @@
     "lekoala/silverstripe-multilingual": "*",
     "lekoala/silverstripe-devtoolkit": "*",
     "lekoala/silverstripe-geotools": "*",
-    "lekoala/silverstripe-common-extension": "*"
+    "lekoala/silverstripe-common-extensions": "*"
   },
   "require-dev": {
     "sminnee/phpunit": "^5.7",
