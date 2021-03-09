@@ -5,6 +5,7 @@ namespace LeKoala\Base\Extensions;
 use Exception;
 use SilverStripe\ORM\DB;
 use SilverStripe\Assets\File;
+use SilverStripe\Assets\Image;
 use SilverStripe\Core\Convert;
 use SilverStripe\Assets\Folder;
 use SilverStripe\ORM\DataObject;
@@ -89,6 +90,13 @@ class BaseFileExtension extends DataExtension
             return FileHelper::humanFilesize($size);
         }
         return $size;
+    }
+
+    public static function findLargeImages() {
+        $mem = FileHelper::memoryLimit();
+        $files = Image::get()->where("FileSize > '$mem'")->toArray();
+
+        d($files, $mem, FileHelper::humanFilesize($mem));
     }
 
     public static function moveFilesWithoutParent()

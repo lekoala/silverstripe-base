@@ -147,13 +147,13 @@ class FileHelper
         switch ($last) {
             case 'g':
                 $val *= 1024;
-                break;
+                // keep processing
             case 'm':
                 $val *= 1024;
-                break;
+                // keep processing
             case 'k':
                 $val *= 1024;
-                break;
+                // keep processing
         }
 
         return $val;
