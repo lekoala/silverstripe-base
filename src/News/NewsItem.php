@@ -37,8 +37,8 @@ use SilverStripe\Security\Permission;
  * @mixin \LeKoala\CommonExtensions\URLSegmentExtension
  * @mixin \LeKoala\Base\Extensions\SmartDataObjectExtension
  * @mixin \LeKoala\Base\Tags\TaggableExtension
- * @mixin \LeKoala\Base\Extensions\SocialShareExtension
- * @mixin \LeKoala\Base\Extensions\EmbeddableExtension
+ * @mixin \LeKoala\CommonExtensions\SocialShareExtension
+ * @mixin \LeKoala\CommonExtensions\EmbeddableExtension
  */
 class NewsItem extends DataObject
 {

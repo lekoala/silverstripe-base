@@ -23,7 +23,7 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Security\IdentityStore;
 use LeKoala\Base\Security\BaseAuthenticator;
 use SilverStripe\Security\DefaultAdminService;
-use LeKoala\Base\Extensions\ValidationStatusExtension;
+use LeKoala\CommonExtensions\ValidationStatusExtension;
 use SilverStripe\Forms\GridField\GridFieldAddNewButton;
 use SilverStripe\Security\MemberAuthenticator\MemberAuthenticator;
 use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
