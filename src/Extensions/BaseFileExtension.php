@@ -3,14 +3,16 @@
 namespace LeKoala\Base\Extensions;
 
 use Exception;
-use LeKoala\Base\View\Statically;
 use SilverStripe\ORM\DB;
 use SilverStripe\Assets\File;
 use SilverStripe\Core\Convert;
 use SilverStripe\Assets\Folder;
 use SilverStripe\ORM\DataObject;
+use LeKoala\Base\View\Statically;
 use SilverStripe\Control\Director;
 use SilverStripe\ORM\DataExtension;
+use LeKoala\Base\Helpers\FileHelper;
+use SilverStripe\Versioned\Versioned;
 use SilverStripe\Assets\Image_Backend;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Config\Configurable;
@@ -50,6 +52,8 @@ class BaseFileExtension extends DataExtension
     private static $db = [
         // This helps tracking state of files uploaded through ajax uploaders
         "IsTemporary" => "Boolean",
+        // Size in bytes
+        "FileSize" => "Int",
     ];
     private static $has_one = [
         // Record is already used by versioned extensions
@@ -62,6 +66,100 @@ class BaseFileExtension extends DataExtension
         if (!$this->owner->ObjectID) {
             $this->owner->ObjectClass = null;
         }
+        if (!$this->owner->FileSize) {
+            $this->owner->FileSize = $this->owner->getAbsoluteSize();
+        }
+    }
+
+    public function getHumanReadableSize()
+    {
+        return FileHelper::humanFilesize($this->owner->FileSize);
+    }
+
+    /**
+     * Get total size for all assets
+     *
+     * @param bool $humanReadable
+     * @return int|string
+     */
+    public static function getTotalAssetsSize($humanReadable = false)
+    {
+        $size = File::get()->sum('FileSize');
+        if ($humanReadable) {
+            return FileHelper::humanFilesize($size);
+        }
+        return $size;
+    }
+
+    public static function moveFilesWithoutParent()
+    {
+        $files = File::get()->filter('ParentID', 0);
+        $folder = Folder::find_or_make("Uploads");
+
+        $setVersion = false;
+        // file need to be unpublished first => otherwise no rename
+        if (class_exists(Versioned::class) && Versioned::get_stage() !== Versioned::DRAFT) {
+            $setVersion = true;
+            Versioned::set_stage(Versioned::DRAFT);
+        }
+
+        foreach ($files as $file) {
+            if ($file instanceof Folder) {
+                continue;
+            }
+
+            $old =  $file->getFilename();
+            $new = 'Uploads/' . $old;
+            $file->setFilename($new);
+            $file->writeWithoutVersion();
+            // self::clearVersions(get_class($file), $file->ID);
+        }
+
+        // they have a parent but no slash => maybe because they were renamed in live mode
+        $files = File::get()->exclude('ParentID', 0)->where("FileFilename NOT LIKE '%/%'");
+        foreach ($files as $file) {
+            if ($file instanceof Folder) {
+                continue;
+            }
+
+            $old =  $file->getFilename();
+            $new = 'Uploads/' . $old;
+            $file->setFilename($new);
+            $file->writeWithoutVersion();
+            // self::clearVersions(get_class($file), $file->ID);
+        }
+
+        if ($setVersion) {
+            Versioned::set_stage(Versioned::LIVE);
+        }
+    }
+
+    /**
+     * @return array An array of deleted files
+     */
+    public static function clearFileWithoutSize()
+    {
+        $files = File::get()->filter('FileSize', 0);
+        $deleted = [];
+        foreach ($files as $f) {
+            if ($f instanceof Folder) {
+                continue;
+            }
+
+            $size = $f->getAbsoluteSize();
+            if ($size) {
+                $f->writeWithoutVersion();
+                continue;
+            }
+
+            $path = $f->getFullPath();
+            if (!is_file($path)) {
+                $deleted[] = $f->ID;
+                $f->delete();
+            }
+        }
+
+        return $deleted;
     }
 
     public function onAfterWrite()
