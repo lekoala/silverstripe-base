@@ -129,7 +129,7 @@ class Alertify
             $js = "alertify.notify('$msg', '$type', 0);";
         }
 
-        Requirements::customScript($js);
+        Requirements::customScript($js, __CLASS__);
     }
 
     /**

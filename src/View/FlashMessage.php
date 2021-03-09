@@ -74,6 +74,9 @@ class FlashMessage
         }
         $session->clear('FlashMessage');
         $provider = self::config()->provider;
+        if (!$provider) {
+            throw new Exception("No provider");
+        }
         $provider::requirements();
         $provider::show($FlashMessage['Message'], $FlashMessage['Type']);
     }
