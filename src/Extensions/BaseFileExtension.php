@@ -111,8 +111,7 @@ class BaseFileExtension extends DataExtension
             $old =  $file->getFilename();
             $new = 'Uploads/' . $old;
             $file->setFilename($new);
-            $file->writeWithoutVersion();
-            // self::clearVersions(get_class($file), $file->ID);
+            $file->write();
         }
 
         // they have a parent but no slash => maybe because they were renamed in live mode
@@ -125,8 +124,7 @@ class BaseFileExtension extends DataExtension
             $old =  $file->getFilename();
             $new = 'Uploads/' . $old;
             $file->setFilename($new);
-            $file->writeWithoutVersion();
-            // self::clearVersions(get_class($file), $file->ID);
+            $file->write();
         }
 
         if ($setVersion) {
