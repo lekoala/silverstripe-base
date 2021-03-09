@@ -34,7 +34,7 @@ use SilverStripe\Security\Permission;
  * @method \LeKoala\Base\News\NewsCategory Category()
  * @method \SilverStripe\ORM\ManyManyList|\LeKoala\Base\Tags\Tag[] Tags()
  * @method \SilverStripe\ORM\ManyManyList|\SilverStripe\Assets\Image[] Images()
- * @mixin \LeKoala\Base\Extensions\URLSegmentExtension
+ * @mixin \LeKoala\CommonExtensions\URLSegmentExtension
  * @mixin \LeKoala\Base\Extensions\SmartDataObjectExtension
  * @mixin \LeKoala\Base\Tags\TaggableExtension
  * @mixin \LeKoala\Base\Extensions\SocialShareExtension

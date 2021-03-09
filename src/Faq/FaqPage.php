@@ -2,15 +2,13 @@
 
 namespace LeKoala\Base\Faq;
 
-use LeKoala\Base\Extensions\SortableExtension;
 use LeKoala\Base\Faq\FaqItem;
-use SilverStripe\Forms\TextField;
 use LeKoala\Base\Faq\FaqCategory;
-use SilverStripe\Forms\LiteralField;
 use SilverStripe\SiteConfig\SiteConfig;
 use SilverStripe\Forms\GridField\GridField;
-use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
+use LeKoala\CommonExtensions\SortableExtension;
 use Symbiote\GridFieldExtensions\GridFieldOrderableRows;
+use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
 
 /**
  * Class \LeKoala\Base\Faq\FaqPage

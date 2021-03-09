@@ -18,7 +18,7 @@ use LeKoala\Base\Forms\SmartUploadField;
  * @method \SilverStripe\Assets\Image Image()
  * @method \LeKoala\Base\News\NewsPage Page()
  * @method \SilverStripe\ORM\DataList|\LeKoala\Base\News\NewsItem[] Items()
- * @mixin \LeKoala\Base\Extensions\URLSegmentExtension
+ * @mixin \LeKoala\CommonExtensions\URLSegmentExtension
  */
 class NewsCategory extends DataObject
 {

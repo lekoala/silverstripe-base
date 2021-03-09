@@ -2,13 +2,13 @@
 
 namespace LeKoala\Base\Helpers;
 
-use LeKoala\Base\Extensions\SortableExtension;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\GridField\GridField;
-use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
+use LeKoala\CommonExtensions\SortableExtension;
 use Symbiote\GridFieldExtensions\GridFieldOrderableRows;
+use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
 
 /**
  * Helpers for forms

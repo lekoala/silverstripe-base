@@ -9,7 +9,7 @@ use SilverStripe\ORM\DataObject;
  *
  * @property string $URLSegment
  * @property string $Title
- * @mixin \LeKoala\Base\Extensions\URLSegmentExtension
+ * @mixin \LeKoala\CommonExtensions\URLSegmentExtension
  */
 class Tag extends DataObject
 {

@@ -12,7 +12,7 @@ use LeKoala\Base\Subsite\SubsiteHelper;
 use SilverStripe\ORM\ValidationException;
 use SilverStripe\Admin\AdminRootController;
 use SilverStripe\Forms\GridField\GridField;
-use LeKoala\Base\Extensions\SortableExtension;
+use LeKoala\CommonExtensions\SortableExtension;
 use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Control\PjaxResponseNegotiator;
 use SilverStripe\Forms\GridField\GridFieldDeleteAction;
