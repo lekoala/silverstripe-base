@@ -21,7 +21,7 @@
         optionsKey: "options",
         maxTries: 5,
         retryInterval: 250,
-        debug: true,
+        debug: false,
     };
 
     /**
@@ -77,6 +77,7 @@
     var ModularBehaviour = {
         optionsTransformers: {},
         afterInitHooks: {},
+        isRunning: false,
         /**
          * This is simply a wrapper of run inside a dom ready function
          * Any requirements should be loaded before this is called
@@ -86,7 +87,7 @@
             var self = this;
             if (newConfig) {
                 for (var newConfigKey in newConfig) {
-                    this.setConfig(newConfig[newConfigKey]);
+                    this.setConfig(newConfigKey, newConfig[newConfigKey]);
                 }
             }
             ready(function () {
@@ -122,12 +123,19 @@
          * Traverse the dom and configure any element with data-mb attribute
          */
         run: function () {
+            if(this.isRunning) {
+                debug('already running');
+                return;
+            }
             debug("run");
+            this.isRunning = true;
             // Collect a static NodeList (need to query again after each ajax call or dom update)
             var nodeList = document.querySelectorAll("[" + config.attr + "]");
             for (var i = 0; i < nodeList.length; i++) {
                 this.configureElement(nodeList[i]);
             }
+            debug("run finished");
+            this.isRunning = false;
         },
         /**
          * Add a callback to apply on a module instance after init

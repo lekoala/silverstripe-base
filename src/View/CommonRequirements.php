@@ -207,7 +207,14 @@ class CommonRequirements
     {
         Requirements::javascript("base/javascript/modular-behaviour.min.js");
         // This is going to run after all our dependencies have been loaded
-        Requirements::customScript("ModularBehaviour.run();", __FUNCTION__);
+        $v = Director::isDev() ? "true" : "false";
+        $js = <<<JS
+ModularBehaviour.init({'debug':$v});
+jQuery(document).ajaxSuccess(function (event, xhr, settings) {
+    ModularBehaviour.run();
+});
+JS;
+        Requirements::customScript($js, __FUNCTION__);
     }
 
     /**
@@ -438,7 +445,7 @@ JS;
     }
 
     /**
-     * If you use ModularBehaviour, you can just do data-mb="owlCarousel"
+     * If you use ModularBehaviour, you can just do data-module="owlCarousel"
      *
      * @link https://github.com/OwlCarousel2/OwlCarousel2
      * @param bool $css If you set this to false, think about including ../../../base/sass/vendor/owl-carousel2/owl.carousel
