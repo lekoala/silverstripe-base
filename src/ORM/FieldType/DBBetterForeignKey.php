@@ -11,7 +11,6 @@ use SilverStripe\Forms\FileHandleField;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\FieldType\DBForeignKey;
 use LeKoala\Base\Forms\Select2SingleField;
-use LeKoala\Base\Forms\FilePondField;
 
 /**
  * Improves scaffolding by making better assumption than the defaults one
@@ -31,7 +30,6 @@ class DBBetterForeignKey extends DBForeignKey
         $hasOneSingleton = singleton($hasOneClass);
         if ($hasOneSingleton instanceof File) {
             $field = Injector::inst()->create(FileHandleField::class, $relationName, $title);
-            // $field = new FilePondField($relationName, $title);
             if ($hasOneSingleton instanceof Image) {
                 $field->setAllowedFileCategories('image/supported');
             }

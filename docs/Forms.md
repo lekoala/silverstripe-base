@@ -8,8 +8,6 @@ Below is the list of fields provided by the module. Documentation is WIP.
 
 ## Tooltips
 
-## FilePond and uploads
-
 ## InputMask
 
 ## CMS fields

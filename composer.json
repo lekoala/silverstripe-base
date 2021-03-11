@@ -43,7 +43,8 @@
     "colymba/gridfield-bulk-editing-tools": "Bulk editing",
     "unclecheese/display-logic": "Display and hide fields",
     "lekoala/silverstripe-blocks": "Blocks page",
-    "lekoala/silverstripe-phonenumber": "Phone number field type"
+    "lekoala/silverstripe-phonenumber": "Phone number field type",
+    "lekoala/silverstripe-filepond": "Filepond file upload"
   },
   "extra": {
     "installer-name": "base",

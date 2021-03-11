@@ -60,12 +60,6 @@ nl:
     TITLE: Land
   EmbeddableExtension:
     EMBEDURL: 'Embed from URL'
-  FilePondField:
-    labelFileProcessing: Uploading
-    labelFileProcessingAborted: 'Upload geannuleerd'
-    labelFileProcessingComplete: 'Upload voltooid'
-    labelIdle: 'Sleep en plaats of <span class="filepond--label-action"> Zoek </span>'
-    labelTapToCancel: 'Klik om ongedaan te maken'
   FlatpickrField:
     NO_DATE_SELECTED: 'Geen datum'
     NO_TIME_SELECTED: 'Geen tijd'

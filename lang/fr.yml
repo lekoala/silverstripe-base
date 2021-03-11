@@ -60,12 +60,6 @@ fr:
     TITLE: Pays
   EmbeddableExtension:
     EMBEDURL: 'Embed from URL'
-  FilePondField:
-    labelFileProcessing: Uploading
-    labelFileProcessingAborted: 'Upload annulé'
-    labelFileProcessingComplete: 'Upload completé'
-    labelIdle: 'Glisser et déposer ou <span class="filepond--label-action"> Parcourir </span>'
-    labelTapToCancel: 'Cliquer pour annuler'
   FlatpickrField:
     NO_DATE_SELECTED: 'Pas de date'
     NO_TIME_SELECTED: 'Pas de heure'
