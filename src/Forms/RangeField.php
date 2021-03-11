@@ -1,8 +1,10 @@
 <?php
+
 namespace LeKoala\Base\Forms;
 
 use SilverStripe\Forms\TextField;
 use SilverStripe\View\Requirements;
+use LeKoala\Base\View\CommonRequirements;
 
 /**
  *
@@ -56,6 +58,6 @@ class RangeField extends TextField
         $version = self::config()->version;
         Requirements::css("https://cdnjs.cloudflare.com/ajax/libs/rangeslider.js/$version/rangeslider.min.css");
         Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/rangeslider.js/$version/rangeslider.min.js");
-        Requirements::javascript('base/javascript/ModularBehaviour.js');
+        CommonRequirements::modularBehaviour();
     }
 }

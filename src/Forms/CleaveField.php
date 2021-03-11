@@ -38,6 +38,6 @@ class CleaveField extends TextField
         CommonRequirements::cleave();
 
         // Order matters for hooks ! Otherwise ready may fire before hooks are defined!
-        Requirements::javascript('base/javascript/ModularBehaviour.js');
+        CommonRequirements::modularBehaviour();
     }
 }

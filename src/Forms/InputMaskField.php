@@ -5,6 +5,7 @@ namespace LeKoala\Base\Forms;
 use SilverStripe\i18n\i18n;
 use SilverStripe\Forms\TextField;
 use SilverStripe\View\Requirements;
+use LeKoala\Base\View\CommonRequirements;
 
 /**
  * Format input using input mask
@@ -244,6 +245,6 @@ class InputMaskField extends TextField
 
         // Order matters for hooks ! Otherwise ready may fire before hooks are defined!
         Requirements::javascript('base/javascript/fields/InputMaskField.js');
-        Requirements::javascript('base/javascript/ModularBehaviour.js');
+        CommonRequirements::modularBehaviour();
     }
 }

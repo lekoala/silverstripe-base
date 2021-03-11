@@ -1,8 +1,11 @@
 <?php
+
 namespace LeKoala\Base\Forms;
 
 use Exception;
 use SilverStripe\View\Requirements;
+use LeKoala\Base\Forms\JsonFormField;
+use LeKoala\Base\View\CommonRequirements;
 
 /**
  * @link https://www.ag-grid.com/javascript-getting-started/
@@ -75,7 +78,7 @@ class AgGridField extends JsonFormField
         Requirements::css('https://unpkg.com/ag-grid/dist/styles/ag-grid.css');
         Requirements::css('https://unpkg.com/ag-grid/dist/styles/' . $theme . '.css');
 
-        Requirements::javascript('base/javascript/ModularBehaviour.js');
+        CommonRequirements::modularBehaviour();
         Requirements::javascript('base/javascript/fields/AgGridField.js');
     }
 

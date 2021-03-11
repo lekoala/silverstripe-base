@@ -7,6 +7,7 @@ use SilverStripe\i18n\i18n;
 use InvalidArgumentException;
 use SilverStripe\Forms\TextField;
 use SilverStripe\View\Requirements;
+use LeKoala\Base\View\CommonRequirements;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\Core\Manifest\ModuleResource;
@@ -583,7 +584,7 @@ class FlatpickrField extends TextField
 
         // Order matters for hooks ! Otherwise ready may fire before hooks are defined!
         Requirements::javascript('base/javascript/fields/FlatpickrField.js');
-        Requirements::javascript('base/javascript/ModularBehaviour.js');
+        CommonRequirements::modularBehaviour();
     }
 
     /**

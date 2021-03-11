@@ -3,10 +3,13 @@
 namespace LeKoala\Base\Forms;
 
 use SilverStripe\Assets\File;
+use SilverStripe\Assets\Image;
 use SilverStripe\Control\HTTP;
 use SilverStripe\Assets\Folder;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Forms\FormField;
+use SilverStripe\Security\Member;
 use LeKoala\Base\Forms\BaseUpload;
 use SilverStripe\Control\Director;
 use SilverStripe\View\Requirements;
@@ -14,12 +17,10 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\Control\HTTPResponse;
+use LeKoala\Base\View\CommonRequirements;
 use SilverStripe\ORM\DataObjectInterface;
-use LeKoala\Base\Extensions\BaseFileExtension;
-use SilverStripe\Assets\Image;
-use SilverStripe\Security\Member;
 use SilverStripe\ORM\ValidationException;
-use SilverStripe\ORM\ArrayList;
+use LeKoala\Base\Extensions\BaseFileExtension;
 
 /**
  * A FilePond field
@@ -325,7 +326,7 @@ class FilePondField extends BaseFileUploadField
         Requirements::javascript("https://unpkg.com/filepond@4.20.1/dist/filepond.js");
         Requirements::javascript("https://unpkg.com/jquery-filepond@1.0.0/filepond.jquery.js");
         // Our custom init
-        Requirements::javascript('base/javascript/ModularBehaviour.js');
+        CommonRequirements::modularBehaviour();
         Requirements::javascript('base/javascript/fields/FilePondField.js');
 
         return parent::FieldHolder($properties);

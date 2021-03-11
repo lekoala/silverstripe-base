@@ -14,6 +14,7 @@ use SilverStripe\View\Requirements;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
+use LeKoala\Base\View\CommonRequirements;
 use LeKoala\Base\Forms\Select2LookupField;
 
 /**
@@ -529,7 +530,7 @@ trait Select2
         if ($lang != 'en') {
             Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/select2/$version/js/i18n/$lang.js");
         }
-        Requirements::javascript('base/javascript/ModularBehaviour.js');
+        CommonRequirements::modularBehaviour();
         Requirements::javascript('base/javascript/fields/Select2Field.js');
         return parent::Field($properties);
     }

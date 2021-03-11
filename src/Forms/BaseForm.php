@@ -12,6 +12,7 @@ use LeKoala\Base\Helpers\ClassHelper;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Control\RequestHandler;
+use LeKoala\Base\View\CommonRequirements;
 
 /**
  * An extended class for forms:
@@ -224,7 +225,7 @@ class BaseForm extends Form
     protected function enableJsValidation()
     {
         $this->setAttribute("data-module", "RequiredFields");
-        Requirements::javascript("base/javascript/ModularBehaviour.js");
+        CommonRequirements::modularBehaviour();
         Requirements::javascript("base/javascript/RequiredFields.js");
     }
 

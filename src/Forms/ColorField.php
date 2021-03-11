@@ -4,6 +4,7 @@ namespace LeKoala\Base\Forms;
 use SilverStripe\i18n\i18n;
 use SilverStripe\Forms\TextField;
 use SilverStripe\View\Requirements;
+use LeKoala\Base\View\CommonRequirements;
 
 /**
  * @link https://bgrins.github.io/spectrum/
@@ -112,7 +113,7 @@ class ColorField extends TextField
         Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/spectrum/$version/spectrum.min.js");
         if ($lang != 'en') {
         }
-        Requirements::javascript('base/javascript/ModularBehaviour.js');
+        CommonRequirements::modularBehaviour();
 
         return parent::Field($properties);
     }

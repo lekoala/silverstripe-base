@@ -2,6 +2,7 @@
 
 namespace LeKoala\Base\Forms\Validator;
 
+use LeKoala\Base\View\CommonRequirements;
 use SilverStripe\ORM\ArrayLib;
 use SilverStripe\Forms\FileField;
 use SilverStripe\Forms\FormField;
@@ -26,7 +27,7 @@ class JsRequiredFields extends RequiredFields
             $this->required = [];
         }
 
-        Requirements::javascript("base/javascript/ModularBehaviour.js");
+        CommonRequirements::modularBehaviour();
         Requirements::javascript("base/javascript/RequiredFields.js");
     }
 
