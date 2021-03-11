@@ -124,7 +124,6 @@ class Alertify
         }
         if ($asAlert) {
             $js = "alertify.alert('$msg').set(transition:'zoom', basic:true, movable:true);";
-            $js = "alertify.notify('$msg', '$type', 0);";
         } else {
             $js = "alertify.notify('$msg', '$type', 0);";
         }
