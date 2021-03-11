@@ -519,7 +519,7 @@ trait Select2
         $config = $this->config;
 
         // Do not use select2 because it is reserved
-        $this->setAttribute('data-config', json_encode($config));
+        $this->setAttribute('data-mb-options', json_encode($config));
 
         $version = self::config()->version;
         Requirements::css("https://cdnjs.cloudflare.com/ajax/libs/select2/$version/css/select2.min.css");

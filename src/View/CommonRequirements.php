@@ -200,16 +200,14 @@ class CommonRequirements
     /**
      * Including modular behaviour tools to initialize scripts from html in one go
      *
-     * Simply use  data-module="myModuleName" where myModuleName matches the jquery plugin
-     * You can pass options in data-config="{"myOption": "true"}" (it has to be properly json encoded)
-     *
-     * Larger option array might be better in php data-config="$JsonOptionsHere"
-     *
+     * @link https://github.com/lekoala/modular-behaviour.js
      * @return void
      */
     public static function modularBehaviour()
     {
-        Requirements::javascript("base/javascript/ModularBehaviour.js");
+        Requirements::javascript("base/javascript/modular-behaviour.min.js");
+        // This is going to run after all our dependencies have been loaded
+        Requirements::customScript("ModularBehaviour.run();", __FUNCTION__);
     }
 
     /**
@@ -440,7 +438,7 @@ JS;
     }
 
     /**
-     * If you use ModularBehaviour, you can just do data-module="owlCarousel"
+     * If you use ModularBehaviour, you can just do data-mb="owlCarousel"
      *
      * @link https://github.com/OwlCarousel2/OwlCarousel2
      * @param bool $css If you set this to false, think about including ../../../base/sass/vendor/owl-carousel2/owl.carousel

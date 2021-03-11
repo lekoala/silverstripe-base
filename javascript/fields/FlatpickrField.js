@@ -1,14 +1,7 @@
 /* global confirmDatePlugin */
 (function ($) {
-  if (typeof $.fn.ModularBehaviourHooks === "undefined") {
-    $.fn.ModularBehaviourHooks = {
-      beforeHooks: {},
-      afterHooks: {},
-    };
-  }
-
-  $.fn.ModularBehaviourHooks.beforeHooks.flatpickr = function (config) {
-    var $this = $(this);
+  ModularBehaviour.addOptionsTransformer("flatpickr", function (opts, el) {
+    var $this = $(el);
     var plugins = [];
     if ($this.data("range")) {
       // Range plugin is not quite there yet
@@ -22,10 +15,11 @@
     if ($this.data("confirmDate")) {
       plugins.push(new confirmDatePlugin());
     }
-    config.plugins = plugins;
-  };
-  $.fn.ModularBehaviourHooks.afterHooks.flatpickr = function () {
-    var $this = $(this);
+    opts.plugins = plugins;
+  });
+
+  ModularBehaviour.addAfterInitHook("flatpickr", function (inst, el, opts) {
+    var $this = $(el);
     var $alt = $this.parent().find(".flatpickr-alt");
     var orgVal = $this.val();
 
@@ -70,5 +64,5 @@
         })
         .trigger("change");
     }
-  };
+  });
 })(jQuery);

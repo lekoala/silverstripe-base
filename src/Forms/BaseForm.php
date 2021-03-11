@@ -224,7 +224,7 @@ class BaseForm extends Form
      */
     protected function enableJsValidation()
     {
-        $this->setAttribute("data-module", "RequiredFields");
+        $this->setAttribute("data-mb", "RequiredFields");
         CommonRequirements::modularBehaviour();
         Requirements::javascript("base/javascript/RequiredFields.js");
     }

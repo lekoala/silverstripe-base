@@ -165,13 +165,13 @@
          * @return {Object}
          */
         parseOptions: function (elementConfig) {
-            if (!elementConfig) {
+            if (!elementConfig || elementConfig === 'undefined') {
                 return {};
             }
             // Deal with string configurations, it may very well be json objects already
             if (typeof elementConfig === "string") {
-                // External config in an html node
                 if (elementConfig.charAt(0) === "#") {
+                    // External config in an html node
                     var externalConfigNode = document.getElementById(
                         elementConfig
                     );
@@ -196,9 +196,12 @@
                         );
                     }
                 } else if (elementConfig.charAt(0) === "{") {
-                    debug(
-                        "Invalid config. Make sure it's properly JSON encoded."
-                    );
+                    elementConfig = JSON.parse(elementConfig);
+                    if(!elementConfig) {
+                        debug(
+                            "Invalid config. Make sure it's properly JSON encoded."
+                        );
+                    }
                 } else {
                     debug("Weird config detected", elementConfig);
                 }
@@ -233,7 +236,7 @@
             } else if (!namespace && typeof global[module] !== "undefined") {
                 // It's a global object, expecting the "new" keyword to be used
                 // if you don't want to use the "new" keyword, consider wrapping the function in a jQuery plugin
-                debug("Configuring js module " + module);
+                debug("Configuring js module " + module + " on #" + element.getAttribute("id"));
                 inst = instantiate(global[module], [
                     "#" + element.getAttribute("id"),
                     options,

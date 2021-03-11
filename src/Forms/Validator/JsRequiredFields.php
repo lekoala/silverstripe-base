@@ -38,7 +38,7 @@ class JsRequiredFields extends RequiredFields
     public function setForm($form)
     {
         $this->form = $form;
-        $this->form->setAttribute("data-module", "RequiredFields");
+        $this->form->setAttribute("data-mb", "RequiredFields");
         return $this;
     }
 

@@ -1,14 +1,7 @@
 /* global Inputmask */
 (function ($) {
-  if (typeof $.fn.ModularBehaviourHooks === "undefined") {
-    $.fn.ModularBehaviourHooks = {
-      beforeHooks: {},
-      afterHooks: {},
-    };
-  }
-
-  $.fn.ModularBehaviourHooks.beforeHooks.inputmask = function (config) {
-    var $this = $(this);
+  ModularBehaviour.addOptionsTransformer("inputmask", function (opts, el) {
+    var $this = $(el);
 
     // raw name is irrelevant, use data attribute
     var name = $this.data("name");
@@ -59,9 +52,10 @@
       }
       hiddenInput.val(val);
     });
-    $.fn.ModularBehaviourHooks.afterHooks.inputmask = function (config) {
-      // Trigger blur to compute value
-      $(this).trigger("blur");
-    };
-  };
+  });
+
+  ModularBehaviour.addAfterInitHook("inputmask", function (inst, el, opts) {
+    // Trigger blur to compute value
+    $(el).trigger("blur");
+  });
 })(jQuery);

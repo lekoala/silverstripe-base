@@ -112,9 +112,9 @@ class AgGridField extends JsonFormField
     public function Field($properties = array())
     {
         $this->addExtraClass(self::config()->theme);
-        $this->setAttribute('data-module', 'AgGridField');
+        $this->setAttribute('data-mb', 'AgGridField');
         // Reference config in div
-        $this->setAttribute('data-config', '#' . $this->ID() . 'Config');
+        $this->setAttribute('data-mb-options', '#' . $this->ID() . 'Config');
         self::requirements();
         return parent::Field($properties);
     }
