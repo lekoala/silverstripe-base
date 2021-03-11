@@ -40,7 +40,8 @@ class BaseSecurityExtension extends Extension
             header('Location: /' . $loginUrl);
             exit();
         }
-        // Already logged in
+        // Already logged in => no need to show log in as
+        // Implement redirectIfLoggedInLink on member or on extension
         if (Member::currentUserID() && ($loginUrl == $url || $loginFormUrl == $url || $defaultLoginUrl == $url)) {
             $member = Member::currentUser();
             if ($member->hasMethod("redirectIfLoggedInLink")) {

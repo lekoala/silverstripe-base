@@ -1,11 +1,15 @@
 <?php
+
 namespace LeKoala\Base\Forms;
 
 use IntlDateFormatter;
 use SilverStripe\i18n\i18n;
+use InvalidArgumentException;
 use SilverStripe\Forms\TextField;
 use SilverStripe\View\Requirements;
 use SilverStripe\ORM\FieldType\DBDatetime;
+use SilverStripe\Core\Manifest\ModuleLoader;
+use SilverStripe\Core\Manifest\ModuleResource;
 
 /**
  * @link https://chmln.github.io/flatpickr
@@ -95,7 +99,13 @@ class FlatpickrField extends TextField
      * @config
      * @var string
      */
-    private static $version = '4.6.6';
+    private static $version = '4.6.9';
+
+    /**
+     * @config
+     * @var string
+     */
+    private static $use_cdn = false;
 
     /**
      * @config
@@ -366,7 +376,7 @@ class FlatpickrField extends TextField
      */
     public function getLocale()
     {
-        return $this->locale ? : i18n::get_locale();
+        return $this->locale ?: i18n::get_locale();
     }
 
     /**
@@ -530,16 +540,34 @@ class FlatpickrField extends TextField
         return parent::Field($properties);
     }
 
+    /**
+     * Helper to access this module resources
+     *
+     * @param string $path
+     * @return ModuleResource
+     */
+    public static function moduleResource($path)
+    {
+        return ModuleLoader::getModule('lekoala/silverstripe-base')->getResource($path);
+    }
+
     public static function requirements($lang = null, $plugins = [], $theme = null)
     {
         if ($lang === null) {
             $lang = substr(i18n::get_locale(), 0, 2);
         }
         $version = self::config()->version;
-        $cdnBase = "https://cdnjs.cloudflare.com/ajax/libs/flatpickr/$version";
-        // $cdnBase = "https://cdn.jsdelivr.net/npm/flatpickr@$version/dist";
+        $use_cdn = self::config()->use_cdn;
+
+        if ($use_cdn) {
+            $cdnBase = "https://cdnjs.cloudflare.com/ajax/libs/flatpickr/$version";
+            // $cdnBase = "https://cdn.jsdelivr.net/npm/flatpickr@$version/dist";
+        } else {
+            $cdnBase = dirname(self::moduleResource("javascript/vendor/cdn/flatpickr/flatpickr.min.js")->getRelativePath());
+        }
+
         Requirements::css("$cdnBase/flatpickr.min.css");
-        Requirements::javascript("$cdnBase/flatpickr.js");
+        Requirements::javascript("$cdnBase/flatpickr.min.js");
         if ($lang != 'en') {
             Requirements::javascript("$cdnBase/l10n/$lang.js");
         }

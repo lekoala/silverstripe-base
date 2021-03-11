@@ -21,7 +21,6 @@ use SilverStripe\Forms\TextField;
  * @property int $SourceMemberID
  * @method \SilverStripe\Security\Member Member()
  * @method \SilverStripe\Security\Member SourceMember()
- * @mixin \LeKoala\Base\Extensions\IPExtension
  */
 class MemberAudit extends DataObject
 {

@@ -25,6 +25,8 @@ use TractorCow\Fluent\Model\Locale;
  *
  * This extension works for versioned and unversioned records.
  *
+ * ONLY NEED FOR FLUENT V4, SEE DELETION POLICIES WITH FLUENT 5
+ *
  * @link https://gist.github.com/bummzack/de3ebec9859101cfa7506b8fa43b21d8
  * @property \LeKoala\Base\Extensions\FluentCascadeDeleteExtension $owner
  */

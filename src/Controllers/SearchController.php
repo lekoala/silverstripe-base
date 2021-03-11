@@ -11,7 +11,7 @@ use LeKoala\Base\Helpers\ClassHelper;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\ErrorPage\ErrorPage;
 use SilverStripe\ORM\FieldType\DBField;
-use LeKoala\Base\Extensions\URLSegmentExtension;
+use LeKoala\CommonExtensions\URLSegmentExtension;
 
 /**
  * Class \LeKoala\Base\Controllers\SearchController

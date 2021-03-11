@@ -8,21 +8,22 @@ use SilverStripe\ORM\ArrayList;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Security\Member;
 use LeKoala\Base\Helpers\IPHelper;
+use SilverStripe\Control\Director;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\Security\Security;
+use LeKoala\CmsActions\CustomAction;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\GraphQL\Controller;
 use SilverStripe\Admin\SecurityAdmin;
 use SilverStripe\Security\Permission;
-use LeKoala\CmsActions\CustomAction;
 use LeKoala\Base\Security\MemberAudit;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\LoginAttempt;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Security\IdentityStore;
 use LeKoala\Base\Security\BaseAuthenticator;
-use LeKoala\Base\Extensions\ValidationStatusExtension;
-use SilverStripe\Control\Director;
+use SilverStripe\Security\DefaultAdminService;
+use LeKoala\CommonExtensions\ValidationStatusExtension;
 use SilverStripe\Forms\GridField\GridFieldAddNewButton;
 use SilverStripe\Security\MemberAuthenticator\MemberAuthenticator;
 use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
@@ -323,7 +324,23 @@ class BaseMemberExtension extends DataExtension
 
         // Login as (but cannot login as yourself :-) )
         if (Permission::check('ADMIN') && $this->owner->ID != Member::currentUserID()) {
-            $actions->push($doLoginAs = new CustomAction('doLoginAs', 'Login as'));
+            // check config flag
+            $login_as_only_default_admin = $this->owner->config()->login_as_only_default_admin;
+            $canLoginAs = false;
+            if ($login_as_only_default_admin) {
+                try {
+                    $defaultAdmin = DefaultAdminService::getDefaultAdminUsername();
+                    if ($defaultAdmin == Security::getCurrentUser()->Email) {
+                        $canLoginAs = true;
+                    }
+                } catch (Exception $ex) {
+                }
+            } else {
+                $canLoginAs = true;
+            }
+            if ($canLoginAs) {
+                $actions->push($doLoginAs = new CustomAction('doLoginAs', 'Login as'));
+            }
         }
     }
 

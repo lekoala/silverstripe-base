@@ -22,7 +22,7 @@ SilverStripe\Security\Member:
     - LeKoala\Base\Security\BaseMemberExtension
 LeKoala\Base\Security\MemberAudit:
   extensions:
-    - LeKoala\Base\Extensions\IPExtension
+    - LeKoala\CommonExtensions\IPExtension
 # Prevent any destructive operation and safely migrate
 SilverStripe\Assets\FileMigrationHelper:
   delete_invalid_files: false

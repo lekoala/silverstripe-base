@@ -19,7 +19,6 @@ class CommonRequirements
 {
     use Configurable;
 
-
     /**
      * @config
      * @var string
@@ -30,7 +29,7 @@ class CommonRequirements
      * @config
      * @var string
      */
-    private static $accouting_version = '0.4.1';
+    private static $accounting_version = '0.4.1';
 
     /**
      * @config
@@ -285,7 +284,7 @@ class CommonRequirements
      */
     public static function accounting()
     {
-        $version = self::config()->accouting_version;
+        $version = self::config()->accounting_version;
         Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/accounting.js/$version/accounting.min.js");
     }
 
