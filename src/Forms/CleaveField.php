@@ -28,7 +28,7 @@ class CleaveField extends TextField
     public function Field($properties = array())
     {
         $this->setAttribute('data-mb', 'Cleave');
-        $this->setAttribute('data-mb-options', json_encode($this->config));
+        $this->setAttribute('data-mb-options', json_encode($this->config, JSON_FORCE_OBJECT));
         self::requirements();
         return parent::Field($properties);
     }
