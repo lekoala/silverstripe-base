@@ -273,11 +273,25 @@ form {
   }
 
   .multicolumn {
-    display: flex;
-    flex-wrap: wrap;
+    > .fieldgroup {
+      display: flex;
+      flex-wrap: wrap;
+      flex-direction: row;
 
-    > * {
-      flex: 1 1 auto;
+      // size is calculated on max-content
+      > * {
+        flex: 1 1 auto;
+      }
+    }
+
+    // size is calculated by the content
+    &.flex-content > .fieldgroup > * {
+      flex: 0 0 auto;
+    }
+
+    // all the same width regardless of the size
+    &.flex-equal > .fieldgroup > * {
+      flex: 1 1 0;
     }
   }
 }

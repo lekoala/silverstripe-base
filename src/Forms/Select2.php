@@ -518,8 +518,8 @@ trait Select2
 
         $config = $this->config;
 
-        // Do not use select2 because it is reserved
-        $this->setAttribute('data-mb-options', json_encode($config));
+        $this->setAttribute('data-mb-options', json_encode($config, JSON_FORCE_OBJECT));
+        $this->setAttribute('data-mb', 'select2');
 
         $version = self::config()->version;
         Requirements::css("https://cdnjs.cloudflare.com/ajax/libs/select2/$version/css/select2.min.css");

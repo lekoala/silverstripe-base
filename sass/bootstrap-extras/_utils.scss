@@ -1,16 +1,22 @@
 // @https://stackoverflow.com/questions/45912296/bootstrap-4-sticky-footer-dynamic-footer-height
 // Usage
-// <div class="wrapper d-flex flex-column">
+// <div class="wrapper flex-sticky-footer">
 // <% include Header %>
 // <main class="flex-fill">
 //     $Layout
 // </main>
 // <% include Footer %>
 // </div>
-body, .wrapper {
-    min-height: 100vh;
+body,
+.wrapper {
+  min-height: 100vh;
+}
+
+.wrapper.flex-sticky-footer {
+  display: flex;
+  flex-direction: column;
 }
 
 .flex-fill {
-    flex: 1 1 auto;
+  flex: 1 1 auto;
 }

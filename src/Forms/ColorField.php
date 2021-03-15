@@ -106,7 +106,7 @@ class ColorField extends TextField
         $config = $this->config;
 
         $this->setAttribute('data-mb', 'spectrum');
-        $this->setAttribute('data-mb-options', json_encode($config));
+        $this->setAttribute('data-mb-options', json_encode($config, JSON_FORCE_OBJECT));
 
         $version = $this->config()->version;
         Requirements::css("https://cdnjs.cloudflare.com/ajax/libs/spectrum/$version/spectrum.min.css");

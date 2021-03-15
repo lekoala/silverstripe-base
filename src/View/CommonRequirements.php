@@ -445,7 +445,7 @@ JS;
     }
 
     /**
-     * If you use ModularBehaviour, you can just do data-module="owlCarousel"
+     * If you use ModularBehaviour, you can just do data-mb="owlCarousel"
      *
      * @link https://github.com/OwlCarousel2/OwlCarousel2
      * @param bool $css If you set this to false, think about including ../../../base/sass/vendor/owl-carousel2/owl.carousel

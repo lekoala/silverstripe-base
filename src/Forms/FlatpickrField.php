@@ -514,7 +514,7 @@ class FlatpickrField extends TextField
             $this->setConfig('locale', $lang);
         }
         $this->setAttribute('data-mb', 'flatpickr');
-        $this->setAttribute('data-mb-options', json_encode($this->config));
+        $this->setAttribute('data-mb-options', json_encode($this->config, JSON_FORCE_OBJECT));
 
         if ($this->range) {
             $this->setAttribute('data-range', $this->range);
