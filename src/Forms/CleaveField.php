@@ -35,9 +35,7 @@ class CleaveField extends TextField
 
     public static function requirements()
     {
-        CommonRequirements::cleave();
-
-        // Order matters for hooks ! Otherwise ready may fire before hooks are defined!
         CommonRequirements::modularBehaviour();
+        CommonRequirements::cleave();
     }
 }

@@ -243,8 +243,7 @@ class InputMaskField extends TextField
         // Requirements::javascript("https://cdn.rawgit.com/RobinHerbots/Inputmask/$version/dist/min/jquery.inputmask.bundle.min.js");
         // Requirements::javascript("https://cdn.jsdelivr.net/npm/inputmask@$version/dist/min/jquery.inputmask.bundle.min.js");
 
-        // Order matters for hooks ! Otherwise ready may fire before hooks are defined!
-        Requirements::javascript('base/javascript/fields/InputMaskField.js');
         CommonRequirements::modularBehaviour();
+        Requirements::javascript('base/javascript/fields/InputMaskField.js');
     }
 }

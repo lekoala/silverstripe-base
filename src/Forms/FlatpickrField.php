@@ -582,9 +582,8 @@ class FlatpickrField extends TextField
             Requirements::css("$cdnBase/themes/$theme.css");
         }
 
-        // Order matters for hooks ! Otherwise ready may fire before hooks are defined!
-        Requirements::javascript('base/javascript/fields/FlatpickrField.js');
         CommonRequirements::modularBehaviour();
+        Requirements::javascript('base/javascript/fields/FlatpickrField.js');
     }
 
     /**
