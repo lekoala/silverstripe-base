@@ -28,7 +28,7 @@
 
       // Transform required attr to .required
       $el.find("[required]").each(function () {
-        var $holder = $(this).parents(".field");
+        var $holder = $(this).parent();
         $(this).removeAttr("required");
         $holder.addClass("required");
         $(this).on("blur", function () {
