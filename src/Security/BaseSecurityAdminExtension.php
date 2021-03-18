@@ -230,6 +230,8 @@ class BaseSecurityAdminExtension extends Extension
 
     protected function addMemberAuditTab(Form $form)
     {
+        MemberAudit::clearOldRecords();
+
         $fields = $form->Fields();
         $MemberAudit_SNG = MemberAudit::singleton();
         $list = MemberAudit::get();
