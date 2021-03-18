@@ -189,7 +189,8 @@ form {
     }
   }
 
-  .field.required {
+  .field.required,
+  .fieldholder-small.required {
     > label {
       margin-right: 0;
       padding-right: 0;
