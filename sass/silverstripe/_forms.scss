@@ -144,11 +144,17 @@ form {
     font-size: 80%;
   }
 
-  .field {
+  div.field {
     margin-bottom: $spacer;
 
+    // Fields inside a composite field have their own margin bottom
     &.CompositeField {
       margin-bottom: 0;
+
+      // Fieldgroup field don't have a field class
+      div.fieldgroup-field {
+        margin-bottom: $spacer;
+      }
     }
   }
 

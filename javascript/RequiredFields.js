@@ -70,9 +70,19 @@
           .trigger("change");
       });
 
+      // Check click action detail
+      var clickedButton = null;
+      $el.find("[type=submit]").on("click", function () {
+        clickedButton = $(this);
+      });
+
       // Validation on submit
       $el.on("submit", function (e) {
         var hasErrors = false;
+
+        if (clickedButton && clickedButton.hasClass("ignore-validation")) {
+          return;
+        }
 
         $(this)
           .find(".required")
