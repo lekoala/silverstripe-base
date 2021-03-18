@@ -40,6 +40,7 @@ class TwoFactorLoginHandler extends LoginHandler
     public function doLogin($data, MemberLoginForm $form, HTTPRequest $request)
     {
         $this->extend('beforeLogin');
+
         // Successful login
         /** @var ValidationResult $result */
         if ($member = $this->checkLogin($data, $request, $result)) {
@@ -52,6 +53,7 @@ class TwoFactorLoginHandler extends LoginHandler
             }
 
             // 2FA is enabled but not needed, log in as normal
+            // otherwise this will be done after step2
             $this->performLogin($member, $data, $request);
 
             // Allow operations on the member after successful login

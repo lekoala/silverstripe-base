@@ -4,6 +4,7 @@ namespace LeKoala\Base\Security;
 
 use Exception;
 use LeKoala\Base\Controllers\HasSession;
+use LeKoala\Base\Forms\GoogleRecaptchaField;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\Forms\FieldList;
@@ -140,6 +141,12 @@ class BaseMemberExtension extends DataExtension
      */
     public function canLogIn(ValidationResult $result)
     {
+        // We can avoid bots by allowing to tick a box
+        // if ($this->owner->isLockedOut() && GoogleRecaptchaField::isSetupReady()) {
+        //     $result->addError('There was too many failed login attempt. Please check the captcha box to try again.');
+        //     return;
+        // }
+
         // Ip whitelist for users with cms access (empty by default)
         // SilverStripe\Security\Security:
         //   admin_ip_whitelist:

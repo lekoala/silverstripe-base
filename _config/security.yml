@@ -38,6 +38,8 @@ SilverStripe\Security\MemberAuthenticator\LostPasswordHandler:
     - LeKoala\Base\Security\LostPasswordHandlerExtension
 # Injector
 SilverStripe\Core\Injector\Injector:
+  SilverStripe\Security\MemberAuthenticator\MemberAuthenticator:
+    class: 'LeKoala\Base\Security\BaseAuthenticator'
   SilverStripe\Security\MemberAuthenticator\MemberLoginForm:
     class: 'LeKoala\Base\Security\MemberLoginForm'
   SilverStripe\Security\Security:

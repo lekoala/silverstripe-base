@@ -2,11 +2,14 @@
 
 namespace LeKoala\Base\Security;
 
+use SilverStripe\Security\Member;
 use LeKoala\Base\Helpers\IPHelper;
 use SilverStripe\Security\Security;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\GraphQL\Controller;
 use SilverStripe\Security\Permission;
+use SilverStripe\ORM\ValidationResult;
+use SilverStripe\Security\MemberPassword;
 use SilverStripe\Security\MemberAuthenticator\LoginHandler;
 use SilverStripe\Security\MemberAuthenticator\MemberAuthenticator;
 
@@ -28,6 +31,51 @@ class BaseAuthenticator extends MemberAuthenticator
         }
 
         return LoginHandler::create($link, $this);
+    }
+
+    protected function authenticateMember($data, ValidationResult &$result = null, Member $member = null)
+    {
+        return parent::authenticateMember($data, $result, $member);
+    }
+
+    public function checkPassword(Member $member, $password, ValidationResult &$result = null)
+    {
+        // Plain password
+        if ($member->Password && !$member->PasswordEncryption) {
+            if ($member->Password == $password) {
+                return $result;
+            }
+        }
+
+        // Check if the member entered his old password if he recently changed it
+        // This prevent disclosing information and helps users
+        $previousPasswords = MemberPassword::get()
+            ->where(['"MemberPassword"."MemberID"' => $member->ID])
+            ->sort('"Created" DESC, "ID" DESC')
+            ->limit(2);
+
+        $i = 0;
+        $recentChange = false;
+        foreach ($previousPasswords as $previousPassword) {
+            // The first password is the current one, check if it's a new one
+            $i++;
+            if ($i == 1) {
+                if (strtotime($previousPassword->Created) >= strtotime('-3 days')) {
+                    $recentChange = true;
+                }
+            }
+            if ($i == 2 && $recentChange) {
+                if ($previousPassword->checkPassword($password)) {
+                    $result->addError(_t(
+                        'BaseAuthenticator.ERRORWRONGCRED',
+                        'You entered your old password. Please use the new one.'
+                    ));
+                    return $result;
+                }
+            }
+        }
+
+        return parent::checkPassword($member, $password, $result);
     }
 
     public static function debugTwoFactorLoginInfos($member)
