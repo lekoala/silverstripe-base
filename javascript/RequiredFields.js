@@ -29,6 +29,9 @@
       // Transform required attr to .required
       $el.find("[required]").each(function () {
         var $holder = $(this).parent();
+        if ($holder.hasClass("middleColumn")) {
+          $holder = $holder.parent();
+        }
         $(this).removeAttr("required");
         $holder.addClass("required");
         $(this).on("blur", function () {
