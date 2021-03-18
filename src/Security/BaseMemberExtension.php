@@ -3,6 +3,7 @@
 namespace LeKoala\Base\Security;
 
 use Exception;
+use LeKoala\Base\Controllers\HasSession;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\Forms\FieldList;
@@ -43,6 +44,7 @@ class BaseMemberExtension extends DataExtension
 {
     use MasqueradeMember;
     use MemberAuthenticatorExtensions;
+    use HasSession;
 
     private static $db = [
         'LastVisited' => 'Datetime',
@@ -268,6 +270,9 @@ class BaseMemberExtension extends DataExtension
     {
         if ($valid->isValid()) {
             $this->owner->audit('password_changed_success');
+
+            // Can prove useful to send custom toast message or notification
+            self::getSession()->set('PasswordChanged', 1);
         } else {
             $this->owner->audit('password_changed_error');
         }
