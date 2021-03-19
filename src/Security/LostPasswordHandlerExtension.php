@@ -27,7 +27,7 @@ class LostPasswordHandlerExtension extends Extension
      * @param Member $member
      * @return array
      */
-    public function forgotPassword($member)
+    public function forgotPassword(&$member)
     {
         // Attempt on invalid member
         if (!$member) {
@@ -38,14 +38,17 @@ class LostPasswordHandlerExtension extends Extension
         $username = DefaultAdminService::getDefaultAdminUsername();
         if ($member->Email == $username) {
             self::getLogger()->debug("Default admin cannot reset his password");
+            $member = null;
             return;
         }
         // Avoid hammering / 2 min per request
         $latestedAudit = $member->Audits()->filter('Event', 'password_requested')->first();
         if ($latestedAudit && strtotime($latestedAudit->Created) >= strtotime('-2 minutes')) {
             self::getLogger()->debug("Avoid hammering for #" . $member->ID);
-            return false;
+            $member = null;
+            return;
         }
+
         $member->audit('password_requested');
     }
 }
