@@ -1,9 +1,11 @@
 <?php
+
 namespace LeKoala\Base\Forms;
 
+use Exception;
 use SilverStripe\ORM\Relation;
-use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\Forms\ListboxField;
+use SilverStripe\ORM\DataObjectInterface;
 
 /**
  * @link https://select2.org

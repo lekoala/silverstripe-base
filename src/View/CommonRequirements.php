@@ -211,6 +211,7 @@ class CommonRequirements
         $js = <<<JS
 ModularBehaviour.init({'debug':$v});
 jQuery(document).ajaxSuccess(function (event, xhr, settings) {
+    console.log("ajax");
     ModularBehaviour.run();
 });
 JS;
