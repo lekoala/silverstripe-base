@@ -201,6 +201,13 @@ class BaseMemberExtension extends DataExtension
         }
     }
 
+    public function onBeforeWrite()
+    {
+        if ($this->owner->Email) {
+            $this->owner->Email = trim($this->owner->Email);
+        }
+    }
+
     /**
      * @deprecated
      */
