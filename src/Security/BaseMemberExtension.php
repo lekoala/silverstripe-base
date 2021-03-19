@@ -29,6 +29,7 @@ use LeKoala\CommonExtensions\ValidationStatusExtension;
 use SilverStripe\Forms\GridField\GridFieldAddNewButton;
 use SilverStripe\Security\MemberAuthenticator\MemberAuthenticator;
 use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
+use SilverStripe\ORM\ValidationException;
 
 /**
  * A lot of base functionalities for your members
@@ -270,9 +271,16 @@ class BaseMemberExtension extends DataExtension
         //
     }
 
-    public function onBeforeChangePassword($password, $valid)
+    /**
+     * @param string $password
+     * @param ValidationResult $valid
+     * @return void
+     */
+    public function onBeforeChangePassword($password, &$valid)
     {
-        //
+        if (!$password && $this->owner->isChanged("Password")) {
+            throw new ValidationException("Your password cannot be empty");
+        }
     }
 
     /**
