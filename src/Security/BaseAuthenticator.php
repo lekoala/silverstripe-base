@@ -10,6 +10,7 @@ use SilverStripe\GraphQL\Controller;
 use SilverStripe\Security\Permission;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\MemberPassword;
+use SilverStripe\Security\PasswordEncryptor;
 use SilverStripe\Security\MemberAuthenticator\LoginHandler;
 use SilverStripe\Security\MemberAuthenticator\MemberAuthenticator;
 
@@ -47,6 +48,15 @@ class BaseAuthenticator extends MemberAuthenticator
             }
         }
 
+        // Check empty password
+        $encryptor = PasswordEncryptor::create_for_algorithm($member->PasswordEncryption);
+        if ($encryptor->check($member->Password, "", $member->Salt, $member)) {
+            $result->addError(_t(
+                'BaseAuthenticator.PLEASERESET',
+                "Please reset your password with 'I've Lost my Password' steps below."
+            ));
+        }
+
         // Check if the member entered his old password if he recently changed it
         // This prevent disclosing information and helps users
         $previousPasswords = MemberPassword::get()
@@ -67,7 +77,7 @@ class BaseAuthenticator extends MemberAuthenticator
             if ($i == 2 && $recentChange) {
                 if ($previousPassword->checkPassword($password)) {
                     $result->addError(_t(
-                        'BaseAuthenticator.ERRORWRONGCRED',
+                        'BaseAuthenticator.OLDPASSWORD',
                         'You entered your old password. Please use the new one.'
                     ));
                     return $result;
