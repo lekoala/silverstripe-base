@@ -78,7 +78,7 @@ class JsRequiredFields extends RequiredFields
             }
 
             // Conditional ?
-            if ($formField->getAttribute("data-show-if")) {
+            if ($formField && $formField->getAttribute("data-show-if")) {
                 //TODO: parse expression properly
                 continue;
             }

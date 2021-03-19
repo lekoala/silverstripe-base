@@ -1,4 +1,5 @@
 <?php
+
 namespace LeKoala\Base\Forms\FullGridField;
 
 use Exception;
@@ -261,9 +262,7 @@ class FullGridFieldCheckbox implements GridField_SaveHandler, GridField_ColumnPr
      */
     public function getColumnContent($gridField, $record, $columnName)
     {
-        if (in_array($record->ID, $this->cannotBeRemovedIDs)) {
-            return '';
-        }
+        $cannotBeRemoved = in_array($record->ID, $this->cannotBeRemovedIDs);
 
         $cb = CheckboxField::create('FullGridSelect[' . $gridField->getName() . '][' . $record->ID . ']', '')
             ->addExtraClass('FullGridSelect no-change-track');
@@ -278,6 +277,9 @@ class FullGridFieldCheckbox implements GridField_SaveHandler, GridField_ColumnPr
 
         // Is checked?
         if (in_array($record->ID, $this->ids)) {
+            if ($cannotBeRemoved) {
+                return '';
+            }
             // Can be removed?
             $cb->setValue(1);
         }
