@@ -105,8 +105,6 @@ class BaseFileExtension extends DataExtension
             $size = $mem;
         }
         $files = Image::get()->where("FileSize > '$mem'")->toArray();
-
-        d($files, $size, FileHelper::humanFilesize($size));
     }
 
     public static function moveFilesWithoutParent()
