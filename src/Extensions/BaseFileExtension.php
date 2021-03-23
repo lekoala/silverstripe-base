@@ -242,11 +242,22 @@ class BaseFileExtension extends DataExtension
     /**
      * Get a cdn version of the image
      *
+     * @param int $width
+     * @param int $height
      * @return string
      */
-    public function StaticallyLink()
+    public function StaticallyLink($width = null, $height = null)
     {
-        return Statically::img($this->owner->AbsoluteLink());
+        $params = [
+            'f=auto'
+        ];
+        if ($width) {
+            $params[] = "w=$width";
+        }
+        if ($height) {
+            $params[] = "h=$height";
+        }
+        return Statically::img($this->owner->AbsoluteLink(), $params);
     }
 
     /**
