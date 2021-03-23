@@ -11,16 +11,20 @@ use SilverStripe\Assets\Folder;
 use SilverStripe\ORM\DataObject;
 use LeKoala\Base\View\Statically;
 use SilverStripe\Control\Director;
+use SilverStripe\Core\Environment;
 use SilverStripe\ORM\DataExtension;
 use LeKoala\Base\Helpers\FileHelper;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\Assets\Image_Backend;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Assets\Storage\AssetStore;
 use SilverStripe\Assets\ImageBackendFactory;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Core\Injector\InjectionCreator;
 use SilverStripe\AssetAdmin\Controller\AssetAdmin;
+use SilverStripe\Assets\Flysystem\ProtectedAssetAdapter;
 
 /**
  * Improved File usage
@@ -49,6 +53,12 @@ class BaseFileExtension extends DataExtension
      * @var string
      */
     private static $auto_clear_threshold = null;
+
+    /**
+     * @config
+     * @var bool
+     */
+    private static $enable_webp = false;
 
     private static $db = [
         // This helps tracking state of files uploaded through ajax uploaders
@@ -217,26 +227,79 @@ class BaseFileExtension extends DataExtension
      * Currently, boolean arguments are not supported in a template
      * @link https://github.com/silverstripe/silverstripe-framework/issues/8690
      *
+     * This can also output a <picture> element with the webp alternative provided
+     * that enable_webp is set to true and nomidi/silverstripe-webp-image is installed
+     *
      * @param int $limitWidth
      * @return string
      */
     public function Lazy($limitWidth = null)
     {
+        /* @var $img Image */
         $img = $this->owner;
         if ($limitWidth) {
             $img = $this->owner->ScaleWidth($limitWidth);
         }
         $url = Convert::raw2att($img->getURL());
         $title = Convert::raw2att($img->getTitle());
-        if (!$limitWidth) {
-            return '<img data-src="' . $url . '" class="lazy" alt="' . $title . '" />';
+
+        $ext = $img->getExtension();
+        $webp_url = str_replace('.' . $ext, '_' . $ext, $url) . ".webp";
+
+        $wh = '';
+        if ($limitWidth) {
+            // this reports original width if resized from template
+            // so we have to pass width as an argument
+            // @link https://github.com/silverstripe/silverstripe-assets/issues/201
+            $w = $img->getWidth();
+            $h = $img->getHeight();
+
+            $wh = ' width="' . $w . '" height="' . $h . '"';
         }
-        // this reports original width if resized from template
-        // so we have to pass width as an argument
-        // @link https://github.com/silverstripe/silverstripe-assets/issues/201
-        $w = $img->getWidth();
-        $h = $img->getHeight();
-        return '<img data-src="' . $url . '" class="lazy" alt="' . $title . '" width="' . $w . '" height="' . $h . '" />';
+
+        // @link https://github.com/verlok/vanilla-lazyload#lazy-responsive-image-with-automatic-webp-format-selection-using-the-picture-tag
+        if (self::config()->enable_webp && in_array($ext, ["jpg", "png"]) && $img->isPublished()) {
+            $this->createWebpIfNeeded();
+
+            $html = '';
+            $html .= '<source data-srcset="' . $webp_url . '" type="image/webp" />';
+            $html .= '<img data-src="' . $url . '" class="lazy" alt="' . $title . '"' . $wh . ' />';
+            return '<picture>' . $html . '</picture>';
+        }
+        return '<img data-src="' . $url . '" class="lazy" alt="' . $title . '"' . $wh . ' />';
+    }
+
+    protected function createWebpIfNeeded()
+    {
+        $img = $this->owner;
+        $path = $img->getFullPath();
+        $store = $this->getAssetStore();
+        $webp_path = $store->createWebPName($path);
+        if (!is_file($webp_path)) {
+            $store = $this->getAssetStore();
+            // nomidi/silverstripe-webp-image or compatible
+            $store->createWebPImage($path, $img->getFilename(), $img->getHash(), $img->getVariant());
+        }
+    }
+
+    public function WebpLink()
+    {
+        $img = $this->owner;
+        $ext = $img->getExtension();
+        if (self::config()->enable_webp && in_array($ext, ["jpg", "png"]) && $img->isPublished()) {
+            $this->createWebpIfNeeded();
+            $webp_url = str_replace('.' . $ext, '_' . $ext, $img->Link()) . ".webp";
+            return $webp_url;
+        }
+        return $img->Link();
+    }
+
+    /**
+     * @return AssetStore|Nomidi\WebPCreator\Flysystem\FlysystemAssetStore
+     */
+    protected function getAssetStore()
+    {
+        return Injector::inst()->get(AssetStore::class);
     }
 
     /**
@@ -367,13 +430,23 @@ class BaseFileExtension extends DataExtension
      */
     public function getFullPath()
     {
-        // TODO: support custom path
-        return Director::publicFolder() . '/assets/' . $this->getRelativePath();
+        return ASSETS_PATH . '/' . $this->getRelativePath();
     }
 
     public function getProtectedFullPath()
     {
-        return Director::publicFolder() . '/assets/.protected/' . $this->getRelativePath();
+        return self::getBaseProtectedPath() . '/' . $this->getRelativePath();
+    }
+
+    public static function getBaseProtectedPath()
+    {
+        // Use environment defined path or default location is under assets
+        if ($path = Environment::getEnv('SS_PROTECTED_ASSETS_PATH')) {
+            return $path;
+        }
+
+        // Default location
+        return ASSETS_PATH . '/' . Config::inst()->get(ProtectedAssetAdapter::class, 'secure_folder');
     }
 
     /**
@@ -402,12 +475,14 @@ class BaseFileExtension extends DataExtension
 
         $Path = '';
         // Is it protected?
-        // TODO: support custom path
         if (!$this->owner->isPublished()) {
-            $Path = '.protected/';
+            $Path = Config::inst()->get(ProtectedAssetAdapter::class, 'secure_folder') . '/';
+            $Path .= $Dir . '/' . $Hash . '/' . $Name;
+        } else {
+            // Check legacy_filenames=true
+            // With SilverStripe 4.4.0, public files are "hash-less" by default
+            $Path .= $Dir . '/' . $Name;
         }
-        // TODO: legacy mode may be enabled
-        $Path .= $Dir . '/' . $Hash . '/' . $Name;
         return $Path;
     }
 }
