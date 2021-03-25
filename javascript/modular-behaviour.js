@@ -173,10 +173,10 @@
                 if (elementConfig.charAt(0) === "#") {
                     // External config in an html node
                     var externalConfigNode = document.getElementById(
-                        elementConfig
+                        elementConfig.slice(1)
                     );
-                    var externalConfig = externalConfigNode.textContent;
-                    if (externalConfig) {
+                    if (externalConfigNode) {
+                        var externalConfig = externalConfigNode.textContent;
                         elementConfig = JSON.parse(externalConfig);
                     } else {
                         debug("Config not found with id " + elementConfig);
