@@ -240,6 +240,9 @@ class BaseFileExtension extends DataExtension
         if ($limitWidth) {
             $img = $this->owner->ScaleWidth($limitWidth);
         }
+        if (!$img) {
+            return;
+        }
         $url = Convert::raw2att($img->getURL());
         $title = Convert::raw2att($img->getTitle());
 
