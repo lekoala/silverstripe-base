@@ -11,7 +11,7 @@
     var val = $this.val();
     var dataformat = $this.data("dataformat");
     var isDecimal = $this.data("isDecimal");
-    var config = $this.data("config");
+    var config = opts;
 
     // Duplicate input field to store data value
     var hiddenInput = $("<input/>", {
