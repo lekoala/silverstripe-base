@@ -2,17 +2,20 @@
 
 namespace LeKoala\Base\Forms\Validator;
 
-use LeKoala\Base\View\CommonRequirements;
+use SilverStripe\Forms\Form;
 use SilverStripe\ORM\ArrayLib;
 use SilverStripe\Forms\FileField;
 use SilverStripe\Forms\FormField;
 use SilverStripe\View\Requirements;
 use SilverStripe\Forms\RequiredFields;
+use LeKoala\Base\View\CommonRequirements;
 
 /**
  */
 class JsRequiredFields extends RequiredFields
 {
+    private static $vanilla_js = true;
+
     public function __construct()
     {
         parent::__construct();
@@ -26,9 +29,21 @@ class JsRequiredFields extends RequiredFields
         } else {
             $this->required = [];
         }
+    }
 
+    public static function requirements(Form $form)
+    {
         CommonRequirements::modularBehaviour();
-        Requirements::javascript("base/javascript/RequiredFields.js");
+        if (self::config()->vanilla_js) {
+            Requirements::javascript("base/javascript/required-fields.js");
+        } else {
+            Requirements::javascript("base/javascript/RequiredFields.js");
+        }
+        $opts = [
+            'skipParentClass' => "middleColumn"
+        ];
+        $form->setAttribute("data-mb-options", json_encode($opts, JSON_FORCE_OBJECT));
+        $form->setAttribute("data-mb", "RequiredFields");
     }
 
     /**
@@ -38,7 +53,8 @@ class JsRequiredFields extends RequiredFields
     public function setForm($form)
     {
         $this->form = $form;
-        $this->form->setAttribute("data-mb", "RequiredFields");
+        self::requirements($form);
+
         return $this;
     }
 
