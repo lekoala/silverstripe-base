@@ -13,8 +13,9 @@
   // Default settings
   var defaults = {};
   var config = {
-    debug: true,
+    debug: false,
     ignoreValidationClass: "ignore-validation",
+    allRequiredClass: "required-all",
   };
   // Actual settings
   var RequiredFields = {
@@ -30,6 +31,23 @@
     if (config.debug) {
       console.log("[rf] " + msg);
     }
+  }
+
+  /**
+   * @param {object} input
+   * @returns {boolean}
+   */
+  function getInputValue(input) {
+    if (input.type == "radio" || input.type == "checkbox") {
+      if (input.checked) {
+        return true;
+      }
+    } else {
+      if (input.value) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /**
@@ -133,24 +151,29 @@
         debug("validating " + list.length + " elements");
         for (var i = 0; i < list.length; i++) {
           var parent = list[i];
+          var allRequired = false;
+          if (parent.classList.contains(config.allRequiredClass)) {
+            allRequired = true;
+          }
 
           if (window.getComputedStyle(parent).display === "none") {
             parent.classList.remove("error");
             continue;
           }
 
-          var inputs = parent.querySelectorAll("input");
+          var inputs = parent.querySelectorAll("input,select");
           if (inputs.length > 0) {
             var hasValue = false;
             for (var j = 0; j < inputs.length; j++) {
               var listInput = inputs[j];
-              // At least one input must have a value or be checked
-              if (listInput.type == "radio" || listInput.type == "checkbox") {
-                if (listInput.checked) {
-                  hasValue = true;
+              if (allRequired) {
+                hasValue = true;
+                if (!getInputValue(listInput)) {
+                  hasValue = false;
                 }
               } else {
-                if (listInput.value) {
+                // At least one input must have a value or be checked
+                if (getInputValue(listInput)) {
                   hasValue = true;
                 }
               }
