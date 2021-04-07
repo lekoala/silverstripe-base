@@ -426,3 +426,13 @@ select.ag-cell-edit-input {
   margin: 0;
   margin-right: 1em;
 }
+
+/* columns */
+.cms-edit-form .columns .form-group.checkbox .form__field-holder {
+  margin-left: 1.5385rem !important;
+  flex: 0 0 100%;
+  max-width: 100%
+}
+.cms-edit-form .columns .form-group:after {
+  display: none;
+}
