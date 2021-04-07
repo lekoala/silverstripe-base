@@ -5,7 +5,7 @@ namespace LeKoala\Base\Forms;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\Assets\Image;
 use SilverStripe\ORM\DataObjectInterface;
-use LeKoala\Base\Blocks\Block;
+use LeKoala\Blocks\Block;
 use Bummzack\SortableFile\Forms\SortableUploadField;
 
 /**
