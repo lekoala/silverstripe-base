@@ -164,10 +164,13 @@
           var inputs = parent.querySelectorAll("input,select");
           if (inputs.length > 0) {
             var hasValue = false;
+            if (allRequired) {
+              hasValue = true;
+            }
             for (var j = 0; j < inputs.length; j++) {
               var listInput = inputs[j];
               if (allRequired) {
-                hasValue = true;
+                // One is enough to invalidate
                 if (!getInputValue(listInput)) {
                   hasValue = false;
                 }
