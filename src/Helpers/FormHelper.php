@@ -33,45 +33,6 @@ class FormHelper
     }
 
     /**
-     * Split Name[Input][Sub][Value] notation
-     *
-     * @param string $name
-     * @return array
-     */
-    public static function extractNameParts($name)
-    {
-        if (strpos($name, '[') !== false) {
-            $matches = null;
-            preg_match_all('/\[([a-zA-Z0-9_]+)\]/', $name, $matches);
-            $matches = $matches[1];
-        } else {
-            $matches = [$name];
-        }
-        return $matches;
-    }
-
-    /**
-     * Get nested data
-     *
-     * @param string $key
-     * @param array $arr
-     * @return string
-     */
-    public static function getIn($key, $arr)
-    {
-        $matches = self::extractNameParts($key);
-        $val = $arr;
-        foreach ($matches as $part) {
-            if (isset($val[$part])) {
-                $val = $val[$part];
-            } else {
-                $val = null;
-            }
-        }
-        return $val;
-    }
-
-    /**
      * Helps dealing with browser autofill
      *
      * @param FormField $field
