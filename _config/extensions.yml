@@ -1,6 +1,10 @@
 ---
 Name: base-extensions
 ---
+SilverStripe\Assets\File:
+  allowed_extensions:
+    - svg
+    - js
 SilverStripe\ORM\DataObject:
   extensions:
     - LeKoala\Base\Extensions\BaseDataObjectExtension
