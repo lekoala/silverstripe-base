@@ -20,6 +20,8 @@ use SilverStripe\ORM\ManyManyThroughList;
 use SilverStripe\ORM\UnsavedRelationList;
 use LeKoala\Base\Forms\BuildableFieldList;
 use LeKoala\Base\Forms\GridField\GridFieldHelper;
+use SilverStripe\Assets\Shortcodes\FileLink;
+use SilverStripe\Assets\Shortcodes\FileLinkTracking;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\Forms\GridField\GridFieldDeleteAction;
 use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
@@ -236,7 +238,7 @@ class BaseDataObjectExtension extends DataExtension
 
     public function onBeforeDelete()
     {
-        // $this->cleanupAssets();
+        $this->cleanupAssets();
     }
 
     public function onAfterDelete()
@@ -513,6 +515,17 @@ class BaseDataObjectExtension extends DataExtension
         if ($this->isVersioned()) {
             return;
         }
+
+        // It's a file tracking, don't cleanup!
+        if (in_array(get_class($this->owner), [FileLink::class, FileLinkTracking::class])) {
+            return;
+        }
+
+        // If we have a cascade delete, no need to worry
+        if (!empty($this->owner->config()->cascade_deletes)) {
+            return;
+        }
+
         $rel = $this->getAllFileRelations();
         $owns =  $this->owner->config()->owns;
 
@@ -533,7 +546,7 @@ class BaseDataObjectExtension extends DataExtension
                             continue;
                         }
                         $rec = $this->owner->$name();
-                        if ($rec && $rec->ID && !$rec->findAllRelatedData()->count()) {
+                        if ($rec && $rec->ID) {
                             $rec->deleteAll();
                         }
                     }
@@ -545,7 +558,7 @@ class BaseDataObjectExtension extends DataExtension
                             continue;
                         }
                         foreach ($this->owner->$name() as $rec) {
-                            if ($rec && $rec->ID && !$rec->findAllRelatedData()->count()) {
+                            if ($rec && $rec->ID) {
                                 $rec->deleteAll();
                             }
                         }
