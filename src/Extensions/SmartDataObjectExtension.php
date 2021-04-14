@@ -73,6 +73,8 @@ class SmartDataObjectExtension extends DataExtension
 
             if (is_dir($protected)) {
                 Filesystem::remove_folder_if_empty($protected);
+            }
+            if (is_dir($public)) {
                 Filesystem::remove_folder_if_empty($public);
             }
         }

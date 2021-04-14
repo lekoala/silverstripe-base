@@ -2,7 +2,6 @@
 
 namespace LeKoala\Base\Extensions;
 
-use Exception;
 use SilverStripe\ORM\DB;
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\Image;
@@ -25,6 +24,7 @@ use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Core\Injector\InjectionCreator;
 use SilverStripe\AssetAdmin\Controller\AssetAdmin;
 use SilverStripe\Assets\Flysystem\ProtectedAssetAdapter;
+use SilverStripe\Dev\Backtrace;
 
 /**
  * Improved File usage

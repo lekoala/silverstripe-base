@@ -236,7 +236,7 @@ class BaseDataObjectExtension extends DataExtension
 
     public function onBeforeDelete()
     {
-        $this->cleanupAssets();
+        // $this->cleanupAssets();
     }
 
     public function onAfterDelete()
@@ -502,6 +502,11 @@ class BaseDataObjectExtension extends DataExtension
         }
     }
 
+    /**
+     * When you delete a record
+     *
+     * @return void
+     */
     protected function cleanupAssets()
     {
         // We should not cleanup tables on versioned items because they can be restored
@@ -528,7 +533,7 @@ class BaseDataObjectExtension extends DataExtension
                             continue;
                         }
                         $rec = $this->owner->$name();
-                        if ($rec && $rec->ID) {
+                        if ($rec && $rec->ID && !$rec->findAllRelatedData()->count()) {
                             $rec->deleteAll();
                         }
                     }
@@ -540,7 +545,7 @@ class BaseDataObjectExtension extends DataExtension
                             continue;
                         }
                         foreach ($this->owner->$name() as $rec) {
-                            if ($rec && $rec->ID) {
+                            if ($rec && $rec->ID && !$rec->findAllRelatedData()->count()) {
                                 $rec->deleteAll();
                             }
                         }
