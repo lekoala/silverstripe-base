@@ -6,7 +6,7 @@ use SilverStripe\ORM\SS_List;
 use SilverStripe\Assets\Image;
 use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\AssetAdmin\Forms\UploadField;
-use LeKoala\Base\Blocks\Block;
+use LeKoala\Blocks\Block;
 
 /**
  * Improves the default uploader by uploading to a consistent default location

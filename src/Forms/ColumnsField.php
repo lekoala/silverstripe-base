@@ -18,6 +18,7 @@ class ColumnsField extends FieldGroup
      * @var boolean
      */
     private static $autosize = true;
+
     /**
      * @config
      * @var string
@@ -34,6 +35,10 @@ class ColumnsField extends FieldGroup
      */
     protected $columnSizes = [];
 
+    /**
+     * @param array
+     */
+    protected $extraRowClasses = [];
 
     public function __construct($children = null)
     {
@@ -59,9 +64,13 @@ class ColumnsField extends FieldGroup
             if (isset($this->columnSizes[$pos])) {
                 $class .= '-' . $this->columnSizes[$pos];
             } elseif (self::config()->autosize) {
-                $autoSize = round(12 / count($this->children));
+                $columnCount = $this->getColumnCount() ?? count($this->children);
+                $autoSize = round(12 / $columnCount);
                 $class .= '-' . $autoSize . ' ' . $col_class . '-xs-12';
             }
+        }
+        if ($this->extraRowClasses) {
+            $class .= ' ' . implode(' ', $this->extraRowClasses);
         }
         return $class;
     }
@@ -132,6 +141,41 @@ class ColumnsField extends FieldGroup
     {
         $this->columnSizes[$col] = $size;
         return $this;
+    }
+
+    /**
+     * @return arrray
+     */
+    public function getExtraRowClasses()
+    {
+        return $this->extraRowClasses;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setExtraRowClasses($extraRowClasses)
+    {
+        $this->extraRowClasses = $extraRowClasses;
+        return $this;
+    }
+
+    /**
+     * @param string $class
+     * @return $this
+     */
+    public function addRowClass($class)
+    {
+        $this->extraRowClasses[] = $class;
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setEqualHeight()
+    {
+        return $this->addRowClass('d-flex');
     }
 
     public function Field($properties = array())

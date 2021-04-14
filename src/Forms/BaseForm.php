@@ -3,6 +3,7 @@
 namespace LeKoala\Base\Forms;
 
 use Exception;
+use LeKoala\Base\Forms\Validator\JsRequiredFields;
 use SilverStripe\Forms\Form;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Forms\FieldList;
@@ -224,9 +225,7 @@ class BaseForm extends Form
      */
     protected function enableJsValidation()
     {
-        $this->setAttribute("data-mb", "RequiredFields");
-        CommonRequirements::modularBehaviour();
-        Requirements::javascript("base/javascript/RequiredFields.js");
+        JsRequiredFields::requirements($this);
     }
 
     /**
