@@ -2,6 +2,7 @@
 
 namespace LeKoala\Base\Security;
 
+use LeKoala\Base\Forms\AlertField;
 use PragmaRX\Google2FA\Google2FA;
 use SilverStripe\Forms\FieldList;
 use LeKoala\Base\Helpers\IPHelper;
@@ -13,6 +14,7 @@ use SilverStripe\Security\Permission;
 use SilverStripe\SiteConfig\SiteConfig;
 use LeKoala\Base\Security\BaseAuthenticator;
 use LeKoala\CmsActions\CustomAction;
+use SilverStripe\Control\Director;
 use SilverStripe\Forms\ToggleCompositeField;
 
 /**
@@ -139,6 +141,7 @@ class TwoFactorMemberExtension extends DataExtension
             $fields->removeByName('TOTPToken');
         }
 
+        $fields->removeByName('TOTPToken');
         if (strlen($this->owner->TOTPToken)) {
             $qrcodeURI = $this->GoogleAuthenticatorQRCode();
             $fields->addFieldToTab('Root.Main', ToggleCompositeField::create(
@@ -146,7 +149,10 @@ class TwoFactorMemberExtension extends DataExtension
                 _t('TwoFactorMemberExtension.CMSTOGGLEQRCODELABEL', 'Second Factor Token Secret'),
                 LiteralField::create(null, sprintf("<img src=\"%s\" style=\"margin-left:10px\" loading=\"lazy\" />", $qrcodeURI))
             ));
-            $fields->removeByName('TOTPToken');
+        }
+
+        if ($this->owner->EnableTwoFactorAuth && empty($this->AvailableTwoFactorMethod())) {
+            $fields->insertAfter("EnableTwoFactorAuth", new AlertField("EnableTwoFactorAuthWarning", "No available authentication method"));
         }
     }
 
@@ -158,10 +164,21 @@ class TwoFactorMemberExtension extends DataExtension
         return 'Token generated';
     }
 
+    public function doClearTOTPToken()
+    {
+        $this->owner->TOTPToken = null;
+        $this->owner->write();
+
+        return 'Token cleared';
+    }
+
     public function updateCMSActions(FieldList $actions)
     {
         if ($this->owner->EnableTwoFactorAuth && strlen($this->owner->TOTPToken) == 0) {
             $actions->push(new CustomAction("doGenerateTOTPToken", "Generate Token"));
+        }
+        if (Director::isDev() && $this->owner->TOTPToken) {
+            $actions->push(new CustomAction("doClearTOTPToken", "Clear Token"));
         }
     }
 }
