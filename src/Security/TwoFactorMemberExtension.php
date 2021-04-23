@@ -46,10 +46,10 @@ class TwoFactorMemberExtension extends DataExtension
             $request = Controller::curr()->getRequest();
             $requestIp = $request->getIP();
             if (IPHelper::checkIp($requestIp, $adminIps)) {
-                // return false;
+                return false;
             }
         }
-        // we only required 2fa for admins
+        // we only require 2fa for admins
         if (BaseAuthenticator::is2FAenabledAdminOnly() && $this->owner->EnableTwoFactorAuth) {
             return Permission::check('CMS_ACCESS', 'any', $this->owner);
         }
