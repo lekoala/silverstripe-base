@@ -53,7 +53,7 @@ class TwoFactorLoginHandler extends LoginHandler
             $session->set('TwoFactorLoginHandler.Data', $data);
 
             if ($member->NeedTwoFactorAuth()) {
-                return $this->redirect($this->link('step2'));
+                return $this->redirect($this->getStep2Link());
             }
 
             // 2FA is enabled but not needed, log in as normal
@@ -222,7 +222,12 @@ class TwoFactorLoginHandler extends LoginHandler
         // Fail to login redirects back to form
         $session->set('TwoFactorLoginHandler.ErrorMessage', _t('TwoFactorLoginHandler.ERRORMESSAGE', 'The provided token is invalid, please try again.'));
 
-        return $this->redirect($this->Link('step2'));
+        return $this->redirect($this->getStep2Link());
+    }
+
+    public function getStep2Link()
+    {
+        return '/Security/login/default/step2';
     }
 
     public function totpStepForm()
@@ -264,7 +269,7 @@ class TwoFactorLoginHandler extends LoginHandler
         // Fail to login redirects back to form
         $session->set('TwoFactorLoginHandler.ErrorMessage', _t('TwoFactorLoginHandler.ERRORMESSAGE', 'The provided token is invalid, please try again.'));
 
-        return $this->redirect($this->Link('step2'));
+        return $this->redirect($this->getStep2Link());
     }
 
     public function getBackURL()
