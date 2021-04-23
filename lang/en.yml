@@ -127,6 +127,11 @@ en:
     NavigateUp: 'Navigate up a folder'
     PreviewButton: Preview
     Version: Version
+  SilverStripe\Admin\ModelAdmin:
+    Title: 'Data Models'
+  SilverStripe\Forms\Form:
+    CSRF_FAILED_MESSAGE: 'There seems to have been a technical problem. Please click the back button, refresh your browser, and try again.'
+    FIELDISREQUIRED: '{name} is required'
   SimpleSearchControllerExtension:
     GO: Go
     SEARCH: Search
@@ -135,6 +140,16 @@ en:
   SocialExtension:
     DISCOVER: 'I discovered'
     SEE: 'You can see it here :'
+  TwoFactorFORM:
+    DODISABLE: 'Disable Two Factor Authentication'
+  TwoFactorForm:
+    2FAENABLED: 'You have enabled Two Factor Authentication'
+    DISABLECONFIRM: 'You have disabled Two Factor Authentication'
+    DOCONFIRM: 'Confirm code and enable 2FA'
+    DOENABLE: 'Enable Two Factor Authentication'
+    DOUPDATE: 'Update my settings'
+    INVALIDCODE: 'The code is invalid, please try again'
+    NEED_CONFIRMATION: 'Please scan the QR code and enter the confirmation code to enable Two Factor Authentication'
   TwoFactorLoginHandler:
     ENTER_YOUR_ACCESS_TOKEN: 'Enter your access token'
     ERRORMESSAGE: 'The provided token is invalid, please try again.'

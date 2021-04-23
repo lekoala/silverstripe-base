@@ -117,6 +117,19 @@ fr:
   PrivacyForm:
     IAGREE: 'Je confirme avoir lu et accepté'
     PLEASEREVIEW: 'Veuillez lire les documents suivants afin de continuer'
+  SilverStripe\Admin\LeftAndMain:
+    CollapsePanel: 'Réduire le panneau'
+    ExpandPanel: 'Développer le panneau'
+    HelpMenu: 'Menu d''aide'
+    MenuToggleAuto: Auto
+    MenuToggleStickyNav: 'Sticky nav'
+    NavigateUp: 'Naviguer dans un dossier'
+    Version: Version
+  SilverStripe\Admin\ModelAdmin:
+    Title: 'Modèles de données'
+  SilverStripe\Forms\Form:
+    CSRF_FAILED_MESSAGE: 'Il semble y avoir eu un problème technique. '
+    FIELDISREQUIRED: '{Le nom est requis'
   SimpleSearchControllerExtension:
     GO: Go
     SEARCH: Chercher
@@ -125,6 +138,16 @@ fr:
   SocialExtension:
     DISCOVER: 'J''ai découvert'
     SEE: 'Un aperçu :'
+  TwoFactorFORM:
+    DODISABLE: 'Désactiver l''authentification à deux facteurs'
+  TwoFactorForm:
+    2FAENABLED: 'Vous avez activé l''authentification à deux facteurs'
+    DISABLECONFIRM: 'Vous avez désactivé l''authentification à deux facteurs'
+    DOCONFIRM: 'Confirmer le code et activer 2FA'
+    DOENABLE: 'Activer l''authentification à deux facteurs'
+    DOUPDATE: 'Mettre à jour mes paramètres'
+    INVALIDCODE: 'Le code n''est pas valide, veuillez réessayer'
+    NEED_CONFIRMATION: 'Veuillez scanner le code QR et entrer le code de confirmation pour activer l''authentification à deux facteurs'
   TwoFactorLoginHandler:
     ENTER_YOUR_ACCESS_TOKEN: 'Entrez le code d''accès'
     ERRORMESSAGE: 'Le jeton fourni n''est pas valide, veuillez réessayer.'

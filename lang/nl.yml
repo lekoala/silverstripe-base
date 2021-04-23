@@ -117,6 +117,19 @@ nl:
   PrivacyForm:
     IAGREE: 'Ik heb gelezen en goedgekeurd'
     PLEASEREVIEW: 'Gelieve onze voorwaarden te accepteren alvorens verder te gaan'
+  SilverStripe\Admin\LeftAndMain:
+    CollapsePanel: 'Samenvouwen paneel'
+    ExpandPanel: 'Vouw paneel uit'
+    HelpMenu: Help-menu
+    MenuToggleAuto: Auto
+    MenuToggleStickyNav: 'Sticky nav'
+    NavigateUp: 'Navigeer door een map'
+    Version: Versie
+  SilverStripe\Admin\ModelAdmin:
+    Title: Gegevensmodellen
+  SilverStripe\Forms\Form:
+    CSRF_FAILED_MESSAGE: 'Er schijnt een technisch probleem te zijn geweest. '
+    FIELDISREQUIRED: '{Naam is vereist'
   SimpleSearchControllerExtension:
     GO: Go
     SEARCH: Zoeken
@@ -125,6 +138,16 @@ nl:
   SocialExtension:
     DISCOVER: 'Ik vond'
     SEE: 'Je kan het hier zien :'
+  TwoFactorFORM:
+    DODISABLE: 'Schakel tweefactorauthenticatie uit'
+  TwoFactorForm:
+    2FAENABLED: 'U heeft twee-factorenauthenticatie ingeschakeld'
+    DISABLECONFIRM: 'U heeft twee-factorenauthenticatie uitgeschakeld'
+    DOCONFIRM: 'Bevestig de code en schakel 2FA in'
+    DOENABLE: 'Schakel twee-factorenauthenticatie in'
+    DOUPDATE: 'Update mijn instellingen'
+    INVALIDCODE: 'De code is ongeldig, probeer het opnieuw'
+    NEED_CONFIRMATION: 'Scan de QR-code en voer de bevestigingscode in om tweefactorauthenticatie in te schakelen'
   TwoFactorLoginHandler:
     ENTER_YOUR_ACCESS_TOKEN: 'Enter your access token'
     ERRORMESSAGE: 'Het opgegeven token is ongeldig. Probeer het opnieuw.'
