@@ -10,12 +10,8 @@ fr:
     DOEDIT: 'Mettre à jour'
     DOSUBMIT: Envoyer
   BaseMemberExtension:
-    ACCOUNT_DISABLED: 'Votre compte a été supprimé.'
-    ACCOUNT_PENDING: 'Votre compte est en cours d''approbation.'
-    ADMIN_IP_INVALID: 'Your ip address is not whitelisted for this account level'
     MEMBER_NOT_LOCKED: 'Member is not locked'
     MEMBER_UNLOCKED: 'Member unlocked'
-    YOU_NEED_2FA_METHOD: 'Your account needs two factor auth but does not have any available authentication method'
   BaseSecurityAdminExtension:
     LockedMembers: 'Locked Members'
     LogAlert: 'Dernière mise à jour le {updated}'
@@ -160,6 +156,8 @@ fr:
     YOUR_TOKEN_IS: 'Votre code d''accès est {token}'
   TwoFactorMemberExtension:
     CMSTOGGLEQRCODELABEL: 'Secret de jeton de deuxième facteur'
+    ADMIN_IP_INVALID: 'Your ip address is not whitelisted for this account level'
+    YOU_NEED_2FA_METHOD: 'Your account needs two factor auth but does not have any available authentication method'
   URLSegmentExtension:
     URLSEGMENT: 'URL Segment'
   ValidationStatusExtension:

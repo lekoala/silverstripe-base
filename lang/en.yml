@@ -10,12 +10,8 @@ en:
     DOEDIT: 'Save changes'
     DOSUBMIT: Submit
   BaseMemberExtension:
-    ACCOUNT_DISABLED: 'Your account has been disabled'
-    ACCOUNT_PENDING: 'Your account is currently pending'
-    ADMIN_IP_INVALID: 'Your ip address {address} is not whitelisted for this account level'
     MEMBER_NOT_LOCKED: 'Member is not locked'
     MEMBER_UNLOCKED: 'Member unlocked'
-    YOU_NEED_2FA_METHOD: 'Your account needs two factor auth but does not have any available authentication method'
   BaseSecurityAdminExtension:
     LockedMembers: 'Locked Members'
     LogAlert: 'Last updated on {updated}'
@@ -162,6 +158,8 @@ en:
     YOUR_TOKEN_IS: 'Your token is {token}'
   TwoFactorMemberExtension:
     CMSTOGGLEQRCODELABEL: 'Second Factor Token Secret'
+    ADMIN_IP_INVALID: 'Your ip address {address} is not whitelisted for this account level'
+    YOU_NEED_2FA_METHOD: 'Your account needs two factor auth but does not have any available authentication method'
   URLSegmentExtension:
     URLSEGMENT: 'URL Segment'
   ValidationStatusExtension:
