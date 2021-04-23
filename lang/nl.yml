@@ -1,4 +1,7 @@
 nl:
+  BaseAuthenticator:
+    OLDPASSWORD: 'U heeft uw oude wachtwoord ingevoerd. '
+    PLEASERESET: 'Stel uw wachtwoord opnieuw in met de onderstaande stappen ''Ik ben mijn wachtwoord kwijt''.'
   BaseFileUploadReceiver:
     ALLOWEXTENSION: 'Toegestane extensies: {ext}'
     MAXRESOLUTION: 'Max resolutie: 2048x2048px'
@@ -114,20 +117,6 @@ nl:
   PrivacyForm:
     IAGREE: 'Ik heb gelezen en goedgekeurd'
     PLEASEREVIEW: 'Gelieve onze voorwaarden te accepteren alvorens verder te gaan'
-  SilverStripe\Admin\LeftAndMain:
-    CollapsePanel: 'Collapse panel'
-    ExpandPanel: 'Expand panel'
-    HelpMenu: 'Help menu'
-    MenuToggleAuto: Auto
-    MenuToggleStickyNav: 'Sticky nav'
-    NavigateUp: 'Navigate up a folder'
-    PreviewButton: Preview
-    Version: Version
-  SilverStripe\Admin\ModelAdmin:
-    Title: 'Data Models'
-  SilverStripe\Forms\Form:
-    CSRF_FAILED_MESSAGE: 'There seems to have been a technical problem. Please click the back button, refresh your browser, and try again.'
-    FIELDISREQUIRED: '{name} is required'
   SimpleSearchControllerExtension:
     GO: Go
     SEARCH: Zoeken
@@ -138,9 +127,16 @@ nl:
     SEE: 'Je kan het hier zien :'
   TwoFactorLoginHandler:
     ENTER_YOUR_ACCESS_TOKEN: 'Enter your access token'
+    ERRORMESSAGE: 'Het opgegeven token is ongeldig. Probeer het opnieuw.'
+    GOBACK: 'Terug naar inlogscherm'
     MESSAGE_SENT: 'Your token has been sent to your phone ending with {end}'
+    SEND_NEW_TOKEN: 'Stuur een nieuwe code'
+    TWOFA_HEADER: Twee-factor-authenticatie
+    USE_YOUR_AUTH_APP: 'Open uw authenticator-app om uw code te genereren'
     VALIDATE_TOKEN: 'Validate token'
     YOUR_TOKEN_IS: 'Your token is {token}'
+  TwoFactorMemberExtension:
+    CMSTOGGLEQRCODELABEL: 'Tweede factor-tokengeheim'
   URLSegmentExtension:
     URLSEGMENT: 'URL Segment'
   ValidationStatusExtension:

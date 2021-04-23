@@ -1,4 +1,7 @@
 fr:
+  BaseAuthenticator:
+    OLDPASSWORD: 'Vous avez entré votre ancien mot de passe. '
+    PLEASERESET: 'Veuillez réinitialiser votre mot de passe en suivant les étapes «J''ai perdu mon mot de passe» ci-dessous.'
   BaseFileUploadReceiver:
     ALLOWEXTENSION: 'Extensions autorisées: {ext}'
     MAXRESOLUTION: 'Résolution max.: 2048x2048px'
@@ -114,24 +117,6 @@ fr:
   PrivacyForm:
     IAGREE: 'Je confirme avoir lu et accepté'
     PLEASEREVIEW: 'Veuillez lire les documents suivants afin de continuer'
-  SilverStripe\Admin\LeftAndMain:
-    CollapsePanel: 'Collapse panel'
-    ExpandPanel: 'Expand panel'
-    HelpMenu: 'Help menu'
-    MenuToggleAuto: Auto
-    MenuToggleStickyNav: 'Sticky nav'
-    NavigateUp: 'Navigate up a folder'
-    PreviewButton: Preview
-    Version: Version
-  SilverStripe\Admin\ModelAdmin:
-    Title: 'Data Models'
-  SilverStripe\Forms\Form:
-    CSRF_FAILED_MESSAGE: 'There seems to have been a technical problem. Please click the back button, refresh your browser, and try again.'
-    FIELDISREQUIRED: '{name} is required'
-  SilverStripe\Security\Security:
-    NOTERESETLINKINVALID: '<p>Le lien de réinitialisation est invalide ou expiré.</p><p>Vous pouvez en <a href="{link1}">demander un nouveau</a> ou changer votre mot de passe après votre <a href="{link2}">connexion</a>.</p>'
-    PASSWORDRESETSENTHEADER: 'Votre mot de passe a été envoyé'
-    PASSWORDRESETSENTTEXT: 'Merci. Un lien pour réinitiliaser votre mot de passe vous a été envoyé à l''adresse indiquée'
   SimpleSearchControllerExtension:
     GO: Go
     SEARCH: Chercher
@@ -141,10 +126,17 @@ fr:
     DISCOVER: 'J''ai découvert'
     SEE: 'Un aperçu :'
   TwoFactorLoginHandler:
-    ENTER_YOUR_ACCESS_TOKEN: 'Enter your access token'
-    MESSAGE_SENT: 'Your token has been sent to your phone ending with {end}'
-    VALIDATE_TOKEN: 'Validate token'
-    YOUR_TOKEN_IS: 'Your token is {token}'
+    ENTER_YOUR_ACCESS_TOKEN: 'Entrez le code d''accès'
+    ERRORMESSAGE: 'Le jeton fourni n''est pas valide, veuillez réessayer.'
+    GOBACK: 'Retour à l''écran de connexion'
+    MESSAGE_SENT: 'Votre code a été envoyé sur votre téléphone terminant par {end}'
+    SEND_NEW_TOKEN: 'Envoyez un nouveau code'
+    TWOFA_HEADER: 'Authentification à deux facteurs'
+    USE_YOUR_AUTH_APP: 'Ouvrez votre application d''authentification pour générer votre code'
+    VALIDATE_TOKEN: 'Valider votre code'
+    YOUR_TOKEN_IS: 'Votre code d''accès est {token}'
+  TwoFactorMemberExtension:
+    CMSTOGGLEQRCODELABEL: 'Secret de jeton de deuxième facteur'
   URLSegmentExtension:
     URLSEGMENT: 'URL Segment'
   ValidationStatusExtension:

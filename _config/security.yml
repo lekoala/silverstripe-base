@@ -5,9 +5,11 @@ After:
 ---
 # Global settings
 LeKoala\Base\Security\BaseAuthenticator:
+  # if you set this to true, you need to apply TwoFactorMemberExtension
   enable_2fa: false
   # need enable_2fa set to true => will only check users with cms permission
   enable_2fa_admin_only: false
+  # don't trigger 2fa for whitelisted ips
   disable_2fa_whitelisted_ips: true
 SilverStripe\Security\Security:
   login_recording: true

@@ -1,4 +1,7 @@
 en:
+  BaseAuthenticator:
+    OLDPASSWORD: 'You entered your old password. Please use the new one.'
+    PLEASERESET: 'Please reset your password with ''I''ve Lost my Password'' steps below.'
   BaseFileUploadReceiver:
     ALLOWEXTENSION: 'Allowed extensions: {ext}'
     MAXRESOLUTION: 'Max resolution: 2048x2048px'
@@ -31,6 +34,7 @@ en:
   ContactForm:
     Company: Company
     Email: Email
+    Email3: Email
     Message: Message
     Name: Name
     Phone: Phone
@@ -123,11 +127,6 @@ en:
     NavigateUp: 'Navigate up a folder'
     PreviewButton: Preview
     Version: Version
-  SilverStripe\Admin\ModelAdmin:
-    Title: 'Data Models'
-  SilverStripe\Forms\Form:
-    CSRF_FAILED_MESSAGE: 'There seems to have been a technical problem. Please click the back button, refresh your browser, and try again.'
-    FIELDISREQUIRED: '{name} is required'
   SimpleSearchControllerExtension:
     GO: Go
     SEARCH: Search
@@ -138,9 +137,16 @@ en:
     SEE: 'You can see it here :'
   TwoFactorLoginHandler:
     ENTER_YOUR_ACCESS_TOKEN: 'Enter your access token'
+    ERRORMESSAGE: 'The provided token is invalid, please try again.'
+    GOBACK: 'Back to login screen'
     MESSAGE_SENT: 'Your token has been sent to your phone ending with {end}'
+    SEND_NEW_TOKEN: 'Send a new code'
+    TWOFA_HEADER: 'Two-factor Authentication'
+    USE_YOUR_AUTH_APP: 'Open your authenticator app to generate your code'
     VALIDATE_TOKEN: 'Validate token'
     YOUR_TOKEN_IS: 'Your token is {token}'
+  TwoFactorMemberExtension:
+    CMSTOGGLEQRCODELABEL: 'Second Factor Token Secret'
   URLSegmentExtension:
     URLSEGMENT: 'URL Segment'
   ValidationStatusExtension:
