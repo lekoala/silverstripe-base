@@ -4,6 +4,7 @@ namespace LeKoala\Base\Helpers;
 
 use RecursiveIteratorIterator;
 use RecursiveDirectoryIterator;
+use SilverStripe\Core\Environment;
 
 class FileHelper
 {
@@ -131,6 +132,12 @@ class FileHelper
         }
         $factor = floor(log($bytes, 1024));
         return sprintf("%.{$decimals}f ", $bytes / pow(1024, $factor)) . ['B', 'KB', 'MB', 'GB', 'TB', 'PB'][$factor];
+    }
+
+    public static function canResizeImageBySize($x, $y, $rgb = 3, $maxMb = 32)
+    {
+        $max = $maxMb * 1024 * 1024;
+        return ($x * $y * $rgb * 1.7 < $max - memory_get_usage());
     }
 
     public static function convertToByte($val)

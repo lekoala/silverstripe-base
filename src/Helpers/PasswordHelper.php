@@ -34,6 +34,12 @@ class PasswordHelper
         return $newpass;
     }
 
+    /**
+     * NOTE: "null" rules will display all rules
+     * You need to set $validator->setTestNames([]); in order to properly display no rules
+     *
+     * @return string
+     */
     public static function getPasswordRules()
     {
         $validator =  Member::password_validator();
@@ -48,17 +54,20 @@ class PasswordHelper
         }
         if (count($validator->getTests())) {
             $translatedRules = self::translatePasswordRules($validator->getTestNames());
-            $rules[] = _t(
-                'PasswordHelper.PasswordTests',
-                'must contain {rules}',
-                ['rules' => implode(', ', $translatedRules)]
-            );
+            if (!empty($translatedRules)) {
+                $rules[] = _t(
+                    'PasswordHelper.PasswordTests',
+                    'must contain {rules}',
+                    ['rules' => implode(', ', $translatedRules)]
+                );
+            }
         }
         return implode("; ", $rules);
     }
 
     protected static function translatePasswordRules(array $rules)
     {
+        $translate = [];
         foreach ($rules as $rule) {
             switch ($rule) {
                 case 'lowercase':

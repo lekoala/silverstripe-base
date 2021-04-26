@@ -28,7 +28,10 @@
 
       // Transform required attr to .required
       $el.find("[required]").each(function () {
-        var $holder = $(this).parents(".field");
+        var $holder = $(this).parent();
+        if ($holder.hasClass("middleColumn")) {
+          $holder = $holder.parent();
+        }
         $(this).removeAttr("required");
         $holder.addClass("required");
         $(this).on("blur", function () {
@@ -70,9 +73,19 @@
           .trigger("change");
       });
 
+      // Check click action detail
+      var clickedButton = null;
+      $el.find("[type=submit]").on("click", function () {
+        clickedButton = $(this);
+      });
+
       // Validation on submit
       $el.on("submit", function (e) {
         var hasErrors = false;
+
+        if (clickedButton && clickedButton.hasClass("ignore-validation")) {
+          return;
+        }
 
         $(this)
           .find(".required")

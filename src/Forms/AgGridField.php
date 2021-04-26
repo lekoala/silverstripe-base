@@ -54,14 +54,15 @@ class AgGridField extends JsonFormField
     private static $theme = 'ag-theme-balham';
 
     /**
+     * @link https://www.ag-grid.com/javascript-grid/grid-properties/
      * @config
      * @return array
      */
     private static $default_config = [
-        'rowSelection' => 'multiple',
-        'editType' => 'fullRow',
+        'rowSelection' => 'multiple', //single|multiple
+        'editType' => 'fullRow', //fullrow|blank
         'singleClickEdit' => true,
-        'gridAutoHeight' => true,
+        'domLayout' => 'autoHeight',
     ];
 
     public function __construct($name, $title = null, $value = null)
@@ -74,9 +75,10 @@ class AgGridField extends JsonFormField
     {
         $theme = self::config()->theme;
 
-        Requirements::javascript('https://unpkg.com/ag-grid/dist/ag-grid.min.noStyle.js');
-        Requirements::css('https://unpkg.com/ag-grid/dist/styles/ag-grid.css');
-        Requirements::css('https://unpkg.com/ag-grid/dist/styles/' . $theme . '.css');
+        Requirements::javascript('https://cdnjs.cloudflare.com/ajax/libs/ag-grid/25.1.0/ag-grid-community.min.noStyle.min.js');
+        Requirements::css('https://cdnjs.cloudflare.com/ajax/libs/ag-grid/25.1.0/styles/ag-grid.min.css');
+        Requirements::css('https://cdnjs.cloudflare.com/ajax/libs/ag-grid/25.1.0/styles/' . $theme . '.min.css');
+        Requirements::css('base/css/AgGridField.css');
 
         CommonRequirements::modularBehaviour();
         Requirements::javascript('base/javascript/fields/AgGridField.js');
@@ -90,8 +92,12 @@ class AgGridField extends JsonFormField
      */
     public function DefaultStyles()
     {
-        if ($this->getGridAutoHeight()) {
-            return 'width:100%;margin-bottom:.5rem';
+        // When domLayout='autoHeight' then your application should not set height on the grid div,
+        // as the div should be allowed flow naturally to fit the grid contents.
+        // When auto height is off then your application should set height on the grid div,
+        // as the grid will fill the div you provide it.
+        if ($this->getDomLayout() == "autoHeight") {
+            return 'width:100%;margin-bottom:.5rem;overflow:visible';
         }
         return 'width:100%;height:300px;margin-bottom:.5rem';
     }
@@ -159,14 +165,14 @@ class AgGridField extends JsonFormField
         return $this->setConfig('enableFilter', $v);
     }
 
-    public function getGridAutoHeight()
+    public function getDomLayout()
     {
-        return $this->getConfig('gridAutoHeight');
+        return $this->getConfig('domLayout');
     }
 
-    public function setGridAutoHeight($v = true)
+    public function setDomLayout($v = true)
     {
-        return $this->setConfig('gridAutoHeight', $v);
+        return $this->setConfig('domLayout', $v);
     }
 
     public function getAttributes()

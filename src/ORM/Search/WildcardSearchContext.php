@@ -132,7 +132,11 @@ class WildcardSearchContext extends SearchContext
                     continue;
                 }
                 foreach ($list as $filterName => $filter) {
-                    $class = str_replace('Filter', '', ClassHelper::getClassWithoutNamespace(get_class($filter)));
+                    $class = ClassHelper::getClassWithoutNamespace(get_class($filter));
+                    // Based on convention, it could contains SearchFilter or Filter in class name
+                    // It should match something within the DataListFilter namespace, eg DataListFilter.MyFilter
+                    $class = str_replace('SearchFilter', '', $class);
+                    $class = str_replace('Filter', '', $class);
                     $key = $filter->getFullName() . ':' . $class;
                     $anyFilter[$key] = $part;
                 }

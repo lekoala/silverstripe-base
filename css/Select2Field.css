@@ -1,17 +1,17 @@
 /* Styles for SilverStripe CMS */
 
 .select2-container--default .select2-selection--multiple {
-    font-size: 1rem;
-    height: 35px;
-    color: #66727d;
-    background-color: #fff;
-    border: 1px solid #ced3d9;
-    border-radius: .25rem;
+  font-size: 1rem;
+  height: 35px;
+  color: #66727d;
+  background-color: #fff;
+  border: 1px solid #ced3d9;
+  border-radius: 0.25rem;
 }
 
 .select2-container--default.select2-container--focus .select2-selection--multiple {
-    color: #66727d;
-    background-color: #fff;
-    border-color: #66afe9;
-    outline: none;
+  color: #66727d;
+  background-color: #fff;
+  border-color: #66afe9;
+  outline: none;
 }

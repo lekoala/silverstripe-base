@@ -6,6 +6,7 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Member;
 use LeKoala\Base\ORM\FieldType\DBJson;
 use SilverStripe\Forms\TextField;
+use SilverStripe\ORM\DB;
 
 /**
  * Audit specific events that may require more attention
@@ -40,15 +41,31 @@ class MemberAudit extends DataObject
         'SourceMember' => Member::class,
     ];
     private static $summary_fields = array(
-        'Created', 'Event', 'SourceMember.Title', 'AuditData'
+        'Created', 'Event', 'SourceMember.Title', 'AuditData.LimitCharacters'
     );
     private static $default_sort = 'Created DESC';
+
+    /**
+     * @config
+     * @var string
+     */
+    private static $keep_duration = "-1 year";
 
     protected function onBeforeWrite()
     {
         parent::onBeforeWrite();
 
         $this->SourceMemberID = Member::currentUserID();
+    }
+
+    public static function clearOldRecords()
+    {
+        $keep_duration = self::config()->keep_duration;
+        if (!$keep_duration) {
+            return;
+        }
+        $date = date('Y-m-d', strtotime($keep_duration));
+        DB::query("DELETE FROM MemberAudit WHERE Created < '$date'");
     }
 
     public function getCMSFields()

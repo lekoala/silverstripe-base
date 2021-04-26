@@ -20,6 +20,8 @@ use SilverStripe\ORM\ManyManyThroughList;
 use SilverStripe\ORM\UnsavedRelationList;
 use LeKoala\Base\Forms\BuildableFieldList;
 use LeKoala\Base\Forms\GridField\GridFieldHelper;
+use SilverStripe\Assets\Shortcodes\FileLink;
+use SilverStripe\Assets\Shortcodes\FileLinkTracking;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\Forms\GridField\GridFieldDeleteAction;
 use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
@@ -502,12 +504,28 @@ class BaseDataObjectExtension extends DataExtension
         }
     }
 
+    /**
+     * When you delete a record
+     *
+     * @return void
+     */
     protected function cleanupAssets()
     {
         // We should not cleanup tables on versioned items because they can be restored
         if ($this->isVersioned()) {
             return;
         }
+
+        // It's a file tracking, don't cleanup!
+        if (in_array(get_class($this->owner), [FileLink::class, FileLinkTracking::class])) {
+            return;
+        }
+
+        // If we have a cascade delete, no need to worry
+        if (!empty($this->owner->config()->cascade_deletes)) {
+            return;
+        }
+
         $rel = $this->getAllFileRelations();
         $owns =  $this->owner->config()->owns;
 

@@ -1,12 +1,22 @@
 <?php
+
 namespace LeKoala\Base\Security;
 
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\EmailField;
+use SilverStripe\Security\MemberAuthenticator\MemberAuthenticator;
 use SilverStripe\Security\MemberAuthenticator\MemberLoginForm as DefaultMemberLoginForm;
 
 class MemberLoginForm extends DefaultMemberLoginForm
 {
+    // public function setAuthenticatorClass($class)
+    // {
+    //     if ($class == MemberAuthenticator::class) {
+    //         $class = BaseAuthenticator::class;
+    //     }
+    //     return parent::setAuthenticatorClass($class);
+    // }
+
     protected function getFormFields()
     {
         $fields = parent::getFormFields();

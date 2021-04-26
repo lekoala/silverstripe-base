@@ -14,28 +14,78 @@ class Statically
     /**
      * Get website screenshot
      *
+     * @link https://statically.io/docs/using-screenshot/
      * @param string $url
+     * @param bool $mobile
+     * @param bool $full
      * @return string
      */
-    public static function screenshot($url)
+    public static function screenshot($url, $mobile = false, $full = false)
     {
-        return 'https://cdn.staticaly.com/screenshot/' . $url;
+        $part = [];
+        if ($mobile) {
+            $part[] = 'device=mobile';
+        }
+        if ($full) {
+            $part[] = 'full=true';
+        }
+        if (!empty($part)) {
+            return 'https://cdn.statically.io/screenshot/'  . implode(",", $part) . '/' . $url;
+        }
+        return 'https://cdn.statically.io/screenshot/'  . $url;
     }
 
     /**
      * Get website screenshot
      *
      * @param string $url
+     * @param bool $mobile
+     * @param bool $full
      * @return string The content of the file
      */
-    public static function screenshotData($url)
+    public static function screenshotData($url, $mobile, $full)
     {
-        return file_get_contents(self::screenshot($url));
+        return file_get_contents(self::screenshot($url, $mobile, $full));
+    }
+
+    /**
+     * Get a cached image
+     *
+     * Supported parameters:
+     * - h=:pixel
+     * - w=:pixel
+     * - f=auto
+     * - f=webp
+     * - q=:percentage
+     *
+     * @link https://statically.io/docs/using-images/
+     * @param string $url
+     * @param array $params
+     * @return string
+     */
+    public static function img($url, $params = [])
+    {
+        $url = preg_replace('#^https?://#', '', $url);
+
+        $p = '';
+        if (!empty($params)) {
+            $p = implode(",", $params) . "/";
+        }
+
+        $urlParts = explode("/", $url, 2);
+
+        $domain = $urlParts[0];
+        $image = $urlParts[1];
+
+        return 'https://cdn.statically.io/img/' . $domain . $p . $image;
     }
 
     /**
      * Get a cached flag
      *
+     * This is not documented anymore
+     *
+     * @deprecated
      * @param string $countryCode
      * @param boolean $svg
      * @param integer $width
@@ -50,32 +100,11 @@ class Statically
     }
 
     /**
-     * Get a cached image
-     *
-     * Supported parameters:
-     * - w
-     * - h
-     * - quality (between 0 and 100)
-     * - crop x,y,w,h
-     * - format=webp
-     * - filter=grayscale
-     *
-     * @param string $url
-     * @param array $params
-     * @return string
-     */
-    public static function img($url, $params = [])
-    {
-        $url = preg_replace('#^https?://#', '', $url);
-        if ($params) {
-            $url .= '?' . http_build_query($params);
-        }
-        return 'https://cdn.staticaly.com/img/' . $url;
-    }
-
-    /**
      * Get the favicon of a domain
      *
+     * This is not documented anymore
+     *
+     * @deprecated
      * @param string $url
      * @return string
      */

@@ -206,15 +206,13 @@ class CommonRequirements
     public static function modularBehaviour()
     {
         Requirements::javascript("base/javascript/modular-behaviour.min.js");
-        // This is going to run after all our dependencies have been loaded
-        $v = Director::isDev() ? "true" : "false";
-        $js = <<<JS
-ModularBehaviour.init({'debug':$v});
-jQuery(document).ajaxSuccess(function (event, xhr, settings) {
-    ModularBehaviour.run();
-});
-JS;
-        Requirements::customScript($js, __FUNCTION__);
+
+        // We cannot use inline scripts because they won't be loaded through ajax
+        if (Director::isDev()) {
+            Requirements::javascript("base/javascript/modular-behaviour-init-dev.js");
+        } else {
+            Requirements::javascript("base/javascript/modular-behaviour-init.js");
+        }
     }
 
     /**

@@ -20,6 +20,7 @@ use SilverStripe\Security\LoginAttempt;
 use LeKoala\CmsActions\CmsInlineFormAction;
 use SilverStripe\Forms\GridField\GridField;
 use LeKoala\Base\Forms\GridField\GridFieldHelper;
+use LeKoala\Base\ORM\Search\WildcardSearchContext;
 use SilverStripe\Forms\GridField\GridFieldConfig_RecordViewer;
 
 /**
@@ -105,6 +106,12 @@ class BaseSecurityAdminExtension extends Extension
             'Email' => 'Email',
             'DirectGroupsList' => 'Direct Groups',
         ));
+
+        // Better search
+        $filter = GridFieldHelper::getGridFieldFilterHeader($members->getConfig());
+        $wildCardHeader = WildcardSearchContext::fromContext($filter->getSearchContext($members));
+        // $wildCardHeader->setWildcardFilters(['FirstName', 'Surname', 'Email']);
+        $wildCardHeader->replaceInFilterHeader($filter);
 
         if (Security::config()->login_recording) {
             $this->addAuditTab($form);
@@ -223,6 +230,8 @@ class BaseSecurityAdminExtension extends Extension
 
     protected function addMemberAuditTab(Form $form)
     {
+        MemberAudit::clearOldRecords();
+
         $fields = $form->Fields();
         $MemberAudit_SNG = MemberAudit::singleton();
         $list = MemberAudit::get();

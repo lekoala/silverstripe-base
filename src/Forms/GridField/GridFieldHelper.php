@@ -4,10 +4,13 @@ namespace LeKoala\Base\Forms\GridField;
 
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
+use SilverStripe\Forms\GridField\GridFieldAddNewButton;
 use SilverStripe\Forms\GridField\GridFieldConfig;
 use SilverStripe\Forms\GridField\GridFieldPaginator;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\Forms\GridField\GridFieldFilterHeader;
+use Symbiote\GridFieldExtensions\GridFieldAddExistingSearchButton;
 use Symbiote\GridFieldExtensions\GridFieldEditableColumns;
 
 /**
@@ -77,5 +80,18 @@ class GridFieldHelper
     public static function getConfig(GridField $gridField)
     {
         return $gridField->getConfig();
+    }
+
+    public static function makeSimpleGridField(GridField $gridField = null)
+    {
+        if (!$gridField) {
+            return;
+        }
+
+        $config = self::getConfig($gridField);
+        $config->removeComponentsByType(GridFieldAddNewButton::class);
+        $config->removeComponentsByType(GridFieldAddExistingSearchButton::class);
+        $config->removeComponentsByType(GridFieldAddExistingAutocompleter::class);
+        $config->removeComponentsByType(GridFieldFilterHeader::class);
     }
 }
