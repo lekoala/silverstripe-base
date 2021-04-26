@@ -25,6 +25,7 @@ use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Core\Injector\InjectionCreator;
 use SilverStripe\AssetAdmin\Controller\AssetAdmin;
 use SilverStripe\Assets\Flysystem\ProtectedAssetAdapter;
+use SilverStripe\Assets\Storage\DBFile;
 
 /**
  * Improved File usage
@@ -235,7 +236,6 @@ class BaseFileExtension extends DataExtension
      */
     public function Lazy($limitWidth = null)
     {
-        /* @var $img Image */
         $img = $this->owner;
         if ($limitWidth) {
             $img = $this->owner->ScaleWidth($limitWidth);
@@ -259,7 +259,7 @@ class BaseFileExtension extends DataExtension
 
         // @link https://github.com/verlok/vanilla-lazyload#lazy-responsive-image-with-automatic-webp-format-selection-using-the-picture-tag
         if (self::config()->enable_webp && in_array($ext, ["jpg", "png"]) && $img->isPublished()) {
-            $this->createWebpIfNeeded();
+            $this->createWebpIfNeeded($img);
 
             $html = '';
             $html .= '<source data-srcset="' . $webp_url . '" type="image/webp" />';
@@ -269,13 +269,17 @@ class BaseFileExtension extends DataExtension
         return '<img data-src="' . $url . '" class="lazy" alt="' . $title . '"' . $wh . ' />';
     }
 
-    protected function createWebpIfNeeded()
+    protected function createWebpIfNeeded($img)
     {
-        $img = $this->owner;
+        if (!$img->isPublished()) {
+            return;
+        }
+        $ext = $img->getExtension();
         $path = $img->getFullPath();
         $store = $this->getAssetStore();
-        $webp_path = $store->createWebPName($path);
-        if (!is_file($webp_path)) {
+        $asUrl = Director::publicFolder() . $store->getAsURL($img->getFilename(), $img->getHash(), $img->getVariant());
+        $webp_url = str_replace('.' . $ext, '_' . $ext, $asUrl) . ".webp";
+        if (!is_file($webp_url)) {
             $store = $this->getAssetStore();
             // nomidi/silverstripe-webp-image or compatible
             $store->createWebPImage($path, $img->getFilename(), $img->getHash(), $img->getVariant());
@@ -287,7 +291,7 @@ class BaseFileExtension extends DataExtension
         $img = $this->owner;
         $ext = $img->getExtension();
         if (self::config()->enable_webp && in_array($ext, ["jpg", "png"]) && $img->isPublished()) {
-            $this->createWebpIfNeeded();
+            $this->createWebpIfNeeded($img);
             $webp_url = str_replace('.' . $ext, '_' . $ext, $img->Link()) . ".webp";
             return $webp_url;
         }
