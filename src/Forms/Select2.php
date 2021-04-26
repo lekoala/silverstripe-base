@@ -183,6 +183,12 @@ trait Select2
 
     public function setAllowClear($value)
     {
+        // won't clear without a source
+        if ($value) {
+            if (!$this->source) {
+                $this->setSource(['' => '']);
+            }
+        }
         return $this->setConfig('allowClear', $value);
     }
 
@@ -517,13 +523,6 @@ trait Select2
         }
 
         $config = $this->config;
-
-        // We need at least an empty option
-        if (isset($config['allowClear'])) {
-            if (!$this->source) {
-                $this->source = ['' => ''];
-            }
-        }
 
         $this->setAttribute('data-mb-options', json_encode($config, JSON_FORCE_OBJECT));
         $this->setAttribute('data-mb', 'select2');
