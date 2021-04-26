@@ -339,6 +339,15 @@ fieldset.grid-field {
   right: 6px;
 }
 
+.cms .select2-container--default .select2-selection--single .select2-selection__clear {
+  color: #43536d;
+  width: 24px;
+  text-align: center;
+}
+.cms .select2-container--default .select2-selection--single .select2-selection__clear:hover {
+  background-color: #f5f5f5;
+}
+
 .cms .select2-container--default .select2-selection--single .select2-selection__rendered {
   line-height: 34px;
 }
@@ -431,7 +440,7 @@ select.ag-cell-edit-input {
 .cms-edit-form .columns .form-group.checkbox .form__field-holder {
   margin-left: 1.5385rem !important;
   flex: 0 0 100%;
-  max-width: 100%
+  max-width: 100%;
 }
 .cms-edit-form .columns .form-group:after {
   display: none;

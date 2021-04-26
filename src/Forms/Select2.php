@@ -80,7 +80,7 @@ trait Select2
      * @config
      * @var string
      */
-    private static $version = '4.0.12';
+    private static $version = '4.0.13';
 
     public function Type()
     {
@@ -517,6 +517,13 @@ trait Select2
         }
 
         $config = $this->config;
+
+        // We need at least an empty option
+        if (isset($config['allowClear'])) {
+            if (!$this->source) {
+                $this->source = ['' => ''];
+            }
+        }
 
         $this->setAttribute('data-mb-options', json_encode($config, JSON_FORCE_OBJECT));
         $this->setAttribute('data-mb', 'select2');
