@@ -27,6 +27,9 @@
             // let the grid know which columns and what data to use
             this.gridOptions = $.extend({}, this.settings);
 
+            // layout
+            this.gridOptions.onGridReady = function() {
+            }
             // handle changes saved to input
             // @link https://www.ag-grid.com/javascript-grid-events/
             this.gridOptions.onRowDataChanged = function () {
@@ -80,13 +83,13 @@
         },
         addRow: function () {
             var newItem = this.createNewRowData();
-            var res = this.gridOptions.api.updateRowData({
+            var res = this.gridOptions.api.applyTransaction({
                 add: [newItem]
             });
         },
         removeSelected: function () {
             var selectedData = this.gridOptions.api.getSelectedRows();
-            var res = this.gridOptions.api.updateRowData({
+            var res = this.gridOptions.api.applyTransaction({
                 remove: selectedData
             });
         }

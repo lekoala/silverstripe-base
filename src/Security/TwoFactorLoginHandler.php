@@ -2,20 +2,23 @@
 
 namespace LeKoala\Base\Security;
 
-use LeKoala\Base\Forms\AlertField;
-use LeKoala\Base\TextMessage\ProviderInterface;
 use SilverStripe\Forms\Form;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\TextField;
 use SilverStripe\Security\Member;
+use LeKoala\Base\Forms\AlertField;
 use SilverStripe\Control\Director;
 use SilverStripe\Forms\FormAction;
+use SilverStripe\Forms\HeaderField;
 use SilverStripe\Security\Security;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\RequiredFields;
-use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\ValidationResult;
+use SilverStripe\Core\Injector\Injector;
+use LeKoala\Base\TextMessage\ProviderInterface;
+use SilverStripe\Forms\LiteralField;
 use SilverStripe\Security\MemberAuthenticator\LoginHandler;
 use SilverStripe\Security\MemberAuthenticator\MemberLoginForm;
 
@@ -28,6 +31,7 @@ class TwoFactorLoginHandler extends LoginHandler
 {
     private static $allowed_actions = [
         'step2',
+        'sendnew',
         'totpStep',
         'textStep',
         'twofactorcomplete',
@@ -49,7 +53,7 @@ class TwoFactorLoginHandler extends LoginHandler
             $session->set('TwoFactorLoginHandler.Data', $data);
 
             if ($member->NeedTwoFactorAuth()) {
-                return $this->redirect($this->link('step2'));
+                return $this->redirect($this->getStep2Link());
             }
 
             // 2FA is enabled but not needed, log in as normal
@@ -106,6 +110,7 @@ class TwoFactorLoginHandler extends LoginHandler
         if (!$member) {
             return $this->redirectBack();
         }
+        $form = null;
         switch ($member->PreferredTwoFactorAuth()) {
             case 'text_message':
                 $form = $this->textStepForm();
@@ -113,11 +118,7 @@ class TwoFactorLoginHandler extends LoginHandler
                 // Send text message with token if needed
                 $token = $this->getRequest()->getSession()->get('TwoFactorLoginHandler.TextToken');
                 if (!$token) {
-                    $token = (string) mt_rand(100000, 999999);
-                    $this->getRequest()->getSession()->set('TwoFactorLoginHandler.TextToken', $token);
-                    $message = _t('TwoFactorLoginHandler.YOUR_TOKEN_IS', "Your token is {token}", ['token' => $token]);
-                    $provider = $this->getTextMessageProvider();
-                    $provider->send($member, $message);
+                    $this->doSendTextMessage();
                 }
                 break;
             case 'totp':
@@ -127,9 +128,41 @@ class TwoFactorLoginHandler extends LoginHandler
                 return $this->redirectBack();
                 break;
         }
+
+        $session = $this->getRequest()->getSession();
+        if ($session->get('TwoFactorLoginHandler.ErrorMessage')) {
+            $message = $session->get('TwoFactorLoginHandler.ErrorMessage');
+            $session->clear('TwoFactorLoginHandler.ErrorMessage');
+            $form->Fields()->push(new AlertField("TwoFactorError", $message, "danger"));
+        }
+
+        // Go back link
+        $form->Actions()->push(new LiteralField("BackDivider", "<hr/>"));
+        $form->Actions()->push(new LiteralField("BackLink", '<a href="/Security/login">' . _t('TwoFactorLoginHandler.GOBACK', 'Back to login screen') . '</a>'));
+
         return [
             "Form" => $form,
         ];
+    }
+
+    protected function doSendTextMessage()
+    {
+        $member = $this->getTwoFactorMember();
+        if ($member) {
+            $token = (string) mt_rand(100000, 999999);
+            $this->getRequest()->getSession()->set('TwoFactorLoginHandler.TextToken', $token);
+            $message = _t('TwoFactorLoginHandler.YOUR_TOKEN_IS', "Your token is {token}", ['token' => $token]);
+            $provider = $this->getTextMessageProvider();
+            $provider->send($member, $message);
+            return true;
+        }
+        return false;
+    }
+
+    public function sendnew()
+    {
+        $this->doSendTextMessage();
+        return $this->redirectBack();
     }
 
     /**
@@ -149,14 +182,19 @@ class TwoFactorLoginHandler extends LoginHandler
     {
         $member = $this->getTwoFactorMember();
         $end = substr($member->Mobile, -4);
+        $Header = new HeaderField("TwoFactorHeader", _t('TwoFactorLoginHandler.TWOFA_HEADER', 'Two-factor Authentication'), 1);
         $MessageSent =  new AlertField('MessageSent', _t('TwoFactorLoginHandler.MESSAGE_SENT', 'Your token has been sent to your phone ending with {end}', ['end' => $end]));
         $SecondFactor =  new TextField('SecondFactor', _t('TwoFactorLoginHandler.ENTER_YOUR_ACCESS_TOKEN', 'Enter your access token'));
+        $SecondFactor->setAttribute("size", 6);
+        $SecondFactor->setAttribute("placeholder", "000000");
         $validator = new RequiredFields('SecondFactor');
         $action = new FormAction('completeTextStep', _t('TwoFactorLoginHandler.VALIDATE_TOKEN', 'Validate token'));
+        $sendNew = new LiteralField("sendnew", '<p><a href="' . $this->Link('sendnew') . '">' . _t('TwoFactorLoginHandler.SEND_NEW_TOKEN', 'Send a new code') . '</a></p>');
         return new Form(
             $this,
             "textStepForm",
             new FieldList([
+                $Header,
                 $MessageSent,
                 $SecondFactor,
             ]),
@@ -182,18 +220,33 @@ class TwoFactorLoginHandler extends LoginHandler
         }
 
         // Fail to login redirects back to form
-        return $this->redirectBack();
+        $session->set('TwoFactorLoginHandler.ErrorMessage', _t('TwoFactorLoginHandler.ERRORMESSAGE', 'The provided token is invalid, please try again.'));
+
+        return $this->redirect($this->getStep2Link());
+    }
+
+    public function getStep2Link()
+    {
+        return '/Security/login/default/step2';
     }
 
     public function totpStepForm()
     {
+        $Header = new HeaderField("TwoFactorHeader", _t('TwoFactorLoginHandler.TWOFA_HEADER', 'Two-factor Authentication'), 1);
+        $HelpMessage =  new AlertField('HelpMessage', _t('TwoFactorLoginHandler.USE_YOUR_AUTH_APP', 'Open your authenticator app to generate your code'));
         $SecondFactor =  new TextField('SecondFactor', _t('TwoFactorLoginHandler.ENTER_YOUR_ACCESS_TOKEN', 'Enter your access token'));
+        $SecondFactor->setAttribute("size", 6);
+        $SecondFactor->setAttribute("placeholder", "000000");
         $validator = new RequiredFields('SecondFactor');
         $action = new FormAction('completeTotpStep', _t('TwoFactorLoginHandler.VALIDATE_TOKEN', 'Validate token'));
         return new Form(
             $this,
             "totpStepForm",
-            new FieldList([$SecondFactor]),
+            new FieldList([
+                $Header,
+                $HelpMessage,
+                $SecondFactor,
+            ]),
             new FieldList([$action]),
             $validator
         );
@@ -214,7 +267,9 @@ class TwoFactorLoginHandler extends LoginHandler
         }
 
         // Fail to login redirects back to form
-        return $this->redirectBack();
+        $session->set('TwoFactorLoginHandler.ErrorMessage', _t('TwoFactorLoginHandler.ERRORMESSAGE', 'The provided token is invalid, please try again.'));
+
+        return $this->redirect($this->getStep2Link());
     }
 
     public function getBackURL()

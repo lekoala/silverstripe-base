@@ -44,7 +44,8 @@
     "unclecheese/display-logic": "Display and hide fields",
     "lekoala/silverstripe-blocks": "Blocks page",
     "lekoala/silverstripe-phonenumber": "Phone number field type",
-    "lekoala/silverstripe-filepond": "Filepond file upload"
+    "lekoala/silverstripe-filepond": "Filepond file upload",
+    "pragmarx/google2fa": "2fa support"
   },
   "extra": {
     "installer-name": "base",

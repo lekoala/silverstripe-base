@@ -1,4 +1,7 @@
 en:
+  BaseAuthenticator:
+    OLDPASSWORD: 'You entered your old password. Please use the new one.'
+    PLEASERESET: 'Please reset your password with ''I''ve Lost my Password'' steps below.'
   BaseFileUploadReceiver:
     ALLOWEXTENSION: 'Allowed extensions: {ext}'
     MAXRESOLUTION: 'Max resolution: 2048x2048px'
@@ -7,12 +10,8 @@ en:
     DOEDIT: 'Save changes'
     DOSUBMIT: Submit
   BaseMemberExtension:
-    ACCOUNT_DISABLED: 'Your account has been disabled'
-    ACCOUNT_PENDING: 'Your account is currently pending'
-    ADMIN_IP_INVALID: 'Your ip address {address} is not whitelisted for this account level'
     MEMBER_NOT_LOCKED: 'Member is not locked'
     MEMBER_UNLOCKED: 'Member unlocked'
-    YOU_NEED_2FA_METHOD: 'Your account needs two factor auth but does not have any available authentication method'
   BaseSecurityAdminExtension:
     LockedMembers: 'Locked Members'
     LogAlert: 'Last updated on {updated}'
@@ -31,6 +30,7 @@ en:
   ContactForm:
     Company: Company
     Email: Email
+    Email3: Email
     Message: Message
     Name: Name
     Phone: Phone
@@ -136,11 +136,30 @@ en:
   SocialExtension:
     DISCOVER: 'I discovered'
     SEE: 'You can see it here :'
+  TwoFactorFORM:
+    DODISABLE: 'Disable Two Factor Authentication'
+  TwoFactorForm:
+    2FAENABLED: 'You have enabled Two Factor Authentication'
+    DISABLECONFIRM: 'You have disabled Two Factor Authentication'
+    DOCONFIRM: 'Confirm code and enable 2FA'
+    DOENABLE: 'Enable Two Factor Authentication'
+    DOUPDATE: 'Update my settings'
+    INVALIDCODE: 'The code is invalid, please try again'
+    NEED_CONFIRMATION: 'Please scan the QR code and enter the confirmation code to enable Two Factor Authentication'
   TwoFactorLoginHandler:
     ENTER_YOUR_ACCESS_TOKEN: 'Enter your access token'
+    ERRORMESSAGE: 'The provided token is invalid, please try again.'
+    GOBACK: 'Back to login screen'
     MESSAGE_SENT: 'Your token has been sent to your phone ending with {end}'
+    SEND_NEW_TOKEN: 'Send a new code'
+    TWOFA_HEADER: 'Two-factor Authentication'
+    USE_YOUR_AUTH_APP: 'Open your authenticator app to generate your code'
     VALIDATE_TOKEN: 'Validate token'
     YOUR_TOKEN_IS: 'Your token is {token}'
+  TwoFactorMemberExtension:
+    CMSTOGGLEQRCODELABEL: 'Second Factor Token Secret'
+    ADMIN_IP_INVALID: 'Your ip address {address} is not whitelisted for this account level'
+    YOU_NEED_2FA_METHOD: 'Your account needs two factor auth but does not have any available authentication method'
   URLSegmentExtension:
     URLSEGMENT: 'URL Segment'
   ValidationStatusExtension:

@@ -1,4 +1,7 @@
 nl:
+  BaseAuthenticator:
+    OLDPASSWORD: 'U heeft uw oude wachtwoord ingevoerd. '
+    PLEASERESET: 'Stel uw wachtwoord opnieuw in met de onderstaande stappen ''Ik ben mijn wachtwoord kwijt''.'
   BaseFileUploadReceiver:
     ALLOWEXTENSION: 'Toegestane extensies: {ext}'
     MAXRESOLUTION: 'Max resolutie: 2048x2048px'
@@ -7,12 +10,8 @@ nl:
     DOEDIT: 'Save changes'
     DOSUBMIT: Verzenden
   BaseMemberExtension:
-    ACCOUNT_DISABLED: 'Uw account werd afgesloten.'
-    ACCOUNT_PENDING: 'Uw account wordt momenteel gevalideerd.'
-    ADMIN_IP_INVALID: 'Your ip address is not whitelisted for this account level'
     MEMBER_NOT_LOCKED: 'Member is not locked'
     MEMBER_UNLOCKED: 'Member unlocked'
-    YOU_NEED_2FA_METHOD: 'Your account needs two factor auth but does not have any available authentication method'
   BaseSecurityAdminExtension:
     LockedMembers: 'Locked Members'
     LogAlert: 'Laatste update op {updated}'
@@ -115,19 +114,18 @@ nl:
     IAGREE: 'Ik heb gelezen en goedgekeurd'
     PLEASEREVIEW: 'Gelieve onze voorwaarden te accepteren alvorens verder te gaan'
   SilverStripe\Admin\LeftAndMain:
-    CollapsePanel: 'Collapse panel'
-    ExpandPanel: 'Expand panel'
-    HelpMenu: 'Help menu'
+    CollapsePanel: 'Samenvouwen paneel'
+    ExpandPanel: 'Vouw paneel uit'
+    HelpMenu: Help-menu
     MenuToggleAuto: Auto
     MenuToggleStickyNav: 'Sticky nav'
-    NavigateUp: 'Navigate up a folder'
-    PreviewButton: Preview
-    Version: Version
+    NavigateUp: 'Navigeer door een map'
+    Version: Versie
   SilverStripe\Admin\ModelAdmin:
-    Title: 'Data Models'
+    Title: Gegevensmodellen
   SilverStripe\Forms\Form:
-    CSRF_FAILED_MESSAGE: 'There seems to have been a technical problem. Please click the back button, refresh your browser, and try again.'
-    FIELDISREQUIRED: '{name} is required'
+    CSRF_FAILED_MESSAGE: 'Er schijnt een technisch probleem te zijn geweest. '
+    FIELDISREQUIRED: '{Naam is vereist'
   SimpleSearchControllerExtension:
     GO: Go
     SEARCH: Zoeken
@@ -136,11 +134,30 @@ nl:
   SocialExtension:
     DISCOVER: 'Ik vond'
     SEE: 'Je kan het hier zien :'
+  TwoFactorFORM:
+    DODISABLE: 'Schakel tweefactorauthenticatie uit'
+  TwoFactorForm:
+    2FAENABLED: 'U heeft twee-factorenauthenticatie ingeschakeld'
+    DISABLECONFIRM: 'U heeft twee-factorenauthenticatie uitgeschakeld'
+    DOCONFIRM: 'Bevestig de code en schakel 2FA in'
+    DOENABLE: 'Schakel twee-factorenauthenticatie in'
+    DOUPDATE: 'Update mijn instellingen'
+    INVALIDCODE: 'De code is ongeldig, probeer het opnieuw'
+    NEED_CONFIRMATION: 'Scan de QR-code en voer de bevestigingscode in om tweefactorauthenticatie in te schakelen'
   TwoFactorLoginHandler:
     ENTER_YOUR_ACCESS_TOKEN: 'Enter your access token'
+    ERRORMESSAGE: 'Het opgegeven token is ongeldig. Probeer het opnieuw.'
+    GOBACK: 'Terug naar inlogscherm'
     MESSAGE_SENT: 'Your token has been sent to your phone ending with {end}'
+    SEND_NEW_TOKEN: 'Stuur een nieuwe code'
+    TWOFA_HEADER: Twee-factor-authenticatie
+    USE_YOUR_AUTH_APP: 'Open uw authenticator-app om uw code te genereren'
     VALIDATE_TOKEN: 'Validate token'
     YOUR_TOKEN_IS: 'Your token is {token}'
+  TwoFactorMemberExtension:
+    CMSTOGGLEQRCODELABEL: 'Tweede factor-tokengeheim'
+    ADMIN_IP_INVALID: 'Your ip address is not whitelisted for this account level'
+    YOU_NEED_2FA_METHOD: 'Your account needs two factor auth but does not have any available authentication method'
   URLSegmentExtension:
     URLSEGMENT: 'URL Segment'
   ValidationStatusExtension:

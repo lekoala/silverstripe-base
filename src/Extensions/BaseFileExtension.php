@@ -2,7 +2,6 @@
 
 namespace LeKoala\Base\Extensions;
 
-use Exception;
 use SilverStripe\ORM\DB;
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\Image;
@@ -25,7 +24,6 @@ use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Core\Injector\InjectionCreator;
 use SilverStripe\AssetAdmin\Controller\AssetAdmin;
 use SilverStripe\Assets\Flysystem\ProtectedAssetAdapter;
-use SilverStripe\Assets\Storage\DBFile;
 
 /**
  * Improved File usage
@@ -239,6 +237,9 @@ class BaseFileExtension extends DataExtension
         $img = $this->owner;
         if ($limitWidth) {
             $img = $this->owner->ScaleWidth($limitWidth);
+        }
+        if (!$img) {
+            return;
         }
         $url = Convert::raw2att($img->getURL());
         $title = Convert::raw2att($img->getTitle());
