@@ -161,7 +161,7 @@
             continue;
           }
 
-          var inputs = parent.querySelectorAll("input,select");
+          var inputs = parent.querySelectorAll("input,textarea,select");
           if (inputs.length > 0) {
             var hasValue = false;
             if (allRequired) {
