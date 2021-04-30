@@ -28,7 +28,7 @@ class TwoFactorForm extends BaseForm
         if ($needConfirmation) {
             $fields->push(new AlertField("NeedConfirmation", _t('TwoFactorForm.NEED_CONFIRMATION', "Please scan the QR code and enter the confirmation code to enable Two Factor Authentication")));
             $qrcodeURI = $member->GoogleAuthenticatorQRCode();
-            $fields->push(LiteralField::create(null, sprintf("<img src=\"%s\" style=\"margin-left:10px\" loading=\"lazy\" width=\"200\" height=\"200\" />", $qrcodeURI)));
+            $fields->push(LiteralField::create(null, sprintf("<img src=\"%s\" style=\"margin-left:10px\" width=\"200\" height=\"200\" />", $qrcodeURI)));
             $SecondFactor =  new TextField('SecondFactor', _t('TwoFactorLoginHandler.ENTER_YOUR_ACCESS_TOKEN', 'Enter your access token'));
             $SecondFactor->setAttribute("size", 6);
             $SecondFactor->setAttribute("placeholder", "000000");
