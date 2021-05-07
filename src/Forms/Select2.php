@@ -537,7 +537,6 @@ trait Select2
 
         $version = self::config()->version;
         $use_cdn = self::config()->use_cdn;
-        $use_cdn = true;
 
         if ($use_cdn) {
             $cdnBase = "https://cdnjs.cloudflare.com/ajax/libs/select2/$version";
