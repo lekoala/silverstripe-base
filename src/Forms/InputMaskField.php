@@ -212,7 +212,7 @@ class InputMaskField extends TextField
     public function Field($properties = array())
     {
         $this->setAttribute('data-mb', 'inputmask');
-        $this->setAttribute('data-mb-options', json_encode($this->config, JSON_FORCE_OBJECT));
+        $this->setAttribute('data-mb-options', $this->getConfigAsJson());
         if ($this->dataFormat) {
             $this->setAttribute('data-dataformat', $this->dataFormat);
         }

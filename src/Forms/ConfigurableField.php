@@ -29,6 +29,19 @@ trait ConfigurableField
     }
 
     /**
+     * Get the config (always as object)
+     *
+     * @return string
+     */
+    public function getConfigAsJson()
+    {
+        if (empty($this->config)) {
+            return '{}';
+        }
+        return json_encode($this->config);
+    }
+
+    /**
      * Set a config value
      *
      * @param string $key

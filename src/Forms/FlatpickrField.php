@@ -295,6 +295,16 @@ class FlatpickrField extends TextField
         return $this->setConfig('maxDate', $value);
     }
 
+    public function getInline()
+    {
+        return $this->getConfig('inline');
+    }
+
+    public function setInline($value)
+    {
+        return $this->setConfig('inline', (bool)$value);
+    }
+
     public function getDefaultDate()
     {
         return $this->getConfig('defaultDate');
@@ -313,6 +323,44 @@ class FlatpickrField extends TextField
     public function setDateFormat($value)
     {
         return $this->setConfig('dateFormat', $value);
+    }
+
+    public function getDisabledDates()
+    {
+        return $this->getConfig('disable');
+    }
+
+    /**
+     * Accepts:
+     * - an array of values:  ["2025-01-30", "2025-02-21", "2025-03-08"]
+     * - an array of ranges:  [["from" => "2025-01-30", "to" => "2025-02-10]]
+     * Js functions are not supported at this time
+     *
+     * @param array $value
+     * @return $this
+     */
+    public function setDisabledDates($value)
+    {
+        return $this->setConfig('disable', $value);
+    }
+
+    public function getEnabledDates()
+    {
+        return $this->getConfig('enable');
+    }
+
+    /**
+     * Accepts:
+     * - an array of values:  ["2025-01-30", "2025-02-21", "2025-03-08"]
+     * - an array of ranges:  [["from" => "2025-01-30", "to" => "2025-02-10]]
+     * Js functions are not supported at this time
+     *
+     * @param array $value
+     * @return $this
+     */
+    public function setEnabledDates($value)
+    {
+        return $this->setConfig('enable', $value);
     }
 
     /**
@@ -514,7 +562,7 @@ class FlatpickrField extends TextField
             $this->setConfig('locale', $lang);
         }
         $this->setAttribute('data-mb', 'flatpickr');
-        $this->setAttribute('data-mb-options', json_encode($this->config, JSON_FORCE_OBJECT));
+        $this->setAttribute('data-mb-options', json_encode($this->config));
 
         if ($this->range) {
             $this->setAttribute('data-range', $this->range);

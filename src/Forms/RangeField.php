@@ -45,9 +45,8 @@ class RangeField extends TextField
 
     public function Field($properties = array())
     {
-        $config = [];
         $this->setAttribute('data-mb', 'rangeslider');
-        $this->setAttribute('data-mb-options', json_encode($config, JSON_FORCE_OBJECT));
+        $this->setAttribute('data-mb-options', $this->getConfigAsJson());
 
         self::requirements();
 
