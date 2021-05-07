@@ -91,14 +91,18 @@ class FormHelper
         }
         $g = new FieldGroup();
         $fields->insertBefore($field1, $g);
+        $fields->remove($f1);
         $g->push($f1);
+        $fields->remove($f2);
         $g->push($f2);
         if ($field3) {
             $f3 = $fields->dataFieldByName($field3);
+            $fields->remove($f3);
             $g->push($f3);
         }
         if ($field4) {
             $f4 = $fields->dataFieldByName($field4);
+            $fields->remove($f4);
             $g->push($f4);
         }
 

@@ -16,6 +16,8 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use LeKoala\Base\View\CommonRequirements;
 use LeKoala\Base\Forms\Select2LookupField;
+use SilverStripe\Core\Manifest\ModuleLoader;
+use SilverStripe\Core\Manifest\ModuleResource;
 
 /**
  * Require trait ConfigurableField
@@ -81,6 +83,12 @@ trait Select2
      * @var string
      */
     private static $version = '4.0.13';
+
+    /**
+     * @config
+     * @var bool
+     */
+    private static $use_cdn = false;
 
     public function Type()
     {
@@ -528,18 +536,38 @@ trait Select2
         $this->setAttribute('data-mb', 'select2');
 
         $version = self::config()->version;
-        Requirements::css("https://cdnjs.cloudflare.com/ajax/libs/select2/$version/css/select2.min.css");
+        $use_cdn = self::config()->use_cdn;
+        $use_cdn = true;
+
+        if ($use_cdn) {
+            $cdnBase = "https://cdnjs.cloudflare.com/ajax/libs/select2/$version";
+        } else {
+            $cdnBase = dirname(dirname(self::moduleResource("javascript/vendor/cdn/select2/js/select2.min.js")->getRelativePath()));
+        }
+        Requirements::css("$cdnBase/css/select2.min.css");
         if ($ctrl instanceof LeftAndMain) {
             Requirements::css('base/css/Select2Field.css');
         }
-        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/select2/$version/js/select2.min.js");
+        Requirements::javascript("$cdnBase/js/select2.min.js");
         if ($lang != 'en') {
-            Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/select2/$version/js/i18n/$lang.js");
+            Requirements::javascript("$cdnBase/js/i18n/$lang.js");
         }
         CommonRequirements::modularBehaviour();
         Requirements::javascript('base/javascript/fields/Select2Field.js');
         return parent::Field($properties);
     }
+
+    /**
+     * Helper to access this module resources
+     *
+     * @param string $path
+     * @return ModuleResource
+     */
+    public static function moduleResource($path)
+    {
+        return ModuleLoader::getModule('lekoala/silverstripe-base')->getResource($path);
+    }
+
 
     /**
      * Validate this field
