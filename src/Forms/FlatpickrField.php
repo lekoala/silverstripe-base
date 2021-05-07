@@ -552,6 +552,14 @@ class FlatpickrField extends TextField
         return ModuleLoader::getModule('lekoala/silverstripe-base')->getResource($path);
     }
 
+    /**
+     * Add requirements
+     *
+     * @param string $lang
+     * @param array $plugins
+     * @param string $theme
+     * @return void
+     */
     public static function requirements($lang = null, $plugins = [], $theme = null)
     {
         if ($lang === null) {
@@ -575,7 +583,7 @@ class FlatpickrField extends TextField
         foreach ($plugins as $plugin) {
             Requirements::javascript("$cdnBase/plugins/$plugin.js");
             if (isset(self::PLUGINS_WITH_CSS[$plugin])) {
-                Requirements::css("h$cdnBase/plugins/$plugin.css");
+                Requirements::css("$cdnBase/plugins/$plugin.css");
             }
         }
         if ($theme) {
