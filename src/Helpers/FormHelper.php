@@ -4,7 +4,9 @@ namespace LeKoala\Base\Helpers;
 
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormField;
+use SilverStripe\Forms\FieldGroup;
 use SilverStripe\Forms\GridField\GridField;
 use LeKoala\CommonExtensions\SortableExtension;
 use Symbiote\GridFieldExtensions\GridFieldOrderableRows;
@@ -61,5 +63,45 @@ class FormHelper
         }
         $gridfield = new GridField($field, $dataobject->fieldLabel($field), $list, $config);
         return $gridfield;
+    }
+
+    /**
+     * Group fields
+     *
+     * Usage:
+     * FormHelper::groupFields($fields, 'StartDate', 'EndDate');
+     *
+     * @param FieldList $fields
+     * @param string $field1
+     * @param string $field2
+     * @param string $field3
+     * @param string $field4
+     * @return FieldGroup
+     */
+    public static function groupFields(FieldList $fields, $field1, $field2, $field3 = null, $field4 = null)
+    {
+        $f1 = $f2 = $f3 = $f4 = null;
+        $f1 = $fields->dataFieldByName($field1);
+        $f2 = $fields->dataFieldByName($field2);
+        if ($field3) {
+            $f3 = $fields->dataFieldByName($field3);
+        }
+        if ($field4) {
+            $f4 = $fields->dataFieldByName($field4);
+        }
+        $g = new FieldGroup();
+        $fields->insertBefore($field1, $g);
+        $g->push($f1);
+        $g->push($f2);
+        if ($field3) {
+            $f3 = $fields->dataFieldByName($field3);
+            $g->push($f3);
+        }
+        if ($field4) {
+            $f4 = $fields->dataFieldByName($field4);
+            $g->push($f4);
+        }
+
+        return $g;
     }
 }
