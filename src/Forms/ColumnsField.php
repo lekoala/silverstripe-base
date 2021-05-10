@@ -65,6 +65,9 @@ class ColumnsField extends FieldGroup
                 $class .= '-' . $this->columnSizes[$pos];
             } elseif (self::config()->autosize) {
                 $columnCount = $this->getColumnCount() ?? count($this->children);
+                if (!$columnCount) {
+                    $columnCount = 2;
+                }
                 $autoSize = round(12 / $columnCount);
                 $class .= '-' . $autoSize . ' ' . $col_class . '-xs-12';
             }
