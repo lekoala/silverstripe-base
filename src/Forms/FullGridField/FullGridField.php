@@ -1,4 +1,5 @@
 <?php
+
 namespace LeKoala\Base\Forms\FullGridField;
 
 use Exception;
@@ -210,7 +211,7 @@ class FullGridField extends GridField
         return array_merge(
             parent::getAttributes(),
             array(
-                'data-record' => ClassHelper::sanitiseClassName($rec) . '_' . $rec->ID,
+                'data-record' => $rec ? ClassHelper::sanitiseClassName($rec) . '_' . $rec->ID : null,
             )
         );
     }

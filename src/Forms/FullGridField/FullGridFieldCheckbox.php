@@ -16,6 +16,7 @@ use SilverStripe\Forms\GridField\GridField_SaveHandler;
 use SilverStripe\Forms\GridField\GridField_HTMLProvider;
 use SilverStripe\Forms\GridField\GridField_ColumnProvider;
 use SilverStripe\Forms\GridField\GridField_DataManipulator;
+use SilverStripe\ORM\DataList;
 
 /**
  * The checkbox handles adding or removing the record to the relation
@@ -57,6 +58,11 @@ class FullGridFieldCheckbox implements GridField_SaveHandler, GridField_ColumnPr
      * @var bool
      */
     protected $noEmpty = true;
+
+    /**
+     * @var bool
+     */
+    protected $keepList = false;
 
     /**
      * @var array
@@ -115,15 +121,16 @@ class FullGridFieldCheckbox implements GridField_SaveHandler, GridField_ColumnPr
         $class = $gridField->getModelClass();
 
         if ($this->sqlSelect) {
-            $list = new ArrayList(iterator_to_array($this->sqlSelect->execute()));
+            $dataList = new ArrayList(iterator_to_array($this->sqlSelect->execute()));
         } else {
-            $list = $class::get();
+            if (!$this->keepList) {
+                $dataList = $class::get();
+            }
             if ($this->filters) {
-                $list = $list->filter($this->filters);
+                $dataList = $dataList->filter($this->filters);
             }
         }
-
-        return $list;
+        return $dataList;
     }
 
 
@@ -426,6 +433,24 @@ class FullGridFieldCheckbox implements GridField_SaveHandler, GridField_ColumnPr
     public function setInstantSave($instantSave)
     {
         $this->instantSave = $instantSave;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getKeepList()
+    {
+        return $this->keepList;
+    }
+
+    /**
+     * @param bool $keepList
+     * @return $this
+     */
+    public function setKeepList($keepList)
+    {
+        $this->keepList = $keepList;
         return $this;
     }
 }
