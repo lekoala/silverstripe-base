@@ -182,6 +182,12 @@ class CommonRequirements
     private static $popper_version = "2.5.4";
 
     /**
+     * @config
+     * @var boolean
+     */
+    private static $modular_behaviour_init = true;
+
+    /**
      * Include all files in a given path
      *
      * @param string $path
@@ -205,13 +211,25 @@ class CommonRequirements
      */
     public static function modularBehaviour()
     {
-        Requirements::javascript("base/javascript/modular-behaviour.min.js");
+        Requirements::javascript("lekoala/silverstripe-base: javascript/modular-behaviour.min.js");
 
-        // We cannot use inline scripts because they won't be loaded through ajax
-        if (Director::isDev()) {
-            Requirements::javascript("base/javascript/modular-behaviour-init-dev.js");
-        } else {
-            Requirements::javascript("base/javascript/modular-behaviour-init.js");
+        // You can disable this and init modular behaviour through your app entry point
+        if (self::config()->modular_behaviour_init) {
+            if (Director::is_ajax()) {
+                // We cannot use inline scripts because they won't be loaded through ajax
+                if (Director::isDev()) {
+                    Requirements::javascript("lekoala/silverstripe-base: javascript/modular-behaviour-init-dev.js");
+                } else {
+                    Requirements::javascript("lekoala/silverstripe-base: javascript/modular-behaviour-init.js");
+                }
+            } else {
+                // Otherwise, use inline scripts that gets loaded after all resources are loaded
+                if (Director::isDev()) {
+                    Requirements::javascriptTemplate("lekoala/silverstripe-base: javascript/modular-behaviour-init-dev.js", [], "ModularBehaviourInit");
+                } else {
+                    Requirements::javascriptTemplate("lekoala/silverstripe-base: javascript/modular-behaviour-init.js", [], "ModularBehaviourInit");
+                }
+            }
         }
     }
 

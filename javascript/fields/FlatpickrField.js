@@ -1,4 +1,4 @@
-/* global confirmDatePlugin */
+/* global confirmDatePlugin, ModularBehaviour */
 (function ($) {
   ModularBehaviour.addOptionsTransformer("flatpickr", function (opts, el) {
     var $this = $(el);
@@ -29,6 +29,9 @@
       if (!val) {
         $this.val("");
       }
+    });
+    $alt.on("blur", function () {
+      var val = $(this).val();
     });
 
     $this.on("change", function () {

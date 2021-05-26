@@ -561,8 +561,17 @@ class FlatpickrField extends TextField
         if ($lang != 'en') {
             $this->setConfig('locale', $lang);
         }
+        $config = $this->config;
+
+        // Disable allow input if using alternative format
+        // Parsing might be difficult in other languages
+        // Otherwise see implemeting parseDate
+        if ($config['altFormat']) {
+            $config['allowInput'] = false;
+        }
+
         $this->setAttribute('data-mb', 'flatpickr');
-        $this->setAttribute('data-mb-options', json_encode($this->config));
+        $this->setAttribute('data-mb-options', json_encode($config));
 
         if ($this->range) {
             $this->setAttribute('data-range', $this->range);
