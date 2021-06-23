@@ -2,6 +2,8 @@
 Name: base-forms
 ---
 SilverStripe\Core\Injector\Injector:
+  SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter:
+    class: LeKoala\Base\Forms\GridField\BetterGridFieldAddExistingAutocompleter
   SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor:
     class: LeKoala\Base\Forms\GridField\GridFieldRecordConfig
   #SilverStripe\AssetAdmin\Forms\UploadField:
