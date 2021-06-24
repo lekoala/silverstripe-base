@@ -183,9 +183,9 @@ class CommonRequirements
 
     /**
      * @config
-     * @var boolean
+     * @var bool
      */
-    private static $modular_behaviour_init = true;
+    private static $modular_behaviour_debug = false;
 
     /**
      * Include all files in a given path
@@ -211,26 +211,12 @@ class CommonRequirements
      */
     public static function modularBehaviour()
     {
-        Requirements::javascript("lekoala/silverstripe-base: javascript/modular-behaviour.min.js");
-
-        // You can disable this and init modular behaviour through your app entry point
-        if (self::config()->modular_behaviour_init) {
-            if (Director::is_ajax()) {
-                // We cannot use inline scripts because they won't be loaded through ajax
-                if (Director::isDev()) {
-                    Requirements::javascript("lekoala/silverstripe-base: javascript/modular-behaviour-init-dev.js");
-                } else {
-                    Requirements::javascript("lekoala/silverstripe-base: javascript/modular-behaviour-init.js");
-                }
-            } else {
-                // Otherwise, use inline scripts that gets loaded after all resources are loaded
-                if (Director::isDev()) {
-                    Requirements::javascriptTemplate("lekoala/silverstripe-base: javascript/modular-behaviour-init-dev.js", [], "ModularBehaviourInit");
-                } else {
-                    Requirements::javascriptTemplate("lekoala/silverstripe-base: javascript/modular-behaviour-init.js", [], "ModularBehaviourInit");
-                }
-            }
+        if (Director::isDev() && self::config()->modular_behaviour_debug) {
+            Requirements::customScript("ModularBehaviour.setConfig('debug',true); ModularBehaviour.init();", "ModularBehaviourInit");
+        } else {
+            Requirements::customScript("ModularBehaviour.init();", "ModularBehaviourInit");
         }
+        Requirements::javascript("lekoala/silverstripe-base: javascript/modular-behaviour.min.js");
     }
 
     /**

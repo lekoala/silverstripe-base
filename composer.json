@@ -45,6 +45,7 @@
     "lekoala/silverstripe-blocks": "Blocks page",
     "lekoala/silverstripe-phonenumber": "Phone number field type",
     "lekoala/silverstripe-filepond": "Filepond file upload",
+    "lekoala/silverstripe-pure-modal": "Modals for the cms",
     "pragmarx/google2fa": "2fa support"
   },
   "extra": {
