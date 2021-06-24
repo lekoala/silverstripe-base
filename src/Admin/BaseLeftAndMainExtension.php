@@ -14,6 +14,7 @@ use LeKoala\Base\View\CommonRequirements;
 use LeKoala\DeferBackend\DeferBackend;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Admin\LeftAndMainExtension;
+use SilverStripe\Core\Environment;
 use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorConfig;
 use SilverStripe\Forms\HTMLEditor\TinyMCECombinedGenerator;
@@ -88,7 +89,10 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
         }
 
         // otherwise it may show artefacts when loading
-        self::forceTinyMCELoad();
+        if (Environment::getEnv('FORCE_TINYMCE_LOAD')) {
+            self::forceTinyMCELoad();
+        }
+
 
         if (self::config()->dark_theme) {
             Requirements::css('base/css/admin-dark.css');
