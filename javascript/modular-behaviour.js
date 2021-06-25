@@ -27,11 +27,11 @@
     debug: false,
   };
 
-  // Track scripts state on load
+  // Track new scripts
   // This helps to limit failed attempts due to yet to be loaded scripts
   var scriptsLoading = 0;
+  // Set this to true if you want to trigger run after scripts are loaded
   var shouldRun = false;
-
   /**
    * @param {HTMLScriptElement} script
    */
@@ -42,16 +42,13 @@
     if (script.hasAttribute("nomodule")) {
       return;
     }
-    // scripts in the body do not trigger onload
-    if (script.parentNode.tagName.toLowerCase() != "head") {
-      return;
-    }
     scriptsLoading++;
 
     script.onload = function (e) {
       scriptsLoading--;
       debug(scriptsLoading + " remaining scripts");
       if (scriptsLoading <= 0) {
+        scriptsLoading = 0;
         debug("all scripts loaded");
 
         // A run attempt has been prevented due to missing scripts
@@ -60,10 +57,6 @@
         }
       }
     };
-  }
-  var scripts = document.querySelectorAll("head script[src]");
-  for (var i = 0; i < scripts.length; i++) {
-    trackScript(scripts[i]);
   }
 
   /**
@@ -222,9 +215,18 @@
      * Traverse the dom and configure any element with data-mb attribute
      */
     run: function () {
+      var self = this;
       if (scriptsLoading) {
         debug("should run");
         shouldRun = true;
+        // Make sure we are not stuck due to a failed script
+        setTimeout(function() {
+            if(scriptsLoading) {
+                scriptsLoading = 0;
+                self.run();
+                debug("run anyway");
+            }
+        }, 500);
         return;
       }
       debug("run");

@@ -55,7 +55,11 @@
    */
   var RequiredFields = function (selector, opts) {
     this.setOptions(opts);
-    this.nodes = document.querySelectorAll(selector);
+    if (selector instanceof HTMLFormElement) {
+      this.nodes = [selector];
+    } else {
+      this.nodes = document.querySelectorAll(selector);
+    }
     this.setRequire();
     this.handleFormSubmit();
 
