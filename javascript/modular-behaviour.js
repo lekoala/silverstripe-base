@@ -352,7 +352,7 @@
         // It's a jQuery module
         debug("Configuring jQuery module " + module);
         // Wrap element and call the plugin with the config
-        inst = jQuery.fn[moduleName].call($(element), options);
+        inst = jQuery.fn[moduleName].call(jQuery(element), options);
       } else {
         // Not defined
         debug("Undefined module " + module);
