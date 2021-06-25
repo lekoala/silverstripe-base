@@ -16,6 +16,14 @@
       plugins.push(new confirmDatePlugin());
     }
     opts.plugins = plugins;
+
+    // Hooks
+    if ($this.data("hooks")) {
+      var hooks = $this.data("hooks");
+      for (var hookName in hooks) {
+        opts[hookName] = window[hooks[hookName]];
+      }
+    }
   });
 
   ModularBehaviour.addAfterInitHook("flatpickr", function (inst, el, opts) {

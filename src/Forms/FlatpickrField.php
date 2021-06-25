@@ -78,6 +78,11 @@ class FlatpickrField extends TextField
     protected $plugins = [];
 
     /**
+     * @var array
+     */
+    protected $hooks = [];
+
+    /**
      * @var string
      */
     protected $theme;
@@ -419,6 +424,26 @@ class FlatpickrField extends TextField
     }
 
     /**
+     * @param string $hook
+     * @return string
+     */
+    public function getHook($hook)
+    {
+        return $this->hooks[$hook] ?? '';
+    }
+
+    /**
+     * @param string $hook
+     * @param string $callbackName
+     * @return $this
+     */
+    public function setHook($hook, $callbackName)
+    {
+        $this->hooks[$hook] = $callbackName;
+        return $this;
+    }
+
+    /**
      * Get locale to use for this field
      *
      * @return string
@@ -578,6 +603,9 @@ class FlatpickrField extends TextField
         }
         if ($this->confirmDate) {
             $this->setAttribute('data-confirm-date', true);
+        }
+        if ($this->hooks) {
+            $this->setAttribute("data-hooks", json_encode($this->hooks));
         }
 
         self::requirements($lang, $this->plugins, $this->theme);

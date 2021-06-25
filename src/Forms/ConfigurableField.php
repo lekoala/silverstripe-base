@@ -29,8 +29,7 @@ trait ConfigurableField
     }
 
     /**
-     * Get the config (always as object)
-     *
+     * Get the config (always as json object)
      * @return string
      */
     public function getConfigAsJson()
@@ -38,7 +37,24 @@ trait ConfigurableField
         if (empty($this->config)) {
             return '{}';
         }
-        return json_encode($this->config);
+        $json = json_encode($this->config);
+    }
+
+    /**
+     * Get the config as a js object
+     * @param array $escape
+     * @return string
+     */
+    public function getConfigAsJs($escape = [])
+    {
+        if (empty($this->config)) {
+            return '{}';
+        }
+        $json = json_encode($this->config);
+        foreach ($escape as $fct) {
+            $json = str_replace('"' . $fct . '"', $fct, $json);
+        }
+        return $json;
     }
 
     /**
