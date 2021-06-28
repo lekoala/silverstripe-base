@@ -213,10 +213,11 @@ class CommonRequirements
     {
         if (Director::isDev() && self::config()->modular_behaviour_debug) {
             Requirements::customScript("ModularBehaviour.setConfig('debug',true); ModularBehaviour.init();", "ModularBehaviourInit");
+            Requirements::javascript("lekoala/silverstripe-base: javascript/modular-behaviour.js");
         } else {
             Requirements::customScript("ModularBehaviour.init();", "ModularBehaviourInit");
+            Requirements::javascript("lekoala/silverstripe-base: javascript/modular-behaviour.min.js");
         }
-        Requirements::javascript("lekoala/silverstripe-base: javascript/modular-behaviour.min.js");
     }
 
     /**

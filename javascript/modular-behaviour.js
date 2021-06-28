@@ -44,7 +44,11 @@
     }
     scriptsLoading++;
 
+    var prevOnload = script.onload;
     script.onload = function (e) {
+      if (prevOnload) {
+        prevOnload(e);
+      }
       scriptsLoading--;
       debug(scriptsLoading + " remaining scripts");
       if (scriptsLoading <= 0) {
@@ -220,12 +224,12 @@
         debug("should run");
         shouldRun = true;
         // Make sure we are not stuck due to a failed script
-        setTimeout(function() {
-            if(scriptsLoading) {
-                scriptsLoading = 0;
-                self.run();
-                debug("run anyway");
-            }
+        setTimeout(function () {
+          if (scriptsLoading) {
+            scriptsLoading = 0;
+            self.run();
+            debug("run anyway");
+          }
         }, 500);
         return;
       }
