@@ -657,11 +657,17 @@ class FlatpickrField extends TextField
             $cdnBase = "https://cdnjs.cloudflare.com/ajax/libs/flatpickr/$version";
             // $cdnBase = "https://cdn.jsdelivr.net/npm/flatpickr@$version/dist";
         } else {
-            $cdnBase = dirname(self::moduleResource("javascript/vendor/cdn/flatpickr/flatpickr.min.js")->getRelativePath());
+            $cdnBase = dirname(self::moduleResource("javascript/vendor/cdn/flatpickr/flatpickr.min.js")->getURL());
         }
 
         Requirements::css("$cdnBase/flatpickr.min.css");
         Requirements::javascript("$cdnBase/flatpickr.min.js");
+        if (!$use_cdn && $lang != 'en') {
+            $cdnPath = dirname(self::moduleResource("javascript/vendor/cdn/flatpickr/flatpickr.min.js")->getPath());
+            if (!is_file("$cdnPath/l10n/$lang.js")) {
+                $lang = 'en'; // revert to en
+            }
+        }
         if ($lang != 'en') {
             Requirements::javascript("$cdnBase/l10n/$lang.js");
         }
