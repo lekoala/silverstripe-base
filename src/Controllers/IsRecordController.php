@@ -135,6 +135,9 @@ trait IsRecordController
                 if ($extraData && is_array($extraData)) {
                     $data = array_merge($data, $extraData);
                 }
+                if ($extraData && $extraData instanceof HTTPRequest) {
+                    return $extraData;
+                }
             }
             return $this->renderWith($this->getViewer($this->getViewAction()), $data);
         }
@@ -144,6 +147,9 @@ trait IsRecordController
             $extraData = $this->onIndex();
             if ($extraData && is_array($extraData)) {
                 $data = array_merge($data, $extraData);
+            }
+            if ($extraData && $extraData instanceof HTTPRequest) {
+                return $extraData;
             }
         }
         return $this->render($data);

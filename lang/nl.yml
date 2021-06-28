@@ -1,4 +1,6 @@
 nl:
+  SilverStripe\\Security\\Member:
+    REMEMBER_ME: "Denk aan mij voor {count} dagen"
   BaseAuthenticator:
     OLDPASSWORD: 'U heeft uw oude wachtwoord ingevoerd. '
     PLEASERESET: 'Stel uw wachtwoord opnieuw in met de onderstaande stappen ''Ik ben mijn wachtwoord kwijt''.'

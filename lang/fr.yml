@@ -1,4 +1,6 @@
 fr:
+  SilverStripe\\Security\\Member:
+    REMEMBER_ME: "Se souvenir de moi pendant {count} jours"
   BaseAuthenticator:
     OLDPASSWORD: 'Vous avez entré votre ancien mot de passe. '
     PLEASERESET: 'Veuillez réinitialiser votre mot de passe en suivant les étapes «J''ai perdu mon mot de passe» ci-dessous.'
