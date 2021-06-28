@@ -10,6 +10,8 @@ nl:
     DOEDIT: 'Save changes'
     DOSUBMIT: Verzenden
   BaseMemberExtension:
+    ACCOUNT_DISABLED: 'Uw account is uitgeschakeld'
+    ACCOUNT_PENDING: 'Uw account is momenteel in behandeling'
     MEMBER_NOT_LOCKED: 'Member is not locked'
     MEMBER_UNLOCKED: 'Member unlocked'
   BaseSecurityAdminExtension:
@@ -57,6 +59,14 @@ nl:
     COOKIES_ARE_REQUIRED: 'Er worden cookies gebruikt op deze website'
   CountryDropdownField:
     TITLE: Land
+  DateHelper:
+    Friday: Vrijdag
+    Monday: Maandag
+    Saturday: Zaterdag
+    Sunday: Zondag
+    Thursday: Donderdag
+    Tuesday: Dinsdag
+    Wednesday: Woensdag
   EmbeddableExtension:
     EMBEDURL: 'Embed from URL'
   FlatpickrField:
@@ -155,8 +165,8 @@ nl:
     VALIDATE_TOKEN: 'Validate token'
     YOUR_TOKEN_IS: 'Your token is {token}'
   TwoFactorMemberExtension:
-    CMSTOGGLEQRCODELABEL: 'Tweede factor-tokengeheim'
     ADMIN_IP_INVALID: 'Your ip address is not whitelisted for this account level'
+    CMSTOGGLEQRCODELABEL: 'Tweede factor-tokengeheim'
     YOU_NEED_2FA_METHOD: 'Your account needs two factor auth but does not have any available authentication method'
   URLSegmentExtension:
     URLSEGMENT: 'URL Segment'

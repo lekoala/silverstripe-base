@@ -51,10 +51,22 @@ class DateHelper
     }
 
     /**
+     * @param bool $translated
      * @return array
      */
-    public static function listDays()
+    public static function listDays($translated = true)
     {
+        if (!$translated) {
+            return [
+                1 => "Monday",
+                2 => "Tuesday",
+                3 => "Wednesday",
+                4 => "Thursday",
+                5 => "Friday",
+                6 => "Saturday",
+                7 => "Sunday",
+            ];
+        }
         return [
             1 => _t('DateHelper.Monday', 'Monday'),
             2 => _t('DateHelper.Tuesday', 'Tuesday'),
@@ -64,5 +76,16 @@ class DateHelper
             6 => _t('DateHelper.Saturday', 'Saturday'),
             7 => _t('DateHelper.Sunday', 'Sunday'),
         ];
+    }
+
+    /**
+     * @param int $i
+     * @param bool $translated
+     * @return string
+     */
+    public static function dayFromIndex($i, $translated = true)
+    {
+        $arr = self::listDays($translated);
+        return $arr[$i] ?? '';
     }
 }

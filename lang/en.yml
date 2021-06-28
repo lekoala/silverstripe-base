@@ -10,6 +10,8 @@ en:
     DOEDIT: 'Save changes'
     DOSUBMIT: Submit
   BaseMemberExtension:
+    ACCOUNT_DISABLED: 'Your account has been disabled'
+    ACCOUNT_PENDING: 'Your account is currently pending'
     MEMBER_NOT_LOCKED: 'Member is not locked'
     MEMBER_UNLOCKED: 'Member unlocked'
   BaseSecurityAdminExtension:
@@ -58,6 +60,14 @@ en:
     COOKIES_ARE_REQUIRED: 'Cookies are required to use this website'
   CountryDropdownField:
     TITLE: Country
+  DateHelper:
+    Friday: Friday
+    Monday: Monday
+    Saturday: Saturday
+    Sunday: Sunday
+    Thursday: Thursday
+    Tuesday: Tuesday
+    Wednesday: Wednesday
   EmbeddableExtension:
     EMBEDURL: 'Embed from URL'
   FlatpickrField:
@@ -157,8 +167,8 @@ en:
     VALIDATE_TOKEN: 'Validate token'
     YOUR_TOKEN_IS: 'Your token is {token}'
   TwoFactorMemberExtension:
-    CMSTOGGLEQRCODELABEL: 'Second Factor Token Secret'
     ADMIN_IP_INVALID: 'Your ip address {address} is not whitelisted for this account level'
+    CMSTOGGLEQRCODELABEL: 'Second Factor Token Secret'
     YOU_NEED_2FA_METHOD: 'Your account needs two factor auth but does not have any available authentication method'
   URLSegmentExtension:
     URLSEGMENT: 'URL Segment'
