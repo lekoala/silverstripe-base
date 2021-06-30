@@ -207,16 +207,24 @@ class CommonRequirements
      * Including modular behaviour tools to initialize scripts from html in one go
      *
      * @link https://github.com/lekoala/modular-behaviour.js
+     * @param bool $ajaxInit
      * @return void
      */
-    public static function modularBehaviour()
+    public static function modularBehaviour($ajaxInit = true)
     {
         if (Director::isDev() && self::config()->modular_behaviour_debug) {
-            Requirements::customScript("ModularBehaviour.setConfig('debug',true); ModularBehaviour.init();", "ModularBehaviourInit");
             Requirements::javascript("lekoala/silverstripe-base: javascript/modular-behaviour.js");
         } else {
-            Requirements::customScript("ModularBehaviour.init();", "ModularBehaviourInit");
             Requirements::javascript("lekoala/silverstripe-base: javascript/modular-behaviour.min.js");
+        }
+        if ($ajaxInit && Director::is_ajax()) {
+            Requirements::javascript("lekoala/silverstripe-base: javascript/modular-behaviour-init.js", "ModularBehaviourInit");
+        } else {
+            if (Director::isDev() && self::config()->modular_behaviour_debug) {
+                Requirements::customScript("ModularBehaviour.init();", "ModularBehaviourInit");
+            } else {
+                Requirements::customScript("ModularBehaviour.setConfig('debug',true); ModularBehaviour.init();", "ModularBehaviourInit");
+            }
         }
     }
 
