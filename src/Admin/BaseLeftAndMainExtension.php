@@ -89,7 +89,9 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
         }
 
         // otherwise it may show artefacts when loading
-        if (Environment::getEnv('FORCE_TINYMCE_LOAD')) {
+        if (Environment::getEnv('DONT_FORCE_TINYMCE_LOAD')) {
+            // Keep default
+        } else {
             self::forceTinyMCELoad();
         }
 
@@ -113,7 +115,8 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
         // This needs to be loaded after #assetadmin because it depends on InsertMediaModal to be defined
         $cmsConfig = HTMLEditorConfig::get('cms');
         $generator = Injector::inst()->get(TinyMCECombinedGenerator::class);
-        Requirements::javascript($generator->getScriptURL($cmsConfig));
+        $link = $generator->getScriptURL($cmsConfig);
+        Requirements::javascript($link);
     }
 
     /**
