@@ -62,12 +62,6 @@ class InputMaskField extends TextField
      */
     private static $use_v5 = true;
 
-    /**
-     * @config
-     * @var string
-     */
-    private static $version_v5 = '5.0.5';
-
 
     public function Type()
     {
@@ -223,26 +217,17 @@ class InputMaskField extends TextField
     public static function requirements()
     {
         $useV5 = self::config()->use_v5;
-        if ($useV5) {
-            $version = self::config()->version_v5;
-        } else {
-            $version = self::config()->version;
-        }
+        $version = self::config()->version;
 
         if ($useV5) {
-            // Requirements::javascript("https://cdn.jsdelivr.net/npm/inputmask@$version/dist/jquery.inputmask.min.js");
             // in v5, lib name is jquery.inputmask
-            Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/$version/jquery.inputmask.min.js");
+            Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.6/jquery.inputmask.min.js");
+            // Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.6/inputmask.min.js");
+            // Use version alias from jsdelivr
+            // Requirements::javascript("https://cdn.jsdelivr.net/npm/inputmask@5/dist/inputmask.min.js");
         } else {
             Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/inputmask/$version/jquery.inputmask.bundle.min.js");
         }
-
-        // unpkg does not support beta version
-        // Requirements::javascript("https://unpkg.com/inputmask@$version/dist/min/jquery.inputmask.bundle.min.js");
-        // rawgit is best effort, might not be reliable
-        // Requirements::javascript("https://cdn.rawgit.com/RobinHerbots/Inputmask/$version/dist/min/jquery.inputmask.bundle.min.js");
-        // Requirements::javascript("https://cdn.jsdelivr.net/npm/inputmask@$version/dist/min/jquery.inputmask.bundle.min.js");
-
         CommonRequirements::modularBehaviour();
         Requirements::javascript('base/javascript/fields/InputMaskField.js');
     }

@@ -220,10 +220,10 @@ class CommonRequirements
         if ($ajaxInit && Director::is_ajax()) {
             Requirements::javascript("lekoala/silverstripe-base: javascript/modular-behaviour-init.js", "ModularBehaviourInit");
         } else {
-            if (Director::isDev() && self::config()->modular_behaviour_debug) {
-                Requirements::customScript("ModularBehaviour.init();", "ModularBehaviourInit");
-            } else {
+            if (Director::isDev() && (self::config()->modular_behaviour_debug || isset($_GET['debug']))) {
                 Requirements::customScript("ModularBehaviour.setConfig('debug',true); ModularBehaviour.init();", "ModularBehaviourInit");
+            } else {
+                Requirements::customScript("ModularBehaviour.init();", "ModularBehaviourInit");
             }
         }
     }

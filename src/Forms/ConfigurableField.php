@@ -38,6 +38,7 @@ trait ConfigurableField
             return '{}';
         }
         $json = json_encode($this->config);
+        return $json;
     }
 
     /**

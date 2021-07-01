@@ -233,9 +233,9 @@
         }, 500);
         return;
       }
-      debug("run");
       // Collect a static NodeList (need to query again after each ajax call or dom update)
       var nodeList = document.querySelectorAll("[" + config.attr + "]:not(." + config.initClass + ")");
+      debug("run : " + nodeList.length + " modules to configure");
       for (var i = 0; i < nodeList.length; i++) {
         this.configureElement(nodeList[i]);
       }
