@@ -3,6 +3,11 @@
   ModularBehaviour.addOptionsTransformer("inputmask", function (opts, el) {
     var $this = $(el);
 
+    // don't process!
+    if (typeof $.fn["inputmask"] !== "undefined") {
+      return;
+    }
+
     // raw name is irrelevant, use data attribute
     var name = $this.data("name");
     if (name == undefined) {
