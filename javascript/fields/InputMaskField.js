@@ -4,7 +4,7 @@
     var $this = $(el);
 
     // don't process!
-    if (typeof $.fn["inputmask"] !== "undefined") {
+    if (typeof $.fn["inputmask"] === "undefined") {
       return;
     }
 

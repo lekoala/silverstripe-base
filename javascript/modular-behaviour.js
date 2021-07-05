@@ -42,6 +42,7 @@
     if (script.hasAttribute("nomodule")) {
       return;
     }
+    debug("tracking " + script.getAttribute("href"));
     scriptsLoading++;
 
     var prevOnload = script.onload;
@@ -167,7 +168,6 @@
             }
             // Track new scripts. If new scripts are added, we will run through all nodes
             if (node.tagName.toLowerCase() === "script") {
-              debug("Track new script");
               trackScript(node);
               shouldRun = true;
             }
@@ -424,6 +424,7 @@
         options = this.parseOptions(options);
         // Apply transformer if any
         if (module in this.optionsTransformers) {
+          debug("Using option transformer for " + module);
           var newOptions = this.optionsTransformers[module](options, element);
           if (newOptions) {
             options = newOptions;
