@@ -13,17 +13,15 @@
     if (name == undefined) {
       name = $this.attr("name");
     }
+
+    if (!name) {
+      return;
+    }
+
     var val = $this.val();
     var dataformat = $this.data("dataformat");
     var isDecimal = $this.data("isDecimal");
     var config = opts;
-
-    // Duplicate input field to store data value
-    var hiddenInput = $("<input/>", {
-      type: "hidden",
-      name: name,
-    });
-    $this.parent().append(hiddenInput);
 
     // Avoid original field being saved (but send the formatted data as a convenience)
     var formattedName = name + "Formatted";
@@ -32,6 +30,13 @@
       formattedName = name + "[Formatted]";
     }
     $this.attr("name", formattedName);
+
+    // Duplicate input field to store data value
+    var hiddenInput = $("<input/>", {
+      type: "hidden",
+      name: name,
+    });
+    $this.parent().append(hiddenInput);
 
     // Update real hidden field with unmasked value
     $this.on("keyup blur", function () {
