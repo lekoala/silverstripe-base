@@ -137,7 +137,8 @@ class NewsPageController extends \PageController
         }
         $Singleton = NewsItem::singleton();
         $table = $Singleton->baseTable();
-        $years = array_unique(DB::prepared_query("SELECT YEAR(Published) FROM $table WHERE Published IS NOT NULL AND Published <= ?", [
+        $years = array_unique(DB::prepared_query("SELECT YEAR(Published) FROM $table WHERE Published IS NOT NULL AND PageID = ? AND Published <= ?", [
+            $this->data()->ID,
             DBDatetime::now()->Format(DBDatetime::ISO_DATETIME)
         ])->column());
         $result = ArrayList::create();
@@ -168,6 +169,7 @@ class NewsPageController extends \PageController
             ->addGroupBy($Published)
             ->addOrderBy('"Published" DESC')
             ->addWhere('Published IS NOT NULL')
+            ->addWhere(['"PageID" = ?' => $this->data()->ID])
             ->addWhere(['"Published" <= ?' => DBDatetime::now()->Format(DBDatetime::ISO_DATETIME)]);
         $posts = $query->execute();
         $result = ArrayList::create();
