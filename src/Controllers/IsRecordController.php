@@ -45,9 +45,14 @@ trait IsRecordController
      */
     public function getRequestedRecord()
     {
+        /** @var HTTPRequest $request  */
+        $request = $this->getRequest();
         $ModelClass = $this->getControllerModelClass();
         $ModelClass_SNG = $ModelClass::singleton();
-        $ID = $this->getRequest()->param('ID');
+        $ID = $request->param('ID');
+        if (!$ID && $request->isPOST()) {
+            $ID = $request->postVar("RecordID");
+        }
         if ($ID) {
             // Get by segment
             if ($ModelClass_SNG->hasExtension(URLSegmentExtension::class)) {
