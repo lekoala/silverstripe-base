@@ -72,3 +72,12 @@ SilverStripe\Core\Injector\Injector:
         - "error"
       properties:
           Formatter: '%$CustomLineFormatter'
+---
+Name: base-sentry
+Only:
+  moduleexists:
+    - 'phptek/sentry'
+---
+PhpTek\Sentry\Handler\SentryHandler:
+  # One of the permitted severities: DEBUG|INFO|WARNING|ERROR|FATAL
+  log_level: WARNING
