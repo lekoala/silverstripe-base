@@ -312,7 +312,7 @@ class BaseContentController extends ContentController
      * Get logger
      *
      * @link https://docs.silverstripe.org/en/4/developer_guides/debugging/error_handling/
-     * @return Monolog\Logger
+     * @return \Monolog\Logger
      */
     public function getLogger()
     {
