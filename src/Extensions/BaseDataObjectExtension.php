@@ -2,6 +2,7 @@
 
 namespace LeKoala\Base\Extensions;
 
+use Exception;
 use GridFieldSoftDeleteAction;
 use SilverStripe\ORM\DB;
 use Psr\Log\LoggerInterface;
@@ -84,19 +85,25 @@ class BaseDataObjectExtension extends DataExtension
 
     /**
      * Quickly apply update to the model without using the ORM or changed LastEdited fields
+     * Don't mix multiple target table for your data. This first field will
+     * determine which table is used
      *
      * @param array $data
      * @return Query
      */
     public function directUpdate($data)
     {
+        if (!$this->owner->ID) {
+            return;
+        }
         $schema = DataObjectSchema::create();
-        $table = $schema->tableName(get_class($this->owner));
+        $table = $schema->tableForField(get_class($this->owner), key($data));
         $query = new SQLUpdate($table);
+        reset($data);
         foreach ($data as $k => $v) {
             $query->assign($k, $v);
         }
-        $query->addWhere('ID = ' . $this->owner->ID);
+        $query->addWhere(['ID' => $this->owner->ID]);
         return $query->execute();
     }
 
