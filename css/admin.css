@@ -445,3 +445,7 @@ select.ag-cell-edit-input {
 .cms-edit-form .columns .form-group:after {
   display: none;
 }
+
+.field input.flatpickr-alt.text[readonly] {
+  background: #fff;
+}
