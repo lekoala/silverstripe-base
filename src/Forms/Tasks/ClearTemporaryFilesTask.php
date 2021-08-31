@@ -17,6 +17,7 @@ class ClearTemporaryFilesTask extends BuildTask
 
     public function run($request)
     {
+        $this->request = $request;
         $this->addOption("go", "Tick this to remove the files", false);
         $options = $this->askOptions();
 
