@@ -195,7 +195,8 @@
     });
 
     // Clickable icons
-    $(".uploadfield-item__thumbnail").entwine({
+    // Only work with smart upload field since 4.8 thanks to silverstripe removing the url field
+    $(".field.smart-upload-field .uploadfield-item__thumbnail").entwine({
       onclick: function () {
         var id = this.parent().find("input").val();
         var uploadfield = this.parents("div.entwine-uploadfield").find("input.entwine-uploadfield");
@@ -204,7 +205,6 @@
         var opened = false;
         for (var i = 0; i < files.length; i++) {
           var item = files[i];
-          // this is not working anymore see https://github.com/silverstripe/silverstripe-asset-admin/issues/1231
           if (item.id == id && item.url) {
             window.open(item.url);
             opened = true;

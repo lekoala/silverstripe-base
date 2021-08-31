@@ -2,11 +2,14 @@
 
 namespace LeKoala\Base\Forms;
 
+use ReflectionObject;
+use LeKoala\Blocks\Block;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\Assets\Image;
+use SilverStripe\Forms\FieldList;
 use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\AssetAdmin\Forms\UploadField;
-use LeKoala\Blocks\Block;
+use SilverStripe\AssetAdmin\Controller\AssetAdmin;
 
 /**
  * Improves the default uploader by uploading to a consistent default location
@@ -40,6 +43,67 @@ class SmartUploadField extends UploadField
     public function __construct($name, $title = null, SS_List $items = null)
     {
         parent::__construct($name, $title, $items);
+
+        $this->addExtraClass("smart-upload-field");
+    }
+
+    /**
+     * Access a protected property when the api does not allow access
+     *
+     * @param object $object
+     * @param string $property
+     * @return mixed
+     */
+    protected static function getProtectedValue($object, $property)
+    {
+        $refObject = new ReflectionObject($object);
+        $refProperty = $refObject->getProperty($property);
+        $refProperty->setAccessible(true);
+        return $refProperty->getValue($object);
+    }
+
+    /**
+     * @param UploadField $uf
+     * @param FieldList $fields
+     * @return $this
+     */
+    public static function replaceField(UploadField $uf, FieldList $fields)
+    {
+        $name = $uf->getName();
+        $title = $uf->Title();
+        $items = $uf->getItems();
+
+        $new = new SmartUploadField($name, $title, $items);
+
+        $setFolderName = self::getProtectedValue($uf, "folderName");
+        if ($setFolderName) {
+            $new->setFolderName($uf);
+        }
+        $fields->replaceField($name, $new);
+
+        return $new;
+    }
+
+    /**
+     * Encode selected values for react
+     *
+     * @return array
+     */
+    protected function getEncodedItems()
+    {
+        $assetAdmin = AssetAdmin::singleton();
+        $fileData = [];
+        foreach ($this->getItems() as $file) {
+            $fileInfo = $assetAdmin->getMinimalistObjectFromData($file);
+            // See lekoala/silverstripe-encrypt
+            if ($file->Encrypted) {
+                $fileInfo['url'] = $file->getDecryptionLink();
+            } else {
+                $fileInfo['url'] = $file->getURL();
+            }
+            $fileData[] = $fileInfo;
+        }
+        return $fileData;
     }
 
     public function saveInto(DataObjectInterface $record)
