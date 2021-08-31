@@ -201,11 +201,17 @@
         var uploadfield = this.parents("div.entwine-uploadfield").find("input.entwine-uploadfield");
         var state = uploadfield.data("state");
         var files = state.data.files;
+        var opened = false;
         for (var i = 0; i < files.length; i++) {
           var item = files[i];
+          // this is not working anymore see https://github.com/silverstripe/silverstripe-asset-admin/issues/1231
           if (item.id == id && item.url) {
             window.open(item.url);
+            opened = true;
           }
+        }
+        if (!opened) {
+          console.log("Could not open file");
         }
       },
     });
