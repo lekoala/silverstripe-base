@@ -2,11 +2,10 @@
 
 namespace LeKoala\Base\Extensions;
 
-use Exception;
-use GridFieldSoftDeleteAction;
 use SilverStripe\ORM\DB;
 use Psr\Log\LoggerInterface;
 use SilverStripe\Assets\File;
+use GridFieldSoftDeleteAction;
 use SilverStripe\Assets\Image;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Forms\FieldList;
@@ -20,8 +19,8 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\ManyManyThroughList;
 use SilverStripe\ORM\UnsavedRelationList;
 use LeKoala\Base\Forms\BuildableFieldList;
-use LeKoala\Base\Forms\GridField\GridFieldHelper;
 use SilverStripe\Assets\Shortcodes\FileLink;
+use LeKoala\Base\Forms\GridField\GridFieldHelper;
 use SilverStripe\Assets\Shortcodes\FileLinkTracking;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\Forms\GridField\GridFieldDeleteAction;
@@ -483,12 +482,13 @@ class BaseDataObjectExtension extends DataExtension
                         if (!$this->owner->isChanged($field)) {
                             continue;
                         }
+                        /** @var File|BaseDataObjectExtension $rec */
                         $rec = $this->owner->$name();
                         // only write if necessary
                         if ($rec && $rec->ID && $rec->ObjectID != $this->owner->ID) {
                             $rec->ObjectID = $this->owner->ID;
                             $rec->ObjectClass = get_class($this->owner);
-                            $rec->write();
+                            $rec->writeWithoutVersionIfPossible();
                         }
                     }
                     break;
