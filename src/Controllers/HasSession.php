@@ -3,9 +3,8 @@
 namespace LeKoala\Base\Controllers;
 
 use Exception;
+use SilverStripe\Control\Controller;
 use SilverStripe\Control\Session;
-use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Core\Injector\Injector;
 
 /**
  * Trait add a static getter. We use static because we don't now if we have a context
@@ -20,10 +19,16 @@ trait HasSession
      */
     public static function getSession()
     {
-        $request = Injector::inst()->get(HTTPRequest::class);
-        try {
-            $session = $request->getSession();
-        } catch (Exception $ex) {
+        if (Controller::has_curr()) {
+            $ctrl = Controller::curr();
+            $request = $ctrl->getRequest();
+            try {
+                $session = $request->getSession();
+            } catch (Exception $ex) {
+                $session = null;
+            }
+        }
+        if (!$session) {
             $data = isset($_SESSION) ? $_SESSION : [];
             $session = new Session($data);
         }
