@@ -95,7 +95,7 @@ class BaseDataObjectExtension extends DataExtension
         if (!$this->owner->ID) {
             return;
         }
-        $schema = DataObjectSchema::create();
+        $schema = DataObjectSchema::singleton();
         $table = $schema->tableForField(get_class($this->owner), key($data));
         $query = new SQLUpdate($table);
         reset($data);

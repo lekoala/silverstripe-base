@@ -33,6 +33,11 @@ class BetterGridFieldAddExistingAutocompleter extends GridFieldAddExistingAutoco
     protected $defaultSearchFilter = 'StartsWith';
 
     /**
+     * @var array
+     */
+    protected $ignoredSearchFields = [];
+
+    /**
      * @var boolean
      */
     protected $wildcardMatch = false;
@@ -106,15 +111,24 @@ class BetterGridFieldAddExistingAutocompleter extends GridFieldAddExistingAutoco
         }
 
         $params = [];
+        $searchValue = $request->getVar('gridfield_relationsearch');
         foreach ($searchFields as $searchField) {
+            // Do we have a specific search filter myfield:myfilter ?
             $name = (strpos($searchField, ':') !== false) ? $searchField : "$searchField:" . $this->defaultSearchFilter;
 
-            $searchValue =  $request->getVar('gridfield_relationsearch');
+            $parts = explode(":", $name);
+            $searchFieldName = $parts[0];
+            if (in_array($searchFieldName, $this->ignoredSearchFields)) {
+                continue;
+            }
+
+            // If we are using partial match, add %
             if ($this->wildcardMatch && $this->defaultSearchFilter == "PartialMatch") {
                 $searchValue = str_replace(" ", "%", $searchValue);
             }
             $params[$name] = $searchValue;
         }
+
         $results = $allList
             ->subtract($gridField->getList())
             ->filterAny($params)
@@ -279,6 +293,27 @@ class BetterGridFieldAddExistingAutocompleter extends GridFieldAddExistingAutoco
     public function setWildcardMatch(bool $wildcardMatch)
     {
         $this->wildcardMatch = $wildcardMatch;
+        return $this;
+    }
+
+    /**
+     * Get the value of ignoredSearchFields
+     * @return array
+     */
+    public function getIgnoredSearchFields()
+    {
+        return $this->ignoredSearchFields;
+    }
+
+    /**
+     * Set the value of ignoredSearchFields
+     *
+     * @param array $ignoredSearchFields
+     * @return $this
+     */
+    public function setIgnoredSearchFields(array $ignoredSearchFields)
+    {
+        $this->ignoredSearchFields = $ignoredSearchFields;
         return $this;
     }
 }
