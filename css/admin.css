@@ -3,6 +3,17 @@
   color: #fff;
 }
 
+.cms-menu__header span.cms-env-marker {
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-size: 10px;
+  font-weight: bold;
+  background: red;
+  display: inline-block;
+  padding: 2px 6px;
+}
+
 /* Prevent double scroll in 4.2 */
 body.cms {
   overflow: hidden;

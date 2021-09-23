@@ -15,8 +15,32 @@ class BaseTemplateProvider implements TemplateGlobalProvider
     public static function get_template_global_variables()
     {
         return array(
-            'BoxIcon'
+            'BoxIcon',
+            'IsLive',
+            'IsDev',
+            'IsTest',
+            'DirectorEnv',
         );
+    }
+
+    public static function DirectorEnv()
+    {
+        return Director::get_environment_type();
+    }
+
+    public static function IsTest()
+    {
+        return Director::isTest();
+    }
+
+    public static function IsDev()
+    {
+        return Director::isDev();
+    }
+
+    public static function IsLive()
+    {
+        return Director::isLive();
     }
 
     /**
