@@ -366,11 +366,13 @@ class BaseDataObjectExtension extends DataExtension
             $config = $gridfield->getConfig();
 
             $GridFieldDataColumns = GridFieldHelper::getGridFieldDataColumns($config);
-            $display = $GridFieldDataColumns->getDisplayFields($gridfield);
-            foreach ($data as $k => $v) {
-                $display[$k] = $k;
+            if ($GridFieldDataColumns) {
+                $display = $GridFieldDataColumns->getDisplayFields($gridfield);
+                foreach ($data as $k => $v) {
+                    $display[$k] = $k;
+                }
+                $GridFieldDataColumns->setDisplayFields($display);
             }
-            $GridFieldDataColumns->setDisplayFields($display);
         }
     }
 
