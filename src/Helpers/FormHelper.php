@@ -90,11 +90,16 @@ class FormHelper
             $f4 = $fields->dataFieldByName($field4);
         }
         $g = new FieldGroup();
+        // Insert group before the first field
         $fields->insertBefore($field1, $g);
+
+        // Move fields inside the group
         $fields->remove($f1);
         $g->push($f1);
         $fields->remove($f2);
         $g->push($f2);
+
+        // Optional fields
         if ($field3) {
             $f3 = $fields->dataFieldByName($field3);
             $fields->remove($f3);

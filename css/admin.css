@@ -14,6 +14,17 @@
   padding: 2px 6px;
 }
 
+.form__fieldgroup.is-large > .form__fieldgroup-item {
+  min-width: 240px;
+}
+
+/* Fields groups are not properly spaced if collapsed */
+@media (max-width: 672px) {
+  form .fieldgroup .form__fieldgroup-item + .form__fieldgroup-item {
+    margin-top: 1.2308rem;
+  }
+}
+
 /* Prevent double scroll in 4.2 */
 body.cms {
   overflow: hidden;
