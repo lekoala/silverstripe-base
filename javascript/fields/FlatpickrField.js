@@ -31,6 +31,8 @@
     var $alt = $this.parent().find(".flatpickr-alt");
     var orgVal = $this.val();
 
+    $this.parent().parent().addClass("flatpickr-initialized");
+
     $alt.on("change", function () {
       var val = $(this).val();
       // without this, alternative input won't be cleared
