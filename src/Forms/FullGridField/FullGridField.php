@@ -165,7 +165,7 @@ class FullGridField extends GridField
      */
     public function getInstantSave()
     {
-        return   $this->getConfig()->getComponentByType(FullGridFieldCheckbox::class)->getInstantSave();
+        return $this->getConfig()->getComponentByType(FullGridFieldCheckbox::class)->getInstantSave();
     }
 
     /**

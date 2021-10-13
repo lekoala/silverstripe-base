@@ -433,6 +433,10 @@ class BaseDataObjectExtension extends DataExtension
      */
     public function deleteAll()
     {
+        // Cannot delete without ID
+        if (!$this->owner->ID) {
+            return;
+        }
         if ($this->isVersioned()) {
             $this->owner->deleteFromStage(Versioned::LIVE);
             $this->owner->deleteFromStage(Versioned::DRAFT);

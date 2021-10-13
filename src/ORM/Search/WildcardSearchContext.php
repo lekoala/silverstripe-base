@@ -102,6 +102,7 @@ class WildcardSearchContext extends SearchContext
 
         $count = count($searchParams);
         $isWildcardSearch = true;
+        // If we use specific set of fields, make sure we have a value for them
         if (!empty($this->wildcardFilters)) {
             $isWildcardSearch = false;
             foreach ($this->wildcardFilters as $wf) {
