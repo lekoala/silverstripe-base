@@ -48,7 +48,7 @@ class BaseAuthenticator extends MemberAuthenticator
             }
         }
 
-        if(!$member->PasswordEncryption) {
+        if (!$member->PasswordEncryption) {
             $result->addError(_t(
                 'BaseAuthenticator.PLEASERESET',
                 "Please reset your password with 'I've Lost my Password' steps below."
