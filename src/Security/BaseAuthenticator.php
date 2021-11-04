@@ -48,6 +48,14 @@ class BaseAuthenticator extends MemberAuthenticator
             }
         }
 
+        if(!$member->PasswordEncryption) {
+            $result->addError(_t(
+                'BaseAuthenticator.PLEASERESET',
+                "Please reset your password with 'I've Lost my Password' steps below."
+            ));
+            return $result;
+        }
+
         // Check empty password
         $encryptor = PasswordEncryptor::create_for_algorithm($member->PasswordEncryption);
         if ($encryptor->check($member->Password, "", $member->Salt, $member)) {
