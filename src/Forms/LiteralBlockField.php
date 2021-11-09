@@ -1,4 +1,5 @@
 <?php
+
 namespace LeKoala\Base\Forms;
 
 use SilverStripe\Forms\LiteralField;
