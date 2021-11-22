@@ -231,7 +231,7 @@ class SubsiteHelper
         SubsiteState::singleton()->setSubsiteId($currentID);
     }
 
-    public function SiteConfig($SubsiteID = 0)
+    public static function SiteConfig($SubsiteID = 0)
     {
         if (!$SubsiteID) {
             $SubsiteID = self::currentSubsiteID();
