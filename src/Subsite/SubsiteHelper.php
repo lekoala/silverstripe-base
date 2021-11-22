@@ -5,6 +5,7 @@ namespace LeKoala\Base\Subsite;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\SiteConfig\SiteConfig;
 use SilverStripe\Subsites\Model\Subsite;
 use SilverStripe\Subsites\State\SubsiteState;
 
@@ -228,5 +229,24 @@ class SubsiteHelper
             $cb($subsite->ID);
         }
         SubsiteState::singleton()->setSubsiteId($currentID);
+    }
+
+    public function SiteConfig($SubsiteID = 0)
+    {
+        if (!$SubsiteID) {
+            $SubsiteID = self::currentSubsiteID();
+        }
+        $SiteConfig = SiteConfig::get()->setDataQueryParam('Subsite.Filter', false)->filter(
+            [
+                'SubsiteID' => $SubsiteID,
+            ]
+        )->first();
+        if (!$SiteConfig) {
+            $SiteConfig = SiteConfig::current_site_config();
+        }
+        if (!$SiteConfig) {
+            $SiteConfig = new SiteConfig();
+        }
+        return $SiteConfig;
     }
 }
