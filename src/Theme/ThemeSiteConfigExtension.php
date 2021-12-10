@@ -204,12 +204,12 @@ class ThemeSiteConfigExtension extends DataExtension
             $themeTab->push($FontsGroup);
             $HeaderFont = new TextField("HeaderFontFamily");
             $FontsGroup->push($HeaderFont);
-            $HeaderFontWeight = new DropdownField("HeaderFontWeight", $this->owner->fieldLabel('HeaderFontWeight'), self::listFontWeights());
+            $HeaderFontWeight = DropdownField::create("HeaderFontWeight", $this->owner->fieldLabel('HeaderFontWeight'), self::listFontWeights());
             $HeaderFontWeight->setHasEmptyDefault(true);
             $FontsGroup->push($HeaderFontWeight);
             $BodyFont = new TextField("BodyFontFamily");
             $FontsGroup->push($BodyFont);
-            $BodyFontWeight = new DropdownField("BodyFontWeight", $this->owner->fieldLabel('BodyFontWeight'), self::listFontWeights());
+            $BodyFontWeight = DropdownField::create("BodyFontWeight", $this->owner->fieldLabel('BodyFontWeight'), self::listFontWeights());
             $BodyFontWeight->setHasEmptyDefault(true);
             $FontsGroup->push($BodyFontWeight);
             $GoogleFonts = new TextField("GoogleFonts");
@@ -218,7 +218,7 @@ class ThemeSiteConfigExtension extends DataExtension
         }
         // Theme - only if any is available
         if (!empty($cssThemes)) {
-            $CssTheme = new DropdownField("CssTheme", $this->owner->fieldLabel('CssTheme'), $cssThemes);
+            $CssTheme = DropdownField::create("CssTheme", $this->owner->fieldLabel('CssTheme'), $cssThemes);
             $CssTheme->setHasEmptyDefault(true);
             $themeTab->push($CssTheme);
         }

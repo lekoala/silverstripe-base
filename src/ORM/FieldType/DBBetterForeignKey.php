@@ -42,7 +42,7 @@ class DBBetterForeignKey extends DBForeignKey
         // Don't scaffold a dropdown for large tables, as making the list concrete
         // might exceed the available PHP memory in creating too many DataObject instances
         if ($list->count() < 100) {
-            $field = new DropdownField($this->name, $title, $list->map('ID', $titleField));
+            $field = DropdownField::create($this->name, $title, $list->map('ID', $titleField));
             $field->setHasEmptyDefault(true);
         } else {
             $field = new Select2SingleField($this->name, $title);

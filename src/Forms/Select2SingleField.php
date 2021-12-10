@@ -1,13 +1,13 @@
 <?php
+
 namespace LeKoala\Base\Forms;
 
-use SilverStripe\Forms\DropdownField;
 use SilverStripe\ORM\DataObjectInterface;
 
 /**
  * @link https://select2.org
  */
-class Select2SingleField extends DropdownField
+class Select2SingleField extends FastDropdownField
 {
     use Select2;
     use ConfigurableField;

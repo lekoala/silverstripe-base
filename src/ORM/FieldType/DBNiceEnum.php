@@ -46,7 +46,7 @@ class DBNiceEnum extends DBEnum
             $name = $this->getName();
         }
 
-        $field = new DropdownField($name, $title, $this->toArray(), $value);
+        $field = DropdownField::create($name, $title, $this->toArray(), $value);
         if ($hasEmpty) {
             $field->setEmptyString($emptyString);
         }

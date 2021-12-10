@@ -2,6 +2,10 @@
 Name: base-forms
 ---
 SilverStripe\Core\Injector\Injector:
+  LeKoala\GeoTools\Fields\TimezoneDropdown:
+    class: LeKoala\Base\Forms\TimezoneDropdownField
+  SilverStripe\Forms\DropdownField:
+    class: LeKoala\Base\Forms\FastDropdownField
   SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter:
     class: LeKoala\Base\Forms\GridField\BetterGridFieldAddExistingAutocompleter
   SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor:
@@ -22,8 +26,8 @@ SilverStripe\Core\Injector\Injector:
       - [setTimeOptions]
 SilverStripe\Forms\FormField:
   # casting:
-    # This makes graphql crash so don't use it
-    # Title: 'HTMLFragment' # allow using html in field titles
+  # This makes graphql crash so don't use it
+  # Title: 'HTMLFragment' # allow using html in field titles
   extensions:
     - LeKoala\Base\Forms\Extensions\BaseFieldExtension
 SilverStripe\Forms\GridField\GridField:
@@ -33,4 +37,4 @@ SilverStripe\Versioned\VersionedGridFieldItemRequest:
   extensions:
     - LeKoala\Base\Forms\GridField\VersionedGridFieldItemRequestExtension
 LeKoala\Base\Forms\InputMaskDateTimeField:
-  default_input_format: 'auto'
+  default_input_format: "auto"

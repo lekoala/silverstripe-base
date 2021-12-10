@@ -2,57 +2,58 @@
 
 namespace LeKoala\Base\Forms;
 
+use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\DropdownField;
 
 /**
  * Useful when rendering lots of dropdown fields on a given page
- * Simply prerender the template and clone this field instance
+ * Do not use DropdownField.ss to get more performance
  *
- * You can then change name, class, id and value
+ * SilverStripe\Core\Injector\Injector:
+ *   SilverStripe\Forms\DropdownField:
+ *     class: LeKoala\Base\Forms\FastDropdownField
  */
 class FastDropdownField extends DropdownField
 {
-    protected $prerender;
-    protected $prerenderAttrs = [];
-
-    public function prerenderTemplate()
+    /**
+     * @param FieldList $fields
+     * @param DropdownField $field
+     * @return $this
+     */
+    public static function replaceField(FieldList $fields, DropdownField $field)
     {
-        $this->prerenderAttrs = [
-            'name' => $this->getName(),
-            'class' => $this->extraClass(),
-            'id' => $this->ID(),
-        ];
-        $this->prerender = $this->Field();
+        $newField = $field->castedCopy(FastDropdownField::class);
+        $fields->replaceField($field->getName(), $newField);
+        return $newField;
     }
 
     public function Field($properties = [])
     {
-        if (empty($properties) && $this->prerender) {
-            /*
-            Should be
-            <select name="Invoices[GridFieldEditableColumns][XXX][RecordID]" class="dropdown editable-column-field" id="Form_FormField_GridFieldEditableColumns_XXX_RecordID">
-            <option value="">Please select</option>
-            <option value="ID">Name</option>
-            ....
-    */
+        $options = [];
 
-            /*
-            Prerender gives
- <select name="_Default" class="dropdown" id="Default">
-    <option value="" selected="selected">Please select</option>
-    <option value="ID">Name</option>
-             */
-
-            $this->prerender = str_replace('name="' . $this->prerenderAttrs['name'] . '"', 'name="' . $this->getName() . '"', $this->prerender);
-            $this->prerender = str_replace('class="' . $this->prerenderAttrs['class'] . '"', 'class="' . $this->extraClass() . '"', $this->prerender);
-            $this->prerender = str_replace('id="' . $this->prerenderAttrs['id'] . '"', 'id="' . $this->ID() . '"', $this->prerender);
-
-            $this->prerender = str_replace('selected="selected"', "", $this->prerender);
-            $this->prerender = str_replace('option value="' . $this->Value() . '"', 'option value="' . $this->Value() . '" selected="selected"', $this->prerender);
-            return $this->prerender;
+        // Add all options
+        foreach ($this->getSourceEmpty() as $value => $title) {
+            $selected = $this->isSelectedValue($value, $this->Value());
+            if ($selected) {
+                $selected = ' selected="selected"';
+            }
+            $disabled = false;
+            if ($this->isDisabledValue($value) && $title != $this->getEmptyString()) {
+                $disabled = ' disabled';
+            }
+            $item = '<option value="' . $value . '"' . $selected . $disabled . '>' . $title . '</option>';
+            $options[] = $item;
         }
 
-        $result = parent::Field($properties);
+        $this->extend('onBeforeRender', $this, $properties);
+
+        // Do not render using template engine because it's really slow for Options
+        // Added benefit: your html source won't look like a total mess
+        $AttributesHTML = $this->getAttributesHTML($properties);
+        $OptionsHTML = implode("\n", $options);
+
+        $result = "<select $AttributesHTML>\n$OptionsHTML\n</select>";
+
         return $result;
     }
 
