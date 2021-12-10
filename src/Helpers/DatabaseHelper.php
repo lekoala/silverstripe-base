@@ -5,8 +5,10 @@ namespace LeKoala\Base\Helpers;
 use Exception;
 use SqlFormatter;
 use SilverStripe\ORM\DB;
+use SilverStripe\ORM\Queries\SQLUpdate;
 use SilverStripe\SQLite\SQLite3Database;
 use SilverStripe\ORM\Connect\MySQLDatabase;
+use SilverStripe\ORM\Queries\SQLInsert;
 use \SilverStripe\View\Parsers\SQLFormatter as SS_SQLFormatter;
 
 /**
@@ -127,6 +129,7 @@ class DatabaseHelper
      */
     public static function findDuplicates($table, $column, $ignoreNull = true)
     {
+        $table = preg_replace('/[^a-zA-Z_]*/', '', $table);
         $where = '';
         if ($ignoreNull) {
             $where = " WHERE $column IS NOT NULL";
@@ -143,5 +146,46 @@ HAVING
     COUNT(*) > 1
 SQL;
         return iterator_to_array(DB::query($sql));
+    }
+
+    public static function update($table, $data, $id)
+    {
+        $query = new SQLUpdate($table);
+        reset($data);
+        foreach ($data as $k => $v) {
+            $query->assign($k, $v);
+        }
+        $query->addWhere(['ID' => $id]);
+        return $query->execute();
+    }
+
+    public static function insert($table, $data)
+    {
+        $query = new SQLInsert($table);
+        reset($data);
+        foreach ($data as $k => $v) {
+            $query->assign($k, $v);
+        }
+        return $query->execute();
+    }
+
+    public static function fastCount($table, $where = [])
+    {
+        $table = preg_replace('/[^a-zA-Z_]*/', '', $table);
+        $sql = "SELECT COUNT(ID) FROM $table";
+        $params = [];
+        $keys = [];
+        if (!empty($where)) {
+            foreach ($where as $k => $v) {
+                if (is_array($v)) {
+                    $keys[] = "$k IN (" . implode(",", $v) . ")";
+                } else {
+                    $keys[] = "$k = ?";
+                    $params[] = $v;
+                }
+            }
+            $sql .= " WHERE " . implode(" AND ", $keys);
+        }
+        return (int) DB::prepared_query($sql, $params)->value();
     }
 }
