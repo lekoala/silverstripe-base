@@ -119,6 +119,11 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
         Requirements::javascript($link);
     }
 
+    public function BaseMenu()
+    {
+        return $this->owner->renderWith($this->owner->getTemplatesWithSuffix('_BaseMenu'));
+    }
+
     /**
      * Hide items if necessary, example yml:
      *

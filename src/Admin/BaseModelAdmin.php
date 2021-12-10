@@ -3,7 +3,10 @@
 namespace LeKoala\Base\Admin;
 
 use SilverStripe\Forms\Form;
+use SilverStripe\Core\Convert;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\View\ArrayData;
 use SilverStripe\Admin\ModelAdmin;
 use LeKoala\Base\Helpers\ClassHelper;
 use SilverStripe\Control\HTTPRequest;
@@ -35,9 +38,37 @@ abstract class BaseModelAdmin extends ModelAdmin
 
     private static $allowed_actions = array(
         'customResponse',
+        'ShowSpec',
         'ImportForm',
         'SearchForm'
     );
+
+    public function ShowSpec()
+    {
+        $modelSNG = singleton($this->owner->modelClass);
+        $modelName = $modelSNG->i18n_singular_name();
+        $importers = $this->getModelImporters();
+        // get HTML specification for each import (column names etc.)
+        $importerClass = $importers[$this->modelTab];
+        /** @var BulkLoader $importer */
+        $importer = new $importerClass($this->modelClass);
+        $spec = $importer->getImportSpec();
+        $specFields = new ArrayList();
+        foreach ($spec['fields'] as $name => $desc) {
+            $specFields->push(new ArrayData(array('Name' => $name, 'Description' => $desc)));
+        }
+        $specRelations = new ArrayList();
+        foreach ($spec['relations'] as $name => $desc) {
+            $specRelations->push(new ArrayData(array('Name' => $name, 'Description' => $desc)));
+        }
+        $specHTML = $this->customise(array(
+            'ClassName' => $this->sanitiseClassName($this->modelClass),
+            'ModelName' => Convert::raw2att($modelName),
+            'Fields' => $specFields,
+            'Relations' => $specRelations,
+        ))->renderWith(['EmptyPage', $this->getTemplatesWithSuffix('_ShowSpec')]);
+        return $specHTML;
+    }
 
     public function getManagedModels()
     {

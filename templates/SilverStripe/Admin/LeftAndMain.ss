@@ -29,7 +29,7 @@
     </div>
 
 	<div class="cms-container" data-layout-type="custom">
-		$Menu
+		$BaseMenu
 		$Content
 		$PreviewPanel
     </div>
