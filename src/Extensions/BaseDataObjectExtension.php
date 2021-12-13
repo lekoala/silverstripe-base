@@ -21,7 +21,10 @@ use SilverStripe\ORM\UnsavedRelationList;
 use LeKoala\Base\Forms\BuildableFieldList;
 use SilverStripe\Assets\Shortcodes\FileLink;
 use LeKoala\Base\Forms\GridField\GridFieldHelper;
+use SilverStripe\Admin\LeftAndMain;
+use SilverStripe\Admin\ModelAdmin;
 use SilverStripe\Assets\Shortcodes\FileLinkTracking;
+use SilverStripe\Control\Controller;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\Forms\GridField\GridFieldDeleteAction;
 use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
@@ -104,6 +107,35 @@ class BaseDataObjectExtension extends DataExtension
         }
         $query->addWhere(['ID' => $this->owner->ID]);
         return $query->execute();
+    }
+
+    public function isBeingEdited()
+    {
+        if (!Controller::has_curr()) {
+            return false;
+        }
+        /** @var LeftAndMain $ctrl  */
+        $ctrl = Controller::curr();
+        if (!$ctrl instanceof LeftAndMain) {
+            return false;
+        }
+        if ($ctrl instanceof ModelAdmin) {
+            // This is the base class being edited, it does not take into account the EditForm
+            // if ($ctrl->getModelClass() != get_class($this->owner)) {
+            //     return false;
+            // }
+            // This is a bit of a hack
+            $ID = $this->owner->ID;
+
+            $url = $ctrl->getRequest()->getURL();
+            if ($ctrl->getRequest()->isPOST()) {
+                // Current url is alway /ItemEditForm because we are posting
+                $url = $ctrl->getBackURL();
+            }
+            return strpos($url, "/item/$ID/edit") !== false;
+        }
+
+        return $this->owner->ID == $ctrl->currentPageID();
     }
 
     /**
