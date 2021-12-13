@@ -1,4 +1,5 @@
 <?php
+
 namespace LeKoala\Base\Forms;
 
 use SilverStripe\Forms\LiteralField;
@@ -46,7 +47,14 @@ class AlertField extends LiteralField
         $type = $this->alertType;
 
         // Wrap in an alert
-        $content = "<div class=\"alert alert-$type\" role=\"alert\">$content</div>";
+        $extraClasses = $this->extraClasses;
+        if (is_array($extraClasses)) {
+            $extraClasses = implode(" ", $extraClasses);
+        }
+        if ($extraClasses) {
+            $extraClasses = " " . $extraClasses;
+        }
+        $content = "<div class=\"alert alert-$type{$extraClasses}\" role=\"alert\">$content</div>";
 
         return $content;
     }
