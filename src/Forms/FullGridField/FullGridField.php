@@ -180,6 +180,48 @@ class FullGridField extends GridField
         return $this;
     }
 
+    /**
+     * Get the value of onAdd
+     * @return Closure
+     */
+    public function getOnAdd()
+    {
+        return $this->getConfig()->getComponentByType(FullGridFieldCheckbox::class)->getOnAdd();
+    }
+
+    /**
+     * Set the value of onAdd
+     *
+     * @param Closure $onAdd
+     * @return $this
+     */
+    public function setOnAdd($onAdd)
+    {
+        $this->getConfig()->getComponentByType(FullGridFieldCheckbox::class)->setOnAdd($onAdd);
+        return $this;
+    }
+
+    /**
+     * Get the value of onRemove
+     * @return Closure
+     */
+    public function getOnRemove()
+    {
+        return $this->getConfig()->getComponentByType(FullGridFieldCheckbox::class)->getOnRemove();
+    }
+
+    /**
+     * Set the value of onRemove
+     *
+     * @param Closure $onRemove
+     * @return $this
+     */
+    public function setOnRemove($onRemove)
+    {
+        $this->getConfig()->getComponentByType(FullGridFieldCheckbox::class)->setOnRemove($onRemove);
+        return $this;
+    }
+
     public function createDefaultConfig()
     {
         $config = GridFieldConfig::create();

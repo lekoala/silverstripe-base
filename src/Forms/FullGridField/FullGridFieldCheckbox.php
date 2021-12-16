@@ -2,9 +2,12 @@
 
 namespace LeKoala\Base\Forms\FullGridField;
 
+use Closure;
 use Exception;
 use SilverStripe\ORM\SS_List;
+use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\ManyManyList;
 use SilverStripe\View\Requirements;
 use SilverStripe\Forms\LiteralField;
 use LeKoala\Base\Helpers\ClassHelper;
@@ -16,7 +19,6 @@ use SilverStripe\Forms\GridField\GridField_SaveHandler;
 use SilverStripe\Forms\GridField\GridField_HTMLProvider;
 use SilverStripe\Forms\GridField\GridField_ColumnProvider;
 use SilverStripe\Forms\GridField\GridField_DataManipulator;
-use SilverStripe\ORM\DataList;
 
 /**
  * The checkbox handles adding or removing the record to the relation
@@ -73,6 +75,16 @@ class FullGridFieldCheckbox implements GridField_SaveHandler, GridField_ColumnPr
      * @var bool
      */
     protected $instantSave = false;
+
+    /**
+     * @var Closure
+     */
+    protected $onAdd = null;
+
+    /**
+     * @var Closure
+     */
+    protected $onRemove = null;
 
     /**
      * Get the value of preventRemove
@@ -162,6 +174,10 @@ class FullGridFieldCheckbox implements GridField_SaveHandler, GridField_ColumnPr
 
         foreach ($toAdd as $k => $id) {
             $list->add($id);
+            if ($this->onAdd) {
+                $cb = $this->onAdd;
+                $cb($id, $rel, $record);
+            }
         }
         if ($this->preventRemove) {
             // Do nothing
@@ -171,6 +187,10 @@ class FullGridFieldCheckbox implements GridField_SaveHandler, GridField_ColumnPr
                     // Do nothing
                 } else {
                     $list->removeByID($id);
+                    if ($this->onRemove) {
+                        $cb = $this->onRemove;
+                        $cb($id, $rel, $record);
+                    }
                 }
             }
         }
@@ -203,18 +223,26 @@ class FullGridFieldCheckbox implements GridField_SaveHandler, GridField_ColumnPr
 
         $rel = $this->saveToRelation ? $this->saveToRelation : $name;
 
-        /* @var $list ManyManyList */
+        /** @var ManyManyList $list */
         $list = $record->$rel();
 
         $msg = "Something wrong happened";
         if ($checked) {
             $list->add($id);
+            if ($this->onAdd) {
+                $cb = $this->onAdd;
+                $cb($id, $rel, $record);
+            }
             $msg = "Record added";
         } else {
             if (in_array($id, $this->cannotBeRemovedIDs)) {
                 // Do nothing
             } else {
                 $list->removeByID($id);
+                if ($this->onRemove) {
+                    $cb = $this->onRemove;
+                    $cb($id, $rel, $record);
+                }
                 $msg = "Record removed";
             }
         }
@@ -451,6 +479,48 @@ class FullGridFieldCheckbox implements GridField_SaveHandler, GridField_ColumnPr
     public function setKeepList($keepList)
     {
         $this->keepList = $keepList;
+        return $this;
+    }
+
+    /**
+     * Get the value of onAdd
+     * @return Closure
+     */
+    public function getOnAdd()
+    {
+        return $this->onAdd;
+    }
+
+    /**
+     * Set the value of onAdd
+     *
+     * @param Closure $onAdd
+     * @return $this
+     */
+    public function setOnAdd($onAdd)
+    {
+        $this->onAdd = $onAdd;
+        return $this;
+    }
+
+    /**
+     * Get the value of onRemove
+     * @return Closure
+     */
+    public function getOnRemove()
+    {
+        return $this->onRemove;
+    }
+
+    /**
+     * Set the value of onRemove
+     *
+     * @param Closure $onRemove
+     * @return $this
+     */
+    public function setOnRemove($onRemove)
+    {
+        $this->onRemove = $onRemove;
         return $this;
     }
 }
