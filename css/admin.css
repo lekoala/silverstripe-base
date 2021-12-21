@@ -471,3 +471,8 @@ select.ag-cell-edit-input {
 .field input.flatpickr-alt.text[readonly] {
   background: #fff;
 }
+
+.chosen-container-single .chosen-single abbr {
+  top: 50%;
+  transform: translateY(-50%);
+}
