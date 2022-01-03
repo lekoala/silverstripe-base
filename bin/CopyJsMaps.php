@@ -26,4 +26,13 @@ foreach ($maps as $map) {
     }
 }
 
+// Remove map from popper
+$popper =  $baseDir . "/vendor/silverstripe/admin/thirdparty/popper/popper.min.js";
+if (is_file($popper)) {
+    $contents = file_get_contents($popper);
+    $contents = str_replace("//# sourceMappingURL=popper.min.js.map", "", $contents);
+    file_put_contents($popper, $contents);
+    echo "Removing map from popper\n";
+}
+
 echo "All done\n";
