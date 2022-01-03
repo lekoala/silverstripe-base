@@ -126,7 +126,7 @@ class ThemeControllerExtension extends Extension
                     // if (Director::isDev()) {
                     //     $ignore[] = $minFile;
                     // } else {
-                        continue;
+                    continue;
                     // }
                 }
                 $name = basename($file);
@@ -252,6 +252,11 @@ class ThemeControllerExtension extends Extension
         if ($minifier) {
             $cssFileContent = $minifier->minify($cssFileContent, 'css', $outputFile);
         }
+
+        // Remove map
+        $cssFileContent = preg_replace("/\/\*#.*\*\//", "", $cssFileContent);
+
+        // Add timestamp
         $date = date('Y-m-d H:i:s');
         $cssFileContent = "/* Compiled on $date*/\n" . $cssFileContent;
         file_put_contents($outputFile, $cssFileContent);
