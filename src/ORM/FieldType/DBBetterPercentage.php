@@ -22,6 +22,7 @@ class DBBetterPercentage extends DBPercentage
     public function scaffoldFormField($title = null, $params = null)
     {
         $field = new InputMaskPercentageField($this->name, $title);
+        // In SilverStripe, percentage are stored like 1% = 0.01
         $field->setIsDecimal(true);
         //TODO : handle % over 100 with a given condition
         return $field;

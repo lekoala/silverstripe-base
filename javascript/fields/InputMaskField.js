@@ -1,5 +1,9 @@
 /* global Inputmask */
 (function ($) {
+  function decimalmultiply(a, b) {
+    return parseFloat((a * b).toFixed(12));
+  }
+
   ModularBehaviour.addOptionsTransformer("inputmask", function (opts, el) {
     var $this = $(el);
 
@@ -22,6 +26,10 @@
     var dataformat = $this.data("dataformat");
     var isDecimal = $this.data("isDecimal");
     var config = opts;
+
+    if (isDecimal) {
+      $this.val(decimalmultiply(val, 100));
+    }
 
     // Avoid original field being saved (but send the formatted data as a convenience)
     var formattedName = name + "Formatted";
@@ -65,7 +73,8 @@
   });
 
   ModularBehaviour.addAfterInitHook("inputmask", function (inst, el, opts) {
+    var $this = $(el);
     // Trigger blur to compute value
-    $(el).trigger("blur");
+    $this.trigger("blur");
   });
 })(jQuery);

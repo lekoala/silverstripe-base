@@ -221,8 +221,8 @@ class InputMaskField extends TextField
 
         if ($useV5) {
             // in v5, lib name is jquery.inputmask
-            Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.6/jquery.inputmask.min.js");
-            // Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.6/inputmask.min.js");
+            Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.7/jquery.inputmask.min.js");
+            // Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.7/inputmask.min.js");
             // Use version alias from jsdelivr
             // Requirements::javascript("https://cdn.jsdelivr.net/npm/inputmask@5/dist/inputmask.min.js");
         } else {

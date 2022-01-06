@@ -20,9 +20,9 @@ class InputMaskPercentageField extends InputMaskNumericField
 
     public function setValue($value, $data = null)
     {
-        if ($this->isDecimal) {
-            $value = $value * 100;
-        }
+        // if ($this->isDecimal) {
+        //     $value = $value * 100;
+        // }
         return parent::setValue($value, $data);
     }
 
@@ -37,9 +37,9 @@ class InputMaskPercentageField extends InputMaskNumericField
     public function dataValue()
     {
         $value = parent::dataValue();
-        if ($this->isDecimal) {
-            $value = $value / 100;
-        }
+        // if ($this->isDecimal) {
+        //     $value = $value / 100;
+        // }
         return $value;
     }
 
