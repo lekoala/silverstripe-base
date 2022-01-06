@@ -62,7 +62,7 @@
       }
       // Decimal %
       if (isDecimal) {
-        val = val / 100;
+        val = decimalmultiply(val, 0.01);
       }
       // Otherwise unmasked value is not using proper decimal separator
       if (config && config.radixPoint === ",") {
@@ -74,6 +74,8 @@
 
   ModularBehaviour.addAfterInitHook("inputmask", function (inst, el, opts) {
     var $this = $(el);
+    // Remove readonly
+    $this.removeAttr("readonly");
     // Trigger blur to compute value
     $this.trigger("blur");
   });
