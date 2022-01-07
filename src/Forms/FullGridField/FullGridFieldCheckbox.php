@@ -307,7 +307,11 @@ class FullGridFieldCheckbox implements GridField_SaveHandler, GridField_ColumnPr
         }
 
         if ($this->ids === null) {
-            $this->ids = $gridField->getList()->column('ID');
+            if ($this->keepList) {
+                $this->ids = [];
+            } else {
+                $this->ids = $gridField->getList()->column('ID');
+            }
         }
 
         // Is checked?
@@ -474,11 +478,13 @@ class FullGridFieldCheckbox implements GridField_SaveHandler, GridField_ColumnPr
 
     /**
      * @param bool $keepList
+     * @param array $ids
      * @return $this
      */
-    public function setKeepList($keepList)
+    public function setKeepList($keepList, $ids = null)
     {
         $this->keepList = $keepList;
+        $this->ids = $ids;
         return $this;
     }
 
