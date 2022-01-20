@@ -319,7 +319,7 @@ box-shadow ease-in-out .15s !default;
             .select2-search__field {
                 background: transparent;
                 padding: 0 $s2bs-padding-base-horizontal;
-                height: $s2bs-input-height-base - 2;
+                height: $s2bs-input-height-base;
                 line-height: $s2bs-line-height;
                 margin-top: 0;
                 min-width: 5em;
@@ -368,7 +368,7 @@ box-shadow ease-in-out .15s !default;
         .select2-search--inline .select2-search__field {
             padding: 0 $s2bs-padding-small-horizontal;
             font-size: $s2bs-font-size-small;
-            height: $s2bs-input-height-small - 2;
+            height: $s2bs-input-height-small;
             line-height: $s2bs-line-height;
         }
         .select2-selection__clear {
@@ -408,7 +408,7 @@ box-shadow ease-in-out .15s !default;
         .select2-search--inline .select2-search__field {
             padding: 0 $s2bs-padding-large-horizontal;
             font-size: $s2bs-font-size-large;
-            height: $s2bs-input-height-large - 2;
+            height: $s2bs-input-height-large;
             line-height: $s2bs-line-height;
         }
         .select2-selection__clear {

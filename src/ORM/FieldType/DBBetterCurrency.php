@@ -51,6 +51,17 @@ class DBBetterCurrency extends DBCurrency
     }
 
     /**
+     * Format the amount
+     *
+     * @param integer $decimals
+     * @return string
+     */
+    public function Decimals($decimals = 2)
+    {
+        return $this->formattedNumber($this->value, $decimals);
+    }
+
+    /**
      * Return an html friendly version of the amount without breaking spaces
      *
      * @param integer $decimals

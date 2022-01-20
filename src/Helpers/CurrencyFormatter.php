@@ -108,7 +108,7 @@ trait CurrencyFormatter
     /**
      * Get grouping separator
      *
-     * @return strubg
+     * @return string
      */
     public function getCurrencyGroupingSeparator()
     {
@@ -128,7 +128,8 @@ trait CurrencyFormatter
     /**
      * Get nicely formatted currency (based on current locale)
      *
-     * @param $amount
+     * @param float $amount
+     * @param int $decimals
      * @return string
      */
     public function formattedCurrency($amount, $decimals = 2)
@@ -146,7 +147,7 @@ trait CurrencyFormatter
         if (!$currency) {
             $symbol = $this->getCurrencySymbol();
             $pos = $this->getDefaultCurrencyPosition();
-            $fmt =  number_format(abs($amount), $decimals, $this->getCurrencyDecimalSeparator(), $this->getCurrencyGroupingSeparator());;
+            $fmt = $this->formattedNumber($amount, $decimals);
             if ($pos == 'after') {
                 $ret = "$fmt $symbol";
             } else {
@@ -162,6 +163,16 @@ trait CurrencyFormatter
         }
 
         return $ret;
+    }
+
+    public function formattedNumber($amount, $decimals = 2)
+    {
+        return number_format(
+            abs($amount),
+            $decimals,
+            $this->getCurrencyDecimalSeparator(),
+            $this->getCurrencyGroupingSeparator()
+        );
     }
 
     /**
