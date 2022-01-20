@@ -131,6 +131,7 @@ class ContactSubmission extends DataObject
         $ex = null;
         try {
             $emailInst = Email::create();
+            $emailInst->setHTMLTemplate('Email\\BaseEmail');
             $emailInst->setTo($address);
             $emailInst->setSubject($e_subject);
             // $emailInst->setBody($msg);
