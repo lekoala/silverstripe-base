@@ -8,23 +8,20 @@ use SilverStripe\ORM\DB;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Security\Member;
-use LeKoala\Base\Helpers\IPHelper;
 use SilverStripe\Control\Director;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\Security\Security;
 use LeKoala\CmsActions\CustomAction;
-use SilverStripe\Core\Config\Config;
 use SilverStripe\GraphQL\Controller;
 use SilverStripe\Admin\SecurityAdmin;
 use SilverStripe\Security\Permission;
 use LeKoala\Base\Security\MemberAudit;
+use LeKoala\CommonExtensions\ValidationStatusExtension;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\LoginAttempt;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Security\IdentityStore;
-use LeKoala\Base\Security\BaseAuthenticator;
 use SilverStripe\Security\DefaultAdminService;
-use LeKoala\CommonExtensions\ValidationStatusExtension;
 use SilverStripe\Forms\GridField\GridFieldAddNewButton;
 use SilverStripe\Security\MemberAuthenticator\MemberAuthenticator;
 use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
@@ -98,15 +95,16 @@ class BaseMemberExtension extends DataExtension
         if (Permission::check('ADMIN', 'any', $this->owner)) {
             return;
         }
-        // If MemberValidationStatus extension is applied, check validation status
-        if ($this->owner->hasExtension(ValidationStatusExtension::class)) {
-            if ($this->owner->IsValidationStatusPending()) {
-                $result->addError(_t('BaseMemberExtension.ACCOUNT_PENDING', "Your account is currently pending"));
-            }
-            if ($this->owner->IsValidationStatusDisabled()) {
-                $result->addError(_t('BaseMemberExtension.ACCOUNT_DISABLED', "Your account has been disabled"));
-            }
-        }
+    }
+
+    public function onValidationDisable()
+    {
+        $this->owner->audit('Validation Status Changed', ['Status' => ValidationStatusExtension::VALIDATION_STATUS_DISABLED]);
+    }
+
+    public function onValidationApprove()
+    {
+        $this->owner->audit('Validation Status Changed', ['Status' => ValidationStatusExtension::VALIDATION_STATUS_APPROVED]);
     }
 
     public function onBeforeWrite()
