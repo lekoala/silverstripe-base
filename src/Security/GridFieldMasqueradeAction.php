@@ -1,9 +1,12 @@
 <?php
+
 namespace LeKoala\Base\Security;
 
-use SilverStripe\Control\Session;
+use SilverStripe\ORM\DataList;
+use SilverStripe\Security\Member;
+use LeKoala\CmsActions\GridFieldRowButton;
+use LeKoala\Base\Security\MasqueradeMember;
 use SilverStripe\Forms\GridField\GridField;
-use LeKoala\Base\Forms\GridField\GridFieldRowButton;
 
 /**
  * Add a button to masquerade users
@@ -19,7 +22,7 @@ class GridFieldMasqueradeAction extends GridFieldRowButton
         return 'masquerade';
     }
 
-    public function getButtonLabel()
+    public function getButtonLabel(GridField $gridField, $record, $columnName)
     {
         return 'Login As';
     }
@@ -35,13 +38,15 @@ class GridFieldMasqueradeAction extends GridFieldRowButton
      */
     public function doHandle(GridField $gridField, $actionName, $arguments, $data)
     {
-        /* @var $item Company */
-        $item = $gridField->getList()->byID($arguments['RecordID']);
+        /** @var DataList $list  */
+        $list = $gridField->getList();
+        /** @var Member|MasqueradeMember $item  */
+        $item = $list->byID($arguments['RecordID']);
         if (!$item) {
             return;
         }
 
-        $member->masqueradeSession();
+        $item->masqueradeSession();
 
         // Save session because we circumvent SS response
         $session = $gridField->getRequest()->getSession();
