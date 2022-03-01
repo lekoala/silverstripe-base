@@ -15,7 +15,7 @@ use SilverStripe\Control\HTTPRequest;
  */
 class CookiesRequiredPageController extends PageController
 {
-    public function init()
+    protected function init()
     {
         parent::init();
         CookieConsent::clearRequirements();

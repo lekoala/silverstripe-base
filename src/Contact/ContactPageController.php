@@ -36,7 +36,7 @@ class ContactPageController extends \PageController
     ];
 
 
-    public function init()
+    protected function init()
     {
         parent::init();
 

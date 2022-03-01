@@ -21,7 +21,7 @@ class FaqPageController extends \PageController
         "index",
     ];
 
-    public function init()
+    protected function init()
     {
         parent::init();
 

@@ -37,7 +37,7 @@ class NewsPageController extends \PageController
      */
     protected $list;
 
-    public function init()
+    protected function init()
     {
         parent::init();
         $this->list = $this->DisplayedItems();
