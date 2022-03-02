@@ -12,6 +12,7 @@ use SilverStripe\View\Requirements;
 use SilverStripe\Forms\LiteralField;
 use LeKoala\Base\Helpers\ClassHelper;
 use SilverStripe\Forms\CheckboxField;
+use SilverStripe\Forms\CompositeField;
 use SilverStripe\ORM\Queries\SQLSelect;
 use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\Forms\GridField\GridField;
@@ -19,6 +20,7 @@ use SilverStripe\Forms\GridField\GridField_SaveHandler;
 use SilverStripe\Forms\GridField\GridField_HTMLProvider;
 use SilverStripe\Forms\GridField\GridField_ColumnProvider;
 use SilverStripe\Forms\GridField\GridField_DataManipulator;
+use SilverStripe\Forms\HiddenField;
 
 /**
  * The checkbox handles adding or removing the record to the relation
@@ -337,7 +339,11 @@ class FullGridFieldCheckbox implements GridField_SaveHandler, GridField_ColumnPr
             $cb->setValue(1);
             // Cannot be removed
             if ($cannotBeRemoved) {
-                return $cb->setDisabled(true)->Field();
+                // Send value anyway
+                $hidden = HiddenField::create('FullGridSelect[' . $gridField->getName() . '][' . $record->ID . ']')->setValue(1)->Field();
+                $cb = $cb->setDisabled(true)->setName('FullGridSelectDisabled[' . $gridField->getName() . '][' . $record->ID . ']')->Field();
+                $compo = new LiteralField("FullGridSelectCb" . $record->ID, $hidden . $cb);
+                return $compo->Field();
             }
         }
 
