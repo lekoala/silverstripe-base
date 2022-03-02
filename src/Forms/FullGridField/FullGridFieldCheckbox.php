@@ -87,6 +87,16 @@ class FullGridFieldCheckbox implements GridField_SaveHandler, GridField_ColumnPr
     protected $onRemove = null;
 
     /**
+     * @var string
+     */
+    protected $confirmMessage = "Are you sure you want to add this record ?";
+
+    /**
+     * @var array
+     */
+    protected $confirmMessageList = [];
+
+    /**
      * Get the value of preventRemove
      * @return bool
      */
@@ -301,6 +311,14 @@ class FullGridFieldCheckbox implements GridField_SaveHandler, GridField_ColumnPr
 
         $cb = CheckboxField::create('FullGridSelect[' . $gridField->getName() . '][' . $record->ID . ']', '')
             ->addExtraClass('FullGridSelect no-change-track');
+
+        if ($this->confirmMessage) {
+            if (!empty($this->confirmMessageList) && in_array($record->ID, $this->confirmMessageList)) {
+                $cb->setAttribute("data-confirm-message", $this->confirmMessage);
+            } elseif (empty($this->confirmMessage)) {
+                $cb->setAttribute("data-confirm-message", $this->confirmMessage);
+            }
+        }
 
         if ($this->instantSave) {
             $cb->addExtraClass('FullGridSelect-instantSave');
@@ -527,6 +545,42 @@ class FullGridFieldCheckbox implements GridField_SaveHandler, GridField_ColumnPr
     public function setOnRemove($onRemove)
     {
         $this->onRemove = $onRemove;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getConfirmMessage()
+    {
+        return $this->confirmMessage;
+    }
+
+    /**
+     * @param string $confirmMessage
+     * @return $this
+     */
+    public function setConfirmMessage($confirmMessage)
+    {
+        $this->confirmMessage = $confirmMessage;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getConfirmMessageList()
+    {
+        return $this->confirmMessageList;
+    }
+
+    /**
+     * @param array $confirmMessageList
+     * @return $this
+     */
+    public function setConfirmMessageList($confirmMessageList)
+    {
+        $this->confirmMessageList = $confirmMessageList;
         return $this;
     }
 }

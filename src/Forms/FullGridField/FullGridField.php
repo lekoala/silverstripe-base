@@ -222,6 +222,42 @@ class FullGridField extends GridField
         return $this;
     }
 
+    /**
+     * @return string
+     */
+    public function getConfirmMessage()
+    {
+        return  $this->getConfig()->getComponentByType(FullGridFieldCheckbox::class)->getConfirmMessage();
+    }
+
+    /**
+     * @param string $confirmMessage
+     * @return $this
+     */
+    public function setConfirmMessage($confirmMessage)
+    {
+        $this->getConfig()->getComponentByType(FullGridFieldCheckbox::class)->setConfirmMessage($confirmMessage);
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getConfirmMessageList()
+    {
+        return  $this->getConfig()->getComponentByType(FullGridFieldCheckbox::class)->getConfirmMessageList();
+    }
+
+    /**
+     * @param array $confirmMessageList
+     * @return $this
+     */
+    public function setConfirmMessageList($confirmMessageList)
+    {
+        $this->getConfig()->getComponentByType(FullGridFieldCheckbox::class)->setConfirmMessageList($confirmMessageList);
+        return $this;
+    }
+
     public function createDefaultConfig()
     {
         $config = GridFieldConfig::create();
