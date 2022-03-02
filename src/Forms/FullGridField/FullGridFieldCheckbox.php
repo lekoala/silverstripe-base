@@ -334,11 +334,11 @@ class FullGridFieldCheckbox implements GridField_SaveHandler, GridField_ColumnPr
 
         // Is checked?
         if (in_array($record->ID, $this->ids)) {
-            if ($cannotBeRemoved) {
-                return '';
-            }
-            // Can be removed?
             $cb->setValue(1);
+            // Cannot be removed
+            if ($cannotBeRemoved) {
+                return $cb->setDisabled(true)->Field();
+            }
         }
 
         return $cb->Field();
