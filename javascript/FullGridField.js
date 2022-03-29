@@ -9,8 +9,14 @@
       onclick: function (e) {
         // Prevent row click
         e.stopPropagation();
+
         // Check/uncheck checkbox when clicking cell
         var $cb = $($(e.target).find("input"));
+
+        if ($cb.is(":disabled")) {
+          return;
+        }
+
         if (!$cb.prop("checked")) {
           $cb.prop("checked", true);
         } else {
@@ -30,6 +36,10 @@
     $("td.col-FullGridSelect input.FullGridSelect-instantSave").entwine({
       onchange: function (e) {
         var $cb = this;
+
+        if ($cb.is(":disabled")) {
+          return;
+        }
 
         if (!securityID) {
           securityID = $("#Form_ItemEditForm_SecurityID").val();
