@@ -4,6 +4,7 @@ namespace LeKoala\Base\Forms;
 
 use Exception;
 use SilverStripe\ORM\Relation;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\Forms\ListboxField;
 use SilverStripe\ORM\DataObjectInterface;
 
@@ -25,7 +26,7 @@ class Select2MultiField extends ListboxField
             return;
         }
 
-        /* @var $relation Relation */
+        /** @var Relation $relation */
         $relation = $record->hasMethod($fieldName) ? $record->$fieldName() : null;
 
         // Detect DB relation or field
