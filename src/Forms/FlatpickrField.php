@@ -105,7 +105,13 @@ class FlatpickrField extends TextField
      * @config
      * @var string
      */
-    private static $version = '4.6.9';
+    private static $version = '4.6.11';
+
+    /**
+     * @config
+     * @var boolean
+     */
+    private static $enable_requirements = true;
 
     /**
      * @config
@@ -647,6 +653,9 @@ class FlatpickrField extends TextField
      */
     public static function requirements($lang = null, $plugins = [], $theme = null)
     {
+        if (!self::config()->enable_requirements) {
+            return;
+        }
         if ($lang === null) {
             $lang = substr(i18n::get_locale(), 0, 2);
         }

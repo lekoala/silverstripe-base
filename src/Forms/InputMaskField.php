@@ -2,10 +2,12 @@
 
 namespace LeKoala\Base\Forms;
 
+use Exception;
 use SilverStripe\i18n\i18n;
 use SilverStripe\Forms\TextField;
 use SilverStripe\View\Requirements;
 use LeKoala\Base\View\CommonRequirements;
+use SilverStripe\Core\Manifest\ModuleLoader;
 
 /**
  * Format input using input mask
@@ -54,7 +56,25 @@ class InputMaskField extends TextField
      * @config
      * @var string
      */
-    private static $version = '4.0.9';
+    private static $old_version = '4.0.9';
+
+    /**
+     * @config
+     * @var string
+     */
+    private static $version = '5.0.7';
+
+    /**
+     * @config
+     * @var boolean
+     */
+    private static $enable_requirements = true;
+
+    /**
+     * @config
+     * @var bool
+     */
+    private static $use_cdn = false;
 
     /**
      * @config
@@ -215,19 +235,43 @@ class InputMaskField extends TextField
         return parent::Field($properties);
     }
 
+    /**
+     * Helper to access this module resources
+     *
+     * @param string $path
+     * @return ModuleResource
+     */
+    public static function moduleResource($path)
+    {
+        return ModuleLoader::getModule('lekoala/silverstripe-base')->getResource($path);
+    }
+
     public static function requirements()
     {
-        $useV5 = self::config()->use_v5;
-        $version = self::config()->version;
+        if (!self::config()->enable_requirements) {
+            return;
+        }
 
-        if ($useV5) {
-            // in v5, lib name is jquery.inputmask
-            Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.7/jquery.inputmask.min.js");
-            // Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.7/inputmask.min.js");
-            // Use version alias from jsdelivr
-            // Requirements::javascript("https://cdn.jsdelivr.net/npm/inputmask@5/dist/inputmask.min.js");
+        $use_v5 = self::config()->use_v5;
+        $oldVersion = self::config()->old_version;
+        $version = self::config()->version;
+        $use_cdn = self::config()->use_cdn;
+
+        if (!$use_v5 && !$use_cdn) {
+            throw new Exception("V4 is only available from CDN");
+        }
+
+        if ($use_cdn) {
+            $cdnBase = "https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/$version";
+            // $cdnBase = "https://cdn.jsdelivr.net/npm/inputmask@$version/dist";
         } else {
-            Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/inputmask/$version/jquery.inputmask.bundle.min.js");
+            $cdnBase = dirname(self::moduleResource("javascript/vendor/cdn/flatpickr/flatpickr.min.js")->getURL());
+        }
+
+        if ($use_v5) {
+            Requirements::javascript("$cdnBase/jquery.inputmask.min.js");
+        } else {
+            Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/inputmask/$oldVersion/jquery.inputmask.bundle.min.js");
         }
         CommonRequirements::modularBehaviour();
         Requirements::javascript('base/javascript/fields/InputMaskField.js');

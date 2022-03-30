@@ -3,25 +3,21 @@
 namespace LeKoala\Base\Forms;
 
 use SilverStripe\ORM\DB;
-use SilverStripe\Dev\Debug;
 use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\ArrayLib;
 use LeKoala\Base\View\Bootstrap;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\Admin\ModelAdmin;
 use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\View\Requirements;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use LeKoala\Base\View\CommonRequirements;
-use LeKoala\Base\Forms\Select2LookupField;
 use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\Core\Manifest\ModuleResource;
 
 /**
  * Require trait ConfigurableField
- * Require trait Select2Source
  */
 trait Select2
 {
@@ -82,7 +78,13 @@ trait Select2
      * @config
      * @var string
      */
-    private static $version = '4.0.13';
+    private static $version = '4.1.0-rc.0';
+
+    /**
+     * @config
+     * @var boolean
+     */
+    private static $enable_requirements = true;
 
     /**
      * @config
@@ -533,24 +535,27 @@ trait Select2
         $this->setAttribute('data-mb-options', $this->getConfigAsJson());
         $this->setAttribute('data-mb', 'select2');
 
-        $version = self::config()->version;
-        $use_cdn = self::config()->use_cdn;
+        if (self::config()->enable_requirements) {
+            $version = self::config()->version;
+            $use_cdn = self::config()->use_cdn;
 
-        if ($use_cdn) {
-            $cdnBase = "https://cdnjs.cloudflare.com/ajax/libs/select2/$version";
-        } else {
-            $cdnBase = dirname(dirname(self::moduleResource("javascript/vendor/cdn/select2/js/select2.min.js")->getRelativePath()));
+            if ($use_cdn) {
+                $cdnBase = "https://cdnjs.cloudflare.com/ajax/libs/select2/$version";
+            } else {
+                $cdnBase = dirname(dirname(self::moduleResource("javascript/vendor/cdn/select2/js/select2.min.js")->getRelativePath()));
+            }
+            Requirements::css("$cdnBase/css/select2.min.css");
+            if ($ctrl instanceof LeftAndMain) {
+                Requirements::css('base/css/Select2Field.css');
+            }
+            Requirements::javascript("$cdnBase/js/select2.min.js");
+            if ($lang != 'en') {
+                Requirements::javascript("$cdnBase/js/i18n/$lang.js");
+            }
+            CommonRequirements::modularBehaviour();
+            Requirements::javascript('base/javascript/fields/Select2Field.js');
         }
-        Requirements::css("$cdnBase/css/select2.min.css");
-        if ($ctrl instanceof LeftAndMain) {
-            Requirements::css('base/css/Select2Field.css');
-        }
-        Requirements::javascript("$cdnBase/js/select2.min.js");
-        if ($lang != 'en') {
-            Requirements::javascript("$cdnBase/js/i18n/$lang.js");
-        }
-        CommonRequirements::modularBehaviour();
-        Requirements::javascript('base/javascript/fields/Select2Field.js');
+
         return parent::Field($properties);
     }
 
