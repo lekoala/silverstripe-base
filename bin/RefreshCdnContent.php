@@ -7,7 +7,8 @@ $map = [
     'flatpickr' => 'https://cdn.jsdelivr.net/npm/flatpickr@4.6/dist',
     'jquery.inputmask' => 'https://cdn.jsdelivr.net/npm/inputmask@5.0.7/dist',
     'moment.js' => 'https://momentjs.com/downloads',
-    'select2' => 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist',
+    // 'select2' => 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist',
+    'select2' => 'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist',
 ];
 
 $glob = glob($basePath . '/' . $cdnFolder . "/*");

@@ -27,6 +27,8 @@
     debug: false,
   };
 
+  var globalRetries = {};
+
   // Track new scripts
   // This helps to limit failed attempts due to yet to be loaded scripts
   var scriptsLoading = 0;
@@ -159,6 +161,10 @@
       self.domObserver = new MutationObserver(function (mutations) {
         for (var i = 0; i < mutations.length; i++) {
           var mutation = mutations[i];
+          // Somehow this creates a loop
+          if (mutation.target.classList.contains("search-form__wrapper")) {
+            return;
+          }
           for (var j = 0; j < mutation.addedNodes.length; j++) {
             var node = mutation.addedNodes[j];
             // Don't bother with nodes without a tag name or not connected to the dom
@@ -351,21 +357,28 @@
       }
 
       // Determine our type of plugin/module
-      if (namespace && typeof namespace[moduleName] !== "undefined") {
-        // It's a global object, expecting the "new" keyword to be used
-        // if you don't want to use the "new" keyword, consider wrapping the function in a function
-        // You can use a factory method using : notation
-        debug("Configuring js module " + module);
-        inst = instantiate(namespace[moduleName], [element, options], factoryMethod);
-      } else if (typeof jQuery !== "undefined" && typeof jQuery.fn[moduleName] !== "undefined") {
-        // It's a jQuery module
-        debug("Configuring jQuery module " + module);
-        // Wrap element and call the plugin with the config
-        inst = jQuery.fn[moduleName].call(jQuery(element), options);
-      } else {
-        // Not defined
-        debug("Undefined module " + module);
-        element.classList.add(config.failedClass);
+      try {
+        if (namespace && typeof namespace[moduleName] !== "undefined") {
+          // It's a global object, expecting the "new" keyword to be used
+          // if you don't want to use the "new" keyword, consider wrapping the function in a function
+          // You can use a factory method using : notation
+          debug("Configuring js module " + module);
+          inst = instantiate(namespace[moduleName], [element, options], factoryMethod);
+        } else if (typeof jQuery !== "undefined" && typeof jQuery.fn[moduleName] !== "undefined") {
+          // It's a jQuery module
+          debug("Configuring jQuery module " + module);
+          // Wrap element and call the plugin with the config
+          inst = jQuery.fn[moduleName].call(jQuery(element), options);
+        } else {
+          // Not defined
+          debug("Undefined module " + module);
+          element.classList.add(config.failedClass);
+        }
+      } catch (error) {
+        element.parentNode.innerText = error;
+        element.classList.add(config.initClass);
+        inst = null;
+        globalRetries[element.getAttribute("id")] = config.maxTries;
       }
 
       if (inst) {
@@ -380,13 +393,10 @@
         debug(module + " initialized");
       } else {
         // This is a bit of a hack, libs might not be loaded yet (after ajax load for instance)
-        var retries = element.getAttribute(config.attr + "-retries");
-        if (!retries) {
-          retries = 0;
-        }
+        var retries = globalRetries[element.getAttribute("id")] || 0;
         if (retries < config.maxTries) {
           retries++;
-          element.setAttribute(config.attr + "-retries", retries);
+          globalRetries[element.getAttribute("id")] = retries;
 
           global.setTimeout(function () {
             debug("try again for " + module);
