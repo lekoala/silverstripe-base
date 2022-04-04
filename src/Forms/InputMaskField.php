@@ -265,7 +265,7 @@ class InputMaskField extends TextField
             $cdnBase = "https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/$version";
             // $cdnBase = "https://cdn.jsdelivr.net/npm/inputmask@$version/dist";
         } else {
-            $cdnBase = dirname(self::moduleResource("javascript/vendor/cdn/inputmask/flatpickr.min.js")->getURL());
+            $cdnBase = dirname(self::moduleResource("javascript/vendor/cdn/jquery.inputmask/jquery.inputmask.min.js")->getURL());
         }
 
         if ($use_v5) {
