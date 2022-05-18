@@ -676,6 +676,7 @@ class FlatpickrField extends TextField
 
         // Track required plugins over time to always include the full required set
         self::$required_plugins = array_unique(array_merge(self::$required_plugins, $plugins));
+        $plugins = self::$required_plugins;
 
         Requirements::css("$cdnBase/flatpickr.min.css");
         Requirements::clear("$cdnBase/flatpickr.min.js");
