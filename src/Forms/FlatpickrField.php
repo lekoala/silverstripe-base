@@ -102,6 +102,11 @@ class FlatpickrField extends TextField
     protected $confirmDate;
 
     /**
+     * @var array
+     */
+    protected static $required_plugins = [];
+
+    /**
      * @config
      * @var string
      */
@@ -669,7 +674,11 @@ class FlatpickrField extends TextField
             $cdnBase = dirname(self::moduleResource("javascript/vendor/cdn/flatpickr/flatpickr.min.js")->getURL());
         }
 
+        // Track required plugins over time to always include the full required set
+        self::$required_plugins = array_unique(array_merge(self::$required_plugins, $plugins));
+
         Requirements::css("$cdnBase/flatpickr.min.css");
+        Requirements::clear("$cdnBase/flatpickr.min.js");
         Requirements::javascript("$cdnBase/flatpickr.min.js");
         if (!$use_cdn && $lang != 'en') {
             $cdnPath = dirname(self::moduleResource("javascript/vendor/cdn/flatpickr/flatpickr.min.js")->getPath());
@@ -678,9 +687,11 @@ class FlatpickrField extends TextField
             }
         }
         if ($lang != 'en') {
+            Requirements::clear("$cdnBase/l10n/$lang.js");
             Requirements::javascript("$cdnBase/l10n/$lang.js");
         }
         foreach ($plugins as $plugin) {
+            Requirements::clear("$cdnBase/plugins/$plugin.js");
             Requirements::javascript("$cdnBase/plugins/$plugin.js");
             if (isset(self::PLUGINS_WITH_CSS[$plugin])) {
                 Requirements::css("$cdnBase/plugins/$plugin.css");
@@ -691,6 +702,7 @@ class FlatpickrField extends TextField
         }
 
         CommonRequirements::modularBehaviour();
+        Requirements::clear('base/javascript/fields/FlatpickrField.js');
         Requirements::javascript('base/javascript/fields/FlatpickrField.js');
     }
 
