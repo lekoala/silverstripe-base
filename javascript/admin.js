@@ -184,9 +184,10 @@
       },
     });
 
-    function triggerLazyLoad(el) {
-      el.find(".lazy-loadable").each(function (idx, ele) {
-        ele.dispatchEvent(new Event("lazyloaded"), { once: true });
+    function triggerLazyLoad(el, selector = '.lazy-loadable') {
+      el.find(selector).each(function (idx, ele) {
+        var lazyEvent = ele.dataset.lazyEvent || "lazyload";
+        ele.dispatchEvent(new Event(lazyEvent), { once: true });
       });
     }
 
