@@ -209,6 +209,7 @@
     stopObserver: function () {
       if (this.domObserver) {
         this.domObserver.disconnect();
+        this.domObserver = null;
       }
     },
     /**
