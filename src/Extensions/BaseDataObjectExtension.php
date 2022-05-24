@@ -28,6 +28,7 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\Forms\GridField\GridFieldDeleteAction;
 use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
+use SilverStripe\Forms\GridField\GridFieldFilterHeader;
 
 /**
  * Improve DataObjects
@@ -46,6 +47,15 @@ class BaseDataObjectExtension extends DataExtension
         $cascade_delete = $this->owner->config()->cascade_deletes;
         // Anything that is deleted in cascade should not be a relation (most of the time!)
         $this->turnRelationsIntoRecordEditor($fields, $cascade_delete);
+
+        $optimize = !$this->owner->config()->dont_remove_gridfield_search;
+        if ($optimize) {
+            $relations = array_keys(array_merge(
+                $this->owner->config()->has_many,
+                $this->owner->config()->many_many,
+            ));
+            $this->removeSearchForms($fields, $relations);
+        }
 
         $many_many = $this->owner->config()->many_many;
         $this->improveAssetsGridField($fields, $many_many);
@@ -404,6 +414,30 @@ class BaseDataObjectExtension extends DataExtension
                     $display[$k] = $k;
                 }
                 $GridFieldDataColumns->setDisplayFields($display);
+            }
+        }
+    }
+
+    /**
+     * @param BuildableFieldList $fields
+     * @param array $arr List of relations
+     * @return void
+     */
+    protected function removeSearchForms(BuildableFieldList $fields, $arr)
+    {
+        if (!$arr) {
+            return;
+        }
+        foreach ($arr as $relation) {
+            $gridfield = $fields->getGridField($relation);
+            if (!$gridfield) {
+                continue;
+            }
+            $config = $gridfield->getConfig();
+
+            // Optimize search form
+            if (strpos($gridfield->extraClass(), "gridfield-keep-search") !== true) {
+                $config->removeComponentsByType(GridFieldFilterHeader::class);
             }
         }
     }
