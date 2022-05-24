@@ -22,6 +22,7 @@
     optionsKey: "options",
     maxTries: 3,
     retryInterval: 250,
+    domRunInterval: 500,
     observeDom: true,
     runAfterDomChanges: true,
     debug: false,
@@ -34,35 +35,47 @@
   var scriptsLoading = 0;
   // Set this to true if you want to trigger run after scripts are loaded
   var shouldRun = false;
+
   /**
    * @param {HTMLScriptElement} script
    */
-  function trackScript(script, increment) {
-    if (script.hasAttribute("async")) {
-      return;
+  function resolveScript(script) {
+    scriptsLoading--;
+    debug(scriptsLoading + " remaining scripts");
+    if (scriptsLoading <= 0) {
+      scriptsLoading = 0;
+      debug("all scripts loaded");
+
+      // A run attempt has been prevented due to missing scripts
+      if (shouldRun) {
+        ModularBehaviour.run();
+      }
     }
-    if (script.hasAttribute("nomodule")) {
+  }
+
+  /**
+   * @param {HTMLScriptElement} script
+   */
+  function trackScript(script) {
+    if (script.hasAttribute("async") || script.hasAttribute("nomodule") || !script.hasAttribute("src")) {
       return;
     }
     debug("tracking " + script.getAttribute("href"));
     scriptsLoading++;
 
     var prevOnload = script.onload;
+    var prevOnerror = script.onerror;
     script.onload = function (e) {
       if (prevOnload) {
         prevOnload(e);
       }
-      scriptsLoading--;
-      debug(scriptsLoading + " remaining scripts");
-      if (scriptsLoading <= 0) {
-        scriptsLoading = 0;
-        debug("all scripts loaded");
-
-        // A run attempt has been prevented due to missing scripts
-        if (shouldRun) {
-          ModularBehaviour.run();
-        }
+      resolveScript(script);
+    };
+    script.onerror = function (e) {
+      if (prevOnerror) {
+        prevOnerror(e);
       }
+      resolveScript(script);
     };
   }
 
@@ -163,36 +176,40 @@
           var mutation = mutations[i];
           // Somehow this creates a loop
           if (mutation.target.classList.contains("search-form__wrapper")) {
-            return;
+            continue;
           }
           for (var j = 0; j < mutation.addedNodes.length; j++) {
             var node = mutation.addedNodes[j];
             // Don't bother with nodes without a tag name or not connected to the dom
             // NOTE: IE 11 does not understand isConnected => check === false
             if (!node.tagName || node.isConnected === false) {
-              return;
+              continue;
             }
             // Track new scripts. If new scripts are added, we will run through all nodes
             if (node.tagName.toLowerCase() === "script") {
               trackScript(node);
               shouldRun = true;
             }
-            // Check if our node or it's children has our attribute and configure if necessary
+
+            // Configure element if it's a single node
             if (!shouldRun) {
-              // Configure element if it's a single node
               if (node.hasAttribute(config.attr)) {
                 self.configureElement(node);
               }
-              // Also run on all children since we might not get all dom changes
-              if (config.runAfterDomChanges) {
-                if (domTimer) {
-                  clearTimeout(domTimer);
-                }
-                domTimer = setTimeout(function () {
-                  self.run();
-                }, 100);
-              }
             }
+          }
+        }
+
+        // Check if our node or it's children has our attribute and configure if necessary
+        if (!shouldRun) {
+          // Also run on all children since we might not get all dom changes
+          if (config.runAfterDomChanges) {
+            if (domTimer) {
+              clearTimeout(domTimer);
+            }
+            domTimer = setTimeout(function () {
+              self.run();
+            }, config.domRunInterval);
           }
         }
       });
