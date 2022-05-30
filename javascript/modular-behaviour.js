@@ -48,6 +48,7 @@
 
       // A run attempt has been prevented due to missing scripts
       if (shouldRun) {
+        shouldRun = false;
         ModularBehaviour.run();
       }
     }
@@ -60,6 +61,8 @@
     if (script.hasAttribute("async") || script.hasAttribute("nomodule") || !script.hasAttribute("src")) {
       return;
     }
+    shouldRun = true;
+
     debug("tracking " + script.getAttribute("href"));
     scriptsLoading++;
 
@@ -170,6 +173,7 @@
       if (self.domObserver) {
         return;
       }
+      var addedNodes = [];
       // Warning : browser extensions can trigger external mutations
       self.domObserver = new MutationObserver(function (mutations) {
         for (var i = 0; i < mutations.length; i++) {
@@ -188,12 +192,12 @@
             // Track new scripts. If new scripts are added, we will run through all nodes
             if (node.tagName.toLowerCase() === "script") {
               trackScript(node);
-              shouldRun = true;
             }
 
             // Configure element if it's a single node
             if (!shouldRun) {
               if (node.hasAttribute(config.attr)) {
+                addedNodes.push(node);
                 self.configureElement(node);
               }
             }
