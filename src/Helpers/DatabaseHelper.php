@@ -123,6 +123,31 @@ class DatabaseHelper
     }
 
     /**
+     * Mutate where array with in clause
+     *
+     * @param array $arr
+     * @param string $field
+     * @param array|string $values
+     * @return void
+     */
+    public static function inArray(&$arr, $field, $values)
+    {
+        if (empty($values)) {
+            return;
+        }
+        if (is_string($values)) {
+            $arr["$field = ?"] = $values;
+        } else {
+            $params = [];
+            foreach ($values as $v) {
+                $params[] = '?';
+            }
+            $paramsStr = implode(",", $params);
+            $arr["$field IN ($paramsStr)"] = $values;
+        }
+    }
+
+    /**
      * @param string $table
      * @param string $column
      * @return array
