@@ -435,8 +435,8 @@ class BaseDataObjectExtension extends DataExtension
             }
             $config = $gridfield->getConfig();
 
-            // Optimize search form
-            if (strpos($gridfield->extraClass(), "gridfield-keep-search") !== true) {
+            // Optimize search form (if request on the dataobject)
+            if (singleton($gridfield->getModelClass())->config()->disable_search_form) {
                 $config->removeComponentsByType(GridFieldFilterHeader::class);
             }
         }
