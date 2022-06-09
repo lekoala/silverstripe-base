@@ -132,10 +132,10 @@ class DatabaseHelper
      */
     public static function inArray(&$arr, $field, $values)
     {
-        if (empty($values)) {
+        if (is_array($values) && empty($values)) {
             return;
         }
-        if (is_string($values)) {
+        if (is_string($values) || is_numeric($values)) {
             $arr["$field = ?"] = $values;
         } else {
             $params = [];
