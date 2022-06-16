@@ -1,0 +1,11 @@
+---
+Name: base-admini
+After:
+  - 'lekoala/silverstripe-admini'
+Only:
+  moduleexists:
+    - 'lekoala/silverstripe-admini'
+---
+LeKoala\Admini\LeftAndMain:
+  extensions:
+    - 'LeKoala\Base\Admin\BaseAdminiExtension'

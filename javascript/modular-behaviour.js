@@ -12,6 +12,9 @@
   if (typeof jQuery === "undefined" && typeof require !== "undefined" && require.defined && require.defined("jquery")) {
     jQuery = require("jquery");
   }
+  if(!global) {
+    global = window;
+  }
 
   var document = global.document;
 
