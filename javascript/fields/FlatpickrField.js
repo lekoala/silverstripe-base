@@ -31,6 +31,8 @@
     var $alt = $this.parent().find(".flatpickr-alt");
     var orgVal = $this.val();
 
+    $alt.addClass("form-control");
+
     $this.parent().parent().addClass("flatpickr-initialized");
 
     $alt.on("change", function () {
