@@ -519,10 +519,13 @@ trait Select2
         }
 
         $ctrl = Controller::curr();
-        if (!$ctrl instanceof LeftAndMain) {
-            if (Bootstrap::enabled()) {
-                $this->setConfig('theme', 'bootstrap4');
-            }
+        // @link https://github.com/ttskch/select2-bootstrap4-theme
+        if ($ctrl->hasMethod("UseBootstrap4") && $ctrl->UseBootstrap4()) {
+            $this->setConfig('theme', 'bootstrap4');
+        }
+        // @link https://apalfrey.github.io/select2-bootstrap-5-theme/
+        if ($ctrl->hasMethod("UseBootstrap5") && $ctrl->UseBootstrap5()) {
+            $this->setConfig('theme', 'bootstrap-5');
         }
 
         // Ajax wizard, needs a form to get controller link
@@ -540,14 +543,24 @@ trait Select2
             $use_cdn = self::config()->use_cdn;
 
             if ($use_cdn) {
-                $cdnBase = "https://cdnjs.cloudflare.com/ajax/libs/select2/$version";
+                $cdnBase = "https://cdn.jsdelivr.net/npm/select2@$version/dist";
             } else {
                 $cdnBase = dirname(dirname(self::moduleResource("javascript/vendor/cdn/select2/js/select2.min.js")->getRelativePath()));
             }
             Requirements::css("$cdnBase/css/select2.min.css");
+
+            // Some custom styles for the cms
             if ($ctrl instanceof LeftAndMain) {
                 Requirements::css('base/css/Select2Field.css');
             }
+
+            if ($ctrl->hasMethod("UseBootstrap4") && $ctrl->UseBootstrap4()) {
+                Requirements::css("https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme@1/dist/select2-bootstrap4.min.css");
+            }
+            if ($ctrl->hasMethod("UseBootstrap5") && $ctrl->UseBootstrap5()) {
+                Requirements::css("https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1/dist/select2-bootstrap-5-theme.min.css");
+            }
+
             Requirements::javascript("$cdnBase/js/select2.min.js");
             if ($lang != 'en') {
                 Requirements::javascript("$cdnBase/js/i18n/$lang.js");
