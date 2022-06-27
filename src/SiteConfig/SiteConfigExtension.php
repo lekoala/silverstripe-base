@@ -83,10 +83,10 @@ class SiteConfigExtension extends DataExtension
         $EmailFooter = new TextareaField('EmailFooter', _t('Global.EmailFooter', 'Email Footer'));
         $fields->addFieldToTab('Root.Main', $EmailFooter);
         // Footer
-        $FooterText = new HTMLEditorField('FooterText');
+        $FooterText = HTMLEditorField::create('FooterText');
         $FooterText->setRows(5);
         $fields->addFieldToTab('Root.Footer', $FooterText);
-        $Copyright = new HTMLEditorField('Copyright');
+        $Copyright = HTMLEditorField::create('Copyright');
         $Copyright->setRows(2);
         $fields->addFieldToTab('Root.Footer', $Copyright);
     }

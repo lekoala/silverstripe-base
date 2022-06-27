@@ -29,6 +29,7 @@
     "lekoala/silverstripe-multilingual": "*",
     "lekoala/silverstripe-devtoolkit": "*",
     "lekoala/silverstripe-geotools": "*",
+    "lekoala/silverstripe-filepond": "*",
     "lekoala/silverstripe-common-extensions": "*"
   },
   "require-dev": {
