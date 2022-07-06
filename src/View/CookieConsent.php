@@ -210,7 +210,12 @@ window.addEventListener("load", function(){
     };
     opts.onInitialise = onInit;
     opts.onStatusChange = opts.onRevokeChoice = onChange;
-    window.cookieconsent.initialise(opts);
+    if(window.cookieconsent) {
+        window.cookieconsent.initialise(opts);
+    }
+    else {
+        console.warn("Cookie consent is disabled or not loaded");
+    }
 });
 JS;
         Requirements::customScript($js, 'CookiesConsentInit');
