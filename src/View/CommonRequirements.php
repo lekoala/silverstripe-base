@@ -71,7 +71,7 @@ class CommonRequirements
      * @config
      * @var string
      */
-    private static $plyr_version = '3.6.6';
+    private static $plyr_version = '3.7.2';
 
     /**
      * @config
