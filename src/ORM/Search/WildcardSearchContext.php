@@ -6,6 +6,7 @@ use Exception;
 use ReflectionProperty;
 use InvalidArgumentException;
 use LeKoala\Base\Helpers\ClassHelper;
+use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\Search\SearchContext;
 use SilverStripe\Forms\GridField\GridFieldFilterHeader;
@@ -27,6 +28,11 @@ class WildcardSearchContext extends SearchContext
     protected $wildcardFilters = [];
 
     /**
+     * @var boolean
+     */
+    protected $filterPunctation = false;
+
+    /**
      * Use this to apply manually this new search context
      * instead of the default one
      *
@@ -38,6 +44,16 @@ class WildcardSearchContext extends SearchContext
         $reflection = new ReflectionProperty(get_class($component), 'searchContext');
         $reflection->setAccessible(true);
         $reflection->setValue($component, $this);
+    }
+
+    /**
+     * @param GridField $gridField
+     * @return void
+     */
+    public function replaceInGridField(GridField $gridField)
+    {
+        $component = $gridField->getConfig()->getComponentByType(GridFieldFilterHeader::class);
+        $this->replaceInFilterHeader($component);
     }
 
     /**
@@ -128,6 +144,9 @@ class WildcardSearchContext extends SearchContext
             }
             $parts = explode(" ", $value);
             foreach ($parts as $part) {
+                if ($this->filterPunctation) {
+                    $part = str_replace(['.', '_', '-'], ' ', $part);
+                }
                 $part = trim($part);
                 if (!$part) {
                     continue;
@@ -145,6 +164,9 @@ class WildcardSearchContext extends SearchContext
             }
         } else {
             foreach ($this->searchParams as $key => $value) {
+                if ($this->filterPunctation) {
+                    $value = str_replace(['.', '_', '-'], ' ', $value);
+                }
                 $key = str_replace('__', '.', $key);
                 if ($filter = $this->getFilter($key)) {
                     $filter->setModel($this->modelClass);
@@ -180,6 +202,27 @@ class WildcardSearchContext extends SearchContext
     public function setWildcardFilters(array $wildcardFilters)
     {
         $this->wildcardFilters = $wildcardFilters;
+        return $this;
+    }
+
+    /**
+     * Get the value of filterPunctation
+     * @return bool
+     */
+    public function getFilterPunctuation()
+    {
+        return $this->filterPunctation;
+    }
+
+    /**
+     * Set the value of filterPunctation
+     *
+     * @param array $filterPunctation
+     * @return $this
+     */
+    public function setFilterPunctuation($filterPunctation)
+    {
+        $this->filterPunctation = $filterPunctation;
         return $this;
     }
 }
