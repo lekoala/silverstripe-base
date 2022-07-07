@@ -3,58 +3,59 @@
 // $Layout
 // <div class="back-to-top"><a href="#top"></a></div>
 .back-to-top {
-    position: fixed;
-    bottom: $spacer;
-    right: $spacer;
-    z-index: 10001;
+  position: fixed;
+  bottom: $spacer;
+  right: $spacer;
+  z-index: 10001;
 
-    a {
-        background: rgba(255, 255, 255, 0.7);
-        width: $spacer*2;
-        height: $spacer*2;
-        font-size: 24px;
-        border-radius: $spacer*2;
-        text-align: center;
-        display: block;
-        transition: background 0.4s;
-        position: relative;
+  a {
+    background: rgba(255, 255, 255, 0.7);
+    width: $spacer * 2;
+    height: $spacer * 2;
+    font-size: 24px;
+    border-radius: $spacer * 2;
+    text-align: center;
+    display: block;
+    transition: background 0.4s;
+    position: relative;
 
-        &:before {
-            line-height: $spacer*2;
-        }
+    &:before {
+      line-height: $spacer * 2;
+    }
+  }
+
+  a:hover {
+    text-decoration: none;
+    background: rgba(255, 255, 255, 1);
+  }
+
+  &.back-to-top-arrow_up a {
+    @include elegant-icon("arrow_up");
+  }
+
+  &.back-to-top-caret a {
+    &:before,
+    &:after {
+      content: "";
+      display: block;
+      height: 6px;
+      width: 12px;
+      border-radius: 3px;
+      background: $link-color;
+      position: absolute;
+      margin-top: -3px;
+      left: 50%;
+      top: 50%;
     }
 
-    a:hover {
-        text-decoration: none;
-        background: rgba(255, 255, 255, 1);
+    &:before {
+      transform: rotate(45deg);
+      margin-left: -3px;
     }
 
-    &.back-to-top-arrow_up a {
-        @include elegant-icon('arrow_up');
+    &:after {
+      transform: rotate(-45deg);
+      margin-left: -9px;
     }
-
-    &.back-to-top-caret a {
-        &:before, &:after {
-            content: '';
-            display: block;
-            height: 6px;
-            width: 12px;
-            border-radius: 3px;
-            background: $link-color;
-            position: absolute;
-            margin-top: -3px;
-            left: 50%;
-            top: 50%;
-        }
-
-        &:before {
-            transform: rotate(45deg);
-            margin-left: -3px;
-        }
-
-        &:after {
-            transform: rotate(-45deg);
-            margin-left: -9px;
-        }
-    }
+  }
 }

@@ -1,34 +1,34 @@
 // @link https://projects.lukehaas.me/css-loaders/
 $loader-color: #666 !default;
 .loader {
-    border-radius: 50%;
-    width: 1em;
-    height: 1em;
-    border-top: 0.1em solid rgba($loader-color, 0.1);
-    border-right: 0.1em solid rgba($loader-color, 0.1);
-    border-bottom: 0.1em solid rgba($loader-color, 0.1);
-    border-left: 0.1em solid $loader-color;
-    transform: translateZ(0);
-    animation: loader-anim 1s infinite linear;
+  border-radius: 50%;
+  width: 1em;
+  height: 1em;
+  border-top: 0.1em solid rgba($loader-color, 0.1);
+  border-right: 0.1em solid rgba($loader-color, 0.1);
+  border-bottom: 0.1em solid rgba($loader-color, 0.1);
+  border-left: 0.1em solid $loader-color;
+  transform: translateZ(0);
+  animation: loader-anim 1s infinite linear;
 
-    &.loader-big {
-        width:2.5em;
-        height:2.5em;
-        border-width: 0.2em;
-    }
+  &.loader-big {
+    width: 2.5em;
+    height: 2.5em;
+    border-width: 0.2em;
+  }
 
-    &.loader-bigger {
-        width:5em;
-        height:5em;
-        border-width: 0.3em;
-    }
+  &.loader-bigger {
+    width: 5em;
+    height: 5em;
+    border-width: 0.3em;
+  }
 }
 
 @keyframes loader-anim {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }

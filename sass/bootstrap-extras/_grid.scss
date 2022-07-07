@@ -1,7 +1,7 @@
 // Avoid images getting outside the grid
 .row img {
-    max-width: 100%;
-    height: auto;
+  max-width: 100%;
+  height: auto;
 }
 
 // Auto columns (apply on parent, have child div without adding extra classes)
@@ -12,54 +12,54 @@
 .grid-2,
 .grid-3,
 .grid-4 {
-    @include media-breakpoint-up(md) {
-        display: flex;
-        flex-direction: row;
-        margin-left: -$spacer;
-        margin-right: -$spacer;
-        >div {
-            flex: 1;
-            flex-grow: 2;
-            padding: 0 $spacer;
-            &.grid-light {
-                flex-grow: 1;
-            }
-            &.grid-heavy {
-                flex-grow: 4;
-            }
-        }
+  @include media-breakpoint-up(md) {
+    display: flex;
+    flex-direction: row;
+    margin-left: -$spacer;
+    margin-right: -$spacer;
+    > div {
+      flex: 1;
+      flex-grow: 2;
+      padding: 0 $spacer;
+      &.grid-light {
+        flex-grow: 1;
+      }
+      &.grid-heavy {
+        flex-grow: 4;
+      }
     }
+  }
 }
 
 .grid-2 {
-    @include media-breakpoint-up(md) {
-        >div {
-            flex-basis: 50%;
-            flex-grow: 0;
-            flex-shrink: 0;
-            max-width: 50%; // IE11
-        }
+  @include media-breakpoint-up(md) {
+    > div {
+      flex-basis: 50%;
+      flex-grow: 0;
+      flex-shrink: 0;
+      max-width: 50%; // IE11
     }
+  }
 }
 
 .grid-3 {
-    @include media-breakpoint-up(md) {
-        >div {
-            flex-basis: 33.33%;
-            flex-grow: 0;
-            flex-shrink: 0;
-            max-width: 33.33%; // IE11
-        }
+  @include media-breakpoint-up(md) {
+    > div {
+      flex-basis: 33.33%;
+      flex-grow: 0;
+      flex-shrink: 0;
+      max-width: 33.33%; // IE11
     }
+  }
 }
 
 .grid-4 {
-    @include media-breakpoint-up(md) {
-        >div {
-            flex-basis: 25%;
-            flex-grow: 0;
-            flex-shrink: 0;
-            max-width: 25%; // IE11
-        }
+  @include media-breakpoint-up(md) {
+    > div {
+      flex-basis: 25%;
+      flex-grow: 0;
+      flex-shrink: 0;
+      max-width: 25%; // IE11
     }
+  }
 }

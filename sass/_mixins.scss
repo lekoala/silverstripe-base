@@ -1,71 +1,67 @@
 @mixin clearfix {
-    &:after {
-        content: "";
-        display: table;
-        clear: both;
-    }
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
 }
 
-@mixin overlay ($top: auto, $right: auto, $bottom: auto, $left: auto) {
-    position: absolute;
-    top: $top;
-    right: $right;
-    bottom: $bottom;
-    left: $left;
+@mixin overlay($top: auto, $right: auto, $bottom: auto, $left: auto) {
+  position: absolute;
+  top: $top;
+  right: $right;
+  bottom: $bottom;
+  left: $left;
 }
 
 @mixin centerer($horizontal: true, $vertical: true) {
-    position: absolute;
+  position: absolute;
 
-    @if ($horizontal and $vertical) {
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-    }
-
-    @else if ($horizontal) {
-        left: 50%;
-        transform: translate(-50%, 0);
-    }
-
-    @else if ($vertical) {
-        top: 50%;
-        transform: translate(0, -50%);
-    }
+  @if ($horizontal and $vertical) {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  } @else if ($horizontal) {
+    left: 50%;
+    transform: translate(-50%, 0);
+  } @else if ($vertical) {
+    top: 50%;
+    transform: translate(0, -50%);
+  }
 }
 
 @mixin selection {
-    ::selection {
-        @content;
-    }
+  ::selection {
+    @content;
+  }
 
-    ::-moz-selection {
-        @content;
-    }
+  ::-moz-selection {
+    @content;
+  }
 
-    ::-webkit-selection {
-        @content;
-    }
+  ::-webkit-selection {
+    @content;
+  }
 }
 
 @mixin placeholder {
-    &::-webkit-input-placeholder {
-        @content
-    }
+  &::-webkit-input-placeholder {
+    @content;
+  }
 
-    &:-moz-placeholder {
-        @content
-    }
+  &:-moz-placeholder {
+    @content;
+  }
 
-    &::-moz-placeholder {
-        @content
-    }
+  &::-moz-placeholder {
+    @content;
+  }
 
-    &:-ms-input-placeholder {
-        @content
-    }
+  &:-ms-input-placeholder {
+    @content;
+  }
 }
 
-@mixin transition($property : 'all', $duration: 0.2, $easing: 'ease-in-out') {
-    transition: $property $duration $easing
+@mixin transition($property: "all", $duration: 0.2, $easing: "ease-in-out") {
+  transition: $property $duration $easing;
 }

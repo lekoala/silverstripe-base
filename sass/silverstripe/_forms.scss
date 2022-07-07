@@ -137,6 +137,13 @@
   padding-bottom: $input-padding-y;
 }
 
+input.form-check-input {
+  margin-left: 0;
+}
+.form-check input.form-check-input {
+  margin-left: -1.25rem;
+}
+
 form {
   .description {
     display: block;
