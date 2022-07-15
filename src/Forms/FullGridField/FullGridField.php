@@ -202,6 +202,27 @@ class FullGridField extends GridField
     }
 
     /**
+     * Get the value of onAdd
+     * @return array
+     */
+    public function getAddExtraFields()
+    {
+        return $this->getConfig()->getComponentByType(FullGridFieldCheckbox::class)->getAddExtraFields();
+    }
+
+    /**
+     * Set the value of onAdd
+     *
+     * @param array $onAdd
+     * @return $this
+     */
+    public function setAddExtraFields($addExtraFields)
+    {
+        $this->getConfig()->getComponentByType(FullGridFieldCheckbox::class)->setAddExtraFields($addExtraFields);
+        return $this;
+    }
+
+    /**
      * Get the value of onRemove
      * @return Closure
      */
