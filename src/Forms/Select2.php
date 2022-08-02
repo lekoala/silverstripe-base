@@ -5,7 +5,6 @@ namespace LeKoala\Base\Forms;
 use SilverStripe\ORM\DB;
 use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\ArrayLib;
-use LeKoala\Base\View\Bootstrap;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\View\Requirements;
@@ -510,6 +509,10 @@ trait Select2
         $lang = substr($this->getLocale(), 0, 2);
         if ($lang != 'en') {
             $this->setConfig('language', $lang);
+        }
+
+        if ($this->isDisabled() || $this->isReadonly()) {
+            $this->setConfig('disabled', true);
         }
 
         // Set RTL
