@@ -308,10 +308,9 @@ class AgGridField extends JsonFormField
      * Set for your columns
      *
      * @param boolean $columnsEditable for your columns
-     *
      * @return $this
      */
-    public function setColumnsEditable(boolean $columnsEditable)
+    public function setColumnsEditable($columnsEditable)
     {
         $this->columnsEditable = $columnsEditable;
 
