@@ -74,6 +74,13 @@ class BaseMemberExtension extends DataExtension
         return Director::absoluteURL(Security::getPasswordResetLink($this->owner, $token));
     }
 
+    public function validate(ValidationResult $validationResult)
+    {
+        if ($this->owner->Email && !filter_var($this->owner->Email, FILTER_VALIDATE_EMAIL)) {
+            $validationResult->addError("Email is not valid");
+        }
+    }
+
     /**
      * This is called by Member::validateCanLogin which is typically called in MemberAuthenticator::authenticate::authenticateMember
      * which is used in LoginHandler::doLogin::checkLogin
