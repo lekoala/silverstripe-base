@@ -94,6 +94,6 @@ class MemberAudit extends DataObject
 
     public function AuditDataShort()
     {
-        return substr($this->AuditData, 0, 100) . '...';
+        return substr((string)$this->AuditData, 0, 100) . '...';
     }
 }
