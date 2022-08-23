@@ -117,15 +117,10 @@ class WildcardSearchContext extends SearchContext
         $this->setSearchParams($searchParams);
 
         $count = count($searchParams);
-        $isWildcardSearch = true;
+        $isWildcardSearch = false;
         // If we use specific set of fields, make sure we have a value for them
         if (!empty($this->wildcardFilters)) {
-            $isWildcardSearch = false;
-            foreach ($this->wildcardFilters as $wf) {
-                if (isset($searchParams[$wf])) {
-                    $isWildcardSearch = true;
-                }
-            }
+            $isWildcardSearch = true;
         }
 
         // If we search only one value, assume we do a wildcard match
@@ -181,6 +176,7 @@ class WildcardSearchContext extends SearchContext
                 throw new Exception("SearchContext connective '$this->connective' not supported after ORM-rewrite.");
             }
         }
+
         return $query;
     }
 
