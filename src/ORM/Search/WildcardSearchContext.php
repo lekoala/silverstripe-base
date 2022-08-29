@@ -10,6 +10,7 @@ use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\Search\SearchContext;
 use SilverStripe\Forms\GridField\GridFieldFilterHeader;
+use SilverStripe\ORM\Filters\PartialMatchFilter;
 
 /**
  * Allows wildcard search in ModelAdmin
@@ -133,10 +134,15 @@ class WildcardSearchContext extends SearchContext
                 $list = [];
                 foreach ($this->wildcardFilters as $wf) {
                     if ($filter = $this->getFilter($wf)) {
+                        // The filter exist in searchable_fields
                         $list[$wf] = $filter;
+                    } else {
+                        // Enable a default filter
+                        $list[$wf] = new PartialMatchFilter($wf);
                     }
                 }
             }
+
             $parts = explode(" ", $value);
             foreach ($parts as $part) {
                 if ($this->filterPunctation) {
