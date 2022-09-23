@@ -34,6 +34,10 @@ class DateHelper
      */
     public static function dateRange($start, $end, $format = 'Y-m-d')
     {
+        if (!$start || !$end) {
+            return [];
+        }
+
         $array = [];
 
         // Variable that store the date interval of period 1 day
