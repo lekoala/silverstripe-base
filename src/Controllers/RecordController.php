@@ -38,9 +38,10 @@ class RecordController extends BaseContentController
     /**
      * Get the record
      *
+     * @param int|string $ID
      * @return bool|DataObject
      */
-    public function getRequestedRecord()
+    public function getRequestedRecord($ID = null)
     {
         $ModelClass = self::config()->model_class;
         if (!$ModelClass) {
@@ -48,12 +49,17 @@ class RecordController extends BaseContentController
         }
         $request = $this->getRequest();
         $ModelClass_SNG = $ModelClass::singleton();
-        $ID = $request->getHeader('X-RecordID');
+        if (!$ID) {
+            $ID = $request->getHeader('X-RecordID');
+        }
         if (!$ID) {
             $ID = (int) $request->requestVar('_RecordID');
         }
+        if (!$ID) {
+            $ID = $this->getRequest()->param('ID');
+        }
         if ($ID) {
-            if ($ModelClass_SNG->hasExtension(URLSegmentExtension::class)) {
+            if ($ModelClass_SNG->hasExtension(URLSegmentExtension::class) && !is_numeric($ID)) {
                 return URLSegmentExtension::getByURLSegment($ModelClass, $ID);
             }
             return DataObject::get_by_id($ModelClass, $ID);
@@ -65,7 +71,11 @@ class RecordController extends BaseContentController
     {
         $ID = $this->getRequest()->param('ID');
         if ($ID) {
-            return $this->renderWith($this->getViewer('read'), ['Item' => $this->getRequestedRecord()]);
+            $record = $this->getRequestedRecord($ID);
+            if (!$record) {
+                return $this->httpError(404, "Record $ID not found");
+            }
+            return $this->renderWith($this->getViewer('read'), ['Item' => $record]);
         }
         return $this;
     }
