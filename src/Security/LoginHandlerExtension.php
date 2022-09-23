@@ -1,4 +1,5 @@
 <?php
+
 namespace LeKoala\Base\Security;
 
 use SilverStripe\Core\Extension;
@@ -10,15 +11,18 @@ use SilverStripe\Core\Extension;
  */
 class LoginHandlerExtension extends Extension
 {
-    public function beforeLogout()
+    public function beforeLogin()
     {
     }
 
-    public function afterLogout()
+    public function afterLogin($member)
     {
+        if ($member->hasMethod('afterLogin')) {
+            $member->afterLogin();
+        }
     }
 
-    public function failedLogout()
+    public function failedLogin()
     {
     }
 }
