@@ -145,6 +145,7 @@ class WildcardSearchContext extends SearchContext
 
             $parts = explode(" ", $value);
             foreach ($parts as $part) {
+                $basePart = $part;
                 if ($this->filterPunctation) {
                     $part = str_replace(['.', '_', '-'], ' ', $part);
                 }
@@ -160,6 +161,10 @@ class WildcardSearchContext extends SearchContext
                     $class = str_replace('Filter', '', $class);
                     $key = $filter->getFullName() . ':' . $class;
                     $anyFilter[$key] = $part;
+                    // also look on unfiltered data
+                    if ($part != $basePart) {
+                        $anyFilter[$key] = $basePart;
+                    }
                 }
                 $query = $query->filterAny($anyFilter);
             }
