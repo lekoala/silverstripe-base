@@ -24,7 +24,7 @@ class DBBetterDateTime extends DBDatetime
     public function toTimezone($timezone = 'UTC')
     {
         if (!$this->value) {
-            return null;
+            return 0;
         }
         $timestamp = strtotime($this->value);
         $userTimezone = new DateTimeZone($timezone);
