@@ -96,4 +96,22 @@ class EmailHelper
         $content = trim($content);
         return $content;
     }
+
+    public static function getRecipientsAsArray($recipients)
+    {
+        if (is_array($recipients)) {
+            return $recipients;
+        }
+        $recipients = str_replace(';', ',', $recipients);
+        $arr = explode(",", $recipients);
+
+        $data = [];
+        foreach ($arr as $row) {
+            $email = self::get_email_from_rfc_email($row);
+            $name = self::get_displayname_from_rfc_email($row);
+            $data[$email] = $name;
+        }
+
+        return $data;
+    }
 }

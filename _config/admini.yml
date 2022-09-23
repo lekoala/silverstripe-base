@@ -1,0 +1,11 @@
+---
+Name: base-admini
+After:
+  - "lekoala/silverstripe-admini"
+Only:
+  moduleexists:
+    - "lekoala/silverstripe-admini"
+---
+LeKoala\Admini\LeftAndMain:
+  extra_requirements_javascript:
+    - 'https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js'

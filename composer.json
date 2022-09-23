@@ -29,6 +29,7 @@
     "lekoala/silverstripe-multilingual": "*",
     "lekoala/silverstripe-devtoolkit": "*",
     "lekoala/silverstripe-geotools": "*",
+    "lekoala/silverstripe-filepond": "*",
     "lekoala/silverstripe-common-extensions": "*"
   },
   "require-dev": {
@@ -55,6 +56,13 @@
       "javascript",
       "fonts"
     ]
+  },
+  "config": {
+    "allow-plugins": {
+      "composer/installers": true,
+      "silverstripe/recipe-plugin": true,
+      "silverstripe/vendor-plugin": true
+    }
   },
   "autoload": {
     "psr-4": {

@@ -86,7 +86,7 @@ trait ImprovedActions
      */
     protected function isActionWithRequest($action)
     {
-        $action = filter_var($action, FILTER_SANITIZE_STRING);
+        $action = filter_var($action, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
         // Keep in mind we can only create a reflection of action from the base class
         // and not those provided by extensions, eg: search

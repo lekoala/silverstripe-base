@@ -56,10 +56,13 @@ trait IsRecordController
         if ($ID) {
             // Get by segment
             if ($ModelClass_SNG->hasExtension(URLSegmentExtension::class)) {
-                return URLSegmentExtension::getByURLSegment($ModelClass, $ID);
+                $record = URLSegmentExtension::getByURLSegment($ModelClass, $ID);
             }
-            // Fallback to id
-            return DataObject::get_by_id($ModelClass, $ID);
+            if (!$record) {
+                // Fallback to id
+                $record = DataObject::get_by_id($ModelClass, $ID);
+            }
+            return $record;
         }
         return false;
     }

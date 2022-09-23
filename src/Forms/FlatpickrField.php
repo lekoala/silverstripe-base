@@ -110,7 +110,7 @@ class FlatpickrField extends TextField
      * @config
      * @var string
      */
-    private static $version = '4.6.11';
+    private static $version = '4.6.13';
 
     /**
      * @config

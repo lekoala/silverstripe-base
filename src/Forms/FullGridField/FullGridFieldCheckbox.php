@@ -89,6 +89,11 @@ class FullGridFieldCheckbox implements GridField_SaveHandler, GridField_ColumnPr
     protected $onRemove = null;
 
     /**
+     * @var array
+     */
+    protected $addExtraFields = [];
+
+    /**
      * @var string
      */
     protected $confirmMessage = "Are you sure you want to add this record ?";
@@ -185,7 +190,7 @@ class FullGridFieldCheckbox implements GridField_SaveHandler, GridField_ColumnPr
         $toRemove = array_diff($currentIds, $post);
 
         foreach ($toAdd as $k => $id) {
-            $list->add($id);
+            $list->add($id, $this->addExtraFields);
             if ($this->onAdd) {
                 $cb = $this->onAdd;
                 $cb($id, $rel, $record);
@@ -240,7 +245,7 @@ class FullGridFieldCheckbox implements GridField_SaveHandler, GridField_ColumnPr
 
         $msg = "Something wrong happened";
         if ($checked) {
-            $list->add($id);
+            $list->add($id, $this->addExtraFields);
             if ($this->onAdd) {
                 $cb = $this->onAdd;
                 $cb($id, $rel, $record);
@@ -587,6 +592,27 @@ class FullGridFieldCheckbox implements GridField_SaveHandler, GridField_ColumnPr
     public function setConfirmMessageList($confirmMessageList)
     {
         $this->confirmMessageList = $confirmMessageList;
+        return $this;
+    }
+
+    /**
+     * Get the value of addExtraFields
+     * @return array
+     */
+    public function getAddExtraFields()
+    {
+        return $this->addExtraFields;
+    }
+
+    /**
+     * Set the value of addExtraFields
+     *
+     * @param array $addExtraFields
+     * @return $this
+     */
+    public function setAddExtraFields(array $addExtraFields)
+    {
+        $this->addExtraFields = $addExtraFields;
         return $this;
     }
 }

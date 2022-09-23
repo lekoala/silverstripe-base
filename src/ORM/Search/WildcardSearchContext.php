@@ -6,9 +6,11 @@ use Exception;
 use ReflectionProperty;
 use InvalidArgumentException;
 use LeKoala\Base\Helpers\ClassHelper;
+use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\Search\SearchContext;
 use SilverStripe\Forms\GridField\GridFieldFilterHeader;
+use SilverStripe\ORM\Filters\PartialMatchFilter;
 
 /**
  * Allows wildcard search in ModelAdmin
@@ -27,6 +29,11 @@ class WildcardSearchContext extends SearchContext
     protected $wildcardFilters = [];
 
     /**
+     * @var boolean
+     */
+    protected $filterPunctation = false;
+
+    /**
      * Use this to apply manually this new search context
      * instead of the default one
      *
@@ -38,6 +45,16 @@ class WildcardSearchContext extends SearchContext
         $reflection = new ReflectionProperty(get_class($component), 'searchContext');
         $reflection->setAccessible(true);
         $reflection->setValue($component, $this);
+    }
+
+    /**
+     * @param GridField $gridField
+     * @return void
+     */
+    public function replaceInGridField(GridField $gridField)
+    {
+        $component = $gridField->getConfig()->getComponentByType(GridFieldFilterHeader::class);
+        $this->replaceInFilterHeader($component);
     }
 
     /**
@@ -101,15 +118,10 @@ class WildcardSearchContext extends SearchContext
         $this->setSearchParams($searchParams);
 
         $count = count($searchParams);
-        $isWildcardSearch = true;
+        $isWildcardSearch = false;
         // If we use specific set of fields, make sure we have a value for them
         if (!empty($this->wildcardFilters)) {
-            $isWildcardSearch = false;
-            foreach ($this->wildcardFilters as $wf) {
-                if (isset($searchParams[$wf])) {
-                    $isWildcardSearch = true;
-                }
-            }
+            $isWildcardSearch = true;
         }
 
         // If we search only one value, assume we do a wildcard match
@@ -122,12 +134,20 @@ class WildcardSearchContext extends SearchContext
                 $list = [];
                 foreach ($this->wildcardFilters as $wf) {
                     if ($filter = $this->getFilter($wf)) {
+                        // The filter exist in searchable_fields
                         $list[$wf] = $filter;
+                    } else {
+                        // Enable a default filter
+                        $list[$wf] = new PartialMatchFilter($wf);
                     }
                 }
             }
+
             $parts = explode(" ", $value);
             foreach ($parts as $part) {
+                if ($this->filterPunctation) {
+                    $part = str_replace(['.', '_', '-'], ' ', $part);
+                }
                 $part = trim($part);
                 if (!$part) {
                     continue;
@@ -145,6 +165,9 @@ class WildcardSearchContext extends SearchContext
             }
         } else {
             foreach ($this->searchParams as $key => $value) {
+                if ($this->filterPunctation) {
+                    $value = str_replace(['.', '_', '-'], ' ', $value);
+                }
                 $key = str_replace('__', '.', $key);
                 if ($filter = $this->getFilter($key)) {
                     $filter->setModel($this->modelClass);
@@ -159,6 +182,7 @@ class WildcardSearchContext extends SearchContext
                 throw new Exception("SearchContext connective '$this->connective' not supported after ORM-rewrite.");
             }
         }
+
         return $query;
     }
 
@@ -180,6 +204,27 @@ class WildcardSearchContext extends SearchContext
     public function setWildcardFilters(array $wildcardFilters)
     {
         $this->wildcardFilters = $wildcardFilters;
+        return $this;
+    }
+
+    /**
+     * Get the value of filterPunctation
+     * @return bool
+     */
+    public function getFilterPunctuation()
+    {
+        return $this->filterPunctation;
+    }
+
+    /**
+     * Set the value of filterPunctation
+     *
+     * @param array $filterPunctation
+     * @return $this
+     */
+    public function setFilterPunctuation($filterPunctation)
+    {
+        $this->filterPunctation = $filterPunctation;
         return $this;
     }
 }

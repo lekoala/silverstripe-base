@@ -123,6 +123,65 @@ class DatabaseHelper
     }
 
     /**
+     * Mutate where array with in clause
+     *
+     * @param array $arr
+     * @param string $field
+     * @param array|string $values
+     * @return void
+     */
+    public static function inArray(&$arr, $field, $values)
+    {
+        if (is_array($values) && empty($values)) {
+            return;
+        }
+        if (is_string($values) || is_numeric($values)) {
+            $arr["$field = ?"] = $values;
+        } else {
+            $params = [];
+            foreach ($values as $v) {
+                $params[] = '?';
+            }
+            $paramsStr = implode(",", $params);
+            $arr["$field IN ($paramsStr)"] = $values;
+        }
+    }
+
+    /**
+     * Join two where clauses either with AND or OR
+     *
+     * @param array $baseWhere
+     * @param array $newWhere
+     * @param string $type
+     * @return array
+     */
+    public static function joinWhere($baseWhere, $newWhere, $type = "OR")
+    {
+        $w = [];
+        $sqlParts = [];
+        $sqlParams = [];
+        foreach ($baseWhere as $sql => $params) {
+            $sqlParts[] = $sql;
+            if (!is_array($params)) {
+                $params = [$params];
+            }
+            $sqlParams = array_merge($sqlParams, $params);
+        }
+        $w[implode("$type", $sqlParts)] = $sqlParams;
+        $sqlParts = [];
+        $sqlParams = [];
+        foreach ($newWhere as $sql => $params) {
+            $sqlParts[] = $sql;
+            if (!is_array($params)) {
+                $params = [$params];
+            }
+            $sqlParams = array_merge($sqlParams, $params);
+        }
+        $w[implode("$type", $sqlParts)] = $sqlParams;
+        return $w;
+    }
+
+    /**
      * @param string $table
      * @param string $column
      * @return array
