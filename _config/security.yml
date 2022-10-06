@@ -52,3 +52,11 @@ SilverStripe\Core\Injector\Injector:
   #    properties:
   #    Authenticators:
   #      cms: '%$LeKoala\Base\Security\BaseAuthenticator'
+---
+Name: base-dev-security
+Except:
+  environment: live
+---
+SilverStripe\Control\Session:
+  # don't kill session when toggling browser inspector/responsive mode
+  strict_user_agent_check: false
