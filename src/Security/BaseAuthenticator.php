@@ -39,30 +39,40 @@ class BaseAuthenticator extends MemberAuthenticator
         return parent::authenticateMember($data, $result, $member);
     }
 
+    /**
+     * @param Member $member
+     * @param string $password
+     * @param ValidationResult|null $result
+     * @return bool
+     */
     public function checkPassword(Member $member, $password, ValidationResult &$result = null)
     {
         // Plain password
         if ($member->Password && !$member->PasswordEncryption) {
             if ($member->Password == $password) {
-                return $result;
+                return true;
             }
         }
 
         if (!$member->PasswordEncryption) {
-            $result->addError(_t(
-                'BaseAuthenticator.PLEASERESET',
-                "Please reset your password with 'I've Lost my Password' steps below."
-            ));
-            return $result;
+            if ($result) {
+                $result->addError(_t(
+                    'BaseAuthenticator.PLEASERESET',
+                    "Please reset your password with 'I've Lost my Password' steps below."
+                ));
+            }
+            return false;
         }
 
         // Check empty password
         $encryptor = PasswordEncryptor::create_for_algorithm($member->PasswordEncryption);
         if ($encryptor->check($member->Password, "", $member->Salt, $member)) {
-            $result->addError(_t(
-                'BaseAuthenticator.PLEASERESET',
-                "Please reset your password with 'I've Lost my Password' steps below."
-            ));
+            if ($result) {
+                $result->addError(_t(
+                    'BaseAuthenticator.PLEASERESET',
+                    "Please reset your password with 'I've Lost my Password' steps below."
+                ));
+            }
         }
 
         // Check if the member entered his old password if he recently changed it
@@ -84,11 +94,13 @@ class BaseAuthenticator extends MemberAuthenticator
             }
             if ($i == 2 && $recentChange) {
                 if ($previousPassword->checkPassword($password)) {
-                    $result->addError(_t(
-                        'BaseAuthenticator.OLDPASSWORD',
-                        'You entered your old password. Please use the new one.'
-                    ));
-                    return $result;
+                    if ($result) {
+                        $result->addError(_t(
+                            'BaseAuthenticator.OLDPASSWORD',
+                            'You entered your old password. Please use the new one.'
+                        ));
+                    }
+                    return false;
                 }
             }
         }

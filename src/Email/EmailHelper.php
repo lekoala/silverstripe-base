@@ -107,7 +107,7 @@ class EmailHelper
 
         $data = [];
         foreach ($arr as $row) {
-            $email = self::get_email_from_rfc_email($row);
+            $email = trim(self::get_email_from_rfc_email($row));
             $name = self::get_displayname_from_rfc_email($row);
             $data[$email] = $name;
         }
