@@ -72,6 +72,7 @@ class BaseAuthenticator extends MemberAuthenticator
                     'BaseAuthenticator.PLEASERESET',
                     "Please reset your password with 'I've Lost my Password' steps below."
                 ));
+                return false;
             }
         }
 
