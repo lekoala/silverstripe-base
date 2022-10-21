@@ -2,6 +2,7 @@
 
 namespace LeKoala\Base\Forms\GridField;
 
+use LeKoala\Base\ORM\Search\WildcardSearchContext;
 use LogicException;
 use ReflectionObject;
 use SilverStripe\ORM\SS_List;
@@ -40,7 +41,12 @@ class BetterGridFieldAddExistingAutocompleter extends GridFieldAddExistingAutoco
     /**
      * @var boolean
      */
-    protected $wildcardMatch = false;
+    protected $filterPunctation = false;
+
+    /**
+     * @var boolean
+     */
+    protected $expandSpace = false;
 
     /**
      * Access a protected property when the api does not allow access
@@ -112,6 +118,18 @@ class BetterGridFieldAddExistingAutocompleter extends GridFieldAddExistingAutoco
 
         $params = [];
         $searchValue = $request->getVar('gridfield_relationsearch');
+        $filterClass = null;
+
+        // shortcuts
+        $shortcutData = WildcardSearchContext::findShortcutInString($searchValue);
+        $forceFilter = false;
+        if ($shortcutData['shortcut']) {
+            $filterClass = $shortcutData['filterClass'];
+            $forceFilter = true;
+            $searchValue = $shortcutData['value'];
+            $filterClass = WildcardSearchContext::getFilterName($filterClass);
+        }
+
         foreach ($searchFields as $searchField) {
             // Do we have a specific search filter myfield:myfilter ?
             $name = (strpos($searchField, ':') !== false) ? $searchField : "$searchField:" . $this->defaultSearchFilter;
@@ -122,17 +140,40 @@ class BetterGridFieldAddExistingAutocompleter extends GridFieldAddExistingAutoco
                 continue;
             }
 
+            if ($forceFilter && $filterClass) {
+                $parts[1] = $filterClass;
+                $name = implode(":", $parts);
+            }
+            $filterClass = $parts[1];
+
+            // Filter punctuation
+            if ($this->filterPunctation) {
+                $searchValue = str_replace(['.', '_', '-'], ' ', $searchValue);
+            }
             // If we are using partial match, add %
-            if ($this->wildcardMatch && $this->defaultSearchFilter == "PartialMatch") {
+            if ($this->expandSpace && $filterClass == "PartialMatch") {
                 $searchValue = str_replace(" ", "%", $searchValue);
             }
             $params[$name] = $searchValue;
         }
 
+        $sort = strtok($searchFields[0], ':') . ' ASC';
+
+//         $char = substr($searchValue, 0, 1);
+//         $sortByTitle = <<<SQL
+// CASE
+//     WHEN Title LIKE '{$char}%' THEN 1
+//     ELSE 2
+// END;
+// SQL;
+//         if (singleton($dataClass)->hasField('Title')) {
+//             $sort = $sortByTitle;
+//         }
+
         $results = $allList
             ->subtract($gridField->getList())
             ->filterAny($params)
-            ->sort(strtok($searchFields[0], ':'), 'ASC')
+            ->sort($sort)
             ->limit($this->getResultsLimit());
 
         $json = [];
@@ -178,17 +219,7 @@ class BetterGridFieldAddExistingAutocompleter extends GridFieldAddExistingAutoco
                         $filter = 'StartsWith';
                     } else {
                         $filterName = $spec['filter'];
-                        // It can be an instance
-                        if ($filterName instanceof SearchFilter) {
-                            $filterName = get_class($filterName);
-                        }
-                        // It can be a fully qualified class name
-                        if (strpos($filterName, '\\') !== false) {
-                            $filterNameParts = explode("\\", $filterName);
-                            // We expect an alias matching the class name without namespace, see #coresearchaliases
-                            $filterName = array_pop($filterNameParts);
-                        }
-                        $filter = preg_replace('/Filter$/', '', $filterName);
+                        $filter = WildcardSearchContext::getFilterName($filterName);
                     }
                     $fields[] = "{$name}:{$filter}";
                 } else {
@@ -277,22 +308,23 @@ class BetterGridFieldAddExistingAutocompleter extends GridFieldAddExistingAutoco
 
     /**
      * Get the value of wildcardMatch
+     * @deprecated
      * @return bool
      */
     public function getWildcardMatch()
     {
-        return $this->wildcardMatch;
+        return $this->expandSpace;
     }
 
     /**
      * Set the value of wildcardMatch
-     *
+     * @deprecated
      * @param bool $wildcardMatch
      * @return $this
      */
     public function setWildcardMatch(bool $wildcardMatch)
     {
-        $this->wildcardMatch = $wildcardMatch;
+        $this->expandSpace = $wildcardMatch;
         return $this;
     }
 
@@ -314,6 +346,46 @@ class BetterGridFieldAddExistingAutocompleter extends GridFieldAddExistingAutoco
     public function setIgnoredSearchFields(array $ignoredSearchFields)
     {
         $this->ignoredSearchFields = $ignoredSearchFields;
+        return $this;
+    }
+
+    /**
+     * Get the value of filterPunctation
+     * @return bool
+     */
+    public function getFilterPunctuation()
+    {
+        return $this->filterPunctation;
+    }
+
+    /**
+     * Set the value of filterPunctation
+     *
+     * @param array $filterPunctation
+     * @return $this
+     */
+    public function setFilterPunctuation($filterPunctation)
+    {
+        $this->filterPunctation = $filterPunctation;
+        return $this;
+    }
+
+    /**
+     * Get the value of expandSpace
+     */
+    public function getExpandSpace()
+    {
+        return $this->expandSpace;
+    }
+
+    /**
+     * Set the value of expandSpace
+     *
+     * @param boolean $expandSpace
+     */
+    public function setExpandSpace($expandSpace)
+    {
+        $this->expandSpace = $expandSpace;
         return $this;
     }
 }

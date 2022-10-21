@@ -5,12 +5,16 @@ namespace LeKoala\Base\ORM\Search;
 use Exception;
 use ReflectionProperty;
 use InvalidArgumentException;
-use LeKoala\Base\Helpers\ClassHelper;
-use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\ORM\DataList;
+use LeKoala\Base\Helpers\ClassHelper;
+use SilverStripe\ORM\Filters\SearchFilter;
 use SilverStripe\ORM\Search\SearchContext;
-use SilverStripe\Forms\GridField\GridFieldFilterHeader;
+use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\ORM\Filters\EndsWithFilter;
+use SilverStripe\ORM\Filters\ExactMatchFilter;
+use SilverStripe\ORM\Filters\StartsWithFilter;
 use SilverStripe\ORM\Filters\PartialMatchFilter;
+use SilverStripe\Forms\GridField\GridFieldFilterHeader;
 
 /**
  * Allows wildcard search in ModelAdmin
@@ -29,9 +33,19 @@ class WildcardSearchContext extends SearchContext
     protected $wildcardFilters = [];
 
     /**
+     * @var string
+     */
+    protected $defaultFilterClass = null;
+
+    /**
      * @var boolean
      */
     protected $filterPunctation = false;
+
+    /**
+     * @var boolean
+     */
+    protected $expandSpace = true;
 
     /**
      * Use this to apply manually this new search context
@@ -70,6 +84,80 @@ class WildcardSearchContext extends SearchContext
         $modelClass = $reflection->getValue($context);
 
         return new static($modelClass, $context->getFields(), $context->getFilters());
+    }
+
+    /**
+     * @param string $name
+     * @return SearchFilter
+     */
+    public function getRealFilter($name)
+    {
+        // The filter exist in searchable_fields
+        // it will return by default a PartialMatch
+        $filter = $this->getFilter($name);
+        if (empty($filter)) {
+            $filterClass = $this->defaultFilterClass ?? PartialMatchFilter::class;
+            $filter = new $filterClass($name);
+        }
+        return $filter;
+    }
+
+    /**
+     * @param string $value
+     * @return array
+     */
+    public static function findShortcutInString($value)
+    {
+        $shortcut = null;
+        if (strpos($value, ':') === 1) {
+            $parts = explode(":", $value);
+            $shortcut = array_shift($parts);
+            $value = implode(":", $parts);
+        }
+
+        $filterClass = null;
+        if ($shortcut) {
+            switch ($shortcut) {
+                case 's':
+                    $filterClass = StartsWithFilter::class;
+                    break;
+                case 'e':
+                    $filterClass = EndsWithFilter::class;
+                    break;
+                case '=':
+                    $filterClass = ExactMatchFilter::class;
+                    break;
+            }
+        }
+
+        return [
+            'shortcut' => $shortcut,
+            'filterClass' => $filterClass,
+            'value' => $value,
+        ];
+    }
+
+    /**
+     * Find out the real filter name
+     * @param string|SearchFilter $filterName
+     * @return string
+     */
+    public static function getFilterName($filterName)
+    {
+        // It can be an instance
+        if ($filterName instanceof SearchFilter) {
+            $filterName = get_class($filterName);
+        }
+        // It can be a fully qualified class name
+        if (strpos($filterName, '\\') !== false) {
+            $filterNameParts = explode("\\", $filterName);
+            // We expect an alias matching the class name without namespace, see #coresearchaliases
+            $filterName = array_pop($filterNameParts);
+        }
+        // Remove suffix
+        $filterName = preg_replace('/Filter$/', '', $filterName);
+        $filterName = preg_replace('/SearchFilter$/', '', $filterName);
+        return $filterName;
     }
 
     /**
@@ -128,58 +216,60 @@ class WildcardSearchContext extends SearchContext
         if ($count === 1 && $isWildcardSearch) {
             $values = array_values($searchParams);
             $value = $values[0];
+
+            // Look for search shortcuts like s: or e:
+            $shortcutData = self::findShortcutInString($value);
+            $forceFilter = null;
+            if ($shortcutData['shortcut']) {
+                $value = $shortcutData['value'];
+                $forceFilter = $shortcutData['filterClass'];
+            }
+
             $anyFilter = [];
             $list = $this->filters;
             if (!empty($this->wildcardFilters)) {
                 $list = [];
                 foreach ($this->wildcardFilters as $wf) {
-                    if ($filter = $this->getFilter($wf)) {
-                        // The filter exist in searchable_fields
-                        $list[$wf] = $filter;
-                    } else {
-                        // Enable a default filter
-                        $list[$wf] = new PartialMatchFilter($wf);
+                    if ($forceFilter) {
+                        $list[$wf] = new $forceFilter($wf);
+                        continue;
                     }
+                    $filter = $this->getRealFilter($wf);
+                    $list[$wf] = $filter;
                 }
             }
 
-            $parts = explode(" ", $value);
-            foreach ($parts as $part) {
-                $basePart = $part;
-                if ($this->filterPunctation) {
-                    $part = str_replace(['.', '_', '-'], ' ', $part);
-                }
-                $part = trim($part);
-                if (!$part) {
-                    continue;
-                }
-                foreach ($list as $filterName => $filter) {
-                    $class = ClassHelper::getClassWithoutNamespace(get_class($filter));
-                    // Based on convention, it could contains SearchFilter or Filter in class name
-                    // It should match something within the DataListFilter namespace, eg DataListFilter.MyFilter
-                    $class = str_replace('SearchFilter', '', $class);
-                    $class = str_replace('Filter', '', $class);
-                    $key = $filter->getFullName() . ':' . $class;
-                    $anyFilter[$key] = $part;
-                    // also look on unfiltered data
-                    if ($part != $basePart) {
-                        $anyFilter[$key] = $basePart;
-                    }
-                }
-                $query = $query->filterAny($anyFilter);
+            $baseValue = $value;
+            if ($this->expandSpace) {
+                $value = str_replace(" ", "%", $value);
             }
+            if ($this->filterPunctation) {
+                $value = str_replace(['.', '_', '-'], ' ', $value);
+            }
+            $value = trim($value);
+            foreach ($list as $filterName => $filter) {
+                $class = self::getFilterName($filter);
+                $key = $filter->getFullName() . ':' . $class;
+                if ($value) {
+                    $anyFilter[$key] = $value;
+                }
+                // also look on unfiltered data
+                if ($value != $baseValue) {
+                    $anyFilter[$key] = $baseValue;
+                }
+            }
+            $query = $query->filterAny($anyFilter);
         } else {
             foreach ($this->searchParams as $key => $value) {
                 if ($this->filterPunctation) {
                     $value = str_replace(['.', '_', '-'], ' ', $value);
                 }
                 $key = str_replace('__', '.', $key);
-                if ($filter = $this->getFilter($key)) {
-                    $filter->setModel($this->modelClass);
-                    $filter->setValue($value);
-                    if (!$filter->isEmpty()) {
-                        $query = $query->alterDataQuery(array($filter, 'apply'));
-                    }
+                $filter = $this->getRealFilter($key);
+                $filter->setModel($this->modelClass);
+                $filter->setValue($value);
+                if (!$filter->isEmpty()) {
+                    $query = $query->alterDataQuery(array($filter, 'apply'));
                 }
             }
 
@@ -230,6 +320,44 @@ class WildcardSearchContext extends SearchContext
     public function setFilterPunctuation($filterPunctation)
     {
         $this->filterPunctation = $filterPunctation;
+        return $this;
+    }
+
+    /**
+     * Get the value of defaultFilterClass
+     */
+    public function getDefaultFilterClass()
+    {
+        return $this->defaultFilterClass;
+    }
+
+    /**
+     * Set the value of defaultFilterClass
+     *
+     * @param string $defaultFilterClass
+     */
+    public function setDefaultFilterClass($defaultFilterClass)
+    {
+        $this->defaultFilterClass = $defaultFilterClass;
+        return $this;
+    }
+
+    /**
+     * Get the value of expandSpace
+     */
+    public function getExpandSpace()
+    {
+        return $this->expandSpace;
+    }
+
+    /**
+     * Set the value of expandSpace
+     *
+     * @param boolean $expandSpace
+     */
+    public function setExpandSpace($expandSpace)
+    {
+        $this->expandSpace = $expandSpace;
         return $this;
     }
 }
