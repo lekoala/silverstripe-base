@@ -209,6 +209,14 @@ abstract class BaseModelAdmin extends ModelAdmin
 
     public function handleRequest(HTTPRequest $request)
     {
+        $SubsiteID = $request->getVar('SubsiteID');
+        if ($SubsiteID) {
+            // We are editing something, move to root
+            if (strpos($request->getURL(), '/EditForm/') !== false) {
+                return $this->owner->redirect($this->Link());
+            }
+        }
+
         $response = parent::handleRequest($request);
         // Force reload since sometimes pjax does not refresh properly everything :-(
         // ! Don't do this, it breaks save and close functionnality
