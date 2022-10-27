@@ -16,7 +16,7 @@ use SilverStripe\Forms\HeaderField;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\Forms\DropdownField;
 use LeKoala\Base\ORM\FieldType\DBColor;
-use LeKoala\FilePond\FilePondField;
+use SilverStripe\AssetAdmin\Forms\UploadField;
 
 /**
  * Extend SiteConfig to make your website Themable
@@ -225,13 +225,13 @@ class ThemeSiteConfigExtension extends DataExtension
         // Images
         $ImagesHeader = new HeaderField("ImagesHeader", "Images");
         $themeTab->push($ImagesHeader);
-        $Logo = new FilePondField('Logo');
+        $Logo = UploadField::create('Logo');
         $Logo->setFolderName("Theme");
         $themeTab->push($Logo);
-        $Icon = new FilePondField('Icon');
+        $Icon = UploadField::create('Icon');
         $Icon->setFolderName("Theme");
         $themeTab->push($Icon);
-        $Favicon = new FilePondField('Favicon');
+        $Favicon = UploadField::create('Favicon');
         $Favicon->setFolderName("Theme");
         $Favicon->setAllowedExtensions('zip');
         $Favicon->setDescription("Upload the zip file generated with <a href=\"https://realfavicongenerator.net/\" target=\"_blank\">Real Favicon Generator</a>. Theme Color will be used as background for your icon.");
