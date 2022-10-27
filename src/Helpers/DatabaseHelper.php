@@ -34,6 +34,20 @@ class DatabaseHelper
     }
 
     /**
+     * Avoid the infamous Cannot filter "Table"."ID" against an empty set
+     *
+     * @param array|string $IDs
+     * @return array|string The list or 0
+     */
+    public static function getValidIDs($IDs)
+    {
+        if (empty($IDs)) {
+            $IDs = 0;
+        }
+        return $IDs;
+    }
+
+    /**
      * Returns an order by clause with an order based on the list of fields
      *
      * @param string $field The field name
