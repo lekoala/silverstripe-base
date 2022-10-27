@@ -73,6 +73,18 @@ class GridFieldHelper
         return $editable;
     }
 
+    public static function makeEmailClickable(GridFieldDataColumns $cols, $field = 'Email')
+    {
+        $formatting = $cols->getFieldFormatting();
+        $formatting[$field] = function ($v, $item) {
+            if (!$v || !filter_var($v, FILTER_VALIDATE_EMAIL)) {
+                return $v;
+            }
+            return '<a href="mailto:' . $v . '">' . $v . '</a>';
+        };
+        $cols->setFieldFormatting($formatting);
+    }
+
     /**
      * @param GridField $gridField
      * @return GridFieldConfig
