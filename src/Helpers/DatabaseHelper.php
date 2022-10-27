@@ -8,6 +8,7 @@ use SilverStripe\ORM\DB;
 use SilverStripe\ORM\Queries\SQLUpdate;
 use SilverStripe\SQLite\SQLite3Database;
 use SilverStripe\ORM\Connect\MySQLDatabase;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\Queries\SQLInsert;
 use \SilverStripe\View\Parsers\SQLFormatter as SS_SQLFormatter;
 
@@ -45,6 +46,26 @@ class DatabaseHelper
             $IDs = 0;
         }
         return $IDs;
+    }
+
+    public static function preventRemoval(DataObject &$obj, $fields = [], $allFiles = false)
+    {
+        if ($allFiles && $obj->hasMethod('getAllFileRelations')) {
+            $filesRelations = $obj->getAllFileRelations();
+            foreach ($filesRelations as $relType => $rels) {
+                foreach ($rels as $rel) {
+                    $fields[] = $rel . "ID";
+                }
+            }
+        }
+
+        $changedFields = $obj->getChangedFields(true, DataObject::CHANGE_VALUE);
+        foreach ($changedFields as $changedField => $changes) {
+            // Revert value if we prevent removal
+            if (in_array($changedField, $fields) && empty($changes['after'])) {
+                $obj->$changedField = $changes['before'];
+            }
+        }
     }
 
     /**
