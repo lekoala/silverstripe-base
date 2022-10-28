@@ -89,6 +89,8 @@ class SiteConfigExtension extends DataExtension
         $Copyright = HTMLEditorField::create('Copyright');
         $Copyright->setRows(2);
         $fields->addFieldToTab('Root.Footer', $Copyright);
+
+        $this->owner->extend("updateBaseCMSFields", $fields);
     }
 
     /**
