@@ -1,6 +1,9 @@
 <?php
+
 namespace LeKoala\Base\Helpers;
 
+use ReflectionClass;
+use ReflectionParameter;
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\Image;
 use SilverStripe\Core\ClassInfo;
@@ -10,8 +13,6 @@ use SilverStripe\Core\Extensible;
 use SilverStripe\Security\Member;
 use SilverStripe\Core\Manifest\Module;
 use SilverStripe\Core\Manifest\ClassLoader;
-use SilverStripe\Core\Manifest\ClassManifest;
-use SilverStripe\Core\Injector\InjectorLoader;
 
 /**
  *
@@ -35,6 +36,18 @@ class ClassHelper
             $array3 = $array1;
         }
         return $array3;
+    }
+
+    /**
+     * @link https://php.watch/versions/8.0/deprecated-reflectionparameter-methods#getClass
+     * @param ReflectionParameter $param
+     * @return ReflectionClass
+     */
+    public static function getReflectionClass(ReflectionParameter $param)
+    {
+        return $param->getType() && !$param->getType()->isBuiltin()
+            ? new ReflectionClass($param->getType()->getName())
+            : null;
     }
 
     /**
