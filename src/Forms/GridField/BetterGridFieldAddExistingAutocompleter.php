@@ -157,24 +157,38 @@ class BetterGridFieldAddExistingAutocompleter extends GridFieldAddExistingAutoco
             $params[$name] = $searchValue;
         }
 
-        $sort = strtok($searchFields[0], ':') . ' ASC';
+        $join = null;
+        $sortField = strtok($searchFields[0], ':');
+        $sortFieldParts = explode(".", $sortField);
+        if (count($sortFieldParts > 1)) {
+            $sortField = $sortFieldParts[1];
+            $join = $sortFieldParts[0];
+        }
+        $sort = $sortField . ' ASC';
 
-//         $char = substr($searchValue, 0, 1);
-//         $sortByTitle = <<<SQL
-// CASE
-//     WHEN Title LIKE '{$char}%' THEN 1
-//     ELSE 2
-// END;
-// SQL;
-//         if (singleton($dataClass)->hasField('Title')) {
-//             $sort = $sortByTitle;
-//         }
+        //         $char = substr($searchValue, 0, 1);
+        //         $sortByTitle = <<<SQL
+        // CASE
+        //     WHEN Title LIKE '{$char}%' THEN 1
+        //     ELSE 2
+        // END;
+        // SQL;
+        //         if (singleton($dataClass)->hasField('Title')) {
+        //             $sort = $sortByTitle;
+        //         }
 
         $results = $allList
             ->subtract($gridField->getList())
             ->filterAny($params)
             ->sort($sort)
             ->limit($this->getResultsLimit());
+
+        if ($join) {
+            // TODO: to refine
+            $table = $allList->dataClass();
+            $externalKey = $join . "ID";
+            $results->innerJoin($join, $join . ".ID = " . $table . "." . $externalKey);
+        }
 
         $json = [];
         Config::nest();
