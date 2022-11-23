@@ -160,9 +160,8 @@ class BetterGridFieldAddExistingAutocompleter extends GridFieldAddExistingAutoco
         $join = null;
         $sortField = strtok($searchFields[0], ':');
         $sortFieldParts = explode(".", $sortField);
-        if (count($sortFieldParts > 1)) {
-            $sortField = $sortFieldParts[1];
-            $join = $sortFieldParts[0];
+        if (count($sortFieldParts) > 1) {
+            $sortField = $allList->applyRelation($sortField);
         }
         $sort = $sortField . ' ASC';
 
@@ -182,13 +181,6 @@ class BetterGridFieldAddExistingAutocompleter extends GridFieldAddExistingAutoco
             ->filterAny($params)
             ->sort($sort)
             ->limit($this->getResultsLimit());
-
-        if ($join) {
-            // TODO: to refine
-            $table = $allList->dataClass();
-            $externalKey = $join . "ID";
-            $results->innerJoin($join, $join . ".ID = " . $table . "." . $externalKey);
-        }
 
         $json = [];
         Config::nest();
