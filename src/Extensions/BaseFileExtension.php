@@ -473,10 +473,14 @@ class BaseFileExtension extends DataExtension
             return implode("/", $parts);
         }
         $Filename = $this->owner->FileFilename;
+        if (!$Filename) {
+            return "";
+        }
+
         $Dir = dirname($Filename);
         $Name = basename($Filename);
 
-        $Hash = $this->owner->FileHash ? substr($this->owner->FileHash, 0, 10) : "";
+        $Hash = substr($this->owner->FileHash, 0, 10);
 
         $Path = '';
         // Is it protected?
