@@ -476,11 +476,11 @@ class BaseFileExtension extends DataExtension
         $Dir = dirname($Filename);
         $Name = basename($Filename);
 
-        $Hash = substr($this->owner->FileHash, 0, 10);
+        $Hash = $this->owner->FileHash ? substr($this->owner->FileHash, 0, 10) : "";
 
         $Path = '';
         // Is it protected?
-        if (!$this->owner->isPublished()) {
+        if (!$this->owner->isPublished() && $Hash) {
             $Path = Config::inst()->get(ProtectedAssetAdapter::class, 'secure_folder') . '/';
             $Path .= $Dir . '/' . $Hash . '/' . $Name;
         } else {
