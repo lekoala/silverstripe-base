@@ -168,7 +168,7 @@ trait CurrencyFormatter
     public function formattedNumber($amount, $decimals = 2)
     {
         return number_format(
-            abs($amount),
+            abs($amount ?? 0),
             $decimals,
             $this->getCurrencyDecimalSeparator(),
             $this->getCurrencyGroupingSeparator()
