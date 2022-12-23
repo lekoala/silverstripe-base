@@ -1,5 +1,6 @@
 # https://docs.silverstripe.org/en/4/developer_guides/debugging/error_handling/
 # See also base config in vendor\silverstripe\framework\_config\logging.yml
+# https://servicedesk.silverstripe.cloud/support/solutions/articles/75000012848-server-logs
 #
 # Available levels in monolog:
 # DEBUG (100): Detailed debug information.
@@ -16,7 +17,13 @@ Name: base-errors
 SilverStripe\Core\Injector\Injector:
   Psr\Log\LoggerInterface:
     calls:
+      SyslogHandler: [ pushHandler, [ '%$Monolog\Handler\HandlerInterface.silverstripe' ] ]
       ErrorLogFileHandler: [ pushHandler, [ '%$ErrorLogFileHandler' ] ]
+  # Internal error handler, piped to syslog
+  Monolog\Handler\HandlerInterface.silverstripe:
+    class: Monolog\Handler\SyslogHandler
+    constructor:
+      - 'SilverStripe_log'
   CustomLineFormatter:
     class: Monolog\Formatter\LineFormatter
     constructor:
