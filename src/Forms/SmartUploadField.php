@@ -48,6 +48,16 @@ class SmartUploadField extends UploadField
     }
 
     /**
+     * Temp fix
+     * @link https://github.com/lekoala/silverstripe-cms-actions/issues/27
+     * @return string
+     */
+    public function ID()
+    {
+        return parent::ID() . "-" . random_int(1, PHP_INT_MAX);
+    }
+
+    /**
      * Access a protected property when the api does not allow access
      *
      * @param object $object
