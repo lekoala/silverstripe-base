@@ -133,10 +133,10 @@ class BaseContentController extends ContentController
         }
 
         // Always helpful!
-        $request = $this->getRequest();
-        if (Director::isDev() && !Director::is_ajax() && $request && !$request->isPOST()) {
-            SSViewer::config()->set('source_file_comments', true);
-        }
+        // $request = $this->getRequest();
+        // if (Director::isDev() && !Director::is_ajax() && $request && !$request->isPOST()) {
+        //     SSViewer::config()->set('source_file_comments', true);
+        // }
 
         // Switch channel for clearer logs
         $this->logger = $this->logger->withName('app');

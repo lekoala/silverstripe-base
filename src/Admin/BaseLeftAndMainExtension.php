@@ -65,7 +65,7 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
         $SiteConfig = SiteConfig::current_site_config();
 
         // Never have comments as it can break ajax requests
-        Config::modify()->set(SSViewer::class, 'source_file_comments', false);
+        // Config::modify()->set(SSViewer::class, 'source_file_comments', false);
 
         LangHelper::persistLocale();
 

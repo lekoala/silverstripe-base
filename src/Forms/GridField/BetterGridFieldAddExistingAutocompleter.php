@@ -183,8 +183,8 @@ class BetterGridFieldAddExistingAutocompleter extends GridFieldAddExistingAutoco
             ->limit($this->getResultsLimit());
 
         $json = [];
-        Config::nest();
-        SSViewer::config()->update('source_file_comments', false);
+        // Config::nest();
+        // SSViewer::config()->update('source_file_comments', false);
         $viewer = SSViewer::fromString($this->resultsFormat);
         foreach ($results as $result) {
             $title = Convert::html2raw($viewer->process($result));
@@ -194,7 +194,7 @@ class BetterGridFieldAddExistingAutocompleter extends GridFieldAddExistingAutoco
                 'id' => $result->ID,
             ];
         }
-        Config::unnest();
+        // Config::unnest();
         $response = new HTTPResponse(json_encode($json));
         $response->addHeader('Content-Type', 'application/json');
         return $response;
