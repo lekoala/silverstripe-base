@@ -183,6 +183,12 @@ class CommonRequirements
 
     /**
      * @config
+     * @var string
+     */
+    private static $lasticon_version = "2";
+
+    /**
+     * @config
      * @var bool
      */
     private static $modular_behaviour_debug = false;
@@ -342,6 +348,16 @@ class CommonRequirements
     {
         $version = self::config()->boxicons_version;
         Requirements::css("https://cdn.jsdelivr.net/npm/boxicons@$version/css/boxicons.min.css");
+    }
+
+    /**
+     * @link https://github.com/lekoala/last-icon
+     * @return void
+     */
+    public static function lastIcon()
+    {
+        $version = self::config()->lasticon_version;
+        Requirements::javascript("https://cdn.jsdelivr.net/npm/last-icon@$version/last-icon.min.js");
     }
 
     /**

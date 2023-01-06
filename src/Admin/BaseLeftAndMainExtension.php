@@ -88,6 +88,8 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
             }
         }
 
+        CommonRequirements::lastIcon();
+
         // otherwise it may show artefacts when loading
         if (Environment::getEnv('DONT_FORCE_TINYMCE_LOAD')) {
             // Keep default
