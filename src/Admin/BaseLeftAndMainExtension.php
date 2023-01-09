@@ -92,7 +92,10 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
 
         // Temp 4.12 fix
         $version = $this->owner->CMSVersionNumber();
-        if ($version == "4.12") {
+        if (isset($_GET['show_cms_version'])) {
+            die($version);
+        }
+        if ($version == "4.12" && !$version) {
             Requirements::javascript("https://code.jquery.com/jquery-migrate-3.4.0.min.js");
         }
 
