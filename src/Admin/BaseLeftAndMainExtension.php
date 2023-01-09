@@ -95,7 +95,7 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
         if (isset($_GET['show_cms_version'])) {
             die($version);
         }
-        if ($version == "4.12" && !$version) {
+        if ($version == "4.12" || !$version) {
             Requirements::javascript("https://code.jquery.com/jquery-migrate-3.4.0.min.js");
         }
 
