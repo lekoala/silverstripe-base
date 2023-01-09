@@ -91,7 +91,10 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
         CommonRequirements::lastIcon();
 
         // Temp 4.12 fix
-        Requirements::javascript("https://code.jquery.com/jquery-migrate-3.4.0.min.js");
+        $version = $this->owner->CMSVersionNumber();
+        if ($version == "4.12") {
+            Requirements::javascript("https://code.jquery.com/jquery-migrate-3.4.0.min.js");
+        }
 
         // otherwise it may show artefacts when loading
         if (Environment::getEnv('DONT_FORCE_TINYMCE_LOAD')) {
