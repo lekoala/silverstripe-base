@@ -157,11 +157,10 @@ class BetterGridFieldAddExistingAutocompleter extends GridFieldAddExistingAutoco
             $params[$name] = $searchValue;
         }
 
-        $join = null;
         $sortField = strtok($searchFields[0], ':');
         $sortFieldParts = explode(".", $sortField);
         if (count($sortFieldParts) > 1) {
-            $sortField = $allList->applyRelation($sortField);
+            $allList = $allList->applyRelation($sortField);
         }
         $sort = $sortField . ' ASC';
 
