@@ -102,13 +102,14 @@ class JsRequiredFields extends RequiredFields
             // submitted data for file upload fields come back as an array
             $value = isset($data[$fieldName]) ? $data[$fieldName] : null;
 
+            $error = '';
             if (is_array($value)) {
                 if ($formField instanceof FileField && isset($value['error']) && $value['error']) {
                     $error = true;
                 } else {
                     $error = (count($value)) ? false : true;
                 }
-            } else {
+            } elseif ($value !== null) {
                 // assume a string or integer
                 $error = (strlen($value)) ? false : true;
             }

@@ -1,4 +1,5 @@
 <?php
+
 namespace LeKoala\Base\Forms;
 
 use SilverStripe\Forms\OptionsetField;
@@ -48,7 +49,7 @@ class YesNoOptionsetField extends OptionsetField
     {
         if ($value) {
             $value = 'YES';
-        } elseif (strlen($value) || $value === false) {
+        } elseif ($value !== null || strlen($value) || $value === false) {
             $value = 'NO';
         }
         return parent::setValue($value, $data);

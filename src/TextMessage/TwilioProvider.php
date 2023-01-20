@@ -53,7 +53,7 @@ class TwilioProvider implements ProviderInterface
         }
 
         // Filter number
-        $to = $member->Mobile;
+        $to = $member->Mobile ?? '';
         $to = str_replace([' ', '-', '/'], '', $to);
 
         if (strlen($to) < 8) {

@@ -14,6 +14,9 @@ class StringHelper
      */
     public static function startsWith($haystack, $needle)
     {
+        if ($needle === null) {
+            return false;
+        }
         $length = strlen($needle);
         return (substr($haystack, 0, $length) === $needle);
     }
@@ -25,6 +28,9 @@ class StringHelper
      */
     public static function endsWith($haystack, $needle)
     {
+        if ($needle === null) {
+            return false;
+        }
         $length = strlen($needle);
         if ($length == 0) {
             return true;
