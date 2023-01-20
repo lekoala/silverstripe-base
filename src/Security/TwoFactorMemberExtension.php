@@ -245,7 +245,7 @@ class TwoFactorMemberExtension extends DataExtension
 
     public function updateCMSActions(FieldList $actions)
     {
-        if ($this->owner->EnableTwoFactorAuth && strlen($this->owner->TOTPToken) == 0) {
+        if ($this->owner->EnableTwoFactorAuth && strlen($this->owner->TOTPToken ?? '') == 0) {
             $actions->push(new CustomAction("doGenerateTOTPToken", "Generate Token"));
         }
         if (Director::isDev() && $this->owner->TOTPToken) {
