@@ -127,6 +127,9 @@ class DBColor extends DBVarchar
      */
     protected static function HEX_TO_RGB($hex)
     {
+        if (!$hex) {
+            $hex = '#000000';
+        }
         $RGB = [];
         $color = intval(ltrim($hex, '#'), 16);
         $r = ($color >> 16) & 0xff;
