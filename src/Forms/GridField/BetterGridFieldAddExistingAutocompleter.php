@@ -158,11 +158,7 @@ class BetterGridFieldAddExistingAutocompleter extends GridFieldAddExistingAutoco
         }
 
         $sortField = strtok($searchFields[0], ':');
-        $sortFieldParts = explode(".", $sortField);
-        if (count($sortFieldParts) > 1) {
-            $allList = $allList->applyRelation($sortField);
-        }
-        $sort = $sortField . ' ASC';
+        $sort = [$sortField => 'ASC']; // if sort field is an array, join will work properly
 
         //         $char = substr($searchValue, 0, 1);
         //         $sortByTitle = <<<SQL
