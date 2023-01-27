@@ -13,12 +13,14 @@ use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Security\Security;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Forms\LiteralField;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Core\Injector\Injector;
+use LeKoala\Base\Security\BaseMemberExtension;
 use LeKoala\Base\TextMessage\ProviderInterface;
-use SilverStripe\Forms\LiteralField;
+use LeKoala\Base\Security\TwoFactorMemberExtension;
 use SilverStripe\Security\MemberAuthenticator\LoginHandler;
 use SilverStripe\Security\MemberAuthenticator\MemberLoginForm;
 
@@ -46,7 +48,7 @@ class TwoFactorLoginHandler extends LoginHandler
         $this->extend('beforeLogin');
 
         // Successful login
-        /** @var ValidationResult $result */
+        /** @var Member|BaseMemberExtension|TwoFactorMemberExtension $member */
         if ($member = $this->checkLogin($data, $request, $result)) {
             $session = $request->getSession();
             $session->set('TwoFactorLoginHandler.MemberID', $member->ID);
@@ -94,7 +96,7 @@ class TwoFactorLoginHandler extends LoginHandler
     }
 
     /**
-     * @return Member
+     * @return Member|TwoFactorMemberExtension
      */
     protected function getTwoFactorMember()
     {

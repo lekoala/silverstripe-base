@@ -4,14 +4,15 @@ namespace LeKoala\Base\Security;
 
 use PragmaRX\Google2FA\Google2FA;
 use SilverStripe\Forms\FieldList;
+use SilverStripe\Security\Member;
 use LeKoala\Base\Forms\AlertField;
+use LeKoala\Base\Helpers\ClassHelper;
 use LeKoala\Base\Helpers\IPHelper;
 use SilverStripe\Control\Director;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\Security\Security;
 use LeKoala\CmsActions\CustomAction;
 use SilverStripe\Control\Controller;
-use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Security\Permission;
 use SilverStripe\ORM\ValidationResult;
@@ -32,38 +33,93 @@ class TwoFactorMemberExtension extends DataExtension
     const METHOD_TEXT = 'text_message';
 
     private static $db = [
+        'PreferredTwoFactorMethod' => "Enum(',totp,text_message')",
         'EnableTwoFactorAuth' => 'Boolean',
         'TOTPToken' => 'Varchar(32)',
     ];
 
+    public static function isEnabled()
+    {
+        /** @var Member $class */
+        $class = singleton(Member::class);
+        return $class->hasExtension(get_called_class());
+    }
+
+    public static function debugTwoFactorLoginInfos($member)
+    {
+        $adminIps = Security::config()->admin_ip_whitelist;
+        $need2Fa = $member->NeedTwoFactorAuth();
+        $requestIp = Controller::curr()->getRequest()->getIP();
+        $isCmsUser = Permission::check('CMS_Access', 'any', $member);
+        $ipCheck = IPHelper::checkIp($requestIp, $adminIps);
+        $disableWhitelisted = Security::config()->disable_2fa_whitelisted_ips;
+        $available2fa = $member->AvailableTwoFactorMethod();
+        return [
+            'admin_ips' => $adminIps,
+            'need_2fa' => $need2Fa,
+            'request_ip' => $requestIp,
+            'is_cms_user' => $isCmsUser,
+            'ip_check' => $ipCheck,
+            'disable_whitelisted' => $disableWhitelisted,
+            'available_2fa' => $available2fa,
+        ];
+    }
+
     /**
+     * Do we need to show 2fa on login?
+     * Disabled if:
+     * - has trusted header
+     * - is default admin and coming from dev ip range
+     * - if 2fa is disabled for admin users and admin ip range is set
+     * - if user disabled it (except if we need to trust ips)
      * @return boolean
      */
     public function NeedTwoFactorAuth()
     {
-        //2fa is disabled globally
-        if (!BaseAuthenticator::is2FAenabled()) {
-            return false;
-        }
-        // the ip is whitelisted, no need for 2fa
-        $adminIps = Security::config()->admin_ip_whitelist;
-        if (!empty($adminIps)) {
-            $request = Controller::curr()->getRequest();
-            $requestIp = $request->getIP();
-            if (IPHelper::checkIp($requestIp, $adminIps)) {
-                return false;
+        $request = Controller::curr()->getRequest();
+        $requestIp = $request->getIP();
+
+        // Request contains a specific header that we can trust
+        $adminTrustedHeaders = Security::config()->admin_trusted_headers;
+        if (!empty($adminTrustedHeaders)) {
+            foreach ($adminTrustedHeaders as $trustedHeader) {
+                if ($request->getHeader($trustedHeader)) {
+                    return false;
+                }
             }
         }
+
         // It's the default admin and we have nothing configured yet
         $defaultAdmin = DefaultAdminService::getDefaultAdminUsername();
-        if ($defaultAdmin && $defaultAdmin == $this->owner->Email && empty($this->AvailableTwoFactorMethod())) {
-            return false;
+        $isDefaultAdmin = $defaultAdmin && $defaultAdmin == $this->owner->Email;
+        $devIps = Security::config()->dev_ip_whitelist;
+        if ($isDefaultAdmin && !empty($devIps)) {
+            // In dev mode or coming from trusted dev ip?
+            $isDevIp = is_array($devIps) ? IPHelper::checkIp($requestIp, $devIps) : false;
+            if (Director::isDev() || $isDevIp) {
+                return false;
+            } else {
+                return true;
+            }
         }
-        // we only require 2fa for admins
-        if (BaseAuthenticator::is2FAenabledAdminOnly() && $this->owner->EnableTwoFactorAuth) {
-            return Permission::check('CMS_ACCESS', 'any', $this->owner);
+
+        // do we check admin ips ?
+        $adminIps = Security::config()->admin_ip_whitelist;
+        if (!empty($adminIps) && !$isDefaultAdmin) {
+            $disabledForAdmin = Security::config()->disable_2fa_whitelisted_ips;
+            if (IPHelper::checkIp($requestIp, $adminIps)) {
+                // we disabled 2fa for admin if coming from trusted ip range
+                if ($disabledForAdmin) {
+                    return false;
+                }
+            } else {
+                // It needs 2fa to be trusted, and therefore cannot login if 2fa is not enabled for that user
+                return true;
+            }
         }
-        return $this->owner->EnableTwoFactorAuth;
+
+        // Is it enabled ?
+        return $this->owner->EnableTwoFactorAuth ? true : false;
     }
 
     /**
@@ -82,10 +138,18 @@ class TwoFactorMemberExtension extends DataExtension
     }
 
     /**
+     * Returns the first available method according to user preference
+     * or in this order:
+     * - TOTP
+     * - Mobile
+     *
      * @return string text_message, totp
      */
     public function PreferredTwoFactorAuth()
     {
+        if ($this->owner->PreferredTwoFactorMethod) {
+            return $this->owner->PreferredTwoFactorMethod;
+        }
         $arr = $this->AvailableTwoFactorMethod();
         if (!empty($arr)) {
             return $arr[0];
@@ -112,8 +176,10 @@ class TwoFactorMemberExtension extends DataExtension
         if (!$this->owner->TOTPToken) {
             return false;
         }
+        $window = Security::config()->window_2fa ?? 4; // number of keys to check, helps if server is out of sync
         $google2fa = new Google2FA();
-        $valid = $google2fa->verifyKey($this->owner->TOTPToken, $input);
+        $valid = $google2fa->verifyKey($this->owner->TOTPToken, $input, $window);
+
         return (bool)$valid;
     }
 
@@ -148,7 +214,6 @@ class TwoFactorMemberExtension extends DataExtension
         if (!$this->owner->exists()) {
             $fields->removeByName('TOTPToken');
         }
-
         $fields->removeByName('TOTPToken');
         if ($this->owner->TOTPToken && strlen($this->owner->TOTPToken)) {
             $qrcodeURI = $this->GoogleAuthenticatorQRCode();
@@ -170,59 +235,17 @@ class TwoFactorMemberExtension extends DataExtension
      *
      * This means canLogIn is called before 2FA, for instance
      *
+     * To prevent login, add errors to validation result
+     *
      * @param ValidationResult $result
      * @return void
      */
     public function canLogIn(ValidationResult $result)
     {
-        // Ip whitelist for users with cms access (empty by default)
-        // SilverStripe\Security\Security:
-        //   admin_ip_whitelist:
-        //     - 127.0.0.1/255
-        $adminIps = Security::config()->admin_ip_whitelist;
-        $devIps = Security::config()->dev_ip_whitelist;
-        $need2Fa = $this->owner->NeedTwoFactorAuth();
-        $hasTwoFaMethods = count($this->owner->AvailableTwoFactorMethod()) > 0;
-
-        // If we whitelist by IP, check we are using a valid IP
-        if (!empty($adminIps)) {
-            $request = Controller::curr()->getRequest();
-            $requestIp = $request->getIP();
-            $isTrusted = false;
-
-            // Request contains a specific header that we can trust
-            $adminTrustedHeaders = Security::config()->admin_trusted_headers;
-            if (!empty($adminTrustedHeaders)) {
-                foreach ($adminTrustedHeaders as $trustedHeader) {
-                    if ($request->getHeader($trustedHeader)) {
-                        $isTrusted = true;
-                    }
-                }
-            }
-
-            // Default admin is trusted by default if no 2fa and from dev ip
-            $defaultAdmin = DefaultAdminService::getDefaultAdminUsername();
-            if ($defaultAdmin && $defaultAdmin == $this->owner->Email && !$hasTwoFaMethods) {
-                $isDev = Director::isDev() || IPHelper::checkIp($requestIp, $devIps);
-                if ($isDev) {
-                    $isTrusted = true;
-                }
-            }
-
-            $isCmsUser = Permission::check('CMS_Access', 'any', $this->owner);
-            if ($isCmsUser && !IPHelper::checkIp($requestIp, $adminIps)) {
-                // No 2fa method to validate important account on invalid ips
-                if (!$hasTwoFaMethods && !$isTrusted) {
-                    $this->owner->audit('invalid_ip_admin', ['ip' => $requestIp]);
-                    $result->addError(_t('TwoFactorMemberExtension.ADMIN_IP_INVALID', "Your ip address {address} is not whitelisted for this account level", ['address' => $requestIp]));
-                }
-            } else {
-                // User has been whitelisted, no need for 2fa
-                if (Config::inst()->get(BaseAuthenticator::class, 'disable_2fa_whitelisted_ips')) {
-                    $need2Fa = false;
-                }
-            }
-        }
+        /** @var Member|TwoFactorMemberExtension $owner */
+        $owner = $this->owner;
+        $need2Fa = $owner->NeedTwoFactorAuth();
+        $hasTwoFaMethods = count($owner->AvailableTwoFactorMethod()) > 0;
 
         // Member need two factor auth but has no available method
         if ($need2Fa && !$hasTwoFaMethods) {
@@ -230,6 +253,10 @@ class TwoFactorMemberExtension extends DataExtension
         }
     }
 
+    public function Is2FaConfigured()
+    {
+        return $this->owner->EnableTwoFactorAuth && count($this->owner->AvailableTwoFactorMethod()) > 0;
+    }
 
     public function doGenerateTOTPToken()
     {

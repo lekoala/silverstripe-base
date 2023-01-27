@@ -9,13 +9,14 @@ use SilverStripe\Security\MemberAuthenticator\MemberLoginForm as DefaultMemberLo
 
 class MemberLoginForm extends DefaultMemberLoginForm
 {
-    // public function setAuthenticatorClass($class)
-    // {
-    //     if ($class == MemberAuthenticator::class) {
-    //         $class = BaseAuthenticator::class;
-    //     }
-    //     return parent::setAuthenticatorClass($class);
-    // }
+    public function setAuthenticatorClass($class)
+    {
+        // This should not be necessary since we inject everything anyway
+        if ($class == MemberAuthenticator::class) {
+            $class = BaseAuthenticator::class;
+        }
+        return parent::setAuthenticatorClass($class);
+    }
 
     protected function getFormFields()
     {

@@ -100,12 +100,12 @@ class BaseSecurityAdminExtension extends Extension
 
         // Show groups
         $cols = GridFieldHelper::getGridFieldDataColumns($members->getConfig());
-        $cols->setDisplayFields(array(
-            'FirstName' => 'FirstName',
-            'Surname' => 'Surname',
-            'Email' => 'Email',
-            'DirectGroupsList' => 'Direct Groups',
-        ));
+        $displayFields = $cols->getDisplayFields($members);
+        $displayFields['DirectGroupsList'] = 'Direct Groups';
+        if (TwoFactorMemberExtension::isEnabled()) {
+            $displayFields['Is2FaConfigured'] = '2FA';
+        }
+        $cols->setDisplayFields($displayFields);
 
         // Better search
         $filter = GridFieldHelper::getGridFieldFilterHeader($members->getConfig());

@@ -27,27 +27,34 @@ class BaseAuthenticator extends MemberAuthenticator
      */
     public function getLoginHandler($link)
     {
-        if (self::is2FAenabled()) {
+        if (TwoFactorMemberExtension::isEnabled()) {
             return TwoFactorLoginHandler::create($link, $this);
         }
-
         return LoginHandler::create($link, $this);
     }
 
+    /**
+     * @param array $data Form submitted data
+     * @param ValidationResult $result
+     * @param Member $member This third parameter is used in the CMSAuthenticator(s)
+     * @return Member Found member, regardless of successful login
+     */
     protected function authenticateMember($data, ValidationResult &$result = null, Member $member = null)
     {
+        // For default admin, this will never call checkPassword, but it will call validateCanLogin
         return parent::authenticateMember($data, $result, $member);
     }
 
     /**
-     * @param Member $member
+     * This is never called for default admin!
+     *
+     * @param Member|BaseMemberExtension $member
      * @param string $password
      * @param ValidationResult|null $result
      * @return bool
      */
     public function checkPassword(Member $member, $password, ValidationResult &$result = null)
     {
-        d($member, $password);
         // Plain password: this should really not happen
         if ($member->Password && !$member->PasswordEncryption) {
             if ($member->Password == $password) {
@@ -79,93 +86,43 @@ class BaseAuthenticator extends MemberAuthenticator
 
         // Check if the member entered his old password if he recently changed it
         // This prevent disclosing information and helps users
-        $previousPasswords = MemberPassword::get()
-            ->where(['"MemberPassword"."MemberID"' => $member->ID])
-            ->sort('"Created" DESC, "ID" DESC')
-            ->limit(2);
-
-        $i = 0;
-        $recentChange = false;
-        foreach ($previousPasswords as $previousPassword) {
-            // The first password is the current one, check if it's a new one
-            $i++;
-            if ($i == 1) {
-                if (strtotime($previousPassword->Created) >= strtotime('-3 days')) {
-                    $recentChange = true;
-                }
-            }
-            if ($i == 2 && $recentChange) {
-                if ($previousPassword->checkPassword($password)) {
-                    if ($result) {
-                        $result->addError(_t(
-                            'BaseAuthenticator.OLDPASSWORD',
-                            'You entered your old password. Please use the new one.'
-                        ));
-                    }
-                    return false;
-                }
-            }
+        if ($member->isRecentPassword($password, 1)) {
+            $result->addError(_t(
+                'BaseAuthenticator.OLDPASSWORD',
+                'You entered your old password. Please use the new one.'
+            ));
         }
 
         return parent::checkPassword($member, $password, $result);
     }
 
-    public static function debugTwoFactorLoginInfos($member)
-    {
-        $adminIps = Security::config()->admin_ip_whitelist;
-        $need2Fa = $member->NeedTwoFactorAuth();
-        $requestIp = Controller::curr()->getRequest()->getIP();
-        $isCmsUser = Permission::check('CMS_Access', 'any', $member);
-        $ipCheck = IPHelper::checkIp($requestIp, $adminIps);
-        $disableWhitelisted = Config::inst()->get(BaseAuthenticator::class, 'disable_2fa_whitelisted_ips');
-        $available2fa = $member->AvailableTwoFactorMethod();
-        return [
-            'admin_ips' => $adminIps,
-            'need_2fa' => $need2Fa,
-            'request_ip' => $requestIp,
-            'is_cms_user' => $isCmsUser,
-            'ip_check' => $ipCheck,
-            'disable_whitelisted' => $disableWhitelisted,
-            'available_2fa' => $available2fa,
-        ];
-    }
-
     /**
      * Needs to be enabled
-     *
-     * LeKoala\Base\Security\BaseAuthenticator:
-     *   enable_2fa: true
-     *
+     * @deprecated
      * @return boolean
      */
     public static function is2FAenabled()
     {
-        return Config::inst()->get(BaseAuthenticator::class, 'enable_2fa');
+        return TwoFactorMemberExtension::isEnabled();
     }
 
     /**
      * Only check admins, also need is2FAenabled
-     *
-     * LeKoala\Base\Security\BaseAuthenticator:
-     *   enable_2fa_admin_only: true
-     *
+     * @deprecated
      * @return boolean
      */
     public static function is2FAenabledAdminOnly()
     {
-        return Config::inst()->get(BaseAuthenticator::class, 'enable_2fa_admin_only');
+        return false;
     }
 
     /**
      * If ip is whitelisted, disable 2fa (true by default)
-     *
-     * LeKoala\Base\Security\BaseAuthenticator:
-     *   disable_2fa_whitelisted_ips: true
-     *
+     * @deprecated
      * @return boolean
      */
     public static function is2FADisabledWhitelistedIps()
     {
-        return Config::inst()->get(BaseAuthenticator::class, 'disable_2fa_whitelisted_ips');
+        return Security::config()->disable_2fa_whitelisted_ips ? true : false;
     }
 }

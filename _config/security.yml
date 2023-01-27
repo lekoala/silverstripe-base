@@ -3,16 +3,16 @@ Name: base-security
 After:
   - '#coresecurity'
 ---
-# Global settings
-LeKoala\Base\Security\BaseAuthenticator:
-  # if you set this to true, you need to apply TwoFactorMemberExtension
-  enable_2fa: false
-  # need enable_2fa set to true => will only check users with cms permission
-  enable_2fa_admin_only: false
-  # don't trigger 2fa for whitelisted ips. Only metters if you set SilverStripe\Security\Security.admin_ip_whitelist
-  disable_2fa_whitelisted_ips: false
 SilverStripe\Security\Security:
   login_recording: true
+  # don't trigger 2fa for whitelisted ips. Use with admin_ip_whitelist
+  # this will effectively lower your security but will make life easier for admin users
+  disable_2fa_whitelisted_ips: false
+  # restrict admin login to a set of ips when 2fa is not set
+  admin_ip_whitelist: []
+  # ip address for dev and default admin
+  dev_ip_whitelist: []
+  window_2fa: 8
   extensions:
     - LeKoala\Base\Security\BaseSecurityExtension
 # Extensions
@@ -40,10 +40,10 @@ SilverStripe\Security\MemberAuthenticator\LostPasswordHandler:
     - LeKoala\Base\Security\LostPasswordHandlerExtension
 # Injector
 SilverStripe\Core\Injector\Injector:
-  SilverStripe\Security\MemberAuthenticator\MemberAuthenticator:
-    class: 'LeKoala\Base\Security\BaseAuthenticator'
   SilverStripe\Security\MemberAuthenticator\MemberLoginForm:
     class: 'LeKoala\Base\Security\MemberLoginForm'
+  SilverStripe\Security\MemberAuthenticator\MemberAuthenticator:
+    class: 'LeKoala\Base\Security\BaseAuthenticator'
   SilverStripe\Security\Security:
     properties:
       Authenticators:

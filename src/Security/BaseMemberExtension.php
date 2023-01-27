@@ -3,7 +3,6 @@
 namespace LeKoala\Base\Security;
 
 use Exception;
-use LeKoala\Base\Controllers\HasSession;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\Forms\FieldList;
@@ -16,16 +15,18 @@ use SilverStripe\GraphQL\Controller;
 use SilverStripe\Admin\SecurityAdmin;
 use SilverStripe\Security\Permission;
 use LeKoala\Base\Security\MemberAudit;
-use LeKoala\CommonExtensions\ValidationStatusExtension;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\LoginAttempt;
+use LeKoala\Base\Controllers\HasSession;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Security\IdentityStore;
+use SilverStripe\ORM\ValidationException;
+use SilverStripe\Security\MemberPassword;
 use SilverStripe\Security\DefaultAdminService;
+use LeKoala\CommonExtensions\ValidationStatusExtension;
 use SilverStripe\Forms\GridField\GridFieldAddNewButton;
 use SilverStripe\Security\MemberAuthenticator\MemberAuthenticator;
 use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
-use SilverStripe\ORM\ValidationException;
 
 /**
  * A lot of base functionalities for your members
@@ -66,6 +67,36 @@ class BaseMemberExtension extends DataExtension
     }
 
     /**
+     * Check if this is one of the recent passwords of the user
+     *
+     * @param string $password
+     * @param int $count how many previous passwords to check (defaults to 1)
+     * @return MemberPassword
+     */
+    public function isRecentPassword($password, $count = 1)
+    {
+        $max = $count + 1;
+        $previousPasswords = MemberPassword::get()
+            ->where(['"MemberPassword"."MemberID"' => $this->owner->ID])
+            ->sort('"Created" DESC, "ID" DESC')
+            ->limit($max);
+
+        $i = 0;
+        foreach ($previousPasswords as $previousPassword) {
+            // The first password is the current one, ignore
+            $i++;
+            if ($i == 1) {
+                // ignore
+            } else {
+                if ($previousPassword->checkPassword($password)) {
+                    return $previousPassword;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
      * @return string
      */
     public function getPasswordResetLink()
@@ -85,6 +116,8 @@ class BaseMemberExtension extends DataExtension
      * This is called by Member::validateCanLogin which is typically called in MemberAuthenticator::authenticate::authenticateMember
      * which is used in LoginHandler::doLogin::checkLogin
      *
+     * To prevent login, add errors to validation result
+     *
      * This means canLogIn is called before 2FA, for instance
      *
      * @param ValidationResult $result
@@ -92,15 +125,35 @@ class BaseMemberExtension extends DataExtension
      */
     public function canLogIn(ValidationResult $result)
     {
-        // We can avoid bots by allowing to tick a box
-        // if ($this->owner->isLockedOut() && GoogleRecaptchaField::isSetupReady()) {
-        //     $result->addError('There was too many failed login attempt. Please check the captcha box to try again.');
-        //     return;
-        // }
+        /** @var Member|BaseMemberExtension|TwoFactorMemberExtension $owner */
+        $owner = $this->owner;
 
-        // Admin can always log in
-        if (Permission::check('ADMIN', 'any', $this->owner)) {
-            return;
+        // Ip whitelist for users with cms access (empty by default)
+        // SilverStripe\Security\Security:
+        //   admin_ip_whitelist:
+        //     - 127.0.0.1/255
+        $adminIps = Security::config()->admin_ip_whitelist;
+
+        $request = Controller::curr()->getRequest();
+        $requestIp = $request->getIP();
+
+        // If we whitelist by IP, check we are using a valid IP
+        if (!empty($adminIps)) {
+            $isCmsUser = Permission::check('CMS_Access', 'any', $owner);
+
+            // Even when coming from invalid ips, if we have 2fa, we can trust the user
+            $trusted = false;
+            if (TwoFactorMemberExtension::isEnabled()) {
+                $need2Fa = $owner->NeedTwoFactorAuth();
+                $has2Fa = count($owner->AvailableTwoFactorMethod()) > 0 ? true : false;
+                $trusted = !$need2Fa || $has2Fa;
+            }
+
+            if ($isCmsUser && !$trusted) {
+                // No 2fa method to validate important account on invalid ips
+                $this->owner->audit('invalid_ip_admin', ['ip' => $requestIp]);
+                $result->addError(_t('BaseMemberExtension.ADMIN_IP_INVALID', "Your ip address {address} is not whitelisted for this account level", ['address' => $requestIp]));
+            }
         }
     }
 
@@ -344,6 +397,14 @@ class BaseMemberExtension extends DataExtension
     }
 
     /**
+     * @return boolean
+     */
+    public function IsSuperAdmin()
+    {
+        return Permission::check('ADMIN', 'any', $this->owner);
+    }
+
+    /**
      * Force member login
      * (since Member::login has been deprecated but is really useful)
      *
@@ -391,7 +452,7 @@ class BaseMemberExtension extends DataExtension
     }
 
     /**
-     * @return array
+     * @return array An array of IDs
      */
     public static function getMembersFromSecurityGroupsIDs()
     {
