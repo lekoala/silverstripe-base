@@ -159,6 +159,7 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
                     $css .= 'li.valCMS_ACCESS_' . end($itemParts) . '{display:none}' . "\n";
                 }
             }
+            // maybe it would be better to use SilverStripe\\Security\\Permission::hidden_permissions
             Requirements::customCSS($css, 'HidePermissions');
         }
     }
