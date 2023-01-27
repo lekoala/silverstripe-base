@@ -98,7 +98,7 @@ class BaseSecurityAdminExtension extends Extension
         );
         $form->Fields()->insertAfter('Members', $MembersOnlyGroups);
 
-        // Show groups
+        // Show groups / 2FA
         $cols = GridFieldHelper::getGridFieldDataColumns($members->getConfig());
         $displayFields = $cols->getDisplayFields($members);
         $displayFields['DirectGroupsList'] = 'Direct Groups';

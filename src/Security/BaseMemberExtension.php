@@ -66,6 +66,14 @@ class BaseMemberExtension extends DataExtension
         return trim($this->owner->FirstName . ' ' . $this->owner->Surname);
     }
 
+    public function getUsedIps()
+    {
+        return LoginAttempt::get()->filter([
+            'MemberID' => $this->owner->ID,
+            'Status' => 'Success',
+        ])->where('Created < DATE_SUB(NOW(), INTERVAL 10 SECOND)')->columnUnique('IP');
+    }
+
     /**
      * Check if this is one of the recent passwords of the user
      *
@@ -185,6 +193,13 @@ class BaseMemberExtension extends DataExtension
     public function afterMemberLoggedIn()
     {
         $this->logVisit();
+
+        if (Member::config()->notify_new_ip) {
+            $result = $this->checkIfNewIp();
+            if ($result) {
+                // Notify user
+            }
+        }
     }
 
     /**
@@ -257,6 +272,8 @@ class BaseMemberExtension extends DataExtension
     {
         if ($valid->isValid()) {
             $this->owner->audit('password_changed_success');
+
+            // email sending is controlled by Member::config()->notify_password_change
 
             // Can prove useful to send custom toast message or notification
             self::getSession()->set('PasswordChanged', 1);
@@ -449,6 +466,20 @@ class BaseMemberExtension extends DataExtension
             DB::get_conn()->now(),
             $this->owner->ID
         ));
+    }
+
+
+    public function checkIfNewIp()
+    {
+        $ips = $this->owner->getUsedIps();
+        if (!empty($ips)) {
+            $request = Controller::curr()->getRequest();
+            $requestIp = $request->getIP();
+            if (!in_array($requestIp, $ips)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
