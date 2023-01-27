@@ -180,12 +180,14 @@ class TwoFactorMemberExtension extends DataExtension
         //   admin_ip_whitelist:
         //     - 127.0.0.1/255
         $adminIps = Security::config()->admin_ip_whitelist;
+        $devIps = Security::config()->dev_ip_whitelist;
         $need2Fa = $this->owner->NeedTwoFactorAuth();
         $hasTwoFaMethods = count($this->owner->AvailableTwoFactorMethod()) > 0;
 
         // If we whitelist by IP, check we are using a valid IP
         if (!empty($adminIps)) {
             $request = Controller::curr()->getRequest();
+            $requestIp = $request->getIP();
             $isTrusted = false;
 
             // Request contains a specific header that we can trust
@@ -198,13 +200,15 @@ class TwoFactorMemberExtension extends DataExtension
                 }
             }
 
-            // Default admin is trusted by default if no 2fa
+            // Default admin is trusted by default if no 2fa and from dev ip
             $defaultAdmin = DefaultAdminService::getDefaultAdminUsername();
             if ($defaultAdmin && $defaultAdmin == $this->owner->Email && !$hasTwoFaMethods) {
-                $isTrusted = true;
+                $isDev = Director::isDev() || IPHelper::checkIp($requestIp, $devIps);
+                if ($isDev) {
+                    $isTrusted = true;
+                }
             }
 
-            $requestIp = $request->getIP();
             $isCmsUser = Permission::check('CMS_Access', 'any', $this->owner);
             if ($isCmsUser && !IPHelper::checkIp($requestIp, $adminIps)) {
                 // No 2fa method to validate important account on invalid ips

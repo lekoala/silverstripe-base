@@ -47,14 +47,15 @@ class BaseAuthenticator extends MemberAuthenticator
      */
     public function checkPassword(Member $member, $password, ValidationResult &$result = null)
     {
-        // Plain password
+        d($member, $password);
+        // Plain password: this should really not happen
         if ($member->Password && !$member->PasswordEncryption) {
             if ($member->Password == $password) {
                 return true;
             }
         }
 
-        if (!$member->PasswordEncryption) {
+        if (!$member->Password || !$member->PasswordEncryption) {
             if ($result) {
                 $result->addError(_t(
                     'BaseAuthenticator.PLEASERESET',
