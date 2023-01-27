@@ -154,6 +154,8 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
                 $itemParts = explode('-', $item);
                 // asset admin is required for upload field details
                 if ($item != 'SilverStripe-AssetAdmin-Controller-AssetAdmin') {
+                    // @link https://github.com/silverstripe/silverstripe-framework/pull/10663
+                    $css .= 'li.valCMS_ACCESS_' . $item . '{display:none}' . "\n";
                     $css .= 'li.valCMS_ACCESS_' . end($itemParts) . '{display:none}' . "\n";
                 }
             }
