@@ -7,6 +7,7 @@ use SilverStripe\ORM\DB;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Security\Member;
+use LeKoala\Base\Helpers\IPHelper;
 use SilverStripe\Control\Director;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\Security\Security;
@@ -147,16 +148,20 @@ class BaseMemberExtension extends DataExtension
 
         // If we whitelist by IP, check we are using a valid IP
         if (!empty($adminIps)) {
+            // Are we a cms user ?
             $isCmsUser = Permission::check('CMS_Access', 'any', $owner);
 
+            // Are we from a trusted ip ?
+            $trusted = IPHelper::checkIp($requestIp, $adminIps);
+
             // Even when coming from invalid ips, if we have 2fa, we can trust the user
-            $trusted = false;
-            if (TwoFactorMemberExtension::isEnabled()) {
+            if (!$trusted && TwoFactorMemberExtension::isEnabled()) {
                 $need2Fa = $owner->NeedTwoFactorAuth();
                 $has2Fa = count($owner->AvailableTwoFactorMethod()) > 0 ? true : false;
                 $trusted = !$need2Fa || $has2Fa;
             }
 
+            // Cms user is not trusted => cannot login
             if ($isCmsUser && !$trusted) {
                 // No 2fa method to validate important account on invalid ips
                 $this->owner->audit('invalid_ip_admin', ['ip' => $requestIp]);
