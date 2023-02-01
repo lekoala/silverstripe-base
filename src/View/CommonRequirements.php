@@ -23,7 +23,7 @@ class CommonRequirements
      * @config
      * @var string
      */
-    private static $jquery_version = '3.5.1';
+    private static $jquery_version = '3.6.3';
 
     /**
      * @config
@@ -71,7 +71,7 @@ class CommonRequirements
      * @config
      * @var string
      */
-    private static $plyr_version = '3.7.2';
+    private static $plyr_version = '3.7.3';
 
     /**
      * @config
@@ -269,12 +269,12 @@ class CommonRequirements
     {
         $version = self::config()->plyr_version;
         if ($css) {
-            Requirements::css("https://cdn.plyr.io/$version/plyr.css");
+            Requirements::css("https://cdn.jsdelivr.net/npm/plyr@$version/dist/plyr.min.css");
         }
         if ($polyfilled) {
-            Requirements::javascript("https://cdn.plyr.io/$version/plyr.polyfilled.js");
+            Requirements::javascript("https://cdn.jsdelivr.net/npm/plyr@$version/dist/plyr.polyfilled.min.js");
         } else {
-            Requirements::javascript("https://cdn.plyr.io/$version/plyr.js");
+            Requirements::javascript("https://cdn.jsdelivr.net/npm/plyr@$version/dist/plyr.min.js");
         }
     }
 
