@@ -7,6 +7,7 @@ use SilverStripe\ORM\DB;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Security\Member;
+use LeKoala\Base\Helpers\IPHelper;
 use SilverStripe\Control\Director;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\Security\Security;
@@ -64,6 +65,14 @@ class BaseMemberExtension extends DataExtension
     public function Fullname()
     {
         return trim($this->owner->FirstName . ' ' . $this->owner->Surname);
+    }
+
+    public function getUsedIps()
+    {
+        return LoginAttempt::get()->filter([
+            'MemberID' => $this->owner->ID,
+            'Status' => 'Success',
+        ])->where('Created < DATE_SUB(NOW(), INTERVAL 10 SECOND)')->columnUnique('IP');
     }
 
     /**
@@ -139,16 +148,20 @@ class BaseMemberExtension extends DataExtension
 
         // If we whitelist by IP, check we are using a valid IP
         if (!empty($adminIps)) {
+            // Are we a cms user ?
             $isCmsUser = Permission::check('CMS_Access', 'any', $owner);
 
+            // Are we from a trusted ip ?
+            $trusted = IPHelper::checkIp($requestIp, $adminIps);
+
             // Even when coming from invalid ips, if we have 2fa, we can trust the user
-            $trusted = false;
-            if (TwoFactorMemberExtension::isEnabled()) {
+            if (!$trusted && TwoFactorMemberExtension::isEnabled()) {
                 $need2Fa = $owner->NeedTwoFactorAuth();
                 $has2Fa = count($owner->AvailableTwoFactorMethod()) > 0 ? true : false;
                 $trusted = !$need2Fa || $has2Fa;
             }
 
+            // Cms user is not trusted => cannot login
             if ($isCmsUser && !$trusted) {
                 // No 2fa method to validate important account on invalid ips
                 $this->owner->audit('invalid_ip_admin', ['ip' => $requestIp]);
@@ -185,6 +198,13 @@ class BaseMemberExtension extends DataExtension
     public function afterMemberLoggedIn()
     {
         $this->logVisit();
+
+        if (Member::config()->notify_new_ip) {
+            $result = $this->checkIfNewIp();
+            if ($result) {
+                // Notify user
+            }
+        }
     }
 
     /**
@@ -257,6 +277,8 @@ class BaseMemberExtension extends DataExtension
     {
         if ($valid->isValid()) {
             $this->owner->audit('password_changed_success');
+
+            // email sending is controlled by Member::config()->notify_password_change
 
             // Can prove useful to send custom toast message or notification
             self::getSession()->set('PasswordChanged', 1);
@@ -449,6 +471,20 @@ class BaseMemberExtension extends DataExtension
             DB::get_conn()->now(),
             $this->owner->ID
         ));
+    }
+
+
+    public function checkIfNewIp()
+    {
+        $ips = $this->owner->getUsedIps();
+        if (!empty($ips)) {
+            $request = Controller::curr()->getRequest();
+            $requestIp = $request->getIP();
+            if (!in_array($requestIp, $ips)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

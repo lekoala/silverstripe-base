@@ -105,7 +105,7 @@ class TwoFactorMemberExtension extends DataExtension
 
         // do we check admin ips ?
         $adminIps = Security::config()->admin_ip_whitelist;
-        if (!empty($adminIps) && !$isDefaultAdmin) {
+        if (!empty($adminIps) && !$isDefaultAdmin && Permission::check('CMS_ACCESS', 'any', $this->owner)) {
             $disabledForAdmin = Security::config()->disable_2fa_whitelisted_ips;
             if (IPHelper::checkIp($requestIp, $adminIps)) {
                 // we disabled 2fa for admin if coming from trusted ip range
