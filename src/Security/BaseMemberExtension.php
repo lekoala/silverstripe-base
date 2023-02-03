@@ -14,6 +14,7 @@ use SilverStripe\Security\Security;
 use LeKoala\CmsActions\CustomAction;
 use SilverStripe\GraphQL\Controller;
 use SilverStripe\Admin\SecurityAdmin;
+use SilverStripe\Control\Email\Email;
 use SilverStripe\Security\Permission;
 use LeKoala\Base\Security\MemberAudit;
 use SilverStripe\ORM\ValidationResult;
@@ -199,10 +200,30 @@ class BaseMemberExtension extends DataExtension
     {
         $this->logVisit();
 
+        // Notify user if needed
         if (Member::config()->notify_new_ip) {
             $result = $this->checkIfNewIp();
+
             if ($result) {
-                // Notify user
+                $request = Controller::curr()->getRequest();
+                $requestIp = $request->getIP();
+                $requestUa = $request->getHeader('User-Agent') ?? "undefined";
+
+                /** @var Email $email */
+                $email = Email::create()
+                    ->setHTMLTemplate('NotifyNewIPEmail')
+                    ->setData($this->owner)
+                    ->setSubject(_t(
+                        'NotifyNewIPEmail.SUBJECT',
+                        "Your account has been accessed from a new IP Address",
+                        'Email subject'
+                    ))
+                    ->addData('RequestIP', $requestIp)
+                    ->addData('RequestUA', $requestUa)
+                    ->addData('AccessTime', date('Y-m-d H:i:s') . ' (' . date_default_timezone_get() . ')')
+                    ->setTo($this->owner->Email);
+
+                $email->send();
             }
         }
     }
