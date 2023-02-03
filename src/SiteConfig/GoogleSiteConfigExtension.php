@@ -43,10 +43,22 @@ class GoogleSiteConfigExtension extends DataExtension
             $fields->addFieldToTab('Root', $tab);
         }
         $GoogleAnalyticsCode = new TextField('GoogleAnalyticsCode');
-        $GoogleAnalyticsCode->setAttribute("placeholder", "UA-XXXXXXX-Y");
+
+        $gtag = $this->EnableGtagManager();
+        if ($gtag) {
+            $GoogleAnalyticsCode->setAttribute("placeholder", "G-XXXXXXXXXX");
+        } else {
+            $GoogleAnalyticsCode->setAttribute("placeholder", "UA-XXXXXXX-Y");
+        }
+
         $tab->push($GoogleAnalyticsCode);
-        $GoogleAnalyticsWithoutCookies = new CheckboxField('GoogleAnalyticsWithoutCookies');
-        $tab->push($GoogleAnalyticsWithoutCookies);
+        if ($gtag) {
+            $fields->removeByName('GoogleAnalyticsWithoutCookies');
+        } else {
+            $GoogleAnalyticsWithoutCookies = new CheckboxField('GoogleAnalyticsWithoutCookies');
+            $tab->push($GoogleAnalyticsWithoutCookies);
+        }
+
         $GoogleMapsApiKey = new TextField('GoogleMapsApiKey');
         $tab->push($GoogleMapsApiKey);
     }
@@ -79,6 +91,21 @@ class GoogleSiteConfigExtension extends DataExtension
         return true;
     }
 
+    public function EnableGtagManager()
+    {
+        $gtag = SiteConfig::config()->gtag_manager; // required for GA 4
+        $code = $this->owner->GoogleAnalyticsCode ?? '';
+        // autodetect gtag
+        if (strpos($code, 'G-') === 0) {
+            $gtag = true;
+        }
+        if (strpos($code, 'UA-') === 0) {
+            $gtag = false;
+        }
+
+        return $gtag;
+    }
+
     /**
      * Called automatically by BaseContentController
      * @return bool
@@ -90,8 +117,7 @@ class GoogleSiteConfigExtension extends DataExtension
         }
 
         $config = SiteConfig::config();
-
-        $gtag =  $config->gtag_manager;
+        $gtag =  $this->EnableGtagManager();
 
         if ($this->owner->GoogleAnalyticsWithoutCookies) {
             CommonRequirements::fingerprintjs();
@@ -114,6 +140,7 @@ FingerprintJS.load().then(function (fp) {
 JS;
         } else {
             if ($gtag) {
+                Requirements::javascript('https://www.googletagmanager.com/gtag/js?id=' . $this->owner->GoogleAnalyticsCode, ['async' => true]);
                 $script = <<<JS
 window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
@@ -146,10 +173,6 @@ JS;
         }
 
         $conditionalAnalytics = $config->conditional_analytics;
-
-        if ($gtag) {
-            Requirements::javascript('https://www.googletagmanager.com/gtag/js?id=' . $this->owner->GoogleAnalyticsCode);
-        }
 
         $uniquenessID = 'ga-tracking';
         // If we don't use cookie, no need to advertise them
