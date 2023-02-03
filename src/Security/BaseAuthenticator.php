@@ -50,7 +50,7 @@ class BaseAuthenticator extends MemberAuthenticator
      *
      * @param Member|BaseMemberExtension $member
      * @param string $password
-     * @param ValidationResult|null $result
+     * @param ValidationResult|null $result This can be null !
      * @return bool
      */
     public function checkPassword(Member $member, $password, ValidationResult &$result = null)
@@ -87,10 +87,12 @@ class BaseAuthenticator extends MemberAuthenticator
         // Check if the member entered his old password if he recently changed it
         // This prevent disclosing information and helps users
         if ($member->isRecentPassword($password, 1)) {
-            $result->addError(_t(
-                'BaseAuthenticator.OLDPASSWORD',
-                'You entered your old password. Please use the new one.'
-            ));
+            if ($result) {
+                $result->addError(_t(
+                    'BaseAuthenticator.OLDPASSWORD',
+                    'You entered your old password. Please use the new one.'
+                ));
+            }
         }
 
         return parent::checkPassword($member, $password, $result);
