@@ -86,7 +86,8 @@ class BaseAuthenticator extends MemberAuthenticator
 
         // Check if the member entered his old password if he recently changed it
         // This prevent disclosing information and helps users
-        if ($member->isRecentPassword($password, 1)) {
+        $validator = Member::password_validator();
+        if ($validator && $validator->getHistoricCount() > 0  && $member->isRecentPassword($password, 1)) {
             if ($result) {
                 $result->addError(_t(
                     'BaseAuthenticator.OLDPASSWORD',
