@@ -6,6 +6,7 @@ use Exception;
 use ReflectionProperty;
 use InvalidArgumentException;
 use SilverStripe\ORM\DataList;
+use SilverStripe\ORM\DataObject;
 use LeKoala\Base\Helpers\ClassHelper;
 use SilverStripe\ORM\Filters\SearchFilter;
 use SilverStripe\ORM\Search\SearchContext;
@@ -177,7 +178,7 @@ class WildcardSearchContext extends SearchContext
      */
     public function getQuery($searchParams, $sort = false, $limit = false, $existingQuery = null)
     {
-        /** DataList $query */
+        /** @var DataList $query */
         $query = null;
         if ($existingQuery) {
             if (!($existingQuery instanceof DataList)) {
@@ -201,21 +202,23 @@ class WildcardSearchContext extends SearchContext
             $query = $query->limit($limit);
         }
 
+        /** @var DataObject $obj */
+        $obj = singleton($this->modelClass);
+
         /** @var DataList $query */
         $query = $query->sort($sort);
         $this->setSearchParams($searchParams);
 
-        $count = count($searchParams);
-        $isWildcardSearch = false;
         // If we use specific set of fields, make sure we have a value for them
-        if (!empty($this->wildcardFilters)) {
-            $isWildcardSearch = true;
+        if (empty($this->wildcardFilters) && $obj->hasField('Title')) {
+            $this->wildcardFilters = ['Title'];
+        } elseif (empty($this->wildcardFilters) && $obj->hasField('Name')) {
+            $this->wildcardFilters = ['Name'];
         }
 
-        // If we search only one value, assume we do a wildcard match
-        if ($count === 1 && $isWildcardSearch) {
-            $values = array_values($searchParams);
-            $value = $values[0];
+        // q holds the wildcard search
+        if (!empty($searchParams['q'])) {
+            $value = $searchParams['q'];
 
             // Look for search shortcuts like s: or e:
             $shortcutData = self::findShortcutInString($value);
@@ -259,23 +262,28 @@ class WildcardSearchContext extends SearchContext
                 }
             }
             $query = $query->filterAny($anyFilter);
-        } else {
-            foreach ($this->searchParams as $key => $value) {
-                if ($this->filterPunctation) {
-                    $value = str_replace(['.', '_', '-'], ' ', $value);
-                }
-                $key = str_replace('__', '.', $key);
-                $filter = $this->getRealFilter($key);
-                $filter->setModel($this->modelClass);
-                $filter->setValue($value);
-                if (!$filter->isEmpty()) {
-                    $query = $query->alterDataQuery(array($filter, 'apply'));
-                }
-            }
+        }
 
-            if ($this->connective != "AND") {
-                throw new Exception("SearchContext connective '$this->connective' not supported after ORM-rewrite.");
+        // Apply any other search criteria set through advanced search
+        foreach ($this->searchParams as $key => $value) {
+            // ignore general search
+            if ($key === "q") {
+                continue;
             }
+            if ($this->filterPunctation) {
+                $value = str_replace(['.', '_', '-'], ' ', $value);
+            }
+            $key = str_replace('__', '.', $key);
+            $filter = $this->getRealFilter($key);
+            $filter->setModel($this->modelClass);
+            $filter->setValue($value);
+            if (!$filter->isEmpty()) {
+                $query = $query->alterDataQuery(array($filter, 'apply'));
+            }
+        }
+
+        if ($this->connective != "AND") {
+            throw new Exception("SearchContext connective '$this->connective' not supported after ORM-rewrite.");
         }
 
         return $query;
