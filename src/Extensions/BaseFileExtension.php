@@ -234,8 +234,10 @@ class BaseFileExtension extends DataExtension
      */
     public function Lazy($limitWidth = null)
     {
+        /** @var Image $img */
         $img = $this->owner;
         if ($limitWidth) {
+            /** @var Image $img */
             $img = $this->owner->ScaleWidth($limitWidth);
         }
         if (!$img) {
@@ -289,6 +291,7 @@ class BaseFileExtension extends DataExtension
 
     public function WebpLink()
     {
+        /** @var Image $img */
         $img = $this->owner;
         $ext = $img->getExtension();
         if (self::config()->enable_webp && in_array($ext, ["jpg", "png"]) && $img->isPublished()) {
@@ -297,6 +300,18 @@ class BaseFileExtension extends DataExtension
             return $webp_url;
         }
         return $img->Link();
+    }
+
+    public function Base64($width = 0)
+    {
+        /** @var Image $resized */
+        $resized = $width > 0 ? $this->owner->ScaleWidth($width) : $this->owner;
+        if ($resized && $resized->exists()) {
+            $str = $resized->getString();
+            $mime = $resized->getMimeType();
+            $img_src = "data:$mime;base64," . str_replace("\n", "", base64_encode($str));
+            return $img_src;
+        }
     }
 
     /**
