@@ -11,6 +11,7 @@ use LeKoala\Base\View\CookieConsent;
 use LeKoala\Base\Forms\Bootstrap\Tab;
 use SilverStripe\Forms\CheckboxField;
 use LeKoala\Base\View\CommonRequirements;
+use SilverStripe\Security\Security;
 use SilverStripe\SiteConfig\SiteConfig;
 
 /**
@@ -141,11 +142,16 @@ JS;
         } else {
             if ($gtag) {
                 Requirements::javascript('https://www.googletagmanager.com/gtag/js?id=' . $this->owner->GoogleAnalyticsCode, ['async' => true]);
+                $opts = "{}";
+                // @link https://developers.google.com/analytics/devguides/collection/ga4/user-id
+                if (Security::getCurrentUser()) {
+                    $opts = "{'user_id': '" . Security::getCurrentUser()->ID . "'}";
+                }
                 $script = <<<JS
 window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
-gtag('config', '{$this->owner->GoogleAnalyticsCode}');
+gtag('config', '{$this->owner->GoogleAnalyticsCode}', $opts);
 JS;
             } else {
                 $script = <<<JS

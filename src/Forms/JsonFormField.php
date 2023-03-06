@@ -41,7 +41,7 @@ abstract class JsonFormField extends FormField
      */
     public function getValueJson()
     {
-        $v = $this->value;
+        $v = $this->value ?? '';
         if (is_array($v)) {
             $v = json_encode($v);
         }

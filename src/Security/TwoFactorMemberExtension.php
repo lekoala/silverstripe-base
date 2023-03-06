@@ -26,6 +26,9 @@ use SilverStripe\Security\DefaultAdminService;
  *
  * LeKoala\Base\Security\BaseAuthenticator:
  *   enable_2fa: true
+ *
+ * TODO: consider implementing OTP
+ * https://philna.sh/blog/2022/12/07/better-two-factor-authentication-experiences-with-web-otp/
  */
 class TwoFactorMemberExtension extends DataExtension
 {
@@ -131,7 +134,30 @@ class TwoFactorMemberExtension extends DataExtension
         if ($this->owner->TOTPToken) {
             $arr[] = self::METHOD_TOTP;
         }
-        if ($this->owner->Mobile) {
+        if ($this->owner->Mobile && TwoFactorLoginHandler::getTextMessageProvider()) {
+            $arr[] = self::METHOD_TEXT;
+        }
+        return $arr;
+    }
+
+    public static function listTwoFactorMethods($list = null)
+    {
+        $arr[self::METHOD_TOTP] = _t('TwoFactorMemberExtension.METHOD_TOTP', 'TOTP');
+        $arr[self::METHOD_TEXT] = _t('TwoFactorMemberExtension.METHOD_TEXT', 'Text message');
+        if (is_array($list)) {
+            $new = [];
+            foreach ($list as $k) {
+                $new[$k] = $arr[$k];
+            }
+            return $new;
+        }
+        return $arr;
+    }
+
+    public static function EnabledTwoFactorMethods()
+    {
+        $arr[] = self::METHOD_TOTP;
+        if (TwoFactorLoginHandler::getTextMessageProvider()) {
             $arr[] = self::METHOD_TEXT;
         }
         return $arr;

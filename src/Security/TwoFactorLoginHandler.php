@@ -154,7 +154,7 @@ class TwoFactorLoginHandler extends LoginHandler
             $token = (string) mt_rand(100000, 999999);
             $this->getRequest()->getSession()->set('TwoFactorLoginHandler.TextToken', $token);
             $message = _t('TwoFactorLoginHandler.YOUR_TOKEN_IS', "Your token is {token}", ['token' => $token]);
-            $provider = $this->getTextMessageProvider();
+            $provider = self::getTextMessageProvider();
             $provider->send($member, $message);
             return true;
         }
@@ -170,9 +170,9 @@ class TwoFactorLoginHandler extends LoginHandler
     /**
      * @return ProviderInterface
      */
-    protected function getTextMessageProvider()
+    public static function getTextMessageProvider()
     {
-        return  Injector::inst()->get(ProviderInterface::class);
+        return Injector::inst()->get(ProviderInterface::class);
     }
 
     public function twofactorcomplete()
