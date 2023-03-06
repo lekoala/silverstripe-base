@@ -21,9 +21,10 @@ SilverStripe\Core\Injector\Injector:
     calls:
       - [setDateTimeOptions]
   SilverStripe\Forms\TimeField:
-    class: LeKoala\Base\Forms\FlatpickrField
-    calls:
-      - [setTimeOptions]
+    class: LeKoala\Base\Forms\InputMaskTimeField
+    # class: LeKoala\Base\Forms\FlatpickrField
+    # calls:
+    #   - [setTimeOptions]
 SilverStripe\Forms\FormField:
   # casting:
   # This makes graphql crash so don't use it
