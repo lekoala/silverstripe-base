@@ -476,3 +476,33 @@ select.ag-cell-edit-input {
   top: 50%;
   transform: translateY(-50%);
 }
+
+/* Last icon */
+l-i {
+  --size: 1em;
+  display: inline-flex;
+  width: var(--size);
+  height: var(--size);
+  vertical-align: middle;
+}
+l-i svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+l-i i {
+  font-size: var(--size) !important;
+  color: currentColor;
+}
+p l-i:not([size]),
+button l-i:not([size]),
+a l-i:not([size]),
+span l-i:not([size]) {
+  vertical-align: -0.125em;
+}
+.material-icons-two-tone {
+  background-color: currentColor;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
