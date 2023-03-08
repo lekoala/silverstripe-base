@@ -225,6 +225,7 @@ class InputMaskField extends TextField
 
     public function Field($properties = array())
     {
+        $this->setAttribute("data-ms-editor", "false");
         $this->setAttribute("readonly", true);
         $this->setAttribute('data-mb', 'inputmask');
         $this->setAttribute('data-mb-options', $this->getConfigAsJson());
