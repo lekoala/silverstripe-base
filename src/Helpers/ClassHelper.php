@@ -200,6 +200,31 @@ class ClassHelper
     }
 
     /**
+     * Finds if a class name matches (partially) the string
+     *
+     * @param string $classOrObject
+     * @param string $name
+     * @param boolean $partial
+     * @param boolean $ns
+     * @return boolean
+     */
+    public static function hasName($classOrObject, $name, $partial = true, $ns = true)
+    {
+        if (is_object($classOrObject)) {
+            $classOrObject = get_class($classOrObject);
+        }
+
+        if (!$ns) {
+            $classOrObject = self::getClassWithoutNamespace($classOrObject);
+        }
+
+        if ($partial) {
+            return str_contains($classOrObject, $name);
+        }
+        return $classOrObject === $name;
+    }
+
+    /**
      * Sanitise a model class' name for inclusion in a link
      *
      * @param string $class
