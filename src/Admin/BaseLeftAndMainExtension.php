@@ -230,6 +230,9 @@ CSS;
 
     protected function includeLastIcon()
     {
+        if (!class_exists(LeKoala\Admini\LeftAndMain::class)) {
+            return;
+        }
         $preconnect = <<<HTML
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

@@ -635,6 +635,7 @@ class BuildableFieldList extends FieldList
      * The default tab if there is no current tab
      *
      * This only apply before any field is added. After that it's better to use setCurrentTab
+     * You still need to create the TabSet yourself
      *
      * @return $this
      */
