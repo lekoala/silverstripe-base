@@ -5,7 +5,8 @@ namespace LeKoala\Base\Forms;
 use SilverStripe\Forms\LiteralField;
 
 /**
- *
+ * Bootstrap alert
+ * Maps good/bad classes
  */
 class AlertField extends LiteralField
 {
@@ -19,6 +20,11 @@ class AlertField extends LiteralField
      * @var string
      */
     protected $alertType = 'info';
+
+    /**
+     * @var bool
+     */
+    protected $messageClass = null;
 
     /**
      * @param string $name
@@ -54,7 +60,11 @@ class AlertField extends LiteralField
         if ($extraClasses) {
             $extraClasses = " " . $extraClasses;
         }
-        $content = "<div class=\"alert alert-$type{$extraClasses}\" role=\"alert\">$content</div>";
+        $classes = 'alert alert-' . $type . '' . $extraClasses;
+        if ($this->messageClass) {
+            $classes .= " message " . $this->messageClass;
+        }
+        $content = "<div class=\"{$classes}\" role=\"alert\">$content</div>";
 
         return $content;
     }
@@ -74,6 +84,16 @@ class AlertField extends LiteralField
      */
     public function setAlertType($alertType)
     {
+        switch ($alertType) {
+            case 'bad':
+                $this->messageClass = $alertType;
+                $alertType = "danger";
+                break;
+            case 'good':
+                $this->messageClass = $alertType;
+                $alertType = "success";
+                break;
+        }
         $this->alertType = $alertType;
 
         return $this;
