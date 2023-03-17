@@ -245,6 +245,25 @@
       },
     });
   });
+
+  // Subsite change detector, maybe add to the core?
+  // @linkl https://github.com/silverstripe/silverstripe-subsites/issues/515
+  var subsiteSessionKey = "admin_subsite_id";
+  var subsiteSelectedId = null;
+  window.addEventListener("storage", () => {
+    var tabId = localStorage.getItem(subsiteSessionKey);
+    if (tabId && subsiteSelectedId != tabId) {
+      if (confirm("The current subsite has changed. Reload the page ?")) {
+        window.location.reload();
+      }
+    }
+  });
+  $("#SubsitesSelect").entwine({
+    onmatch: function () {
+      subsiteSelectedId = this.find("option[selected]").attr("value");
+      localStorage.setItem(subsiteSessionKey, subsiteSelectedId);
+    },
+  });
 })(jQuery);
 
 // @link https://stackoverflow.com/questions/400212/how-do-i-copy-to-the-clipboard-in-javascript
