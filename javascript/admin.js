@@ -245,6 +245,42 @@
       },
     });
   });
+
+  // Subsite change detector, maybe add to the core?
+  // @linkl https://github.com/silverstripe/silverstripe-subsites/issues/515
+
+  /**
+   * Store current subsite id and ask to reload the page if it detects any change
+   */
+  function detectSubsiteChange(selectedId) {
+    var sessionKey = "admin_subsite_id";
+    var reloadPending = false;
+    try {
+      localStorage.setItem(sessionKey, selectedId);
+
+      window.addEventListener("storage", function () {
+        if (reloadPending) {
+          return;
+        }
+        var tabId = localStorage.getItem(sessionKey);
+        if (tabId && selectedId != tabId) {
+          var msg = ss.i18n._t("Admin.SUBSITECHANGED", "You've changed subsite in another tab, do you want to reload the page?");
+          reloadPending = true; // Don't trigger multiple confirm dialog
+          if (confirm(msg)) {
+            window.location.reload();
+          }
+          // Don't ask again if cancelled
+        }
+      });
+    } catch (e) {
+      // Maybe storage is full or not available, disable this feature and ignore error
+    }
+  }
+  $("#SubsitesSelect").entwine({
+    onmatch: function () {
+      detectSubsiteChange(this.find("option[selected]").attr("value"));
+    },
+  });
 })(jQuery);
 
 // @link https://stackoverflow.com/questions/400212/how-do-i-copy-to-the-clipboard-in-javascript

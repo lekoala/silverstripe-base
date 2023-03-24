@@ -48,6 +48,8 @@ class InputMaskTimeField extends InputMaskDateTimeField
 
     public function saveInto(DataObjectInterface $record)
     {
+        // Replace missing placeholders
+        $this->value = str_replace([':MM', ':ss'], ':00', $this->value);
         return parent::saveInto($record);
     }
 
