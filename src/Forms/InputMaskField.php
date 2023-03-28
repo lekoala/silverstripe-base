@@ -232,6 +232,9 @@ class InputMaskField extends TextField
         if ($this->dataFormat) {
             $this->setAttribute('data-dataformat', $this->dataFormat);
         }
+        if ($this->readonly) {
+            $this->setAttribute("disabled", true);
+        }
         self::requirements();
         return parent::Field($properties);
     }
