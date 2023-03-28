@@ -1,10 +1,12 @@
 <?php
+
 namespace LeKoala\Base\Forms;
 
-use SilverStripe\Forms\CheckboxSetField;
-use SilverStripe\Control\Controller;
-use SilverStripe\Admin\LeftAndMain;
+use InvalidArgumentException;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Admin\LeftAndMain;
+use SilverStripe\Control\Controller;
+use SilverStripe\Forms\CheckboxSetField;
 
 /**
  * Allows setting a custom class on child elements

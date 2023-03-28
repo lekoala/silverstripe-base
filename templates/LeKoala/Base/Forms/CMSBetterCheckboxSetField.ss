@@ -3,7 +3,7 @@
 		<% loop $Options %>
 			<div class="checkbox form-check $Class $Up.extraItemClass">
 				<label class="form-check-label">
-					<input id="$ID" class="checkbox form-check-input" name="$Name" type="checkbox" value="$Value"<% if $isChecked %> checked="checked"<% end_if %><% if $isDisabled %> disabled="disabled"<% end_if %> />
+					<input id="$ID" class="checkbox form-check-input" name="$Name" type="checkbox" value="$Value"<% if $isChecked %> checked="checked"<% end_if %><% if $isDisabled || $Up.isReadonly %> disabled="disabled"<% end_if %> />
 					$Title
 				</label>
 			</div>
