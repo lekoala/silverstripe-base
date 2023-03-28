@@ -4,12 +4,12 @@ namespace LeKoala\Base\Forms\Extensions;
 
 use SilverStripe\Core\Extension;
 use SilverStripe\Forms\FormField;
+use SilverStripe\Control\Controller;
 
 /**
- * Deprecated
- *
  * This is merged into BaseFieldExtension
  *
+ * @deprecated
  * @property \LeKoala\Base\Forms\Extensions\TooltipExtension $owner
  */
 class TooltipExtension extends Extension
@@ -21,7 +21,11 @@ class TooltipExtension extends Extension
     public function setTooltip($value)
     {
         $this->owner->setAttribute('title', $value);
-        $this->owner->setAttribute('data-toggle', 'tooltip');
-        //TODO: figure out why the javascript is not properly triggered
+        $curr = Controller::has_curr() ? Controller::curr() : null;
+        if ($curr && $curr->UseBootstrap5()) {
+            $this->owner->setAttribute('data-bs-toggle', 'tooltip');
+        } else {
+            $this->owner->setAttribute('data-toggle', 'tooltip');
+        }
     }
 }

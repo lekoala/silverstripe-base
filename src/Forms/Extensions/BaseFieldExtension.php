@@ -33,6 +33,9 @@ class BaseFieldExtension extends Extension
      */
     public function getTooltip()
     {
+        if ($this->owner->getAttribute("data-bs-tooltip")) {
+            return $this->owner->getAttribute("data-tooltip");
+        }
         if ($this->owner->getAttribute("data-tooltip")) {
             return $this->owner->getAttribute("data-tooltip");
         }
@@ -48,8 +51,12 @@ class BaseFieldExtension extends Extension
     public function setTooltip($value)
     {
         $this->owner->setAttribute('title', $value);
-        $this->owner->setAttribute('data-toggle', 'tooltip');
-        //TODO: figure out why the javascript is not properly triggered
+        $curr = Controller::has_curr() ? Controller::curr() : null;
+        if ($curr && $curr->UseBootstrap5()) {
+            $this->owner->setAttribute('data-bs-toggle', 'tooltip');
+        } else {
+            $this->owner->setAttribute('data-toggle', 'tooltip');
+        }
         return $this->owner;
     }
 
@@ -63,14 +70,20 @@ class BaseFieldExtension extends Extension
      */
     public function setTooltipIcon($value)
     {
+        $curr = Controller::has_curr() ? Controller::curr() : null;
         // Not working in cms
-        if (Controller::curr() instanceof LeftAndMain) {
+        if ($curr && $curr instanceof LeftAndMain) {
             return $this->setTooltip($value);
         }
         $this->owner->setAttribute('data-tooltip', $value);
         $title = $this->owner->Title();
         $svg = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" style="fill:rgba(0, 0, 0, 1);transform:;-ms-filter:"><path d="M12,2C6.486,2,2,6.486,2,12s4.486,10,10,10s10-4.486,10-10S17.514,2,12,2z M13,17h-2v-6h2V17z M13,9h-2V7h2V9z"></path></svg>';
-        $title .= " <span data-title=\"$value\" data-toggle=\"tooltip\">$svg</value>";
+
+        if ($curr && $curr->UseBootstrap5()) {
+            $title .= " <span data-bs-title=\"$value\" data-bs-toggle=\"tooltip\">$svg</value>";
+        } else {
+            $title .= " <span data-title=\"$value\" data-toggle=\"tooltip\">$svg</value>";
+        }
         $this->owner->setTitle($title);
         return $this->owner;
     }
