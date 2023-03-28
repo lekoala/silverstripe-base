@@ -52,7 +52,7 @@ class BaseFieldExtension extends Extension
     {
         $this->owner->setAttribute('title', $value);
         $curr = Controller::has_curr() ? Controller::curr() : null;
-        if ($curr && $curr->UseBootstrap5()) {
+        if ($curr && $curr->hasMethod('UseBootstrap5') && $curr->UseBootstrap5()) {
             $this->owner->setAttribute('data-bs-toggle', 'tooltip');
         } else {
             $this->owner->setAttribute('data-toggle', 'tooltip');
@@ -79,7 +79,7 @@ class BaseFieldExtension extends Extension
         $title = $this->owner->Title();
         $svg = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" style="fill:rgba(0, 0, 0, 1);transform:;-ms-filter:"><path d="M12,2C6.486,2,2,6.486,2,12s4.486,10,10,10s10-4.486,10-10S17.514,2,12,2z M13,17h-2v-6h2V17z M13,9h-2V7h2V9z"></path></svg>';
 
-        if ($curr && $curr->UseBootstrap5()) {
+        if ($curr && $curr->hasMethod('UseBootstrap5') && $curr->UseBootstrap5()) {
             $title .= " <span data-bs-title=\"$value\" data-bs-toggle=\"tooltip\">$svg</value>";
         } else {
             $title .= " <span data-title=\"$value\" data-toggle=\"tooltip\">$svg</value>";

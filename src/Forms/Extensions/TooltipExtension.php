@@ -22,7 +22,7 @@ class TooltipExtension extends Extension
     {
         $this->owner->setAttribute('title', $value);
         $curr = Controller::has_curr() ? Controller::curr() : null;
-        if ($curr && $curr->UseBootstrap5()) {
+        if ($curr && $curr->hasMethod('UseBootstrap5') && $curr->UseBootstrap5()) {
             $this->owner->setAttribute('data-bs-toggle', 'tooltip');
         } else {
             $this->owner->setAttribute('data-toggle', 'tooltip');
