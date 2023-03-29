@@ -36,13 +36,13 @@ class PrivacyForm extends BaseForm
         $fields->addHeader($header);
 
         if ($PrivacyNoticePage && $PrivacyNoticePage->Content) {
-            $CheckPrivacyTitle = $startLabel . ' <a href="'.$PrivacyNoticePage->Link().'" target="_blank">'.$PrivacyNoticePage->Title.'</a>';
+            $CheckPrivacyTitle = $startLabel . ' <a href="' . $PrivacyNoticePage->Link() . '" target="_blank">' . $PrivacyNoticePage->Title . '</a>';
             $PrivacyContent = '<div class="PrivacyForm-Box">' . $PrivacyNoticePage->Content . '</div>';
             $fields->addLiteral($PrivacyContent);
             $fields->addCheckbox("CheckPrivacy", $CheckPrivacyTitle, ["required" => "required"]);
         }
         if ($TermsAndConditionsPage->Content) {
-            $CheckTermsTitle = $startLabel . ' <a href="'.$TermsAndConditionsPage->Link().'" target="_blank">'.$TermsAndConditionsPage->Title.'</a>';
+            $CheckTermsTitle = $startLabel . ' <a href="' . $TermsAndConditionsPage->Link() . '" target="_blank">' . $TermsAndConditionsPage->Title . '</a>';
             $TermsContent = '<div class="PrivacyForm-Box">' . $TermsAndConditionsPage->Content . '</div>';
 
             $fields->addLiteral($TermsContent);
@@ -61,6 +61,9 @@ class PrivacyForm extends BaseForm
         }
         $this->record->write();
 
-        return $this->getController()->redirectBack();
+        if (!empty($data['BackURL'])) {
+            return $this->getController()->redirectBack();
+        }
+        return $this->getController()->redirect('/');
     }
 }
