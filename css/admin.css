@@ -1,33 +1,38 @@
+html,
+.panel--scrollable {
+    scroll-padding-top: 53px;
+}
+
 /* Wrong link color */
 .cms-menu a {
-  color: #fff;
+    color: #fff;
 }
 
 .cms-menu__header span.cms-env-marker {
-  position: absolute;
-  top: 0;
-  left: 0;
-  font-size: 10px;
-  font-weight: bold;
-  background: red;
-  display: inline-block;
-  padding: 0px 6px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 10px;
+    font-weight: bold;
+    background: red;
+    display: inline-block;
+    padding: 0px 6px;
 }
 
-.form__fieldgroup.is-large > .form__fieldgroup-item {
-  min-width: 240px;
+.form__fieldgroup.is-large>.form__fieldgroup-item {
+    min-width: 240px;
 }
 
 /* Fields groups are not properly spaced if collapsed */
 @media (max-width: 672px) {
-  form .fieldgroup .form__fieldgroup-item + .form__fieldgroup-item {
-    margin-top: 1.2308rem;
-  }
+    form .fieldgroup .form__fieldgroup-item+.form__fieldgroup-item {
+        margin-top: 1.2308rem;
+    }
 }
 
 /* Prevent double scroll in 4.2 */
 body.cms {
-  overflow: hidden;
+    overflow: hidden;
 }
 
 /* Placeholder is definetely too dark @link https://github.com/silverstripe/silverstripe-admin/pull/806 */
@@ -36,443 +41,445 @@ body.cms {
 .field select::placeholder,
 .field textarea::placeholder,
 .form-control::placeholder {
-  color: #adb8c9;
+    color: #adb8c9;
 }
 
 .field input.text::-webkit-input-placeholder,
 .field select::-webkit-input-placeholder,
 .field textarea::-webkit-input-placeholder,
 .form-control::-webkit-input-placeholder {
-  color: #adb8c9;
+    color: #adb8c9;
 }
 
 .field input.text::-moz-placeholder,
 .field select::-moz-placeholder,
 .field textarea::-moz-placeholder,
 .form-control::-moz-placeholder {
-  color: #adb8c9;
+    color: #adb8c9;
 }
 
 .field input.text:-ms-input-placeholder,
 .field select:-ms-input-placeholder,
 .field textarea:-ms-input-placeholder,
 .form-control:-ms-input-placeholder {
-  color: #adb8c9;
+    color: #adb8c9;
 }
 
 /* Large panels need this for small screens */
 .panel {
-  overflow-x: auto;
+    overflow-x: auto;
 }
 
 /* HTMLEditor should be full width ! */
 .cms-edit-form .form-group.htmleditor.stacked .form__field-holder {
-  -webkit-box-flex: 0;
-  -webkit-flex: 0 0 100%;
-  flex: 0 0 100%;
-  max-width: 100%;
+    -webkit-box-flex: 0;
+    -webkit-flex: 0 0 100%;
+    flex: 0 0 100%;
+    max-width: 100%;
 }
 
 /* Context menu */
 .contextMenu {
-  position: absolute;
-  border: 1px solid #eee;
-  background: #fff;
-  z-index: 500;
-  -webkit-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.5);
-  -moz-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.5);
-  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.5);
+    position: absolute;
+    border: 1px solid #eee;
+    background: #fff;
+    z-index: 500;
+    -webkit-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.5);
+    -moz-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.5);
+    box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.5);
 }
 
 .contextMenu a {
-  display: block;
-  padding: 6px 12px;
-  border-bottom: 1px solid #eee;
+    display: block;
+    padding: 6px 12px;
+    border-bottom: 1px solid #eee;
 }
 
 .contextMenu a:last-child {
-  border-bottom: 0;
+    border-bottom: 0;
 }
 
 /* Warning is too big */
 .btn-toolbar .btn.actions-warning {
-  display: none;
-  position: absolute;
-  bottom: 50px;
-  left: 0;
-  border: 1px solid #ced5e1;
-  background: #fff;
+    display: none;
+    position: absolute;
+    bottom: 50px;
+    left: 0;
+    border: 1px solid #ced5e1;
+    background: #fff;
 }
 
-.btn-toolbar button:hover + .btn.actions-warning {
-  display: block;
+.btn-toolbar button:hover+.btn.actions-warning {
+    display: block;
 }
 
 /* Somehow checkboxes are misaligned */
 @media (min-width: 992px) {
-  .cms-edit-form .form-group.checkbox > .form__field-holder {
-    padding-left: 42px;
-  }
+    .cms-edit-form .form-group.checkbox>.form__field-holder {
+        padding-left: 42px;
+    }
 }
 
 /* Cosmetic changes */
 .cms-sitename a {
-  color: #fff;
-  display: block;
-  margin: 10px;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  justify-content: left;
+    color: #fff;
+    display: block;
+    margin: 10px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    justify-content: left;
 }
 
 .ui-tabs-anchor.nav-link.active {
-  text-shadow: -0.06ex 0 rgba(0, 0, 0, 0.6), 0.06ex 0 rgba(0, 0, 0, 0.6);
+    text-shadow: -0.06ex 0 rgba(0, 0, 0, 0.6), 0.06ex 0 rgba(0, 0, 0, 0.6);
 }
 
 /* More compact dropdown + visible if collapsed */
 /* Maybe not necessary some day https://github.com/silverstripe/silverstripe-subsites/issues/380#issuecomment-409434462 */
 .cms .cms-menu .cms-subsites {
-  padding: 0;
+    padding: 0;
 }
 
 .cms .cms-menu .cms-subsites .field.dropdown {
-  margin: 0;
+    margin: 0;
 }
 
 .cms-menu .cms-subsites .dropdown span {
-  color: #000 !important;
+    color: #000 !important;
 }
 
 .cms-subsites .field .chosen-container-single .chosen-single {
-  border-radius: 0;
+    border-radius: 0;
 }
 
 .cms .cms-menu .cms-subsites select {
-  visibility: hidden;
-  height: 34px;
-  border-radius: 0;
+    visibility: hidden;
+    height: 34px;
+    border-radius: 0;
 }
 
 .cms .cms-menu.collapsed .cms-subsites {
-  display: block;
+    display: block;
 }
 
 .cms-menu.collapsed .cms-subsites .chosen-drop {
-  min-width: 180px;
+    min-width: 180px;
 }
 
 .cms-subsites .field .chosen-drop .active-result:hover {
-  opacity: 0.9;
+    opacity: 0.9;
 }
 
 .cms-subsites .field .chosen-drop .result-selected {
-  color: #999;
-  background: #ccc;
+    color: #999;
+    background: #ccc;
 }
 
 .cms-subsites .chosen-container .chosen-results {
-  max-height: 400px;
+    max-height: 400px;
 }
 
 /* Icons in menu */
 .menu__icon.fa {
-  font-size: 17px !important;
+    font-size: 17px !important;
 }
 
 .menu__icon {
-  width: 22px;
-  left: 10px;
-  margin-top: 0;
-  text-align: center;
+    width: 22px;
+    left: 10px;
+    margin-top: 0;
+    text-align: center;
 }
 
 .menu__icon.icon-16 {
-  background-repeat: no-repeat;
+    background-repeat: no-repeat;
 }
 
 @media (min-width: 768px) {
-  .collapsed .menu__icon {
-    /* box width 60px, icon width = 22px 60-22/2 = 19 */
-    left: 19px;
-  }
+    .collapsed .menu__icon {
+        /* box width 60px, icon width = 22px 60-22/2 = 19 */
+        left: 19px;
+    }
 
-  .collapsed .menu__icon.icon-16 {
-    /* box width 60px, icon width = 16px 60-16/2 = 22 */
-    left: 22px;
-  }
+    .collapsed .menu__icon.icon-16 {
+        /* box width 60px, icon width = 16px 60-16/2 = 22 */
+        left: 22px;
+    }
 }
 
 /* Row classes */
 
 .cms table.grid-field__table tr.grouped {
-  background-color: #f5f5f5;
+    background-color: #f5f5f5;
 }
 
 .cms table.grid-field__table tr.green.odd {
-  background-color: #daf2da;
+    background-color: #daf2da;
 }
 
 .cms table.grid-field__table tr.green.even {
-  background-color: #c2f2c1;
+    background-color: #c2f2c1;
 }
 
 .cms table.grid-field__table tr.blue.odd {
-  background-color: #d9edf7;
+    background-color: #d9edf7;
 }
 
 .cms table.grid-field__table tr.blue.even {
-  background-color: #bce8f1;
+    background-color: #bce8f1;
 }
 
 .cms table.grid-field__table tr.amber.odd {
-  background-color: #faebcc;
+    background-color: #faebcc;
 }
 
 .cms table.grid-field__table tr.amber.even {
-  background-color: #fcf8e3;
+    background-color: #fcf8e3;
 }
 
 .cms table.grid-field__table tr.red.odd {
-  background-color: #f2dede;
+    background-color: #f2dede;
 }
 
 .cms table.grid-field__table tr.red.even {
-  background-color: #ebccd1;
+    background-color: #ebccd1;
 }
 
 .cms table.grid-field__table tbody tr.even:hover,
 .cms table.grid-field__table tbody tr:hover {
-  background-color: #f0f4f7;
+    background-color: #f0f4f7;
 }
 
 /* Image gallery */
 .grid-field.gridfield-gallery thead .col-LargeAssetThumbnail {
-  display: none;
+    display: none;
 }
 
 .grid-field.gridfield-gallery tbody {
-  background: none;
+    background: none;
 }
 
 .grid-field.gridfield-gallery tbody tr {
-  display: inline-block;
-  width: 380px;
-  background: #fff;
+    display: inline-block;
+    width: 380px;
+    background: #fff;
 }
 
 .grid-field.gridfield-gallery tbody tr:hover {
-  background: #f0f4f7;
+    background: #f0f4f7;
 }
 
 .grid-field.gridfield-gallery tbody tr td {
-  display: block;
+    display: block;
 }
 
 .grid-field.gridfield-gallery tbody tr td.col-Name {
-  border: 0;
-  padding-bottom: 0;
+    border: 0;
+    padding-bottom: 0;
 }
 
 .grid-field.gridfield-gallery tbody tr td.grid-field__col-compact {
-  border: 0;
-  position: relative;
-  display: block;
-  width: 380px;
+    border: 0;
+    position: relative;
+    display: block;
+    width: 380px;
 }
 
 .grid-field.gridfield-gallery tbody tr td.grid-field__col-compact .gridfield-button-delete {
-  position: absolute;
-  right: 1.2308rem;
-  display: inline-block;
+    position: absolute;
+    right: 1.2308rem;
+    display: inline-block;
 }
 
 .grid-field.gridfield-gallery tbody tr:first-child td {
-  border-top: 0;
+    border-top: 0;
 }
 
 .grid-field.gridfield-gallery tbody tr.ss-gridfield-no-items {
-  display: table-row;
-  width: 100%;
+    display: table-row;
+    width: 100%;
 }
 
 .grid-field.gridfield-gallery tbody tr.ss-gridfield-no-items td {
-  display: table-cell;
+    display: table-cell;
 }
 
 /* UI fixes */
 /* Looks broken otherwise */
 .cms .grid-field .add-existing-autocompleter button.action_gridfield_relationadd span {
-  float: none;
+    float: none;
 }
 
 /* select height can be weirdly inconsistent
    size=1 select have no height, some select have a bigger height, chosen has 36px .. */
 .cms .field select,
 .field .chosen-container-single .chosen-single {
-  height: 35px;
+    height: 35px;
 }
 
 /* the margin top prevents label alignment and looks strange */
-.form__fieldgroup > .form__fieldgroup-item {
-  margin-top: 0;
+.form__fieldgroup>.form__fieldgroup-item {
+    margin-top: 0;
 }
 
 /* grid field without a footer have no margin bottom */
 fieldset.grid-field {
-  margin-bottom: 1.2308rem;
+    margin-bottom: 1.2308rem;
 }
 
 /* pagination looks awful in thead */
 .grid-field thead .grid-field__title-row th {
-  position: relative;
+    position: relative;
 }
 
 .grid-field thead .pagination-records-number {
-  position: absolute;
-  top: 0.9231rem;
-  right: 1.5385rem;
+    position: absolute;
+    top: 0.9231rem;
+    right: 1.5385rem;
 }
 
 /* large table can extend the screen width */
-.cms .grid-field__table tr th.main > span {
-  white-space: normal;
+.cms .grid-field__table tr th.main>span {
+    white-space: normal;
 }
 
 /* inputs and select in a grid field */
 .cms .ss-gridfield-editable select.dropdown {
-  height: auto;
+    height: auto;
 }
 
 /* upload field clickable icons */
 .uploadfield-item__thumbnail {
-  cursor: pointer !important;
+    cursor: pointer !important;
 }
 
 /* select 2 */
 .cms .select2-container--default .select2-selection {
-  color: #43536d;
-  border: 1px solid #c1cad9;
-  border-radius: 0.23rem;
-  height: 34px;
+    color: #43536d;
+    border: 1px solid #c1cad9;
+    border-radius: 0.23rem;
+    height: 34px;
 }
 
 .cms .select2-container--default .select2-selection--single .select2-selection__arrow {
-  height: 34px;
-  right: 6px;
+    height: 34px;
+    right: 6px;
 }
 
 .cms .select2-container--default .select2-selection--single .select2-selection__clear {
-  color: #43536d;
-  width: 24px;
-  text-align: center;
+    color: #43536d;
+    width: 24px;
+    text-align: center;
 }
+
 .cms .select2-container--default .select2-selection--single .select2-selection__clear:hover {
-  background-color: #f5f5f5;
+    background-color: #f5f5f5;
 }
 
 .cms .select2-container--default .select2-selection--single .select2-selection__rendered {
-  line-height: 34px;
+    line-height: 34px;
 }
 
-select[readonly].select2 + .select2-container {
-  pointer-events: none;
-  touch-action: none;
+select[readonly].select2+.select2-container {
+    pointer-events: none;
+    touch-action: none;
 }
 
-select[readonly].select2 + .select2-container .select2-selection {
-  background: #eee;
-  box-shadow: none;
+select[readonly].select2+.select2-container .select2-selection {
+    background: #eee;
+    box-shadow: none;
 }
 
-select[readonly].select2 + .select2-container .select2-selection__arrow,
-select[readonly].select2 + .select2-container .select2-selection__clear {
-  display: none;
+select[readonly].select2+.select2-container .select2-selection__arrow,
+select[readonly].select2+.select2-container .select2-selection__clear {
+    display: none;
 }
 
 /* ag grid */
 .ag-cell-edit-input {
-  height: 100% !important;
-  border: 0 !important;
-  padding: 0 11px !important;
-  border-radius: 0 !important;
+    height: 100% !important;
+    border: 0 !important;
+    padding: 0 11px !important;
+    border-radius: 0 !important;
 }
 
 select.ag-cell-edit-input {
-  padding: 0 0 !important;
+    padding: 0 0 !important;
 }
 
 /* bulk checkboxes are misaligned and ui is ugly */
 .col-bulkSelect,
 .bulkManagerOptions th:last-child {
-  position: relative;
-  vertical-align: middle;
-  text-align: center;
-  padding-right: 0 !important;
-  padding-left: 0 !important;
+    position: relative;
+    vertical-align: middle;
+    text-align: center;
+    padding-right: 0 !important;
+    padding-left: 0 !important;
 }
 
 .col-bulkSelect input.checkbox,
 .bulkManagerOptions th:last-child input.form-check-input {
-  display: inline-block;
-  margin: 0 auto;
+    display: inline-block;
+    margin: 0 auto;
 }
 
 #bulkActionName_Holder {
-  margin-bottom: 0;
+    margin-bottom: 0;
 }
 
 .bulkManagerOptions th:last-child {
-  padding-top: 0;
+    padding-top: 0;
 }
 
 .bulkManagerOptions .form-check-label {
-  display: block;
-  margin: 0 auto;
-  width: 25px;
-  height: 34px;
-  padding-top: 10.5px;
+    display: block;
+    margin: 0 auto;
+    width: 25px;
+    height: 34px;
+    padding-top: 10.5px;
 }
 
 .bulkManagerOptions {
-  background: rgb(231, 234, 240);
+    background: rgb(231, 234, 240);
 }
 
 .bulkManagerOptions th {
-  padding: 0;
+    padding: 0;
 }
 
 .bulkManagerOptions .chosen-container-single .chosen-single {
-  border-radius: 0;
+    border-radius: 0;
 }
 
 .bulkManagerOptions select {
-  visibility: hidden;
-  height: 34px;
-  border-radius: 0;
+    visibility: hidden;
+    height: 34px;
+    border-radius: 0;
 }
 
 /* quick filters */
 
 .quickfilters label {
-  margin: 0;
-  margin-right: 1em;
+    margin: 0;
+    margin-right: 1em;
 }
 
 /* columns */
 .cms-edit-form .columns .form-group.checkbox .form__field-holder {
-  margin-left: 1.5385rem !important;
-  flex: 0 0 100%;
-  max-width: 100%;
+    margin-left: 1.5385rem !important;
+    flex: 0 0 100%;
+    max-width: 100%;
 }
+
 .cms-edit-form .columns .form-group:after {
-  display: none;
+    display: none;
 }
 
 .field input.flatpickr-alt.text[readonly] {
-  background: #fff;
+    background: #fff;
 }
 
 .chosen-container-single .chosen-single abbr {
-  top: 50%;
-  transform: translateY(-50%);
+    top: 50%;
+    transform: translateY(-50%);
 }
