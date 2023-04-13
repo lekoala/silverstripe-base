@@ -3,6 +3,10 @@ Name: base-security
 After:
   - '#coresecurity'
 ---
+# https://github.com/silverstripe/silverstripe-framework/issues/9346
+SilverStripe\Control\Session:
+  cookie_secure: true
+  cookie_name_secure: 'PHPSESSID'
 SilverStripe\Security\Security:
   login_recording: true
   # don't trigger 2fa for whitelisted ips. Use with admin_ip_whitelist
