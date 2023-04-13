@@ -11,6 +11,7 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\SiteConfig\SiteConfig;
 use SilverStripe\Core\Injector\Injector;
 use LeKoala\Base\View\CommonRequirements;
+use LeKoala\DeferBackend\CspProvider;
 use LeKoala\DeferBackend\DeferBackend;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Admin\LeftAndMainExtension;
@@ -88,7 +89,7 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
             }
         }
 
-        CommonRequirements::lastIcon();
+        $this->includeLastIcon();
 
         // Temp 4.12 fix
         $version = $this->owner->CMSVersionNumber();
@@ -225,6 +226,39 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
 .cms-login-status .cms-login-status__logout-link:focus, .cms-login-status .cms-login-status__logout-link:hover {background-color: $border}
 CSS;
         Requirements::customCSS($styles, 'AdminMenuStyles');
+    }
+
+    protected function includeLastIcon()
+    {
+        if (!class_exists(LeKoala\Admini\LeftAndMain::class)) {
+            return;
+        }
+        $preconnect = <<<HTML
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+HTML;
+        Requirements::insertHeadTags($preconnect, "googlefontspreconnect");
+
+        // Could also host locally https://marella.me/material-icons/demo/#two-tone
+        Requirements::css("https://fonts.googleapis.com/icon?family=Material+Icons+Two+Tone");
+        Requirements::javascript('lekoala/silverstripe-admini: client/js/last-icon.min.js', ["type" => "application/javascript"]);
+
+        $nonce = '';
+        if (class_exists(\LeKoala\DeferBackend\CspProvider::class)) {
+            $nonce = \LeKoala\DeferBackend\CspProvider::getCspNonce();
+        }
+        $lastIconScript = <<<JS
+<script nonce="$nonce">
+    window.LastIcon = {
+            types: {
+            material: "twotone",
+            },
+            defaultSet: "material",
+            fonts: ["material"],
+        };
+</script>
+JS;
+        Requirements::insertHeadTags($lastIconScript, __FUNCTION__);
     }
 
     /**

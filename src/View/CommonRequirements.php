@@ -291,12 +291,13 @@ class CommonRequirements
         }
         $version = self::config()->moment_version;
         $tzversion = self::config()->moment_timezone_version;
-        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/moment.js/$version/moment-with-locales.min.js");
+        // Doesn't support js modules
+        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/moment.js/$version/moment-with-locales.min.js", ["type" => "application/javascript"]);
         if ($lang != 'en') {
-            Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/moment.js/$version/locale/$lang.js");
+            Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/moment.js/$version/locale/$lang.js", ["type" => "application/javascript"]);
         }
         if ($timezone) {
-            Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/$tzversion/moment-timezone-with-data.min.js");
+            Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/$tzversion/moment-timezone-with-data.min.js", ["type" => "application/javascript"]);
         }
     }
 
