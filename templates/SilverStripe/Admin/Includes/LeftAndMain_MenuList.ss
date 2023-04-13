@@ -1,3 +1,6 @@
+<% if ShowAVWarning %>
+<div class="p-2 text-white">Warning! Antivirus disabled</div>
+<% end_if %>
 <ul class="cms-menu__list">
 	<% loop $MainMenu %>
 		<li class="$LinkingMode $FirstLast <% if $LinkingMode == 'link' %><% else %>opened<% end_if %>" id="Menu-$Code" title="$Title.ATT">

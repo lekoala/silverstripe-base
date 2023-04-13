@@ -13,6 +13,7 @@ use SilverStripe\Control\Director;
 use SilverStripe\Core\Environment;
 use SilverStripe\ORM\DataExtension;
 use LeKoala\Base\Helpers\FileHelper;
+use LeKoala\Base\Security\Antivirus;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\Assets\Image_Backend;
@@ -183,6 +184,14 @@ class BaseFileExtension extends DataExtension
         }
 
         return $deleted;
+    }
+
+    public function onAfterUpload()
+    {
+        // See BaseUpload::validate, it's better because it works on tmp file
+        // if (Antivirus::isConfigured()) {
+        //     Antivirus::scan($this->owner);
+        // }
     }
 
     public function onAfterWrite()

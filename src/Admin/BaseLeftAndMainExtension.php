@@ -2,6 +2,7 @@
 
 namespace LeKoala\Base\Admin;
 
+use LeKoala\Base\Security\Antivirus;
 use Psr\Log\LoggerInterface;
 use SilverStripe\Admin\CMSMenu;
 use SilverStripe\View\SSViewer;
@@ -114,6 +115,14 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
 
         Requirements::javascript("base/javascript/admin.js");
         $this->requireAdminStyles();
+    }
+
+    public function ShowAVWarning()
+    {
+        if (Antivirus::isConfigured() && !Antivirus::isConfiguredAndWorking()) {
+            return true;
+        }
+        return false;
     }
 
     /**

@@ -2,8 +2,10 @@
 
 namespace LeKoala\Base\Forms;
 
+use Exception;
 use SilverStripe\Assets\Upload;
 use SilverStripe\ORM\DataObject;
+use LeKoala\Base\Security\Antivirus;
 use SilverStripe\Assets\FileNameFilter;
 
 /**
@@ -57,6 +59,25 @@ class BaseUpload extends Upload
         $this->file->extend('onAfterUpload');
         $this->extend('onAfterLoadIntoFile', $this->file);
         return true;
+    }
+
+    public function validate($tmpFile)
+    {
+        $validator = $this->validator;
+        $validator->setTmpFile($tmpFile);
+        $isValid = $validator->validate();
+        if ($validator->getErrors()) {
+            $this->errors = array_merge($this->errors, $validator->getErrors());
+        }
+        if (Antivirus::isConfiguredAndWorking()) {
+            try {
+                Antivirus::scanFile($tmpFile['tmp_name']);
+            } catch (Exception $e) {
+                $isValid = false;
+                $this->errors = [$e->getMessage()];
+            }
+        }
+        return $isValid;
     }
 
     /**
