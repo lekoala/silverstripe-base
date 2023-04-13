@@ -11,16 +11,51 @@ use SilverStripe\Core\Environment;
 use LeKoala\Base\Extensions\BaseFileExtension;
 
 /**
- * You must install lib yourself in your project
+ * You must install lib yourself in your project or use exec
  *
  * @link https://github.com/jonjomckay/quahog
  * @link https://docs.clamav.net/
  */
 class Antivirus
 {
+    public static function isPhpEnvSupported()
+    {
+        if (!self::useSocket() && !self::useExec()) {
+            return false;
+        }
+        return true;
+    }
+
+    public static function useExec()
+    {
+        $res = exec(self::getExecPath() . ' --ping 10');
+        if ($res === "PONG") {
+            return true;
+        }
+        return false;
+    }
+
+    public static function useSocket()
+    {
+        return function_exists('socket_connect') && class_exists(Client::class);
+    }
+
     public static function isConfigured()
     {
-        return self::getDaemonPath() != false && class_exists(Client::class);
+        if (self::getDaemonPath() || self::getExecPath()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Could be something like ANTIVIRUS_EXEC="C:\Program^ Files\ClamAV\clamdscan.exe" or clamdscan
+     *
+     * @return string
+     */
+    public static function getExecPath()
+    {
+        return Environment::getEnv('ANTIVIRUS_EXEC');
     }
 
     public static function getDaemonPath()
@@ -42,13 +77,16 @@ class Antivirus
      */
     public static function isConfiguredAndWorking()
     {
-        if (!self::isConfigured()) {
-            return false;
+        if (self::getExecPath() && self::useExec()) {
+            return true;
         }
+
+        // Check for pid file
         $pid = self::getPidFile();
         if ($pid && is_file($pid)) {
             return true;
         }
+        // Try to init scanner
         try {
             $scanner = self::getScanner();
         } catch (Exception $e) {
@@ -79,10 +117,16 @@ class Antivirus
      */
     public static function scanFile($path, $file = null)
     {
-        $scanner = self::getScanner();
-        $result = $scanner->scanFile($path);
+        if (self::useExec()) {
+            $res = shell_exec(self::getExecPath() . ' ' . $path);
+            $virusFound = strpos($res, 'Infected files: 1') !== false;
+        } else {
+            $scanner = self::getScanner();
+            $result = $scanner->scanFile($path);
+            $virusFound = $result->isFound();
+        }
 
-        if ($result->isFound()) {
+        if ($virusFound) {
             unlink($path);
             if ($file && $file->ID) {
                 $file->delete();
@@ -103,10 +147,16 @@ class Antivirus
 
         $path = $file->getFullPath();
 
-        $scanner = self::getScanner();
-        $result = $scanner->scanFile($path);
+        if (self::useExec()) {
+            $res = shell_exec(self::getExecPath() . ' ' . $path);
+            $virusFound = strpos($res, 'Infected files: 1') !== false;
+        } else {
+            $scanner = self::getScanner();
+            $result = $scanner->scanFile($path);
+            $virusFound = $result->isFound();
+        }
 
-        if ($result->isFound()) {
+        if ($virusFound) {
             unlink($path);
             if ($file->ID) {
                 $file->delete();
