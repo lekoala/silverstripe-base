@@ -83,7 +83,6 @@ class GoogleSiteConfigExtension extends DataExtension
      */
     public function shouldRequireGoogleAnalytics()
     {
-        return true;
         if (!Director::isLive()) {
             return false;
         }
