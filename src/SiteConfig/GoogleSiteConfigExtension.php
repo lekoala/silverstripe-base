@@ -83,6 +83,7 @@ class GoogleSiteConfigExtension extends DataExtension
      */
     public function shouldRequireGoogleAnalytics()
     {
+        return true;
         if (!Director::isLive()) {
             return false;
         }
@@ -145,7 +146,11 @@ JS;
                 $opts = "{}";
                 // @link https://developers.google.com/analytics/devguides/collection/ga4/user-id
                 if (Security::getCurrentUser()) {
-                    $opts = "{'user_id': '" . Security::getCurrentUser()->ID . "'}";
+                    $currentUser = Security::getCurrentUser();
+                    // Don't expose ID if possible
+                    $uid = $currentUser->hasMethod('UuidSegment') ? $currentUser->UuidSegment() : $currentUser->ID;
+                    d($uid);
+                    $opts = "{'user_id': '" . $uid . "'}";
                 }
                 $script = <<<JS
 window.dataLayer = window.dataLayer || [];
