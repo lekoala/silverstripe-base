@@ -36,6 +36,11 @@ class BetterGridFieldAddExistingAutocompleter extends GridFieldAddExistingAutoco
     /**
      * @var array
      */
+    protected $searchFilters = [];
+
+    /**
+     * @var array
+     */
     protected $ignoredSearchFields = [];
 
     /**
@@ -103,6 +108,10 @@ class BetterGridFieldAddExistingAutocompleter extends GridFieldAddExistingAutoco
 
         /** @var DataList $allList  */
         $allList = $this->searchList ? $this->searchList : DataList::create($dataClass);
+
+        if (!empty($this->searchFilters)) {
+            $allList = $allList->filter($this->searchFilters);
+        }
 
         $searchFields = ($this->getSearchFields())
             ? $this->getSearchFields()
@@ -387,6 +396,27 @@ class BetterGridFieldAddExistingAutocompleter extends GridFieldAddExistingAutoco
     public function setExpandSpace($expandSpace)
     {
         $this->expandSpace = $expandSpace;
+        return $this;
+    }
+
+    /**
+     * Get the value of searchFilters
+     * @return array
+     */
+    public function getSearchFilters()
+    {
+        return $this->searchFilters;
+    }
+
+    /**
+     * Set the value of searchFilters
+     *
+     * @param array $searchFilters
+     * @return $this
+     */
+    public function setSearchFilters($searchFilters)
+    {
+        $this->searchFilters = $searchFilters;
         return $this;
     }
 }
