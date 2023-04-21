@@ -100,6 +100,10 @@ class Antivirus
      */
     public static function getScanner()
     {
+        if (!class_exists(Factory::class) || !class_exists(Client::class)) {
+            throw new Exception("Missing libs");
+        }
+
         // $socket = (new \Socket\Raw\Factory())->createClient('unix:///var/run/clamav/clamd.ctl'); # Using a UNIX socket
         // $socket = (new \Socket\Raw\Factory())->createClient('tcp://127.0.0.1:3310'); # Using a TCP socket
         $socket = (new Factory())->createClient(self::getDaemonPath());
