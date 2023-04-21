@@ -149,7 +149,6 @@ JS;
                     $currentUser = Security::getCurrentUser();
                     // Don't expose ID if possible
                     $uid = $currentUser->hasMethod('UuidSegment') ? $currentUser->UuidSegment() : $currentUser->ID;
-                    d($uid);
                     $opts = "{'user_id': '" . $uid . "'}";
                 }
                 $script = <<<JS
