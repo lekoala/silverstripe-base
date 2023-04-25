@@ -20,7 +20,7 @@ class CleaveTimeField extends CleaveField
     {
         parent::__construct($name, $title, $value);
 
-        $this->setConfig('time', true);
+        $this->setInputType('time');
     }
 
     /**

@@ -372,6 +372,15 @@ class CommonRequirements
     }
 
     /**
+     * @link https://github.com/lekoala/cleave-es6
+     * @return void
+     */
+    public static function cleaveElement()
+    {
+        Requirements::javascript("lekoala/silverstripe-base: javascript/custom-elements/cleave-input.min.js");
+    }
+
+    /**
      * @link https://github.com/fingerprintjs/fingerprintjs
      * @return void
      */

@@ -2,8 +2,8 @@
 
 namespace LeKoala\Base\ORM\FieldType;
 
+use LeKoala\Base\Forms\CleaveField;
 use SilverStripe\ORM\FieldType\DBVarchar;
-use LeKoala\Base\Forms\InputMaskNumericField;
 use LeKoala\Base\Helpers\CurrencyFormatter;
 
 /**
@@ -60,15 +60,15 @@ class DBNumericVarchar extends DBVarchar
      * @param string $title
      * @param array $params
      *
-     * @return InputMaskNumericField
+     * @return CleaveField
      */
     public function scaffoldFormField($title = null, $params = null)
     {
-        $field = new InputMaskNumericField($this->name, $title);
+        $field = new CleaveField($this->name, $title);
+        $field->setInputType('numeral');
         $field->setDigits($this->decimalSize);
-        if (!$this->decimalSize) {
-            $field->setRadixPoint("");
-        }
+        $field->setRadixPoint($this->getCurrencyDecimalSeparator());
+        $field->setGroupSeparator($this->getCurrencyGroupingSeparator());
         return $field;
     }
 }

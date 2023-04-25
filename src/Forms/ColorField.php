@@ -1,13 +1,14 @@
 <?php
+
 namespace LeKoala\Base\Forms;
 
 use SilverStripe\i18n\i18n;
 use SilverStripe\Forms\TextField;
 use SilverStripe\View\Requirements;
-use LeKoala\Base\View\CommonRequirements;
 
 /**
- * @link https://bgrins.github.io/spectrum/
+ * @link https://github.com/mdbassit/Coloris
+ * @link https://gist.github.com/lekoala/233b0c6246170716c52dbfab342caf22
  * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/color
  */
 class ColorField extends TextField
@@ -22,28 +23,10 @@ class ColorField extends TextField
     protected $locale = null;
 
     /**
-     * Config array
-     *
-     * @var array
-     */
-    protected $config = [];
-
-    /**
-     * @config
-     * @var string
-     */
-    private static $version = '1.8.0';
-
-    /**
      * @config
      * @var array
      */
-    private static $default_config = [
-        "preferredFormat" => "hex",
-        "showInitial" => true,
-        "showInput" => true,
-        "allowEmpty" => true,
-    ];
+    private static $default_config = [];
 
     public function __construct($name, $title = null, $value = '', $maxLength = null, $form = null)
     {
@@ -53,25 +36,22 @@ class ColorField extends TextField
 
     public function getInputType()
     {
-        // Use text instead of color to allow empty
-        // @link https://github.com/bgrins/spectrum/issues/201
         return 'text';
-        // return 'color';
     }
 
     public function Type()
     {
-        return 'spectrum';
+        return 'coloris';
     }
 
-    public function getList()
+    public function getSwatches()
     {
-        return $this->getConfig('list');
+        return $this->getConfig('swatches');
     }
 
-    public function setList($values)
+    public function setSwatches($values)
     {
-        $this->setConfig('list', $values);
+        $this->setConfig('swatches', $values);
     }
 
     /**
@@ -81,7 +61,7 @@ class ColorField extends TextField
      */
     public function getLocale()
     {
-        return $this->locale ? : i18n::get_locale();
+        return $this->locale ?: i18n::get_locale();
     }
 
     /**
@@ -100,19 +80,12 @@ class ColorField extends TextField
 
     public function Field($properties = array())
     {
-        // Set lang based on locale
-        $lang = substr($this->getLocale(), 0, 2);
-
-        $this->setAttribute('data-mb', 'spectrum');
-        $this->setAttribute('data-mb-options', $this->getConfigAsJson());
-
-        $version = $this->config()->version;
-        Requirements::css("https://cdnjs.cloudflare.com/ajax/libs/spectrum/$version/spectrum.min.css");
-        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/spectrum/$version/spectrum.min.js");
-        if ($lang != 'en') {
-        }
-        CommonRequirements::modularBehaviour();
-
+        self::requirements();
         return parent::Field($properties);
+    }
+
+    public static function requirements()
+    {
+        Requirements::javascript("lekoala/silverstripe-base: javascript/custom-elements/coloris-input.min.js");
     }
 }

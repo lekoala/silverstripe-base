@@ -2,8 +2,8 @@
 
 namespace LeKoala\Base\ORM\FieldType;
 
+use LeKoala\Base\Forms\CleaveField;
 use SilverStripe\ORM\FieldType\DBCurrency;
-use LeKoala\Base\Forms\InputMaskCurrencyField;
 use LeKoala\Base\Helpers\CurrencyFormatter;
 
 /**
@@ -35,7 +35,14 @@ class DBBetterCurrency extends DBCurrency
      */
     public function scaffoldFormField($title = null, $params = null)
     {
-        $field = new InputMaskCurrencyField($this->name, $title);
+        $field = new CleaveField($this->name, $title);
+        $field->setInputType('numeral');
+        $field->setDigits($this->decimalSize);
+        $field->setRadixPoint($this->getCurrencyDecimalSeparator());
+        $field->setGroupSeparator($this->getCurrencyGroupingSeparator());
+        // there is no space between the dollar symbol and the amount for US currency.
+        // on the other hand, there is a non-breaking space between the dollar amount and the euro sign for EU countries.
+        // $field->setPrefix($this->getCurrencySymbol());
         return $field;
     }
 
