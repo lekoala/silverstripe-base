@@ -8,6 +8,7 @@ use LeKoala\Base\Forms\JsonFormField;
 use LeKoala\Base\View\CommonRequirements;
 
 /**
+ * @deprecated Use TabulatorGrid instead
  * @link https://www.ag-grid.com/javascript-getting-started/
  */
 class AgGridField extends JsonFormField
