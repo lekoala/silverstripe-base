@@ -12,7 +12,7 @@
   if (typeof jQuery === "undefined" && typeof require !== "undefined" && require.defined && require.defined("jquery")) {
     jQuery = require("jquery");
   }
-  if(!global) {
+  if (!global) {
     global = window;
   }
 
@@ -176,9 +176,10 @@
       if (self.domObserver) {
         return;
       }
-      var addedNodes = [];
       // Warning : browser extensions can trigger external mutations
       self.domObserver = new MutationObserver(function (mutations) {
+        var addedNodes = [];
+        var hasChanged = false;
         for (var i = 0; i < mutations.length; i++) {
           var mutation = mutations[i];
           // Somehow this creates a loop
@@ -192,6 +193,7 @@
             if (!node.tagName || node.isConnected === false) {
               continue;
             }
+            hasChanged = true;
             // Track new scripts. If new scripts are added, we will run through all nodes
             if (node.tagName.toLowerCase() === "script") {
               trackScript(node);
@@ -210,7 +212,7 @@
         // Check if our node or it's children has our attribute and configure if necessary
         if (!shouldRun) {
           // Also run on all children since we might not get all dom changes
-          if (config.runAfterDomChanges) {
+          if (config.runAfterDomChanges && hasChanged) {
             if (domTimer) {
               clearTimeout(domTimer);
             }
