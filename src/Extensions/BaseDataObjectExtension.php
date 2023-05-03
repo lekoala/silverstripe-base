@@ -560,7 +560,9 @@ class BaseDataObjectExtension extends DataExtension
                         if ($rec && $rec->ID && $rec->ObjectID != $this->owner->ID) {
                             $rec->ObjectID = $this->owner->ID;
                             $rec->ObjectClass = get_class($this->owner);
-                            $rec->writeWithoutVersionIfPossible();
+                            if ($rec->isChanged()) {
+                                $rec->writeWithoutVersionIfPossible();
+                            }
                         }
                     }
                     break;

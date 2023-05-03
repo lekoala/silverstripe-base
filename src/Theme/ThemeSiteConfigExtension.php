@@ -337,7 +337,9 @@ class ThemeSiteConfigExtension extends DataExtension
             }
         }
         if (!empty($themeOptions['emptyTheme'])) {
-            $this->owner->CssTheme = null;
+            if ($this->owner->CssTheme) {
+                $this->owner->CssTheme = null;
+            }
         }
 
         // Generate palette if necessary

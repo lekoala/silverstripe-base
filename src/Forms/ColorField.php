@@ -81,7 +81,14 @@ class ColorField extends TextField
     public function Field($properties = array())
     {
         self::requirements();
-        return parent::Field($properties);
+
+        $html = parent::Field($properties);
+        $config = $this->getConfigAsJson();
+
+        // Simply wrap with custom element and set config
+        $html = "<color-input data-config='" . json_encode($config) . "'>" . $html . '</color-input>';
+
+        return $html;
     }
 
     public static function requirements()

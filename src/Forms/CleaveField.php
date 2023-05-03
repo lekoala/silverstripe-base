@@ -43,9 +43,20 @@ class CleaveField extends TextField
 
     public function Field($properties = array())
     {
-        $properties['InputType'] = $this->inputType;
         self::requirements();
-        return parent::Field($properties);
+
+        $html = parent::Field($properties);
+        $config = $this->getConfigAsJson();
+
+        $type = '';
+        if ($this->getInputType()) {
+            $type = ' type="' . $this->getInputType() . '"';
+        }
+
+        // Simply wrap with custom element and set config
+        $html = "<cleave-input data-config='" . json_encode($config) . "'" . $type . ">" . $html . '</cleave-input>';
+
+        return $html;
     }
 
     public static function requirements()

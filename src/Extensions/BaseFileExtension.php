@@ -77,7 +77,7 @@ class BaseFileExtension extends DataExtension
         if (!$this->owner->ObjectID) {
             $this->owner->ObjectClass = null;
         }
-        if (!$this->owner->FileSize) {
+        if (!$this->owner->FileSize && $this->owner->File) {
             $this->owner->FileSize = $this->owner->getAbsoluteSize();
         }
     }
@@ -200,7 +200,8 @@ class BaseFileExtension extends DataExtension
     }
 
     /**
-     * Get a list of files for the given DataObject
+     * Get a list of files uploaded the given DataObject
+     * It doesn't mean that the files are currently or still associated!!
      *
      * @param DataObject $record
      * @return DataList|File[]
@@ -294,7 +295,7 @@ class BaseFileExtension extends DataExtension
         if (!is_file($webp_url)) {
             $store = $this->getAssetStore();
             // nomidi/silverstripe-webp-image or compatible
-            $store->createWebPImage($path, $img->getFilename(), $img->getHash(), $img->getVariant());
+            $store->createWebPImage($path, $img->getFilename(), $img->getHash(), $img->getVariant()); // @intelephense-ignore-line
         }
     }
 
