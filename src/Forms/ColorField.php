@@ -86,7 +86,7 @@ class ColorField extends TextField
         $config = $this->getConfigAsJson();
 
         // Simply wrap with custom element and set config
-        $html = "<coloris-input data-config='" . json_encode($config) . "'>" . $html . '</coloris-input>';
+        $html = "<coloris-input data-config='" . $config . "'>" . $html . '</coloris-input>';
 
         return $html;
     }

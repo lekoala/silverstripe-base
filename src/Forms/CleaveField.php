@@ -15,7 +15,7 @@ class CleaveField extends TextField
 {
     use ConfigurableField;
 
-    protected $inputType;
+    protected $cleaveType;
 
     /**
      * @config
@@ -49,12 +49,12 @@ class CleaveField extends TextField
         $config = $this->getConfigAsJson();
 
         $type = '';
-        if ($this->getInputType()) {
-            $type = ' type="' . $this->getInputType() . '"';
+        if ($this->getCleaveType()) {
+            $type = ' type="' . $this->getCleaveType() . '"';
         }
 
         // Simply wrap with custom element and set config
-        $html = "<cleave-input data-config='" . json_encode($config) . "'" . $type . ">" . $html . '</cleave-input>';
+        $html = "<cleave-input data-config='" . $config . "'" . $type . ">" . $html . '</cleave-input>';
 
         return $html;
     }
@@ -65,23 +65,23 @@ class CleaveField extends TextField
     }
 
     /**
-     * Get the value of inputType
+     * Get the value of cleaveType
      * @return string
      */
-    public function getInputType()
+    public function getCleaveType()
     {
-        return $this->inputType;
+        return $this->cleaveType;
     }
 
     /**
      * Set the value of inputType
      *
-     * @param string $inputType date,time,datetime,numeral
+     * @param string $cleaveType date,time,datetime,numeral
      * @return $this
      */
-    public function setInputType($inputType)
+    public function setCleaveType($cleaveType)
     {
-        $this->inputType = $inputType;
+        $this->cleaveType = $cleaveType;
         return $this;
     }
 

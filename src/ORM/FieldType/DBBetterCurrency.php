@@ -36,7 +36,7 @@ class DBBetterCurrency extends DBCurrency
     public function scaffoldFormField($title = null, $params = null)
     {
         $field = new CleaveField($this->name, $title);
-        $field->setInputType('numeral');
+        $field->setCleaveType('numeral');
         $field->setDigits($this->decimalSize);
         $field->setRadixPoint($this->getCurrencyDecimalSeparator());
         $field->setGroupSeparator($this->getCurrencyGroupingSeparator());

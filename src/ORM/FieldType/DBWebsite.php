@@ -17,7 +17,7 @@ class DBWebsite extends DBVarchar
     public function scaffoldFormField($title = null, $params = null)
     {
         $field = TextField::create($this->name, $title);
-        $field->setInputType("url");
+        $field->setCleaveType("url");
         return $field;
     }
 
