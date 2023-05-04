@@ -17,6 +17,13 @@ class TimeController extends Controller
     public function index(HTTPRequest $request = null)
     {
         $time = time();
+        if (class_exists(\Carbon\Carbon::class)) {
+            // somehow make this configurable
+            if ($this->getSession()->get('test_now')) {
+                \Carbon\Carbon::setTestNow($this->getSession()->get('test_now'));
+            }
+            $time = \Carbon\Carbon::now()->timestamp;
+        }
         if (class_exists(\Cake\Chronos\Chronos::class)) {
             // somehow make this configurable
             if ($this->getSession()->get('test_now')) {
