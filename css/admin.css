@@ -1,3 +1,8 @@
+/* We are missing currently some bootstrap vars */
+:root {
+    --bs-border-color: #ced5e1;
+}
+
 html,
 .panel--scrollable {
     scroll-padding-top: 53px;

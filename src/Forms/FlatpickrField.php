@@ -26,17 +26,7 @@ class FlatpickrField extends TextField
     const DEFAULT_ALT_DATE_FORMAT = 'l j F Y';
     const DEFAULT_ALT_TIME_FORMAT = 'H:i';
     const DEFAULT_ALT_DATETIME_FORMAT = 'l j F Y H:i';
-    // Plugins
-    const PLUGIN_CONFIRM_DATE = 'confirmDate/confirmDate';
-    const PLUGIN_RANGE = 'rangePlugin';
-    const PLUGIN_SCROLL = 'scrollPlugin';
-    const PLUGIN_MIN_MAX_TIME = 'minMaxTimePlugin';
-    const PLUGIN_WEEK_SELECT = 'weekSelect/weekSelect';
-    const PLUGIN_MONTH_SELECT = 'monthSelect/monthSelect';
-    const PLUGINS_WITH_CSS = [
-        self::PLUGIN_CONFIRM_DATE,
-        self::PLUGIN_MONTH_SELECT
-    ];
+
     /**
      * @var bool
      */
@@ -102,15 +92,9 @@ class FlatpickrField extends TextField
     protected $confirmDate;
 
     /**
-     * @var array
+     * @var bool
      */
-    protected static $required_plugins = [];
-
-    /**
-     * @config
-     * @var string
-     */
-    private static $version = '4.6.13';
+    protected $monthSelect;
 
     /**
      * @config
@@ -120,7 +104,7 @@ class FlatpickrField extends TextField
 
     /**
      * @config
-     * @var string
+     * @var boolean
      */
     private static $use_cdn = false;
 
@@ -130,9 +114,6 @@ class FlatpickrField extends TextField
      * @var array
      */
     private static $default_config = [
-        'allowInput' => true, // Otherwise it will show as a readonly field
-        'altInput' => true,
-        'altInputClass' => 'text flatpickr-alt',
         'defaultDate' => '',
         'time_24hr' => true,
     ];
@@ -144,39 +125,6 @@ class FlatpickrField extends TextField
         $this->config = self::config()->default_config;
         $this->setDatetimeFormat($this->convertDatetimeFormat(self::DEFAULT_ALT_DATE_FORMAT));
         $this->setAltFormat(self::DEFAULT_ALT_DATE_FORMAT);
-    }
-
-    /**
-     * @param string $plugin
-     * @return $this
-     */
-    public function addPlugin($plugin)
-    {
-        if (!isset($this->plugins[$plugin])) {
-            $this->plugins[] = $plugin;
-        }
-        return $this;
-    }
-
-    /**
-     * @param string $plugin
-     * @return $this
-     */
-    public function removePlugin($plugin)
-    {
-        if (isset($this->plugins[$plugin])) {
-            unset($this->plugins[$plugin]);
-        }
-        return $this;
-    }
-
-    /**
-     * @return void
-     */
-    public function clearPlugins()
-    {
-        $this->plugins = [];
-        return $this;
     }
 
     /**
@@ -400,15 +348,12 @@ class FlatpickrField extends TextField
      */
     public function setRange($range, $confirm = true)
     {
-        // enable this when it works properly with altInput
-        // $this->addPlugin(self::PLUGIN_RANGE);
         $this->range = $range;
         if ($confirm) {
             $this->setConfirmDate(true);
         }
         return $this;
     }
-
 
     /**
      * Get add confirm box
@@ -429,8 +374,26 @@ class FlatpickrField extends TextField
      */
     public function setConfirmDate($confirmDate)
     {
-        $this->addPlugin(self::PLUGIN_CONFIRM_DATE);
         $this->confirmDate = $confirmDate;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getMonthSelect()
+    {
+        return $this->monthSelect;
+    }
+
+    /**
+     * @param bool $monthSelect
+     *
+     * @return $this
+     */
+    public function setMonthSelect($monthSelect)
+    {
+        $this->monthSelect = $monthSelect;
         return $this;
     }
 
@@ -599,27 +562,26 @@ class FlatpickrField extends TextField
         }
         $config = $this->config;
 
-        // Disable allow input if using alternative format
-        // Parsing might be difficult in other languages
-        // Otherwise see implemeting parseDate
-        if ($config['altFormat']) {
-            $config['allowInput'] = false;
-        }
-
-        $this->setAttribute('data-mb', 'flatpickr');
-        $this->setAttribute('data-mb-options', json_encode($config));
-
+        $data = [];
         if ($this->range) {
-            $this->setAttribute('data-range', $this->range);
+            $data[] = 'data-range="' . $this->range . '"';
         }
         if ($this->confirmDate) {
-            $this->setAttribute('data-confirm-date', true);
+            $data[] = 'data-confirm-date="true"';
+        }
+        if ($this->monthSelect) {
+            $data[] = 'data-month-select="true"';
         }
         if ($this->hooks) {
-            $this->setAttribute("data-hooks", json_encode($this->hooks));
+            // Use replace callback format
+            foreach ($this->hooks as $k => $v) {
+                $config[$k] = [
+                    "__fn" => $v
+                ];
+            }
         }
 
-        self::requirements($lang, $this->plugins, $this->theme);
+        self::requirements($lang, $this->theme);
 
         if ($this->readonly) {
             if ($this->getNoCalendar() && $this->getEnableTime()) {
@@ -634,7 +596,14 @@ class FlatpickrField extends TextField
         // Time formatting can cause value change for no reasons
         $this->addExtraClass('no-change-track');
 
-        return parent::Field($properties);
+        $html = parent::Field($properties);
+        $config = json_encode($config);
+
+        $attrs = implode(' ', $data);
+        // Simply wrap with custom element and set config
+        $html = "<flatpickr-input data-config='" . $config . "'" . $attrs . ">" . $html . '</flatpickr-input>';
+
+        return $html;
     }
 
     /**
@@ -656,7 +625,7 @@ class FlatpickrField extends TextField
      * @param string $theme
      * @return void
      */
-    public static function requirements($lang = null, $plugins = [], $theme = null)
+    public static function requirements($lang = null, $theme = null)
     {
         if (!self::config()->enable_requirements) {
             return;
@@ -664,23 +633,17 @@ class FlatpickrField extends TextField
         if ($lang === null) {
             $lang = substr(i18n::get_locale(), 0, 2);
         }
-        $version = self::config()->version;
-        $use_cdn = self::config()->use_cdn;
 
+        // We still need a copy of the cdn js files to load l10n or themes
+        $use_cdn = self::config()->use_cdn;
         if ($use_cdn) {
-            $cdnBase = "https://cdnjs.cloudflare.com/ajax/libs/flatpickr/$version";
-            // $cdnBase = "https://cdn.jsdelivr.net/npm/flatpickr@$version/dist";
+            $cdnBase = "https://cdn.jsdelivr.net/npm/flatpickr@4/dist";
         } else {
             $cdnBase = dirname(self::moduleResource("javascript/vendor/cdn/flatpickr/flatpickr.min.js")->getURL());
         }
+        Requirements::javascript("lekoala/silverstripe-base: javascript/custom-elements/flatpickr-input.min.js");
 
-        // Track required plugins over time to always include the full required set
-        self::$required_plugins = array_unique(array_merge(self::$required_plugins, $plugins));
-        $plugins = self::$required_plugins;
-
-        Requirements::css("$cdnBase/flatpickr.min.css");
-        Requirements::clear("$cdnBase/flatpickr.min.js");
-        Requirements::javascript("$cdnBase/flatpickr.min.js");
+        // Load lang (leverage waitDefined from custom element)
         if (!$use_cdn && $lang != 'en') {
             $cdnPath = dirname(self::moduleResource("javascript/vendor/cdn/flatpickr/flatpickr.min.js")->getPath());
             if (!is_file("$cdnPath/l10n/$lang.js")) {
@@ -688,23 +651,13 @@ class FlatpickrField extends TextField
             }
         }
         if ($lang != 'en') {
-            Requirements::clear("$cdnBase/l10n/$lang.js");
+            //eg: https://cdn.jsdelivr.net/npm/flatpickr@4/dist/l10n/fr.js
             Requirements::javascript("$cdnBase/l10n/$lang.js");
         }
-        foreach ($plugins as $plugin) {
-            Requirements::clear("$cdnBase/plugins/$plugin.js");
-            Requirements::javascript("$cdnBase/plugins/$plugin.js");
-            if (isset(self::PLUGINS_WITH_CSS[$plugin])) {
-                Requirements::css("$cdnBase/plugins/$plugin.css");
-            }
-        }
+
         if ($theme) {
             Requirements::css("$cdnBase/themes/$theme.css");
         }
-
-        CommonRequirements::modularBehaviour();
-        Requirements::clear('base/javascript/fields/FlatpickrField.js');
-        Requirements::javascript('base/javascript/fields/FlatpickrField.js');
     }
 
     /**
