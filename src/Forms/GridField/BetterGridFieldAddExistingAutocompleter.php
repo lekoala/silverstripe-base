@@ -17,6 +17,7 @@ use SilverStripe\ORM\Filters\SearchFilter;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldConfig;
 use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
+use SilverStripe\ORM\UnsavedRelationList;
 
 /**
  * see https://github.com/silverstripe/silverstripe-framework/pull/9991
@@ -108,6 +109,11 @@ class BetterGridFieldAddExistingAutocompleter extends GridFieldAddExistingAutoco
 
         /** @var DataList $allList  */
         $allList = $this->searchList ? $this->searchList : DataList::create($dataClass);
+
+        // Fix unsaved
+        if ($allList instanceof UnsavedRelationList) {
+            $allList = DataList::create($dataClass);
+        }
 
         if (!empty($this->searchFilters)) {
             $allList = $allList->filter($this->searchFilters);
