@@ -110,11 +110,6 @@ class BetterGridFieldAddExistingAutocompleter extends GridFieldAddExistingAutoco
         /** @var DataList $allList  */
         $allList = $this->searchList ? $this->searchList : DataList::create($dataClass);
 
-        // Fix unsaved
-        if ($allList instanceof UnsavedRelationList) {
-            $allList = DataList::create($dataClass);
-        }
-
         if (!empty($this->searchFilters)) {
             $allList = $allList->filter($this->searchFilters);
         }

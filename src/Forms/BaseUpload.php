@@ -69,7 +69,7 @@ class BaseUpload extends Upload
         if ($validator->getErrors()) {
             $this->errors = array_merge($this->errors, $validator->getErrors());
         }
-        if (Antivirus::isConfiguredAndWorking()) {
+        if (Antivirus::isConfigured()) {
             try {
                 Antivirus::scanFile($tmpFile['tmp_name']);
             } catch (Exception $e) {
