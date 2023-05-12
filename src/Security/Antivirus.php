@@ -20,13 +20,13 @@ class Antivirus
 {
     public static function isPhpEnvSupported()
     {
-        if (!self::useSocket() && !self::useExec()) {
+        if (!self::useSocket() && !self::pingExec()) {
             return false;
         }
         return true;
     }
 
-    public static function useExec()
+    public static function pingExec()
     {
         $res = exec(self::getExecPath() . ' --ping 10');
         if ($res === "PONG") {
@@ -77,7 +77,8 @@ class Antivirus
      */
     public static function isConfiguredAndWorking()
     {
-        if (self::getExecPath() && self::useExec()) {
+        // Check pong
+        if (self::getExecPath() && self::pingExec()) {
             return true;
         }
 
@@ -121,8 +122,11 @@ class Antivirus
      */
     public static function scanFile($path, $file = null)
     {
-        if (self::useExec()) {
+        if (self::getExecPath()) {
             $res = shell_exec(self::getExecPath() . ' ' . $path);
+            if ($res === null || $res === false) {
+                throw new Exception("Could not run virus scanner using: " . self::getExecPath() . ' ' . $path);
+            }
             $virusFound = strpos($res, 'Infected files: 1') !== false;
         } else {
             $scanner = self::getScanner();
@@ -151,7 +155,7 @@ class Antivirus
 
         $path = $file->getFullPath();
 
-        if (self::useExec()) {
+        if (self::getExecPath()) {
             $res = shell_exec(self::getExecPath() . ' ' . $path);
             $virusFound = strpos($res, 'Infected files: 1') !== false;
         } else {
