@@ -139,4 +139,4 @@
       });
     },
   });
-})(jQuery, moment, window);
+})(jQuery, window);
