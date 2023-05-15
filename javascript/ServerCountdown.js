@@ -1,7 +1,8 @@
 /* global jquery, window */
 
 /**
- * A server side countdown
+ * Countdown
+ * @deprecated Use countdown-element instead
  */
 (function ($, window) {
   // https://github.com/uxitten/polyfill/blob/master/string.polyfill.js
