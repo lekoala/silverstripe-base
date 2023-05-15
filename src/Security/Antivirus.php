@@ -124,7 +124,8 @@ class Antivirus
     public static function scanFile($path, $file = null)
     {
         if (self::getExecPath()) {
-            $res = shell_exec(self::getExecPath() . ' ' . $path);
+            $safepath = escapeshellarg($path);
+            $res = shell_exec(self::getExecPath() . ' ' . $safepath);
             if ($res === null || $res === false) {
                 throw new Exception("Could not run virus scanner using: " . self::getExecPath() . ' ' . $path);
             }
