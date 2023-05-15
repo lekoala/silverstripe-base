@@ -50,6 +50,7 @@ class Antivirus
 
     /**
      * Could be something like ANTIVIRUS_EXEC="C:\Program^ Files\ClamAV\clamdscan.exe" or clamdscan
+     * If you get permission errors, try with clamdscan --fdpass
      *
      * @return string
      */

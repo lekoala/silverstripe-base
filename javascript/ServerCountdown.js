@@ -1,9 +1,9 @@
-/* global jquery, moment, window */
+/* global jquery, window */
 
 /**
  * A server side countdown
  */
-(function ($, moment, window) {
+(function ($, window) {
   // https://github.com/uxitten/polyfill/blob/master/string.polyfill.js
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/padStart
   if (!String.prototype.padStart) {
@@ -22,6 +22,16 @@
     };
   }
 
+  function asDate(str) {
+    if (!str) {
+      return new Date();
+    }
+    if (str instanceof Date) {
+      return str;
+    }
+    return new Date(str);
+  }
+
   $.fn.extend({
     ServerCountdown: function (options) {
       this.defaultOptions = {
@@ -38,11 +48,6 @@
         },
         // in ms
         interval: 1000,
-        serverSyncUrl: "/__time",
-        // in seconds
-        serverPoll: 30,
-        serverPollDisabledAbove: 300,
-        serverPollDisabledBelow: 3,
       };
 
       var settings = $.extend({}, this.defaultOptions, options);
@@ -59,13 +64,16 @@
           return;
         }
 
-        var startDate = moment(start);
-        var endDate = moment(end);
+        var startDate = asDate(start);
+        var endDate = asDate(end);
+        var nowDate = asDate();
 
         // diff in milliseconds
         var data = {};
-        data.diff = endDate.diff(startDate);
-        var poll = settings.serverPoll;
+        data.diff = endDate.getTime() - startDate.getTime();
+
+        // Compute our initial difference based on current time (useful for interval)
+        data.initDiff = nowDate.getTime() - startDate.getTime();
 
         if (settings.onInit) {
           settings.onInit.call();
@@ -125,22 +133,8 @@
             settings.onTick.call($this, data);
           }
 
-          data.diff -= settings.interval;
-
-          // Check if needs polling (no within last 2 seconds or above 5 minutes)
-          poll--;
-          if (poll <= 0 && data.diff > settings.serverPollDisabledBelow * 1000 && data.diff < settings.serverPollDisabledAbove * 1000) {
-            poll = settings.serverPoll;
-
-            $.getJSON(settings.serverSyncUrl, function (result) {
-              startDate = moment(result.date);
-              var newDiff = endDate.diff(startDate);
-              // It can only go down
-              if (newDiff < data.diff) {
-                data.diff = newDiff;
-              }
-            });
-          }
+          nowDate = asDate();
+          data.diff = endDate.getTime() - nowDate.getTime() + data.initDiff;
         }, settings.interval);
       });
     },
