@@ -80,7 +80,7 @@
           settings.onInit.call();
         }
 
-        var interval = setInterval(function () {
+        var compute = function () {
           if (data.diff <= 0) {
             clearInterval(interval);
             if (settings.onComplete) {
@@ -136,7 +136,9 @@
 
           nowDate = asDate();
           data.diff = endDate.getTime() - nowDate.getTime() + data.initDiff;
-        }, settings.interval);
+        };
+        compute();
+        var interval = setInterval(compute, settings.interval);
       });
     },
   });
