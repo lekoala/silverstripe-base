@@ -35,6 +35,18 @@ class FormHelper
     }
 
     /**
+     * convert camel case to words
+     *
+     * @param string $str
+     * @return string
+     */
+    public static function niceLabel($str)
+    {
+        $parts = preg_split('/(?=[A-Z])/', $str);
+        return implode(' ', $parts);
+    }
+
+    /**
      * Helps dealing with browser autofill
      *
      * @param FormField $field
