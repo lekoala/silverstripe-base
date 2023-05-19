@@ -3,8 +3,6 @@
 namespace LeKoala\Base\Security;
 
 use Exception;
-use Socket\Raw\Factory;
-use Xenolope\Quahog\Client;
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\Folder;
 use SilverStripe\Core\Environment;
@@ -37,7 +35,7 @@ class Antivirus
 
     public static function useSocket()
     {
-        return function_exists('socket_connect') && class_exists(Client::class);
+        return function_exists('socket_connect') && class_exists(\Xenolope\Quahog\Client::class);
     }
 
     public static function isConfigured()
@@ -48,9 +46,20 @@ class Antivirus
         return false;
     }
 
+    public static function socketOrExec()
+    {
+        if (self::useSocket() && self::getDaemonPath()) {
+            return 'socket';
+        }
+        if (self::getExecPath()) {
+            return 'exec';
+        }
+        return 'none';
+    }
+
     /**
      * Could be something like ANTIVIRUS_EXEC="C:\Program^ Files\ClamAV\clamdscan.exe" or clamdscan
-     * If you get permission errors, try with clamdscan --fdpass
+     * You may need "clamdscan --stream" for it to work properly on temp files
      *
      * @return string
      */
@@ -102,16 +111,16 @@ class Antivirus
      */
     public static function getScanner()
     {
-        if (!class_exists(Factory::class) || !class_exists(Client::class)) {
+        if (!class_exists(\Socket\Raw\Factory::class) || !class_exists(\Xenolope\Quahog\Client::class)) {
             throw new Exception("Missing libs");
         }
 
         // $socket = (new \Socket\Raw\Factory())->createClient('unix:///var/run/clamav/clamd.ctl'); # Using a UNIX socket
         // $socket = (new \Socket\Raw\Factory())->createClient('tcp://127.0.0.1:3310'); # Using a TCP socket
-        $socket = (new Factory())->createClient(self::getDaemonPath());
+        $socket = (new \Socket\Raw\Factory())->createClient(self::getDaemonPath());
 
         // Create a new instance of the Client
-        $quahog = new Client($socket, 5, PHP_NORMAL_READ);
+        $quahog = new \Xenolope\Quahog\Client($socket, 5, PHP_NORMAL_READ);
 
         return $quahog;
     }
@@ -123,52 +132,34 @@ class Antivirus
      */
     public static function scanFile($path, $file = null)
     {
+        $virusFound = false;
+
+        if (!$path && $file) {
+            $path = $file->getFullPath();
+        }
+
         if (self::getExecPath()) {
-            $safepath = escapeshellarg($path);
-            $res = shell_exec(self::getExecPath() . ' ' . $safepath);
+            // $res = shell_exec(self::getExecPath() . ' ' . escapeshellarg($path));
+            $res = shell_exec(self::getExecPath() . ' ' . $path);
             if ($res === null || $res === false) {
                 throw new Exception("Could not run virus scanner using: " . self::getExecPath() . ' ' . $path);
             }
+            if (strpos($res, 'Total errors: 0') !== false) {
+                throw new Exception(self::getExecPath() . ' ' . $path . "\nResult:\n" . $res);
+            }
             $virusFound = strpos($res, 'Infected files: 1') !== false;
-        } else {
+        } elseif (self::getDaemonPath()) {
             $scanner = self::getScanner();
             $result = $scanner->scanFile($path);
+            if ($result->hasFailed()) {
+                throw new Exception($result->getReason() . ': ' . $path);
+            }
             $virusFound = $result->isFound();
         }
 
         if ($virusFound) {
             unlink($path);
             if ($file && $file->ID) {
-                $file->delete();
-            }
-            throw new Exception("A virus has been detected and removed");
-        }
-    }
-
-    /**
-     * @param File|BaseFileExtension $file
-     * @return void
-     */
-    public static function scan($file)
-    {
-        if ($file instanceof Folder) {
-            return;
-        }
-
-        $path = $file->getFullPath();
-
-        if (self::getExecPath()) {
-            $res = shell_exec(self::getExecPath() . ' ' . $path);
-            $virusFound = strpos($res, 'Infected files: 1') !== false;
-        } else {
-            $scanner = self::getScanner();
-            $result = $scanner->scanFile($path);
-            $virusFound = $result->isFound();
-        }
-
-        if ($virusFound) {
-            unlink($path);
-            if ($file->ID) {
                 $file->delete();
             }
             throw new Exception("A virus has been detected and removed");
