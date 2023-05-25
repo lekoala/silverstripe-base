@@ -65,6 +65,18 @@ class FileHelper
         return trim($output);
     }
 
+    public static function arrayToCsv($data, $filepath, $delimiter = ',', $enclosure = '"', $escapeChar = '\\')
+    {
+        if (is_file($filepath)) {
+            unlink($filepath);
+        }
+        $fp = fopen($filepath, 'w');
+        foreach ($data as $row) {
+            fputcsv($fp, $row, $delimiter, $enclosure, $escapeChar);
+        }
+        return fclose($fp);
+    }
+
     /**
      * Recursively remove a dir
      *
