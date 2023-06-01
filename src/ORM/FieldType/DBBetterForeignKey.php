@@ -10,7 +10,7 @@ use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FileHandleField;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\FieldType\DBForeignKey;
-use LeKoala\Base\Forms\Select2SingleField;
+use LeKoala\Base\Forms\TomSelectSingleField;
 
 /**
  * Improves scaffolding by making better assumption than the defaults one
@@ -45,7 +45,7 @@ class DBBetterForeignKey extends DBForeignKey
             $field = DropdownField::create($this->name, $title, $list->map('ID', $titleField));
             $field->setHasEmptyDefault(true);
         } else {
-            $field = new Select2SingleField($this->name, $title);
+            $field = new TomSelectSingleField($this->name, $title);
             $field->setAjaxWizard($hasOneClass);
         }
         return $field;

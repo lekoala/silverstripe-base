@@ -9,13 +9,11 @@ use SilverStripe\Forms\ListboxField;
 use SilverStripe\ORM\DataObjectInterface;
 
 /**
- * @link https://select2.org
- * @deprecated
- * Use tom select instead
+ * @link https://tom-select.js.org/
  */
-class Select2MultiField extends ListboxField implements AjaxPoweredField
+class TomSelectMultiField extends ListboxField implements AjaxPoweredField
 {
-    use Select2;
+    use TomSelect;
 
     /**
      * @param DataObject|DataObjectInterface $record The record to save into

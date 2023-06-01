@@ -6,18 +6,14 @@ use SilverStripe\ORM\DB;
 use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\ArrayLib;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\View\Requirements;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
-use LeKoala\Base\View\CommonRequirements;
-use SilverStripe\Core\Manifest\ModuleLoader;
-use SilverStripe\Core\Manifest\ModuleResource;
 
 /**
  */
-trait Select2
+trait TomSelect
 {
     use ConfigurableField;
 
@@ -76,30 +72,36 @@ trait Select2
 
     /**
      * @config
-     * @var string
-     */
-    private static $version = '4.1.0-rc.0';
-
-    /**
-     * @config
      * @var boolean
      */
     private static $enable_requirements = true;
 
     /**
+     * @link https://github.com/orchidjs/tom-select/blob/master/src/defaults.ts
      * @config
-     * @var bool
+     * @var array
      */
-    private static $use_cdn = false;
+    private static $default_config = [
+        "valueField" => "id",
+        "labelField" => "text",
+        "searchField" => ["text"]
+    ];
+
+    public function __construct($name, $title = null, $source = [], $value = null)
+    {
+        parent::__construct($name, $title, $source, $value);
+        $this->mergeDefaultConfig();
+        $this->setAllowClear(true);
+    }
 
     public function Type()
     {
-        return 'select2';
+        return 'tomselect';
     }
 
     public function extraClass()
     {
-        return 'select no-chosen ' . parent::extraClass();
+        return 'no-chosen ' . parent::extraClass();
     }
 
     public function setValue($value, $data = null)
@@ -149,31 +151,56 @@ trait Select2
         return true;
     }
 
-    /**
-     * @link https://github.com/select2/select2/issues/3387
-     */
     public function performReadonlyTransformation()
     {
-        /** @var Select2SingleField $field */
-        $field = $this->castedCopy(Select2SingleField::class);
+        $field = $this->castedCopy(TomSelectSingleField::class);
+        $field->setDisabled(true);
         $field->setSource($this->getSource());
         $field->setReadonly(true);
         // Required to properly set value if no source set
         if ($this->ajaxClass) {
             $field->setAjaxClass($this->getAjaxClass());
         }
-        // This rely on styles in admin.css
         return $field;
+    }
+
+    public function getPlugin($plugin)
+    {
+        if (isset($this->config['plugins'][$plugin])) {
+            return $this->config['plugins'][$plugin];
+        }
+    }
+
+    public function removePlugin($plugin)
+    {
+        if (isset($this->config['plugins'][$plugin])) {
+            unset($this->config['plugins'][$plugin]);
+        }
+        return $this;
+    }
+
+    public function setPlugin($plugin, $config = [])
+    {
+        $plugins = $this->config['plugins'] ?? [];
+        if (empty($plugins)) {
+            $this->config['plugins'] = $plugins;
+        }
+        $pluginConfig = $plugins[$plugin] ?? [];
+        $this->config['plugins'][$plugin] = array_merge($pluginConfig, $config);
+        return $this;
     }
 
     public function getTags()
     {
-        return $this->getConfig('tags');
+        return $this->getConfig('create');
     }
 
-    public function setTags($value)
+    public function setTags($value, $blur = true)
     {
-        return $this->setConfig('tags', $value);
+        if ($value) {
+            $this->setConfig('createOnBlur', $blur);
+        }
+        return $this->setConfig('create', $value);
     }
 
     public function getPlaceholder()
@@ -188,41 +215,53 @@ trait Select2
 
     public function getAllowClear()
     {
-        return $this->getConfig('allowClear');
+        return $this->getConfig('remove_button');
     }
 
     public function setAllowClear($value)
     {
-        // won't clear without a source
+        // @link https://tom-select.js.org/plugins/remove-button/
         if ($value) {
-            if (!$this->source) {
-                $this->setSource(['' => '']);
-            }
+            return $this->setPlugin('remove_button', ['title' => _t('TomSelect.Remove', 'Remove')]);
+        } else {
+            return $this->removePlugin('remove_button');
         }
-        return $this->setConfig('allowClear', $value);
     }
 
     public function getTokenSeparators()
     {
-        return $this->getConfig('tokenSeparators');
+        return $this->getConfig('delimiter');
     }
 
     public function setTokenSeparator($value)
     {
-        return $this->setConfig('tokenSeparators', $value);
+        return $this->setConfig('delimiter', $value);
     }
 
     public function getAjax()
     {
-        return $this->getConfig('ajax');
+        return $this->getConfig('_ajax');
     }
 
     public function setAjax($url, $opts = [])
     {
         $ajax = array_merge([
             'url' => $url,
+            'paramName' => "q",
+            'params' => [
+                'SecurityID' => $this->getForm()->getSecurityToken()->getValue()
+            ]
         ], $opts);
-        return $this->setConfig('ajax', $ajax);
+        return $this->setConfig('_ajax', $ajax);
+    }
+
+    public function setAjaxLoad($callbackName, $valueField = "id", $labelField = "text", $searchField = "text")
+    {
+        $this->setConfig('load', $callbackName);
+        $this->setConfig('valueField', $valueField);
+        $this->setConfig('labelField', $labelField);
+        $this->setConfig('searchField', $searchField);
+        return $this;
     }
 
     /**
@@ -289,7 +328,7 @@ trait Select2
      */
     public function isAjax()
     {
-        return $this->ajaxClass || $this->getConfig('ajax');
+        return $this->ajaxClass || $this->getConfig('_ajax') || $this->config('load');
     }
 
     public function autocomplete(HTTPRequest $request)
@@ -305,7 +344,7 @@ trait Select2
         }
 
         $name = $this->getName();
-        $term = '%' . $request->getVar('term') . '%';
+        $term = '%' . $request->getVar('q') . '%';
 
         $class = $this->ajaxClass;
 
@@ -391,8 +430,7 @@ trait Select2
         $query = DB::prepared_query($sql, $params);
         $results = iterator_to_array($query);
 
-        $more = false;
-        $body = json_encode(['results' => $results, 'pagination' => ['more' => $more]]);
+        $body = json_encode(['data' => $results]);
 
         $response = new HTTPResponse($body);
         $response->addHeader('Content-Type', 'application/json');
@@ -521,71 +559,26 @@ trait Select2
             $this->setConfig('dir', $dir);
         }
 
-        $ctrl = Controller::curr();
-        // @link https://github.com/ttskch/select2-bootstrap4-theme
-        if ($ctrl->hasMethod("UseBootstrap4") && $ctrl->UseBootstrap4()) {
-            $this->setConfig('theme', 'bootstrap4');
-        }
-        // @link https://apalfrey.github.io/select2-bootstrap-5-theme/
-        if ($ctrl->hasMethod("UseBootstrap5") && $ctrl->UseBootstrap5()) {
-            $this->setConfig('theme', 'bootstrap-5');
-        }
-
         // Ajax wizard, needs a form to get controller link
         if ($this->ajaxClass) {
-            $token = $this->getForm()->getSecurityToken()->getValue();
-            $url = $this->Link('autocomplete') . '?SecurityID=' . $token;
+            $url = $this->Link('autocomplete');
             $this->setAjax($url);
         }
 
-        $this->setAttribute('data-mb-options', $this->getConfigAsJson());
-        $this->setAttribute('data-mb', 'select2');
-
         if (self::config()->enable_requirements) {
-            $version = self::config()->version;
-            $use_cdn = self::config()->use_cdn;
-
-            if ($use_cdn) {
-                $cdnBase = "https://cdn.jsdelivr.net/npm/select2@$version/dist";
-            } else {
-                $cdnBase = dirname(dirname(self::moduleResource("javascript/vendor/cdn/select2/js/select2.min.js")->getRelativePath()));
-            }
-            Requirements::css("$cdnBase/css/select2.min.css");
-
-            // Some custom styles for the cms
-            if ($ctrl instanceof LeftAndMain) {
-                Requirements::css('base/css/Select2Field.css');
-            }
-
-            if ($ctrl->hasMethod("UseBootstrap4") && $ctrl->UseBootstrap4()) {
-                Requirements::css("https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme@1/dist/select2-bootstrap4.min.css");
-            }
-            if ($ctrl->hasMethod("UseBootstrap5") && $ctrl->UseBootstrap5()) {
-                Requirements::css("https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1/dist/select2-bootstrap-5-theme.min.css");
-            }
-
-            Requirements::javascript("$cdnBase/js/select2.min.js");
-            if ($lang != 'en') {
-                Requirements::javascript("$cdnBase/js/i18n/$lang.js");
-            }
-            CommonRequirements::modularBehaviour();
-            Requirements::javascript('base/javascript/fields/Select2Field.js');
+            Requirements::javascript("lekoala/silverstripe-base: javascript/custom-elements/tom-select.min.js");
         }
 
-        return parent::Field($properties);
-    }
+        $html = parent::Field($properties);
+        $config = $this->getConfigAsJson();
 
-    /**
-     * Helper to access this module resources
-     *
-     * @param string $path
-     * @return ModuleResource
-     */
-    public static function moduleResource($path)
-    {
-        return ModuleLoader::getModule('lekoala/silverstripe-base')->getResource($path);
-    }
+        $html = str_replace("form-select", "", $html);
 
+        // Simply wrap with custom element and set config
+        $html = "<tom-select data-config='" . $config . "'>" . $html . '</tom-select>';
+
+        return $html;
+    }
 
     /**
      * Validate this field

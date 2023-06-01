@@ -488,3 +488,7 @@ select.ag-cell-edit-input {
     top: 50%;
     transform: translateY(-50%);
 }
+
+.ts-control {
+    height: 35px;
+}

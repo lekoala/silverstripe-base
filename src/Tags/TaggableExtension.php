@@ -7,7 +7,7 @@ use LeKoala\Base\Tags\Tag;
 use SilverStripe\ORM\DataList;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\ORM\DataExtension;
-use LeKoala\Base\Forms\Select2MultiField;
+use LeKoala\Base\Forms\TomSelectMultiField;
 
 /**
  * Provides cross objects tag functionnality
@@ -24,7 +24,7 @@ class TaggableExtension extends DataExtension
     public function updateCMSFields(FieldList $fields)
     {
         $list = Tag::get()->map()->toArray();
-        $Tags = new Select2MultiField("Tags", "Tags", $list);
+        $Tags = new TomSelectMultiField("Tags", "Tags", $list);
         $Tags->setTags(true);
         $Tags->setOnNewTag(function ($tag) {
             $new = new Tag();

@@ -6,12 +6,10 @@ use SilverStripe\ORM\DataObjectInterface;
 
 /**
  * @link https://tom-select.js.org/
- * @deprecated
- * Use tom select instead
  */
-class Select2SingleField extends FastDropdownField implements AjaxPoweredField
+class TomSelectSingleField extends FastDropdownField implements AjaxPoweredField
 {
-    use Select2;
+    use TomSelect;
 
     /**
      * @param DataObject|DataObjectInterface $record The record to save into
