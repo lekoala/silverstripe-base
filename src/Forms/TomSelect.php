@@ -12,6 +12,7 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 
 /**
+ * @deprecated use FormElements
  */
 trait TomSelect
 {

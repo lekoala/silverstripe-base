@@ -14,6 +14,7 @@ use SilverStripe\Core\Manifest\ModuleResource;
 
 /**
  * @link https://chmln.github.io/flatpickr
+ * @deprecated use FormElements
  */
 class FlatpickrField extends TextField
 {

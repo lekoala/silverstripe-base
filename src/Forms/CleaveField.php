@@ -10,6 +10,7 @@ use SilverStripe\View\Requirements;
  *
  * @link https://nosir.github.io/cleave.js/
  * @link https://github.com/lekoala/cleave-es6
+ * @deprecated use FormElements
  */
 class CleaveField extends TextField
 {

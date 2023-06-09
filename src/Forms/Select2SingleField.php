@@ -3,6 +3,7 @@
 namespace LeKoala\Base\Forms;
 
 use SilverStripe\ORM\DataObjectInterface;
+use LeKoala\FormElements\AjaxPoweredField;
 
 /**
  * @link https://tom-select.js.org/

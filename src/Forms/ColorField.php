@@ -10,6 +10,7 @@ use SilverStripe\View\Requirements;
  * @link https://github.com/mdbassit/Coloris
  * @link https://gist.github.com/lekoala/233b0c6246170716c52dbfab342caf22
  * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/color
+ * @deprecated use FormElements
  */
 class ColorField extends TextField
 {
