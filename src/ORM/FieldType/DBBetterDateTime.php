@@ -4,6 +4,7 @@ namespace LeKoala\Base\ORM\FieldType;
 
 use DateTime;
 use DateTimeZone;
+use LeKoala\FormElements\FlatpickrField;
 use SilverStripe\ORM\FieldType\DBDatetime;
 
 /**
@@ -11,6 +12,13 @@ use SilverStripe\ORM\FieldType\DBDatetime;
  */
 class DBBetterDateTime extends DBDatetime
 {
+    public function scaffoldFormField($title = null, $params = null)
+    {
+        $field = FlatpickrField::create($this->name, $title);
+        $field->setDateTimeOptions();
+
+        return $field;
+    }
 
     /**
      * Timestamp is always UTC

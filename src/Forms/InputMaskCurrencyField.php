@@ -6,6 +6,7 @@ use LeKoala\Base\Helpers\CurrencyFormatter;
 
 /**
  * Format currency
+ * @deprecated Use form-elements
  */
 class InputMaskCurrencyField extends InputMaskNumericField
 {

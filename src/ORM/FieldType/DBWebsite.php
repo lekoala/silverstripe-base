@@ -2,7 +2,7 @@
 
 namespace LeKoala\Base\ORM\FieldType;
 
-use SilverStripe\Forms\TextField;
+use LeKoala\FormElements\InputMaskField;
 use SilverStripe\ORM\FieldType\DBVarchar;
 
 /**
@@ -16,8 +16,8 @@ class DBWebsite extends DBVarchar
 
     public function scaffoldFormField($title = null, $params = null)
     {
-        $field = TextField::create($this->name, $title);
-        $field->setCleaveType("url");
+        $field = new InputMaskField($this->name, $title);
+        $field->setAlias(InputMaskField::ALIAS_URL);
         return $field;
     }
 

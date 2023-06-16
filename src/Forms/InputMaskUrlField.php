@@ -4,6 +4,7 @@ namespace LeKoala\Base\Forms;
 
 /**
  * Format urls
+ * @deprecated Use form-elements
  */
 class InputMaskUrlField extends InputMaskField
 {

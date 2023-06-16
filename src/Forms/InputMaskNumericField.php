@@ -10,6 +10,7 @@ use SilverStripe\Forms\ReadonlyField;
  * Use CurrencyFormatter to get rules for decimals and grouping separators
  *
  * @link https://github.com/RobinHerbots/Inputmask/blob/4.x/README_numeric.md
+ * @deprecated Use form-elements
  */
 class InputMaskNumericField extends InputMaskField
 {

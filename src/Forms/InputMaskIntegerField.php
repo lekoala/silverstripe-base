@@ -3,6 +3,7 @@ namespace LeKoala\Base\Forms;
 
 /**
  * Format numbers
+ * @deprecated Use form-elements
  */
 class InputMaskIntegerField extends InputMaskNumericField
 {

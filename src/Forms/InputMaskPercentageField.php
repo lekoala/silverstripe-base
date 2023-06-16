@@ -3,6 +3,7 @@ namespace LeKoala\Base\Forms;
 
 /**
  * Format %
+ * @deprecated Use form-elements
  */
 class InputMaskPercentageField extends InputMaskNumericField
 {

@@ -5,12 +5,21 @@ namespace LeKoala\Base\ORM\FieldType;
 use Exception;
 use InvalidArgumentException;
 use SilverStripe\ORM\FieldType\DBDate;
+use LeKoala\FormElements\FlatpickrField;
 
 /**
  * This one does not crash in case your database contains rubbish data
  */
 class DBBetterDate extends DBDate
 {
+    public function scaffoldFormField($title = null, $params = null)
+    {
+        $field = FlatpickrField::create($this->name, $title);
+        // $field->setDateTimeOptions();
+
+        return $field;
+    }
+
     /**
      * Fix non-iso dates
      *

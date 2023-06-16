@@ -6,7 +6,7 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBPolymorphicForeignKey;
 
 /**
- * Allow null class by default is no relation is set
+ * Allow null class by default if no relation is set
  */
 class DBNullablePolymorphicForeignKey extends DBPolymorphicForeignKey
 {

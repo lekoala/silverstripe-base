@@ -2,7 +2,7 @@
 
 namespace LeKoala\Base\ORM\FieldType;
 
-use LeKoala\Base\Forms\CleaveField;
+use LeKoala\FormElements\CleaveField;
 use SilverStripe\ORM\FieldType\DBCurrency;
 use LeKoala\Base\Helpers\CurrencyFormatter;
 

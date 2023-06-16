@@ -2,6 +2,8 @@
 
 namespace LeKoala\Base\SiteConfig;
 
+use LeKoala\FormElements\InputMaskField;
+use LeKoala\FormElements\TelInputField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\HeaderField;
@@ -34,15 +36,15 @@ class SiteConfigExtension extends DataExtension
 
     private static $db = [
         // Contact Details
-        "ContactEmail" => "Varchar(199)",
-        "ContactPhone" => "Varchar",
+        "ContactEmail" => "Email",
+        "ContactPhone" => "Phone",
         "ContactAddress" => "Varchar(199)", // A geocodable address
         "ContactInfos" => "HTMLText", // Additionnal infos with map, links etc
         "LegalName" => "Varchar(199)", // The legal name of the company, for copyright use
         "CompanyRegistrationNumber" => "Varchar(59)", // The legal number
         "LegalCourt" => "Varchar(59)", // The legal court
         // Emails
-        "DefaultFromEmail" => "Varchar(199)",
+        "DefaultFromEmail" => "Email",
         "EmailFooter" => "Text",
         // Footer
         "FooterText" => "HTMLText",
@@ -58,13 +60,14 @@ class SiteConfigExtension extends DataExtension
         // Contact fields
         $ContactsHeader = new HeaderField('ContactsHeader', _t('Global.ContactsSettings', 'Contacts settings'));
         $fields->addFieldToTab('Root.Main', $ContactsHeader);
-        $ContactEmail = new TextField('ContactEmail', _t('Global.Email', 'Email'));
+        $ContactEmail = new InputMaskField('ContactEmail', _t('Global.Email', 'Email'));
+        $ContactEmail->setAlias(InputMaskField::ALIAS_EMAIL);
         $fields->addFieldToTab('Root.Main', $ContactEmail);
-        $ContactPhone = new TextField('ContactPhone', _t('Global.Phone', 'Phone'));
+        $ContactPhone = new TelInputField('ContactPhone', _t('Global.Phone', 'Phone'));
         $fields->addFieldToTab('Root.Main', $ContactPhone);
         $ContactAddress = new TextField('ContactAddress', _t('Global.Address', 'Address'));
         $fields->addFieldToTab('Root.Main', $ContactAddress);
-        $ContactInfos = new HTMLEditorField('ContactInfos', _t('Global.ContactInfos', 'Contact details'));
+        $ContactInfos = HTMLEditorField::create('ContactInfos', _t('Global.ContactInfos', 'Contact details'));
         // See https://docs.silverstripe.org/en/4/developer_guides/forms/field_types/htmleditorfield/
         $ContactInfos->setRows(7);
         $fields->addFieldToTab('Root.Main', $ContactInfos);

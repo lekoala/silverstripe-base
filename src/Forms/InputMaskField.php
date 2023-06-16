@@ -15,6 +15,8 @@ use SilverStripe\Core\Manifest\ModuleLoader;
  * Fully decouples formatted field from data field.
  * Formatting is a UI concept that should not be dealt with in PHP outside of the scope of validation.
  * This avoids messy conversion (for date, currency, ...)
+ *
+ * @deprecated Use form-elements
  */
 class InputMaskField extends TextField
 {

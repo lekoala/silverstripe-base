@@ -5,6 +5,7 @@ namespace LeKoala\Base\Forms;
  * Format date field using ISO value
  *
  * Locale conversion cannot be done by InputMask and should be provided by a third party service
+ * @deprecated Use form-elements
  */
 class InputMaskDateField extends InputMaskDateTimeField
 {

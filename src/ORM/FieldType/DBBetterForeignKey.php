@@ -2,6 +2,9 @@
 
 namespace LeKoala\Base\ORM\FieldType;
 
+// use LeKoala\Base\Forms\TomSelectSingleField;
+// use LeKoala\FormElements\TomSelectSingleField;
+use LeKoala\FormElements\BsTagsSingleField;
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\Image;
 use SilverStripe\ORM\DataList;
@@ -10,7 +13,6 @@ use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FileHandleField;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\FieldType\DBForeignKey;
-use LeKoala\Base\Forms\TomSelectSingleField;
 
 /**
  * Improves scaffolding by making better assumption than the defaults one
@@ -45,7 +47,7 @@ class DBBetterForeignKey extends DBForeignKey
             $field = DropdownField::create($this->name, $title, $list->map('ID', $titleField));
             $field->setHasEmptyDefault(true);
         } else {
-            $field = new TomSelectSingleField($this->name, $title);
+            $field = new BsTagsSingleField($this->name, $title);
             $field->setAjaxWizard($hasOneClass);
         }
         return $field;

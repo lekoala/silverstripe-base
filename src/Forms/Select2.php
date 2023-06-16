@@ -102,6 +102,16 @@ trait Select2
         return 'select no-chosen ' . parent::extraClass();
     }
 
+    public function getServerVars()
+    {
+        return [
+            'queryParam' => 'q',
+            'dataKey' => 'data',
+            'valueField' => 'id',
+            'labelField' => 'text',
+        ];
+    }
+
     public function setValue($value, $data = null)
     {
         // For ajax, we need to add the option to the list

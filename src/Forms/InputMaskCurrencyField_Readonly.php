@@ -7,6 +7,7 @@ use LeKoala\Base\Helpers\CurrencyFormatter;
 
 /**
  * Readonly version of a {@link InputMaskCurrencyField}.
+ * @deprecated Use form-elements
  */
 class InputMaskCurrencyField_Readonly extends ReadonlyField
 {

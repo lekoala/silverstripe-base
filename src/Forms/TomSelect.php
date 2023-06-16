@@ -95,6 +95,16 @@ trait TomSelect
         $this->setAllowClear(true);
     }
 
+    public function getServerVars()
+    {
+        return [
+            'queryParam' => 'q',
+            'dataKey' => 'data',
+            'valueField' => 'id',
+            'labelField' => 'text',
+        ];
+    }
+
     public function Type()
     {
         return 'tomselect';

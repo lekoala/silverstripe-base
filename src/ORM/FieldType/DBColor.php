@@ -2,7 +2,7 @@
 
 namespace LeKoala\Base\ORM\FieldType;
 
-use LeKoala\Base\Forms\ColorField;
+use LeKoala\FormElements\ColorField;
 use SilverStripe\ORM\FieldType\DBVarchar;
 
 /**

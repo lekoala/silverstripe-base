@@ -7,9 +7,11 @@ use SilverStripe\ORM\Relation;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Forms\ListboxField;
 use SilverStripe\ORM\DataObjectInterface;
+use LeKoala\FormElements\AjaxPoweredField;
 
 /**
  * @link https://tom-select.js.org/
+ * @deprecated use FormElements
  */
 class TomSelectMultiField extends ListboxField implements AjaxPoweredField
 {

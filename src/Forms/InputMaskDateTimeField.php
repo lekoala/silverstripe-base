@@ -11,6 +11,7 @@ use SilverStripe\i18n\i18n;
  * Locale conversion cannot be done by InputMask and should be provided by a third party service
  *
  * @link https://github.com/RobinHerbots/Inputmask/blob/5.x/README_date.md
+ * @deprecated Use form-elements
  */
 class InputMaskDateTimeField extends InputMaskField
 {

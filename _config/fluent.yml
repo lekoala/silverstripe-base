@@ -22,6 +22,7 @@ TractorCow\Fluent\Extension\FluentExtension:
     # Our custom stuff
     - UntranslatedVarchar
     - LeKoala\Base\ORM\FieldType\UntranslatedVarchar
+    - LeKoala\Base\ORM\FieldType\DBEmail
 # Add extensions to SilverStripe
 SilverStripe\SiteConfig\SiteConfig:
   # Prevent duplicate siteconfigs when localised

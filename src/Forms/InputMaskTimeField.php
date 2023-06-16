@@ -7,6 +7,7 @@ use SilverStripe\ORM\DataObjectInterface;
 /**
  * Format time field
  * @link https://github.com/RobinHerbots/Inputmask/blob/5.x/README_date.md
+ * @deprecated Use form-elements
  */
 class InputMaskTimeField extends InputMaskDateTimeField
 {

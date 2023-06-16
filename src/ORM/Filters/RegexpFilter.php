@@ -2,7 +2,6 @@
 
 namespace LeKoala\Base\ORM\Filters;
 
-use SilverStripe\ORM\DB;
 use InvalidArgumentException;
 use SilverStripe\ORM\DataQuery;
 use SilverStripe\ORM\Filters\SearchFilter;
