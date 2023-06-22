@@ -8,4 +8,5 @@ Only:
 ---
 LeKoala\Admini\LeftAndMain:
   extra_requirements_javascript:
-    - 'https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js'
+    - src: "https://cdn.jsdelivr.net/npm/jquery@3.7.0/dist/jquery.min.js"
+      type: "text/javascript"
