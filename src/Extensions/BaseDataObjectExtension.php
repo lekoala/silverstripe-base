@@ -25,6 +25,7 @@ use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\Admin\ModelAdmin;
 use SilverStripe\Assets\Shortcodes\FileLinkTracking;
 use SilverStripe\Control\Controller;
+use SilverStripe\Forms\FormScaffolder;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\Forms\GridField\GridFieldDeleteAction;
 use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
@@ -117,6 +118,14 @@ class BaseDataObjectExtension extends DataExtension
         }
         $query->addWhere(['ID' => $this->owner->ID]);
         return $query->execute();
+    }
+
+    public function updateFormScaffolder(FormScaffolder $fs)
+    {
+        $restricted_fields = $this->owner->config()->restricted_fields;
+        if (!empty($restricted_fields)) {
+            $fs->restrictFields = $restricted_fields;
+        }
     }
 
     public function isBeingEdited()

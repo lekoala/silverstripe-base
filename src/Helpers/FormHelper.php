@@ -59,6 +59,21 @@ class FormHelper
         $field->setAttribute("onfocus", "this.removeAttribute('readonly')");
     }
 
+    public static function makeFieldReadonly(FieldList $fields, $names)
+    {
+        if (!is_array($names)) {
+            $names = [$names];
+        }
+
+        foreach ($names as $item) {
+            $fieldName = ($item instanceof FormField) ? $item->getName() : $item;
+            $srcField = $fields->dataFieldByName($fieldName);
+            if ($srcField) {
+                $fields->replaceField($fieldName, $srcField->performReadonlyTransformation());
+            }
+        }
+    }
+
     /**
      * @param DataObject $dataobject
      * @param string $field

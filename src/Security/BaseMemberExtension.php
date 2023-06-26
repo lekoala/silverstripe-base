@@ -20,6 +20,7 @@ use LeKoala\Base\Security\MemberAudit;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\LoginAttempt;
 use LeKoala\Base\Controllers\HasSession;
+use LeKoala\Base\Helpers\FormHelper;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Security\IdentityStore;
 use SilverStripe\ORM\ValidationException;
@@ -321,7 +322,7 @@ class BaseMemberExtension extends DataExtension
 
         $ctrl = Controller::curr();
 
-        $fields->makeFieldReadonly([
+        FormHelper::makeFieldReadonly($fields, [
             'FailedLoginCount',
             'LastVisited',
             'NumVisit',
