@@ -122,9 +122,9 @@ class BaseDataObjectExtension extends DataExtension
 
     public function updateFormScaffolder(FormScaffolder $fs)
     {
-        $restricted_fields = $this->owner->config()->restricted_fields;
-        if (!empty($restricted_fields)) {
-            $fs->restrictFields = $restricted_fields;
+        $ignored_fields = $this->owner->config()->ignored_fields;
+        if (!empty($ignored_fields)) {
+            $fs->ignoreFields = $ignored_fields;
         }
     }
 
