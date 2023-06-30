@@ -132,17 +132,16 @@ class BaseContentController extends ContentController
             // There might not be a session
         }
 
-        // Always helpful!
-        // $request = $this->getRequest();
-        // if (Director::isDev() && !Director::is_ajax() && $request && !$request->isPOST()) {
-        //     SSViewer::config()->set('source_file_comments', true);
-        // }
-
         // Switch channel for clearer logs
         $this->logger = $this->logger->withName('app');
 
         if ($SiteConfig->LogoID) {
-            Requirements::insertHeadTags('<script type="application/ld+json">' . $this->LogoSchemaMarkup() . '</script>', 'LogoSchemaMarkup');
+            $LogoSchemaMarkup = $this->getCache()->get('LogoSchemaMarkup');
+            if (!$LogoSchemaMarkup) {
+                $LogoSchemaMarkup = $this->LogoSchemaMarkup();
+                $this->getCache()->set('LogoSchemaMarkup', $LogoSchemaMarkup, 3600);
+            }
+            Requirements::insertHeadTags('<script type="application/ld+json">' . $LogoSchemaMarkup . '</script>', 'LogoSchemaMarkup');
         }
     }
 
@@ -154,7 +153,6 @@ class BaseContentController extends ContentController
      */
     public function LogoSchemaMarkup()
     {
-        $page = $this->dataRecord;
         $sc = SiteConfig::current_site_config();
         $logoLink = Director::absoluteURL($sc->Logo()->Link());
 

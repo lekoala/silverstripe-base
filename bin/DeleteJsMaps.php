@@ -11,19 +11,16 @@ while (!is_dir($composerInstall)) {
 
 echo "Base dir $baseDir\n";
 
-$srcDir = $dir . "/resources/Admin";
 $destDir = $baseDir . "/vendor/silverstripe/admin/thirdparty/bootstrap/js/dist";
-$maps = glob("$srcDir/*.js.map");
-$c = count($maps);
-echo "Processing $c files from $srcDir\n";
+$maps = glob("$destDir/*.js");
+echo "Processing files in $destDir\n";
 
 foreach ($maps as $map) {
-    $dest = $destDir . "/" . basename($map);
-    echo "Processing $map\n";
-    if (!is_file($dest)) {
-        copy($map, $dest);
-        echo "Copied to $dest\n";
-    }
+    $contents = file_get_contents($map);
+    $base = basename($map);
+    $contents = str_replace("//# sourceMappingURL=$base.map", "", $contents);
+    file_put_contents($map, $contents);
+    echo "Removing map from $map\n";
 }
 
 // Remove map from popper
@@ -32,7 +29,7 @@ if (is_file($popper)) {
     $contents = file_get_contents($popper);
     $contents = str_replace("//# sourceMappingURL=popper.min.js.map", "", $contents);
     file_put_contents($popper, $contents);
-    echo "Removing map from popper\n";
+    echo "Removing map from $popper\n";
 }
 
 echo "All done\n";

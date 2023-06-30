@@ -63,6 +63,18 @@ class CookieConsent
      * @config
      * @var string
      */
+    private static $cookies_link = null;
+
+    /**
+     * @config
+     * @var string
+     */
+    private static $privacy_link = null;
+
+    /**
+     * @config
+     * @var string
+     */
     private static $opts = [
         'position' => 'bottom-left',
         'theme' => 'classic', // leave empty or classic or edgeless
@@ -97,11 +109,13 @@ class CookieConsent
 
         $use_theme = $conf->force_colors ? false : true;
 
-        $privacyLink = 'https://cookiesandyou.com/';
-        // If we have a privacy notice, use it!
-        $privacyNotice = DataObject::get_one(PrivacyNoticePage::class);
-        if ($privacyNotice) {
-            $privacyLink = $privacyNotice->Link();
+        $privacyLink = self::config()->privacy_link ?? 'https://cookiesandyou.com/';
+        if (!self::config()->privacy_link) {
+            // If we have a privacy notice, use it!
+            $privacyNotice = DataObject::get_one(PrivacyNoticePage::class);
+            if ($privacyNotice) {
+                $privacyLink = $privacyNotice->Link();
+            }
         }
 
         $message = _t('CookieConsent.MESSAGE', "This website uses cookies to ensure you get the best experience on your website");
@@ -171,8 +185,8 @@ class CookieConsent
 
         // Create url to redirect to if cookies are dismissed
         $cookiesRequired = self::config()->cookies_required ? 'true' : 'false';
-        $cookiesLink = '/';
-        if (self::config()->cookies_required) {
+        $cookiesLink = self::config()->cookies_link ?? "/";
+        if (self::config()->cookies_required && !self::config()->cookies_link) {
             $page = DataObject::get_one(CookiesRequiredPage::class);
             if ($page) {
                 $cookiesLink = '/' . $page->Link();
