@@ -498,3 +498,11 @@ select.ag-cell-edit-input {
 :not(:defined) {
     visibility: hidden;
 }
+
+.tags-badge .close {
+    padding: 0 0 0 4px;
+}
+
+.tags-badge.badge-primary {
+    background-color: #0071c4;
+}
