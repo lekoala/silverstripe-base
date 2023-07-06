@@ -2,21 +2,22 @@
 
 namespace LeKoala\Base\Admin;
 
-use LeKoala\Base\Security\Antivirus;
 use Psr\Log\LoggerInterface;
 use SilverStripe\Admin\CMSMenu;
 use SilverStripe\View\SSViewer;
+use SilverStripe\Core\Environment;
 use SilverStripe\View\Requirements;
+use LeKoala\Base\Security\Antivirus;
 use LeKoala\Multilingual\LangHelper;
 use SilverStripe\Core\Config\Config;
+use LeKoala\DeferBackend\CspProvider;
+use LeKoala\DeferBackend\DeferBackend;
 use SilverStripe\SiteConfig\SiteConfig;
 use SilverStripe\Core\Injector\Injector;
 use LeKoala\Base\View\CommonRequirements;
-use LeKoala\DeferBackend\CspProvider;
-use LeKoala\DeferBackend\DeferBackend;
 use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Admin\AdminRootController;
 use SilverStripe\Admin\LeftAndMainExtension;
-use SilverStripe\Core\Environment;
 use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorConfig;
 use SilverStripe\Forms\HTMLEditor\TinyMCECombinedGenerator;
@@ -115,6 +116,14 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
 
         Requirements::javascript("base/javascript/admin.js");
         $this->requireAdminStyles();
+    }
+
+    public function onBeforeInit()
+    {
+        if (!$this->owner->canView()) {
+            header('Location: /' . AdminRootController::config()->get('url_base') . '/');
+            exit();
+        }
     }
 
     public function ShowAVWarning()
