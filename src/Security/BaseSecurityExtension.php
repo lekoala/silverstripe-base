@@ -37,7 +37,7 @@ class BaseSecurityExtension extends Extension
 
         // Cannot GET login form
         if ($url == $loginFormUrl && $req->isGET()) {
-            header('Location: /' . $loginUrl);
+            header('Location: /' . ltrim($loginUrl, '/'));
             exit();
         }
         // Already logged in => no need to show log in as
