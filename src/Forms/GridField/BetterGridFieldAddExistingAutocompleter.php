@@ -181,9 +181,13 @@ class BetterGridFieldAddExistingAutocompleter extends GridFieldAddExistingAutoco
         //             $sort = $sortByTitle;
         //         }
 
-        $results = $allList
-            ->subtract($gridField->getList())
-            ->filterAny($params)
+        $results = $allList;
+
+        if (!($results instanceof UnsavedRelationList)) {
+            $results = $results->subtract($gridField->getList());
+        }
+
+        $results = $results->filterAny($params)
             ->sort($sort)
             ->limit($this->getResultsLimit());
 

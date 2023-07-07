@@ -182,6 +182,15 @@ class DatabaseHelper
         }
     }
 
+    public static function appendInClause($str, $values, $field = "ID")
+    {
+        if (empty($values)) {
+            return $str;
+        }
+
+        return $str . " $field IN (" . implode(",", $values) . ")";
+    }
+
     /**
      * Join two where clauses either with AND or OR
      *
