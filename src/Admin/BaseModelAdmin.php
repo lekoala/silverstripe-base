@@ -213,7 +213,7 @@ abstract class BaseModelAdmin extends ModelAdmin
         if ($SubsiteID) {
             // We are editing something, move to root
             if (strpos($request->getURL(), '/EditForm/') !== false) {
-                header('Location: ' . $this->Link());
+                header('Location: /' . ltrim($this->Link(), '/'));
                 exit();
             }
         }
