@@ -9,8 +9,10 @@ use SilverStripe\Core\Environment;
 use SilverStripe\View\Requirements;
 use LeKoala\Base\Security\Antivirus;
 use LeKoala\Multilingual\LangHelper;
+use SilverStripe\Control\Controller;
 use SilverStripe\Core\Config\Config;
 use LeKoala\DeferBackend\CspProvider;
+use SilverStripe\Security\Permission;
 use LeKoala\DeferBackend\DeferBackend;
 use SilverStripe\SiteConfig\SiteConfig;
 use SilverStripe\Core\Injector\Injector;
@@ -21,7 +23,6 @@ use SilverStripe\Admin\LeftAndMainExtension;
 use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorConfig;
 use SilverStripe\Forms\HTMLEditor\TinyMCECombinedGenerator;
-use SilverStripe\Security\Permission;
 
 /**
  * Available config
@@ -123,7 +124,11 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
     {
         if (!$this->owner->canView()) {
             if (Permission::check('CMS_ACCESS')) {
-                header('Location: /' . AdminRootController::config()->get('url_base') . '/');
+                $segment = Config::forClass($this->config()->get('default_panel'))
+                    ->get('url_segment');
+
+                $adminLink = ltrim(Controller::join_links(AdminRootController::admin_url(), $segment, '/'), '/');
+                header('Location: /' . $adminLink);
                 exit();
             }
             header('Location: /');
