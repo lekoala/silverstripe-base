@@ -21,6 +21,7 @@ use SilverStripe\Admin\LeftAndMainExtension;
 use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorConfig;
 use SilverStripe\Forms\HTMLEditor\TinyMCECombinedGenerator;
+use SilverStripe\Security\Permission;
 
 /**
  * Available config
@@ -121,7 +122,11 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
     public function onBeforeInit()
     {
         if (!$this->owner->canView()) {
-            header('Location: /' . AdminRootController::config()->get('url_base') . '/');
+            if (Permission::check('CMS_ACCESS')) {
+                header('Location: /' . AdminRootController::config()->get('url_base') . '/');
+                exit();
+            }
+            header('Location: /');
             exit();
         }
     }
