@@ -37,4 +37,13 @@ class SiteAdmin extends BaseModelAdmin
      * @var string
      */
     private static $menu_icon_class = "bx bx-data";
+    private static $enabled = false;
+
+    public function canView($member = null)
+    {
+        if (!static::config()->enabled) {
+            return false;
+        }
+        return parent::canView($member);
+    }
 }

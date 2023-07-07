@@ -124,8 +124,8 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
     {
         if (!$this->owner->canView()) {
             if (Permission::check('CMS_ACCESS')) {
-                $segment = Config::forClass($this->config()->get('default_panel'))
-                    ->get('url_segment');
+                $segment = Config::forClass(AdminRootController::config()->get('default_panel'))
+                    ->get('url_segment') ?? '';
 
                 $adminLink = ltrim(Controller::join_links(AdminRootController::admin_url(), $segment, '/'), '/');
                 header('Location: /' . $adminLink);
