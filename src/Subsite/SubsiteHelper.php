@@ -2,6 +2,7 @@
 
 namespace LeKoala\Base\Subsite;
 
+use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
@@ -248,5 +249,10 @@ class SubsiteHelper
             $SiteConfig = new SiteConfig();
         }
         return $SiteConfig;
+    }
+
+    public static function updateDataList(DataList $datalist, $v = false)
+    {
+        return $datalist->setDataQueryParam('Subsite.filter', $v);
     }
 }
