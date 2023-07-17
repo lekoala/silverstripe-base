@@ -501,6 +501,7 @@ select.ag-cell-edit-input {
 
 .tags-badge .close {
     padding: 0 0 0 4px;
+    display: inline-block;
 }
 
 .tags-badge.badge-primary {
