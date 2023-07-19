@@ -14,6 +14,7 @@ use SilverStripe\Core\Config\Config;
 use LeKoala\DeferBackend\CspProvider;
 use SilverStripe\Security\Permission;
 use LeKoala\DeferBackend\DeferBackend;
+use LeKoala\Base\Subsite\SubsiteHelper;
 use SilverStripe\SiteConfig\SiteConfig;
 use SilverStripe\Core\Injector\Injector;
 use LeKoala\Base\View\CommonRequirements;
@@ -21,6 +22,7 @@ use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Admin\AdminRootController;
 use SilverStripe\Admin\LeftAndMainExtension;
 use SilverStripe\Core\Manifest\ModuleLoader;
+use SilverStripe\Subsites\State\SubsiteState;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorConfig;
 use SilverStripe\Forms\HTMLEditor\TinyMCECombinedGenerator;
 
@@ -96,13 +98,13 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
         $this->includeLastIcon();
 
         // Temp 4.12 fix
-        $version = $this->owner->CMSVersionNumber();
-        if (isset($_GET['show_cms_version'])) {
-            die($version);
-        }
-        if ($version == "4.12" || !$version) {
-            Requirements::javascript("https://code.jquery.com/jquery-migrate-3.4.0.min.js");
-        }
+        // $version = $this->owner->CMSVersionNumber();
+        // if (isset($_GET['show_cms_version'])) {
+        //     die($version);
+        // }
+        // if ($version == "4.12" || !$version) {
+        //     Requirements::javascript("https://code.jquery.com/jquery-migrate-3.4.0.min.js");
+        // }
 
         // otherwise it may show artefacts when loading
         if (Environment::getEnv('DONT_FORCE_TINYMCE_LOAD')) {

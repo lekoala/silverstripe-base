@@ -18,9 +18,11 @@
         <% include SilverStripe\\Admin\\LeftAndMain_MenuList %>
     </div>
 
+    <% cached 'menufooter' %>
     <div class="toolbar toolbar--south cms-panel-toggle vertical-align-items">
         <% include SilverStripe\\Admin\\LeftAndMain_MenuToggle %>
     </div>
+    <% end_cached %>
 </div>
 
 <button class="fill-height fill-width cms-menu-mobile-overlay" aria-controls="cms-menu" aria-expanded="false"></button>
