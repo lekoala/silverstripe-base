@@ -232,6 +232,13 @@ class SubsiteHelper
         SubsiteState::singleton()->setSubsiteId($currentID);
     }
 
+    public static function persistSubsite()
+    {
+        if (self::usesSubsite()) {
+            $_SESSION['SubsiteID'] = self::currentSubsiteID();
+        }
+    }
+
     public static function SiteConfig($SubsiteID = 0)
     {
         if (!$SubsiteID) {
