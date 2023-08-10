@@ -83,35 +83,37 @@ class BaseSecurityAdminExtension extends Extension
         $request = $this->getRequest();
         $dirParts = explode('/', $request->remaining());
         $currentID = isset($dirParts[3]) ? [$dirParts[3]] : [];
-        $membersOfGroups = BaseMemberExtension::getMembersFromSecurityGroups($currentID);
         $members = $this->getMembersGridField($form);
-        $members->setList($membersOfGroups);
+        if ($members) {
+            $membersOfGroups = BaseMemberExtension::getMembersFromSecurityGroups($currentID);
+            $members->setList($membersOfGroups);
 
-        // Add message
-        $MembersOnlyGroups = AlertField::create(
-            'MembersOnlyGroups',
-            _t(
-                'BaseSecurityAdminExtension.MembersOnlyGroups',
-                'Only group members are shown. To add a user to a group, link it from an existing group.'
-            ),
-            'info'
-        );
-        $form->Fields()->insertAfter('Members', $MembersOnlyGroups);
+            // Add message
+            $MembersOnlyGroups = AlertField::create(
+                'MembersOnlyGroups',
+                _t(
+                    'BaseSecurityAdminExtension.MembersOnlyGroups',
+                    'Only group members are shown. To add a user to a group, link it from an existing group.'
+                ),
+                'info'
+            );
+            $form->Fields()->insertAfter('Members', $MembersOnlyGroups);
 
-        // Show groups / 2FA
-        $cols = GridFieldHelper::getGridFieldDataColumns($members->getConfig());
-        $displayFields = $cols->getDisplayFields($members);
-        $displayFields['DirectGroupsList'] = 'Direct Groups';
-        if (TwoFactorMemberExtension::isEnabled()) {
-            $displayFields['Is2FaConfigured'] = '2FA';
+            // Show groups / 2FA
+            $cols = GridFieldHelper::getGridFieldDataColumns($members->getConfig());
+            $displayFields = $cols->getDisplayFields($members);
+            $displayFields['DirectGroupsList'] = 'Direct Groups';
+            if (TwoFactorMemberExtension::isEnabled()) {
+                $displayFields['Is2FaConfigured'] = '2FA';
+            }
+            $cols->setDisplayFields($displayFields);
+
+            // Better search
+            $filter = GridFieldHelper::getGridFieldFilterHeader($members->getConfig());
+            $wildCardHeader = WildcardSearchContext::fromContext($filter->getSearchContext($members));
+            // $wildCardHeader->setWildcardFilters(['FirstName', 'Surname', 'Email']);
+            $wildCardHeader->replaceInFilterHeader($filter);
         }
-        $cols->setDisplayFields($displayFields);
-
-        // Better search
-        $filter = GridFieldHelper::getGridFieldFilterHeader($members->getConfig());
-        $wildCardHeader = WildcardSearchContext::fromContext($filter->getSearchContext($members));
-        // $wildCardHeader->setWildcardFilters(['FirstName', 'Surname', 'Email']);
-        $wildCardHeader->replaceInFilterHeader($filter);
 
         if (Security::config()->login_recording) {
             $this->addAuditTab($form);
@@ -143,6 +145,9 @@ class BaseSecurityAdminExtension extends Extension
 
     protected function addLogTab(Form $form)
     {
+        //TODO: ss5 fix
+        return;
+
         $logFiles = $this->getLogFiles();
         $logTab = new Tab('Logs', _t('BaseSecurityAdminExtension.Logs', 'Logs'));
         $form->Fields()->addFieldsToTab('Root', $logTab);
@@ -175,6 +180,9 @@ class BaseSecurityAdminExtension extends Extension
 
     protected function addAuditTab(Form $form)
     {
+        // TODO: ss5 fix
+        return;
+
         $fields = $form->Fields();
         $auditTab = new Tab('SecurityAudit', _t('BaseSecurityAdminExtension.SecurityAudit', "Security Audit"));
         $fields->addFieldsToTab('Root', $auditTab);
@@ -230,6 +238,9 @@ class BaseSecurityAdminExtension extends Extension
 
     protected function addMemberAuditTab(Form $form)
     {
+        // TODO: ss5 fix
+        return;
+
         MemberAudit::clearOldRecords();
 
         $fields = $form->Fields();
@@ -259,7 +270,11 @@ class BaseSecurityAdminExtension extends Extension
      */
     protected function getMembersGridField(Form $form)
     {
-        return $form->Fields()->dataFieldByName('Members');
+        $field = $form->Fields()->dataFieldByName('Members');
+        if (!$field) {
+            $field = $form->Fields()->dataFieldByName('users');
+        }
+        return $field;
     }
 
     /**
@@ -268,6 +283,10 @@ class BaseSecurityAdminExtension extends Extension
      */
     protected function getGroupsGridField(Form $form)
     {
-        return $form->Fields()->dataFieldByName('Groups');
+        $field = $form->Fields()->dataFieldByName('Groups');
+        if (!$field) {
+            $field = $form->Fields()->dataFieldByName('groups');
+        }
+        return $field;
     }
 }
