@@ -1,85 +1,84 @@
 {
-  "name": "lekoala/silverstripe-base",
-  "description": "Extend base functionnality of SilverStripe",
-  "type": "silverstripe-vendormodule",
-  "keywords": [
-    "silverstripe",
-    "module",
-    "cms"
-  ],
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "LeKoala",
-      "email": "thomas@lekoala.be"
-    }
-  ],
-  "require": {
-    "php": ">=7.2",
-    "silverstripe/recipe-plugin": "^1",
-    "silverstripe/recipe-cms": "^4.4",
-    "axllent/silverstripe-minifier": "^1.0",
-    "symbiote/silverstripe-gridfieldextensions": "^3.1",
-    "colymba/gridfield-bulk-editing-tools": "^3.0",
-    "bummzack/sortablefile": "^2.0",
-    "silvershop/silverstripe-hasonefield": "^3.0",
-    "wilr/silverstripe-googlesitemaps": "^2.0",
-    "lekoala/silverstripe-cms-actions": "*",
-    "lekoala/silverstripe-defer-backend": "*",
-    "lekoala/silverstripe-multilingual": "*",
-    "lekoala/silverstripe-devtoolkit": "*",
-    "lekoala/silverstripe-geotools": "*",
-    "lekoala/silverstripe-filepond": "*",
-    "lekoala/silverstripe-form-elements": "*",
-    "lekoala/silverstripe-phonenumber": "*",
-    "lekoala/silverstripe-common-extensions": "*"
-  },
-  "require-dev": {
-    "sminnee/phpunit": "^5.7",
-    "squizlabs/php_codesniffer": "^3.0",
-    "silverstripe/sqlite3": "^2.1",
-    "symfony/var-dumper": "^4.2",
-    "silverleague/ideannotator": "3.x-dev"
-  },
-  "suggest": {
-    "predis/predis": "Use Redis as a cache",
-    "colymba/gridfield-bulk-editing-tools": "Bulk editing",
-    "unclecheese/display-logic": "Display and hide fields",
-    "lekoala/silverstripe-blocks": "Blocks page",
-    "lekoala/silverstripe-phonenumber": "Phone number field type",
-    "lekoala/silverstripe-filepond": "Filepond file upload",
-    "lekoala/silverstripe-pure-modal": "Modals for the cms",
-    "pragmarx/google2fa": "2fa support"
-  },
-  "extra": {
-    "installer-name": "base",
-    "expose": [
-      "css",
-      "javascript",
-      "fonts"
-    ]
-  },
-  "config": {
-    "allow-plugins": {
-      "composer/installers": true,
-      "silverstripe/recipe-plugin": true,
-      "silverstripe/vendor-plugin": true
-    }
-  },
-  "autoload": {
-    "psr-4": {
-      "LeKoala\\Base\\": "src/",
-      "LeKoala\\Base\\Test\\": "tests/"
-    }
-  },
-  "support": {
-    "issues": "https://github.com/lekoala/silverstripe-base/issues"
-  },
-  "scripts": {
-    "lint": "phpcs src/ tests/",
-    "lint-clean": "phpcbf src/ tests/",
-    "test": "phpunit -v"
-  },
-  "minimum-stability": "dev",
-  "prefer-stable": true
+    "name": "lekoala/silverstripe-base",
+    "description": "Extend base functionnality of SilverStripe",
+    "type": "silverstripe-vendormodule",
+    "keywords": [
+        "silverstripe",
+        "module",
+        "cms"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "LeKoala",
+            "email": "thomas@lekoala.be"
+        }
+    ],
+    "require": {
+        "php": "^7.4 || ^8",
+        "silverstripe/recipe-plugin": "^1 || ^2",
+        "silverstripe/recipe-cms": "^4.4 || ^5",
+        "symbiote/silverstripe-gridfieldextensions": "^3.1 || ^4",
+        "colymba/gridfield-bulk-editing-tools": "^3 || ^4",
+        "bummzack/sortablefile": "^2",
+        "silvershop/silverstripe-hasonefield": "^3 || ^4",
+        "wilr/silverstripe-googlesitemaps": "^2 || ^3",
+        "lekoala/silverstripe-cms-actions": "*",
+        "lekoala/silverstripe-defer-backend": "*",
+        "lekoala/silverstripe-multilingual": "*",
+        "lekoala/silverstripe-devtoolkit": "*",
+        "lekoala/silverstripe-geotools": "*",
+        "lekoala/silverstripe-filepond": "*",
+        "lekoala/silverstripe-form-elements": "*",
+        "lekoala/silverstripe-phonenumber": "*",
+        "lekoala/silverstripe-common-extensions": "*"
+    },
+    "require-dev": {
+        "sminnee/phpunit": "^5.7",
+        "squizlabs/php_codesniffer": "^3.0",
+        "silverstripe/sqlite3": "^2.1",
+        "symfony/var-dumper": "^4.2",
+        "silverleague/ideannotator": "3.x-dev"
+    },
+    "suggest": {
+        "predis/predis": "Use Redis as a cache",
+        "colymba/gridfield-bulk-editing-tools": "Bulk editing",
+        "unclecheese/display-logic": "Display and hide fields",
+        "lekoala/silverstripe-blocks": "Blocks page",
+        "lekoala/silverstripe-phonenumber": "Phone number field type",
+        "lekoala/silverstripe-filepond": "Filepond file upload",
+        "lekoala/silverstripe-pure-modal": "Modals for the cms",
+        "pragmarx/google2fa": "2fa support"
+    },
+    "extra": {
+        "installer-name": "base",
+        "expose": [
+            "css",
+            "javascript",
+            "fonts"
+        ]
+    },
+    "config": {
+        "allow-plugins": {
+            "composer/installers": true,
+            "silverstripe/recipe-plugin": true,
+            "silverstripe/vendor-plugin": true
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "LeKoala\\Base\\": "src/",
+            "LeKoala\\Base\\Test\\": "tests/"
+        }
+    },
+    "support": {
+        "issues": "https://github.com/lekoala/silverstripe-base/issues"
+    },
+    "scripts": {
+        "lint": "phpcs src/ tests/",
+        "lint-clean": "phpcbf src/ tests/",
+        "test": "phpunit -v"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }

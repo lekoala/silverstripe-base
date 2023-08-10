@@ -248,9 +248,12 @@ class ThemeControllerExtension extends Extension
             }
         }
         // Minify
-        $minifier = Requirements::backend()->getMinifier();
-        if ($minifier) {
-            $cssFileContent = $minifier->minify($cssFileContent, 'css', $outputFile);
+        $backend = Requirements::backend();
+        if (method_exists($backend, "getMinifier")) {
+            $minifier = $backend->getMinifier();
+            if ($minifier) {
+                $cssFileContent = $minifier->minify($cssFileContent, 'css', $outputFile);
+            }
         }
 
         // Remove map

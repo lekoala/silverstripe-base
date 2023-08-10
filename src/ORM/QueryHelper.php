@@ -2,6 +2,8 @@
 
 namespace LeKoala\Base\ORM;
 
+use SilverStripe\ORM\DataList;
+
 class QueryHelper
 {
     const FIRST = 'first';
@@ -18,20 +20,22 @@ class QueryHelper
         if (is_int($idOrWhere)) {
             return $class::get_by_id($class, $idOrWhere);
         }
+        /** @var DataList $list */
+        $list = $class::get();
         if (is_string($idOrWhere)) {
             switch ($idOrWhere) {
                 case self::FIRST:
-                    return $class::get()->first();
+                    return $list->first();
                 case self::LAST:
-                    return $class::get()->last();
+                    return $list->last();
                 case self::RANDOM:
-                    return $class::get()->sort('RAND()')->first();
+                    return $list->orderBy('RAND()')->first();
                 default:
                     return $class::get_one($class, $idOrWhere);
             }
         }
         if (is_array($idOrWhere)) {
-            return $class::get()->filter($idOrWhere)->first();
+            return $list->filter($idOrWhere)->first();
         }
     }
 

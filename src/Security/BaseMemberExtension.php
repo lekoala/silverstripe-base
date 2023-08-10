@@ -113,7 +113,7 @@ class BaseMemberExtension extends DataExtension
     public function getPasswordResetLink()
     {
         $token = $this->owner->generateAutologinTokenAndStoreHash();
-        return Director::absoluteURL(Security::getPasswordResetLink($this->owner, $token));
+        return Director::absoluteURL(Security::getPasswordResetLink($this->owner, $token) ?? "");
     }
 
     public function validate(ValidationResult $validationResult)
@@ -363,13 +363,20 @@ class BaseMemberExtension extends DataExtension
 
     public function updateCMSActions(FieldList $actions)
     {
+        $currentUser = Security::getCurrentUser();
+        if (!$currentUser) {
+            return;
+        }
+
+        $isAdmin = Permission::check('ADMIN');
+
         // Admin can unlock people
-        if (Permission::check('ADMIN') && $this->owner->isLockedOut()) {
+        if ($isAdmin && $this->owner->isLockedOut()) {
             $actions->push($doUnlock = new CustomAction('doUnlock', 'Unlock'));
         }
 
         // Login as (but cannot login as yourself :-) )
-        if (Permission::check('ADMIN') && $this->owner->ID != Member::currentUserID()) {
+        if ($isAdmin && $this->owner->ID != $currentUser->ID) {
             // check config flag
             $login_as_only_default_admin = $this->owner->config()->login_as_only_default_admin;
             $canLoginAs = false;
@@ -429,7 +436,8 @@ class BaseMemberExtension extends DataExtension
      */
     public function NotMe()
     {
-        return $this->owner->ID !== Member::currentUserID();
+        $user = Security::getCurrentUser();
+        return $user && $this->owner->ID !== $user->ID;
     }
 
     /**

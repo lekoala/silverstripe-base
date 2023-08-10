@@ -25,6 +25,7 @@ use SilverStripe\CMS\Controllers\ContentController;
 use SilverStripe\Control\HTTPRequest;
 use LeKoala\DeferBackend\DeferBackend;
 use LeKoala\Multilingual\LangHelper;
+use SilverStripe\Control\HTTPResponse;
 
 /**
  * A more opiniated base controller for your app
@@ -154,7 +155,7 @@ class BaseContentController extends ContentController
     public function LogoSchemaMarkup()
     {
         $sc = SiteConfig::current_site_config();
-        $logoLink = Director::absoluteURL($sc->Logo()->Link());
+        $logoLink = Director::absoluteURL($sc->Logo()->Link() ?? "");
 
         $arr = [];
         $arr['@context'] = "https://schema.org";
@@ -166,7 +167,7 @@ class BaseContentController extends ContentController
         return json_encode($arr);
     }
 
-    public function handleRequest(HTTPRequest $request)
+    public function handleRequest(HTTPRequest $request): HTTPResponse
     {
         $response = parent::handleRequest($request);
 

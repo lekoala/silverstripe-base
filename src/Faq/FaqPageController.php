@@ -55,7 +55,7 @@ class FaqPageController extends \PageController
         $arr = [];
         $arr['@context'] = "https://schema.org";
         $arr['@type'] = "FAQPage";
-        $arr['@id'] = Director::absoluteURL($this->Link());
+        $arr['@id'] = Director::absoluteURL($this->Link() ?? "");
         $arr["inLanguage"] = LangHelper::get_locale();
         $arr['name'] = $page->getTitle();
         $arr['description'] = $page->getShareDescription();

@@ -207,7 +207,7 @@ abstract class BaseModelAdmin extends ModelAdmin
         return DataObject::get_by_id($class, $ID);
     }
 
-    public function handleRequest(HTTPRequest $request)
+    public function handleRequest(HTTPRequest $request): HTTPResponse
     {
         $SubsiteID = $request->getVar('SubsiteID');
         if ($SubsiteID) {

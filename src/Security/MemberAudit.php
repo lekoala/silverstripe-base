@@ -7,6 +7,7 @@ use SilverStripe\Security\Member;
 use LeKoala\Base\ORM\FieldType\DBJson;
 use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\DB;
+use SilverStripe\Security\Security;
 
 /**
  * Audit specific events that may require more attention
@@ -55,7 +56,8 @@ class MemberAudit extends DataObject
     {
         parent::onBeforeWrite();
 
-        $this->SourceMemberID = Member::currentUserID();
+        $member = Security::getCurrentUser();
+        $this->SourceMemberID = $member ? $member->ID : 0;
     }
 
     public static function clearOldRecords()

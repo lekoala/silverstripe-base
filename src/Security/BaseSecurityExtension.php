@@ -11,6 +11,7 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Security\IdentityStore;
 use SilverStripe\Admin\AdminRootController;
 use SilverStripe\Security\DefaultAdminService;
+use SilverStripe\Security\Security;
 
 /**
  * Additionnal functionnalities
@@ -42,8 +43,8 @@ class BaseSecurityExtension extends Extension
         }
         // Already logged in => no need to show log in as
         // Implement redirectIfLoggedInLink on member or on extension
-        if (Member::currentUserID() && ($loginUrl == $url || $loginFormUrl == $url || $defaultLoginUrl == $url)) {
-            $member = Member::currentUser();
+        $member = Security::getCurrentUser();
+        if ($member && ($loginUrl == $url || $loginFormUrl == $url || $defaultLoginUrl == $url)) {
             if ($member->hasMethod("redirectIfLoggedInLink")) {
                 header('Location: ' . $member->redirectIfLoggedInLink());
                 exit();

@@ -6,6 +6,7 @@ use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\Security\Member;
 use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\Security\Security;
 
 trait MenuHelpers
 {
@@ -81,7 +82,7 @@ trait MenuHelpers
      */
     public function ToggleMemberMenu()
     {
-        if (Member::currentUserID()) {
+        if (Security::getCurrentUser()) {
             $result = $this->MembersOnlyMenu();
         } else {
             $result = $this->NonMemberOnlyMenu();

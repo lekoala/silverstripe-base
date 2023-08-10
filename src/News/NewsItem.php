@@ -96,7 +96,7 @@ class NewsItem extends DataObject
 
     public function AbsoluteLink()
     {
-        return Director::absoluteURL($this->Link());
+        return Director::absoluteURL($this->Link() ?? "");
     }
 
     public function Thumbnail()
