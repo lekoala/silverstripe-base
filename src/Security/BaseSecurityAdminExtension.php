@@ -20,8 +20,11 @@ use SilverStripe\Security\LoginAttempt;
 use LeKoala\CmsActions\CmsInlineFormAction;
 use SilverStripe\Forms\GridField\GridField;
 use LeKoala\Base\Forms\GridField\GridFieldHelper;
+use SilverStripe\Forms\GridField\GridFieldConfig;
 use LeKoala\Base\ORM\Search\WildcardSearchContext;
+use SilverStripe\Forms\GridField\GridFieldImportButton;
 use SilverStripe\Forms\GridField\GridFieldConfig_RecordViewer;
+use SilverStripe\Security\Group;
 
 /**
  * Class \LeKoala\Base\Security\BaseSecurityAdminExtension
@@ -33,6 +36,10 @@ class BaseSecurityAdminExtension extends Extension
     private static $allowed_actions = [
         'doClearLogs',
         'doRotateLogs',
+        // new tabs
+        'security_audit',
+        'members_audit',
+        'logs',
     ];
 
     /**
@@ -41,6 +48,43 @@ class BaseSecurityAdminExtension extends Extension
     protected function getSecurityAdmin()
     {
         return $this->owner;
+    }
+
+    public function init()
+    {
+        // Kill roles
+        $models = $this->owner::config()->get('managed_models');
+        unset($models['roles']);
+
+        // Add extra tabs
+        if (Security::config()->login_recording) {
+            $models['security_audit'] = [
+                'title' => 'Security Audit',
+                'dataClass' => LoginAttempt::class,
+            ];
+        }
+
+        if (Permission::check('ADMIN')) {
+            $models['members_audit'] = [
+                'title' => 'Members audit',
+                'dataClass' => MemberAudit::class,
+            ];
+            $models['logs'] = [
+                'title' => 'Logs',
+                'dataClass' => MemberAudit::class,
+            ];
+        }
+
+        $this->owner::config()->set('managed_models', $models);
+    }
+
+    public function updateGridFieldConfig(GridFieldConfig $config)
+    {
+        $url = explode("/", $this->owner->getRequest()->getURL());
+        $segment = $url[2] ?? "";
+        if (in_array($segment, ['security_audit', 'members_audit', 'logs'])) {
+            $config->removeComponentsByType(GridFieldImportButton::class);
+        }
     }
 
     protected function redirectWithStatus($msg, $code = 200)
@@ -76,9 +120,6 @@ class BaseSecurityAdminExtension extends Extension
 
     public function updateEditForm(Form $form)
     {
-        // Roles are confusing
-        $form->Fields()->removeByName('Roles');
-
         // In security, we only show group members + current item (to avoid issue when creating stuff)
         $request = $this->getRequest();
         $dirParts = explode('/', $request->remaining());
@@ -115,13 +156,22 @@ class BaseSecurityAdminExtension extends Extension
             $wildCardHeader->replaceInFilterHeader($filter);
         }
 
-        if (Security::config()->login_recording) {
-            $this->addAuditTab($form);
+        $url = explode("/", $this->owner->getRequest()->getURL());
+        $segment = $url[2] ?? "";
+        if ($segment == "security_audit") {
+            if (Security::config()->login_recording) {
+                $this->addAuditTab($form);
+            }
         }
-
-        if (Permission::check('ADMIN')) {
-            $this->addMemberAuditTab($form);
-            $this->addLogTab($form);
+        if ($segment == "members_audit") {
+            if (Permission::check('ADMIN')) {
+                $this->addMemberAuditTab($form);
+            }
+        }
+        if ($segment == "logs") {
+            if (Permission::check('ADMIN')) {
+                $this->addLogTab($form);
+            }
         }
     }
 
@@ -145,12 +195,9 @@ class BaseSecurityAdminExtension extends Extension
 
     protected function addLogTab(Form $form)
     {
-        //TODO: ss5 fix
-        return;
-
         $logFiles = $this->getLogFiles();
-        $logTab = new Tab('Logs', _t('BaseSecurityAdminExtension.Logs', 'Logs'));
-        $form->Fields()->addFieldsToTab('Root', $logTab);
+        $logTab = $form->Fields();
+        $logTab->removeByName('logs');
 
         foreach ($logFiles as $logFile) {
             $logName = pathinfo($logFile, PATHINFO_FILENAME);
@@ -180,12 +227,8 @@ class BaseSecurityAdminExtension extends Extension
 
     protected function addAuditTab(Form $form)
     {
-        // TODO: ss5 fix
-        return;
-
-        $fields = $form->Fields();
-        $auditTab = new Tab('SecurityAudit', _t('BaseSecurityAdminExtension.SecurityAudit', "Security Audit"));
-        $fields->addFieldsToTab('Root', $auditTab);
+        $auditTab = $form->Fields();
+        $auditTab->removeByName('security_audit');
 
         $Member_SNG = Member::singleton();
         $membersLocked = Member::get()->where('LockedOutUntil > NOW()');
@@ -238,17 +281,13 @@ class BaseSecurityAdminExtension extends Extension
 
     protected function addMemberAuditTab(Form $form)
     {
-        // TODO: ss5 fix
-        return;
-
         MemberAudit::clearOldRecords();
 
-        $fields = $form->Fields();
         $MemberAudit_SNG = MemberAudit::singleton();
         $list = MemberAudit::get();
         if ($list->count()) {
-            $auditTab = new Tab('MemberAuditTab', _t('BaseSecurityAdminExtension.MemberAuditTab', "Members Audit"));
-            $fields->addFieldsToTab('Root', $auditTab);
+            $auditTab = $form->Fields();
+            $auditTab->removeByName('members_audit');
 
             $MemberAuditGrid = new GridField('MemberAudit', _t('BaseSecurityAdminExtension.MemberAudit', "Members audit events"), $list, GridFieldConfig_RecordViewer::create());
             $MemberAuditGrid->setForm($form);
