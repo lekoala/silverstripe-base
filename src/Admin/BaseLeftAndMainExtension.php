@@ -97,15 +97,6 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
 
         $this->includeLastIcon();
 
-        // Temp 4.12 fix
-        // $version = $this->owner->CMSVersionNumber();
-        // if (isset($_GET['show_cms_version'])) {
-        //     die($version);
-        // }
-        // if ($version == "4.12" || !$version) {
-        //     Requirements::javascript("https://code.jquery.com/jquery-migrate-3.4.0.min.js");
-        // }
-
         // otherwise it may show artefacts when loading
         if (Environment::getEnv('DONT_FORCE_TINYMCE_LOAD')) {
             // Keep default
@@ -113,32 +104,12 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
             self::forceTinyMCELoad();
         }
 
-
         if (self::config()->dark_theme) {
             Requirements::css('base/css/admin-dark.css');
         }
 
         Requirements::javascript("base/javascript/admin.js");
         $this->requireAdminStyles();
-    }
-
-    public function onBeforeInit()
-    {
-        if (!$this->owner->canView()) {
-            if (Permission::check('CMS_ACCESS')) {
-                // Persist SubsiteID before force redirect
-                SubsiteHelper::persistSubsite();
-
-                $segment = Config::forClass(AdminRootController::config()->get('default_panel'))
-                    ->get('url_segment') ?? '';
-
-                $adminLink = ltrim(Controller::join_links(AdminRootController::admin_url(), $segment, '/'), '/');
-                header('Location: /' . $adminLink);
-                exit();
-            }
-            header('Location: /');
-            exit();
-        }
     }
 
     public function ShowAVWarning()

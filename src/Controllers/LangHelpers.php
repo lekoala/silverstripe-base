@@ -32,6 +32,9 @@ trait LangHelpers
     public function LangLink($lang)
     {
         $locale = LangHelper::get_locale_from_lang($lang);
-        return $this->LocaleLink($locale);
+        if (method_exists($this, 'LocaleLink')) {
+            return $this->LocaleLink($locale);
+        }
+        return $this->Link();
     }
 }
