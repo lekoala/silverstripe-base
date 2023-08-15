@@ -70,7 +70,7 @@ class Antivirus
 
     public static function getDaemonPath()
     {
-        return Environment::getEnv('ANTIVIRUS_SOCKET');
+        return Environment::getEnv('ANTIVIRUS_SOCKET') ?? '';
     }
 
     public static function getPidFile()
@@ -114,9 +114,13 @@ class Antivirus
         if (!class_exists(\Socket\Raw\Factory::class) || !class_exists(\Xenolope\Quahog\Client::class)) {
             throw new Exception("Missing libs");
         }
+        if (!self::getDaemonPath()) {
+            throw new Exception("Empty path");
+        }
 
         // $socket = (new \Socket\Raw\Factory())->createClient('unix:///var/run/clamav/clamd.ctl'); # Using a UNIX socket
         // $socket = (new \Socket\Raw\Factory())->createClient('tcp://127.0.0.1:3310'); # Using a TCP socket
+
         $socket = (new \Socket\Raw\Factory())->createClient(self::getDaemonPath());
 
         // Create a new instance of the Client
