@@ -129,6 +129,7 @@ class ContactSubmission extends DataObject
         $e_content = "<br/><hr/>Message:<br/>$message<hr/>";
         $msg = $e_body . $e_content;
         $ex = null;
+        $result = null;
         try {
             $emailInst = Email::create();
             $emailInst->setHTMLTemplate('Email\\BaseEmail');
@@ -138,7 +139,7 @@ class ContactSubmission extends DataObject
             $emailInst->addData(['EmailContent' => $msg]);
             $emailInst->setReplyTo($email, $name);
 
-            $result = $emailInst->send();
+            $emailInst->send();
 
             $this->EmailSent = true;
         } catch (\Exception $e) {
@@ -148,7 +149,9 @@ class ContactSubmission extends DataObject
             self::getLogger()->info($e);
             return false;
         }
-        $this->EmailResults = is_string($result) ? $result : json_encode($result);
+        if ($result) {
+            $this->EmailResults = is_string($result) ? $result : json_encode($result);
+        }
         return $this->write();
     }
 }
