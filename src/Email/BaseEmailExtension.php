@@ -9,7 +9,7 @@ use LeKoala\Base\Theme\ThemeSiteConfigExtension;
 /**
  * Some useful stuff for your emails
  *
- * @link https://docs.silverstripe.org/en/4/developer_guides/email/
+ * @link https://docs.silverstripe.org/en/5/developer_guides/email/
  * @property \SilverStripe\Control\Email\Email|\LeKoala\Base\Email\BaseEmailExtension $owner
  */
 class BaseEmailExtension extends Extension
@@ -41,13 +41,12 @@ class BaseEmailExtension extends Extension
     /**
      * Get body of message after rendering
      * Useful for previews
-     *
+     * @deprecated
      * @return string
      */
     public function getRenderedBody()
     {
-        $this->owner->render();
-        return $this->owner->getSwiftMessage()->getBody();
+        return $this->owner->getHtmlBody();
     }
 
     /**
