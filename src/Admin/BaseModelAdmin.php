@@ -43,6 +43,16 @@ abstract class BaseModelAdmin extends ModelAdmin
         'SearchForm'
     );
 
+    protected function init()
+    {
+        parent::init();
+
+        // Optimize search form
+        if (strpos($this->getRequest()->getURL(), 'schema/SearchForm') !== false) {
+            session_write_close();
+        }
+    }
+
     public function ShowSpec()
     {
         $modelSNG = singleton($this->owner->modelClass);
