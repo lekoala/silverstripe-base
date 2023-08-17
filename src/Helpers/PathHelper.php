@@ -36,6 +36,24 @@ class PathHelper
 
     /**
      * @param string $url
+     * @return string An absolute public url
+     */
+    public static function absoluteThemeURL($url)
+    {
+        return Director::absoluteURL(self::themeURL($url));
+    }
+
+    /**
+     * @param string $url
+     * @return string An absolute public url
+     */
+    public static function absoluteResourceURL($url)
+    {
+        return Director::absoluteURL(self::resourceURL($url));
+    }
+
+    /**
+     * @param string $url
      * @return string An absolute path
      */
     public static function themePath($url)
