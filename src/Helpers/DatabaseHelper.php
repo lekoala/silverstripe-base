@@ -15,6 +15,7 @@ use SilverStripe\ORM\Queries\SQLInsert;
 use SilverStripe\ORM\Queries\SQLUpdate;
 use SilverStripe\SQLite\SQLite3Database;
 use SilverStripe\ORM\Connect\MySQLDatabase;
+use SilverStripe\ORM\UnsavedRelationList;
 use \SilverStripe\View\Parsers\SQLFormatter as SS_SQLFormatter;
 
 /**
@@ -322,6 +323,11 @@ SQL;
         $foreignClass = $schema->hasOneComponent($localClass, $componentName);
         if (!$foreignClass) {
             throw new RuntimeException("No has one component");
+        }
+
+        // Simply ignore since the list is not built yet
+        if ($list instanceof UnsavedRelationList) {
+            return $list;
         }
 
         // Build join expression
