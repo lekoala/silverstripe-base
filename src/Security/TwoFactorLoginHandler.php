@@ -52,9 +52,12 @@ class TwoFactorLoginHandler extends LoginHandler
         if ($member = $this->checkLogin($data, $request, $result)) {
             $session = $request->getSession();
             $session->set('TwoFactorLoginHandler.MemberID', $member->ID);
-            $session->set('TwoFactorLoginHandler.Data', $data);
 
             if ($member->NeedTwoFactorAuth()) {
+                // Don't forget to clear this afterwards
+                // Never store password
+                unset($data['Password']);
+                $session->set('TwoFactorLoginHandler.Data', $data);
                 return $this->redirect($this->getStep2Link());
             }
 
@@ -272,6 +275,16 @@ class TwoFactorLoginHandler extends LoginHandler
         $session->set('TwoFactorLoginHandler.ErrorMessage', _t('TwoFactorLoginHandler.ERRORMESSAGE', 'The provided token is invalid, please try again.'));
 
         return $this->redirect($this->getStep2Link());
+    }
+
+    public function performLogin($member, $data, HTTPRequest $request)
+    {
+        $member = parent::performLogin($member, $data, $request);
+
+        $session  = $this->request->getSession();
+        $data = $session->clear('TwoFactorLoginHandler');
+
+        return $member;
     }
 
     public function getBackURL()
