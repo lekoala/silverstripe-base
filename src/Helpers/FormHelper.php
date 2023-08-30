@@ -7,6 +7,7 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\FieldGroup;
+use SilverStripe\Forms\CompositeField;
 use SilverStripe\Forms\GridField\GridField;
 use LeKoala\CommonExtensions\SortableExtension;
 use Symbiote\GridFieldExtensions\GridFieldOrderableRows;
@@ -59,17 +60,30 @@ class FormHelper
         $field->setAttribute("onfocus", "this.removeAttribute('readonly')");
     }
 
+    /**
+     * Pass an array of names or an array of name => flag for dynamic conditions
+     * @param FieldList $fields
+     * @param string|array $names
+     * @return void
+     */
     public static function makeFieldReadonly(FieldList $fields, $names)
     {
         if (!is_array($names)) {
             $names = [$names];
         }
 
-        foreach ($names as $item) {
-            $fieldName = ($item instanceof FormField) ? $item->getName() : $item;
-            $srcField = $fields->dataFieldByName($fieldName);
-            if ($srcField) {
-                $fields->replaceField($fieldName, $srcField->performReadonlyTransformation());
+        foreach ($names as $idx => $item) {
+            if (is_numeric($idx)) {
+                $fieldName = ($item instanceof FormField) ? $item->getName() : $item;
+                $srcField = $fields->dataFieldByName($fieldName);
+                if ($srcField) {
+                    $fields->replaceField($fieldName, $srcField->performReadonlyTransformation());
+                }
+            } elseif ($item) {
+                $srcField = $fields->dataFieldByName($idx);
+                if ($srcField) {
+                    $fields->replaceField($idx, $srcField->performReadonlyTransformation());
+                }
             }
         }
     }

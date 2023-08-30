@@ -361,4 +361,16 @@ SQL;
         });
         return $list;
     }
+
+    /**
+     * Turns out columnUnique doesn't work as expected
+     * @link https://github.com/silverstripe/silverstripe-framework/issues/10452
+     * @param DataList $list
+     * @param string $colName
+     * @return array
+     */
+    public static function uniqueCol(DataList $list, $colName)
+    {
+        return array_unique($list->columnUnique($colName));
+    }
 }
