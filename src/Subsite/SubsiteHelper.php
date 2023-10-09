@@ -244,7 +244,7 @@ class SubsiteHelper
         if (!$SubsiteID) {
             $SubsiteID = self::currentSubsiteID();
         }
-        $SiteConfig = SiteConfig::get()->setDataQueryParam('Subsite.Filter', false)->filter(
+        $SiteConfig = SiteConfig::get()->setDataQueryParam('Subsite.filter', false)->filter(
             [
                 'SubsiteID' => $SubsiteID,
             ]
