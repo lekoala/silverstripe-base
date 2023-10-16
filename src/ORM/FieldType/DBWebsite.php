@@ -25,9 +25,10 @@ class DBWebsite extends DBVarchar
      * Get a sweet short url
      *
      * @param boolean $removeWWW
+     * @param boolean $removeSlash
      * @return string
      */
-    public function ShortUrl($removeWWW = true)
+    public function ShortUrl($removeWWW = true, $removeSlash = true)
     {
         $domain = $input = $this->value;
         $urlParts = parse_url($input);
@@ -37,6 +38,29 @@ class DBWebsite extends DBVarchar
         // remove www
         if ($removeWWW) {
             $domain = preg_replace('/^www\./', '', $domain);
+        }
+        // remove ending /
+        if ($removeSlash) {
+            $domain = trim($domain, '/');
+        }
+
+        return $domain;
+    }
+
+    public function FullUrl()
+    {
+        $domain = $this->value;
+        if (strpos($domain, 'http') === false) {
+            $domain = 'http://' . $domain;
+        }
+        return $domain;
+    }
+
+    public function SecureFullUrl()
+    {
+        $domain = $this->value;
+        if (strpos($domain, 'http') === false) {
+            $domain = 'https://' . $domain;
         }
         return $domain;
     }
