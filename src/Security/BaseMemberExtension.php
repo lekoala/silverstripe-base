@@ -11,6 +11,7 @@ use LeKoala\Base\Helpers\IPHelper;
 use SilverStripe\Control\Director;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\Security\Security;
+use LeKoala\Base\Helpers\FormHelper;
 use LeKoala\CmsActions\CustomAction;
 use SilverStripe\GraphQL\Controller;
 use SilverStripe\Admin\SecurityAdmin;
@@ -20,11 +21,11 @@ use LeKoala\Base\Security\MemberAudit;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\LoginAttempt;
 use LeKoala\Base\Controllers\HasSession;
-use LeKoala\Base\Helpers\FormHelper;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Security\IdentityStore;
 use SilverStripe\ORM\ValidationException;
 use SilverStripe\Security\MemberPassword;
+use SilverStripe\Forms\ConfirmedPasswordField;
 use SilverStripe\Security\DefaultAdminService;
 use LeKoala\CommonExtensions\ValidationStatusExtension;
 use SilverStripe\Forms\GridField\GridFieldAddNewButton;
@@ -255,12 +256,13 @@ class BaseMemberExtension extends DataExtension
      */
     public function updateMemberFormFields(FieldList $fields)
     {
-        //
     }
 
     public function updateMemberPasswordField($password)
     {
-        //
+        // This is actually annoying, and we don't allow blank passwords anyway
+        // @link https://github.com/silverstripe/silverstripe-framework/issues/10940
+        $password->setCanBeEmpty(true);
     }
 
     public function updateDateFormat($format)

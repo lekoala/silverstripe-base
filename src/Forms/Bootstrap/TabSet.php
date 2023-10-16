@@ -1,4 +1,5 @@
 <?php
+
 namespace LeKoala\Base\Forms\Bootstrap;
 
 use SilverStripe\View\SSViewer;
@@ -32,7 +33,10 @@ class TabSet extends DefaultTabSet
     public function FieldHolder($properties = array())
     {
         if (!$this->hasSelectedTab()) {
-            $this->Tabs()->first()->setSelected(true);
+            $firstTab = $this->Tabs()->first();
+            if ($firstTab) {
+                $firstTab->setSelected(true);
+            }
         }
         $state = SSViewer::getRewriteHashLinksDefault();
         SSViewer::setRewriteHashLinksDefault(false);

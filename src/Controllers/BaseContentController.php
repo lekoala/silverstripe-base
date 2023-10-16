@@ -18,6 +18,7 @@ use LeKoala\Base\View\CookieConsent;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Config\Config;
 use LeKoala\Base\Helpers\ThemeHelper;
+use LeKoala\Base\Subsite\SubsiteHelper;
 use SilverStripe\SiteConfig\SiteConfig;
 use LeKoala\DeferBackend\CspProvider;
 use SilverStripe\ORM\Connect\DatabaseException;
@@ -26,6 +27,7 @@ use SilverStripe\Control\HTTPRequest;
 use LeKoala\DeferBackend\DeferBackend;
 use LeKoala\Multilingual\LangHelper;
 use SilverStripe\Control\HTTPResponse;
+use SilverStripe\Core\Environment;
 
 /**
  * A more opiniated base controller for your app
@@ -84,6 +86,13 @@ class BaseContentController extends ContentController
         if (ThemeHelper::isAdminTheme()) {
             parent::init();
             return;
+        }
+
+        if (Director::isDev()) {
+            $FORCE_SUBSITE = Environment::getEnv('FORCE_SUBSITE');
+            if ($FORCE_SUBSITE) {
+                SubsiteHelper::changeSubsite($FORCE_SUBSITE);
+            }
         }
 
         DeferBackend::replaceBackend();

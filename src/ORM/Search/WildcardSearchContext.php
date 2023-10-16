@@ -205,8 +205,11 @@ class WildcardSearchContext extends SearchContext
         /** @var DataObject $obj */
         $obj = singleton($this->modelClass);
 
-        /** @var DataList $query */
-        $query = $query->sort($sort);
+        if ($sort) {
+            /** @var DataList $query */
+            $query = $query->sort($sort);
+        }
+
         $this->setSearchParams($searchParams);
 
         // If we use specific set of fields, make sure we have a value for them
@@ -282,9 +285,9 @@ class WildcardSearchContext extends SearchContext
             }
         }
 
-        if ($this->connective != "AND") {
-            throw new Exception("SearchContext connective '$this->connective' not supported after ORM-rewrite.");
-        }
+        // if ($this->connective != "AND") {
+        //     throw new Exception("SearchContext connective '$this->connective' not supported after ORM-rewrite.");
+        // }
 
         return $query;
     }

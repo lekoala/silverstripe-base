@@ -52,8 +52,9 @@ class BaseSecurityAdminExtension extends Extension
 
     public function init()
     {
+        $owner = $this->getSecurityAdmin();
         // Kill roles
-        $models = $this->owner::config()->get('managed_models');
+        $models = $owner::config()->get('managed_models');
         unset($models['roles']);
 
         // Add extra tabs
@@ -75,7 +76,7 @@ class BaseSecurityAdminExtension extends Extension
             ];
         }
 
-        $this->owner::config()->set('managed_models', $models);
+        $owner::config()->set('managed_models', $models);
     }
 
     public function updateGridFieldConfig(GridFieldConfig $config)

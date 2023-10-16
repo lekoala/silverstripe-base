@@ -4,12 +4,18 @@ namespace LeKoala\Base\Helpers;
 
 use Exception;
 use SqlFormatter;
+use RuntimeException;
 use SilverStripe\ORM\DB;
+use SilverStripe\ORM\DataList;
+use SilverStripe\ORM\DataQuery;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\ManyManyList;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\ORM\Queries\SQLInsert;
 use SilverStripe\ORM\Queries\SQLUpdate;
 use SilverStripe\SQLite\SQLite3Database;
 use SilverStripe\ORM\Connect\MySQLDatabase;
-use SilverStripe\ORM\DataObject;
-use SilverStripe\ORM\Queries\SQLInsert;
+use SilverStripe\ORM\UnsavedRelationList;
 use \SilverStripe\View\Parsers\SQLFormatter as SS_SQLFormatter;
 
 /**
@@ -275,7 +281,8 @@ SQL;
     public static function fastCount($table, $where = [])
     {
         $table = preg_replace('/[^a-zA-Z_]*/', '', $table);
-        $sql = "SELECT COUNT(ID) FROM $table";
+        // COUNT(*) is the fastest
+        $sql = "SELECT COUNT(*) FROM $table";
         $params = [];
         $keys = [];
         if (!empty($where)) {
@@ -290,5 +297,80 @@ SQL;
             $sql .= " WHERE " . implode(" AND ", $keys);
         }
         return (int) DB::prepared_query($sql, $params)->value();
+    }
+
+    /**
+     * Inject some fields from a has_one relation into the DataObject extra fields
+     * Fields are made available under $ComponentName_$FieldName
+     *
+     * @param DataList $list
+     * @param string $componentName
+     * @param array $fields
+     * @return DataList|ManyManyList
+     */
+    public static function inject($list, $componentName, $fields = [])
+    {
+        if (empty($fields)) {
+            return $list;
+        }
+
+        $localClass = $list->dataClass();
+        if (!$localClass) {
+            throw new RuntimeException("No class defined for this DataList");
+        }
+
+        $schema = DataObject::getSchema();
+        $foreignClass = $schema->hasOneComponent($localClass, $componentName);
+        if (!$foreignClass) {
+            throw new RuntimeException("No has one component");
+        }
+
+        // Simply ignore since the list is not built yet
+        if ($list instanceof UnsavedRelationList) {
+            return $list;
+        }
+
+        // Build join expression
+        $foreignPrefix = $componentName;
+        $localPrefix = null;
+
+        $table = $schema->tableName($foreignClass);
+        $tableAlias = $componentName . $table;
+
+        $localKey = $componentName . "ID";
+        $localIDColumn = $schema->sqlColumnForField($localClass, $localKey, $localPrefix);
+        $foreignKey = "ID";
+        $foreignKeyIDColumn = $schema->sqlColumnForField($foreignClass, $foreignKey, $foreignPrefix);
+        $joinExpression = "{$foreignKeyIDColumn} = {$localIDColumn}";
+
+        // Create a list of aliased fields for selectField()
+        $aliasedFields = [];
+        foreach ($fields as $f) {
+            $alias = $componentName . '_' . $f;
+            $col = $schema->sqlColumnForField($foreignClass, $f, $foreignPrefix);
+            $aliasedFields[$col] = $alias;
+        }
+
+        // Apply join and alter DataQuery in order to query our extra fields
+        $list = $list->leftJoin($table, $joinExpression, $tableAlias);
+        $list = $list->alterDataQuery(function (DataQuery $dataQuery) use ($aliasedFields) {
+            foreach ($aliasedFields as $col => $alias) {
+                $dataQuery->selectField($col, $alias);
+            }
+            return $dataQuery;
+        });
+        return $list;
+    }
+
+    /**
+     * Turns out columnUnique doesn't work as expected
+     * @link https://github.com/silverstripe/silverstripe-framework/issues/10452
+     * @param DataList $list
+     * @param string $colName
+     * @return array
+     */
+    public static function uniqueCol(DataList $list, $colName)
+    {
+        return array_unique($list->columnUnique($colName));
     }
 }

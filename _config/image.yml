@@ -1,0 +1,11 @@
+---
+Only:
+  classexists: '\Intervention\Image\Vips\Driver'
+  extensionloaded: 'ffi'
+---
+# run composer require osiemsiedem/intervention-image-vips-driver
+# https://docs.silverstripe.org/en/5/developer_guides/files/images/#changing-the-manipulation-driver-to-imagick
+SilverStripe\Core\Injector\Injector:
+  Intervention\Image\ImageManager:
+    constructor:
+      - { driver: vips }

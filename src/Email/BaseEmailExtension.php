@@ -2,6 +2,7 @@
 
 namespace LeKoala\Base\Email;
 
+use ReflectionMethod;
 use SilverStripe\Core\Extension;
 use SilverStripe\SiteConfig\SiteConfig;
 use LeKoala\Base\Theme\ThemeSiteConfigExtension;
@@ -9,7 +10,7 @@ use LeKoala\Base\Theme\ThemeSiteConfigExtension;
 /**
  * Some useful stuff for your emails
  *
- * @link https://docs.silverstripe.org/en/4/developer_guides/email/
+ * @link https://docs.silverstripe.org/en/5/developer_guides/email/
  * @property \SilverStripe\Control\Email\Email|\LeKoala\Base\Email\BaseEmailExtension $owner
  */
 class BaseEmailExtension extends Extension
@@ -38,22 +39,31 @@ class BaseEmailExtension extends Extension
         $colors['Btn'] = $sc->dbObject('PrimaryColor')->ContrastColor();
     }
 
+    protected function renderEmail()
+    {
+        $reflectionMethod = new ReflectionMethod($this->owner, 'updateHtmlAndTextWithRenderedTemplates');
+        $reflectionMethod->setAccessible(true);
+        $reflectionMethod->invoke($this->owner);
+    }
+
     /**
      * Get body of message after rendering
      * Useful for previews
-     *
      * @return string
      */
     public function getRenderedBody()
     {
-        $this->owner->render();
-        return $this->owner->getSwiftMessage()->getBody();
+        // This is what's being done before send()
+        $this->renderEmail();
+        // Get body
+        return $this->owner->getHtmlBody();
     }
 
     /**
      * Don't forget that setBody will erase content of html template
      * Prefer to use this instead. Basically you can replace setBody calls with this method
      * URLs are rewritten by render process
+     * Keep in mind that once data is set, setBody is ignored
      *
      * Content is stored under EmailContent variable for consistency with base template
      * \vendor\silverstripe\framework\templates\SilverStripe\Control\Email\Email.ss
