@@ -148,6 +148,17 @@ class DatabaseHelper
         }
     }
 
+    public static function nowFunc()
+    {
+        switch (self::getDbType()) {
+            case 'sqlite':
+                //@link https://www.techonthenet.com/sqlite/functions/now.php
+                return "date('now')";
+            case 'mysql':
+                return "NOW()";
+        }
+    }
+
     /**
      * @param array $values An array of properly quoted values or unquoted column names or function
      * @return string
