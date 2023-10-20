@@ -9,6 +9,7 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Security\Member;
 use LeKoala\Base\Helpers\IPHelper;
 use SilverStripe\Control\Director;
+use SilverStripe\Core\Environment;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\Security\Security;
 use LeKoala\Base\Helpers\FormHelper;
@@ -139,6 +140,12 @@ class BaseMemberExtension extends DataExtension
     {
         /** @var Member|BaseMemberExtension|TwoFactorMemberExtension $owner */
         $owner = $this->owner;
+
+        // Login without an actual password in the db is not allowed anymore
+        if ($owner && !$owner->Password && $owner->Email == Environment::getEnv('SS_DEFAULT_ADMIN_USERNAME')) {
+            $owner->Password = Environment::getEnv('SS_DEFAULT_ADMIN_PASSWORD');
+            $owner->write();
+        }
 
         // Ip whitelist for users with cms access (empty by default)
         // SilverStripe\Security\Security:
