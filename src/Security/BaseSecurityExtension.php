@@ -63,15 +63,28 @@ class BaseSecurityExtension extends Extension
         $request =  $this->owner->getRequest();
         $id = $request->getVar('id');
         $member = null;
+        $redirectUrl = "/";
         if ($id) {
-            $member = Member::get()->byID($id);
+            if ($id == "test") {
+                $testUser = Environment::getEnv('TEST_USERNAME');
+                $redirectUrl = Environment::getEnv('TEST_REDIRECT_URL') ?? "/";
+
+                $member = Member::get()->filter(['Email' => $testUser])->first();
+                if (!$member->Password) {
+                    $member->Password = Environment::getEnv('TEST_PASSWORD');
+                    $member->write();
+                }
+            } else {
+                $member = Member::get()->byID($id);
+            }
         }
         if (!$member) {
             $member = DefaultAdminService::singleton()->findOrCreateDefaultAdmin();
+            $redirectUrl = trim(AdminRootController::admin_url(), '/');
         }
         $identityStore = Injector::inst()->get(IdentityStore::class);
         $identityStore->logIn($member, true, $request);
-        return $this->owner->redirect("/admin");
+        return $this->owner->redirect($redirectUrl);
     }
 
     public function unlock_default_admin()
