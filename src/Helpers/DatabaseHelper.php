@@ -15,6 +15,7 @@ use SilverStripe\ORM\Queries\SQLInsert;
 use SilverStripe\ORM\Queries\SQLUpdate;
 use SilverStripe\SQLite\SQLite3Database;
 use SilverStripe\ORM\Connect\MySQLDatabase;
+use SilverStripe\ORM\Connect\Query;
 use SilverStripe\ORM\UnsavedRelationList;
 use \SilverStripe\View\Parsers\SQLFormatter as SS_SQLFormatter;
 
@@ -148,6 +149,17 @@ class DatabaseHelper
         }
     }
 
+    public static function nowFunc()
+    {
+        switch (self::getDbType()) {
+            case 'sqlite':
+                //@link https://www.techonthenet.com/sqlite/functions/now.php
+                return "date('now')";
+            case 'mysql':
+                return "NOW()";
+        }
+    }
+
     /**
      * @param array $values An array of properly quoted values or unquoted column names or function
      * @return string
@@ -161,6 +173,23 @@ class DatabaseHelper
             case 'mysql':
                 return "CONCAT(" . implode(',', $values) . ")";
         }
+    }
+
+    /**
+     * @param Query $query
+     * @return array|null
+     */
+    public static function firstFromQuery(Query $query)
+    {
+        return self::first($query->getIterator(), null);
+    }
+
+    public static function first(iterable $iterable, $default = null)
+    {
+        foreach ($iterable as $item) {
+            return $item;
+        }
+        return $default;
     }
 
     /**
