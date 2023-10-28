@@ -38,6 +38,7 @@ class TimezoneDropdownField extends FastDropdownField
             if (!empty($aliases)) {
                 $normalizedAliases = [];
                 foreach ($aliases as $k => $v) {
+                    // Add a prefix to avoid clashes with regular value
                     if (is_int($k)) {
                         $normalizedAliases[$v['name']] = '_' . $v['value'];
                     } else {
@@ -49,6 +50,24 @@ class TimezoneDropdownField extends FastDropdownField
             }
         }
         parent::__construct($name, $title, $source, $value);
+    }
+
+    public function normalizedAliases()
+    {
+        $aliases = $this->config()->aliases ?? [];
+        if (!empty($aliases)) {
+            $normalizedAliases = [];
+            foreach ($aliases as $k => $v) {
+                if (is_int($k)) {
+                    $normalizedAliases[$v['name']] = $v['value'];
+                } else {
+                    $normalizedAliases[$k] = $v;
+                }
+            }
+
+            return $normalizedAliases;
+        }
+        return [];
     }
 
     public function dataValue()
