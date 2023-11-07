@@ -89,10 +89,12 @@ class BaseContentController extends ContentController
         }
 
         if (Director::isDev()) {
-            $FORCE_SUBSITE = Environment::getEnv('FORCE_SUBSITE');
-            if ($FORCE_SUBSITE) {
-                SubsiteHelper::changeSubsite($FORCE_SUBSITE);
-            }
+            // This should probably happen at middlewazre level
+            // $FORCE_SUBSITE = Environment::getEnv('FORCE_SUBSITE');
+            // if ($FORCE_SUBSITE) {
+            //     SubsiteHelper::changeSubsite($FORCE_SUBSITE, true);
+            //     $this->dataRecord->SubsiteID = $FORCE_SUBSITE;
+            // }
         }
 
         DeferBackend::replaceBackend();
