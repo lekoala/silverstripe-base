@@ -281,6 +281,10 @@ SQL;
      */
     public static function updateFromValues($table, $values, $valueField, $targetField = null, $idField = "ID", $nullValue = "NULL")
     {
+        // Return early if no values!
+        if (empty($values)) {
+            return;
+        }
         if (!$targetField) {
             $targetField = $valueField;
         }
