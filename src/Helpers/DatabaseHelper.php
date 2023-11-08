@@ -3,6 +3,8 @@
 namespace LeKoala\Base\Helpers;
 
 use Exception;
+use InvalidArgumentException;
+use League\Csv\InvalidArgument;
 use SqlFormatter;
 use RuntimeException;
 use SilverStripe\ORM\DB;
@@ -116,18 +118,40 @@ class DatabaseHelper
     /**
      * Get current database type
      *
-     * @return string mysql|sqlite
+     * @return string mysql|sqlite|postgres
      */
     public static function getDbType()
     {
         $conn = DB::get_conn();
         if ($conn instanceof MySQLDatabase) {
             return 'mysql';
-        } elseif ($conn instanceof SQLite3Database) {
+        } elseif ($conn instanceof \SilverStripe\SQLite\SQLite3Database) {
             return 'sqlite';
+        } elseif ($conn instanceof \SilverStripe\PostgreSQL\PostgreSQLConnector) {
+            return 'postgres';
+        }
+        throw new Exception("Unsupported db type : " . get_class($conn));
+    }
+
+    public static function getDbVersion()
+    {
+        $conn = DB::get_conn();
+        $str = $conn->getVersion();
+
+        $connector = self::getDbType();
+        $parts = explode('-', $str);
+
+        $type = $connector;
+        if (isset($parts[1])) {
+            $type = $parts[1];
         }
 
-        throw new Exception("Unsupported db type : " . get_class($conn));
+        return [
+            'connector' => $connector, // str
+            'type' => strtolower($type), // lc str
+            'version' => $parts[0] ?? '', // str
+            'major_version' => intval($parts[0] ?? 0), // int
+        ];
     }
 
     /**
@@ -146,6 +170,8 @@ class DatabaseHelper
             case 'mysql':
                 // @link https://www.w3resource.com/mysql/date-and-time-functions/mysql-unix_timestamp-function.php
                 return "UNIX_TIMESTAMP($date)";
+            default:
+                return "UNIX_TIMESTAMP($date)";
         }
     }
 
@@ -156,6 +182,8 @@ class DatabaseHelper
                 //@link https://www.techonthenet.com/sqlite/functions/now.php
                 return "date('now')";
             case 'mysql':
+                return "NOW()";
+            default:
                 return "NOW()";
         }
     }
@@ -172,7 +200,124 @@ class DatabaseHelper
                 return implode("||", $values);
             case 'mysql':
                 return "CONCAT(" . implode(',', $values) . ")";
+            default:
+                return "CONCAT(" . implode(',', $values) . ")";
         }
+    }
+
+    public static function supportsRank()
+    {
+        $supportFunction = false;
+        $dbVersion = self::getDbVersion();
+        if ($dbVersion['type'] == "sqlite") {
+            $supportFunction = true;
+        } elseif ($dbVersion['type'] == "mysql") {
+            $supportFunction = $dbVersion['major_version'] >= 8;
+        } elseif ($dbVersion['type'] == "mariadb") {
+            $supportFunction = version_compare($dbVersion['version'], '10.2', '>=');
+        }
+        return $supportFunction;
+    }
+
+    /**
+     * @param string $table The base table, eg: "Score"
+     * @param string $field The field olding the value, sorted by DESC order, eg: "Value"
+     * @param string $partitionBy Group records by subject, eg: "RecordID" or "Subject"
+     * @param string $whereClause Additional where clause, eg: Status != 'ignored'
+     * @param string $id The id field, ID by default
+     * @param boolean $dense Have gaps or no gaps (no gaps by default)
+     * @return array
+     */
+    public static function rank($table, $field, $partitionBy, $whereClause = '', $id = "ID", $dense = true)
+    {
+        $where = '';
+        if ($whereClause) {
+            $where = "WHERE $whereClause";
+        }
+        $ranking = '_Ranking';
+
+        // dense has no gaps for ties
+        $fn = $dense ? 'dense_rank' : 'rank';
+
+        // rank function exists in mysql 8, sqlite, MariaDB 10.2
+        $supportFunction = self::supportsRank();
+        if (!$supportFunction && !$dense) {
+            throw new InvalidArgumentException("Dense = false is not supported without functions");
+        }
+
+        if ($supportFunction) {
+            // @link https://www.sqliz.com/sqlite-ref/dense_rank/
+            $sql = <<<SQL
+SELECT $table.$id, $table.$field, $table.$partitionBy,
+    $fn() OVER (
+        PARTITION BY $partitionBy
+        ORDER BY $field DESC
+    ) $ranking
+    FROM $table $where;
+SQL;
+            return iterator_to_array(DB::query($sql));
+        }
+
+        //@link https://rpbouman.blogspot.com/2009/09/mysql-another-ranking-trick.html
+        $sql = <<<SQL
+SELECT $table.$id, $table.$field, $table.$partitionBy,
+    FIND_IN_SET($table.$partitionBy,
+    (SELECT GROUP_CONCAT(DISTINCT $table.$partitionBy ORDER BY $table.$partitionBy DESC) FROM $table $where)
+    ) as $ranking FROM $table $where;
+SQL;
+        return iterator_to_array(DB::query($sql));
+    }
+
+    /**
+     * Update from an array of values
+     * Might be easier to simply write a bunch of update statements in a transaction
+     *
+     * @param string $table
+     * @param array $values
+     * @param string $valueField
+     * @param string $targetField
+     * @param string $idField
+     * @return Query
+     */
+    public static function updateFromValues($table, $values, $valueField, $targetField = null, $idField = "ID", $nullValue = "NULL")
+    {
+        if (!$targetField) {
+            $targetField = $valueField;
+        }
+        $statements = [];
+        $ids = [];
+        foreach ($values as $row) {
+            $idVal = $row[$idField];
+            $ids[] = $idVal;
+            $value = $row[$valueField] ?? "$nullValue";
+            $value = "'$value'";
+            $statements[] = "WHEN $idField=$idVal THEN $value";
+        }
+        $allIds = implode(",", $ids);
+        $setCaseWhen = 'CASE ' . implode("\n", $statements) . ' END';
+        $sql = <<<SQL
+UPDATE $table SET
+        $targetField = $setCaseWhen
+    WHERE $idField IN ($allIds);
+SQL;
+        return DB::query($sql);
+    }
+
+    public static function alterAutoincrementStatement($table, $value)
+    {
+        switch (self::getDbType()) {
+            case 'sqlite':
+                return "UPDATE SQLITE_SEQUENCE SET seq = $value WHERE name = '$table'";
+            case 'mysql':
+                return "ALTER TABLE $table AUTO_INCREMENT = $value";
+            default:
+                return "ALTER TABLE $table AUTO_INCREMENT = $value";
+        }
+    }
+
+    public static function alterAutoincrement($table, $value)
+    {
+        return DB::query(self::alterAutoincrementStatement($table, $value));
     }
 
     /**
