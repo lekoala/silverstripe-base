@@ -6,14 +6,20 @@ use SilverStripe\Control\Director;
 
 class PlaywrightHelper
 {
+    protected static $is_runner = false;
+    protected static $is_setup = false;
 
     public static function isTestRunner()
     {
+        if (self::$is_runner) {
+            return true;
+        }
         $headers = getallheaders();
         foreach ($headers as $k => $v) {
             $k = strtolower($k);
             // In global.setup.ts, a test.sqlite is created for the test runner
             if ($k === 'x-playwright' && $v == "test-runner") {
+                self::$is_runner = true;
                 return true;
             }
         }
@@ -22,11 +28,15 @@ class PlaywrightHelper
 
     public static function isTestSetup()
     {
+        if (self::$is_setup) {
+            return true;
+        }
         $headers = getallheaders();
         foreach ($headers as $k => $v) {
             $k = strtolower($k);
             // In global.setup.ts, a test.sqlite is created for the test runner
             if ($k === 'x-playwright' && $v == "test-setup") {
+                self::$is_setup = true;
                 return true;
             }
         }
