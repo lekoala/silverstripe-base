@@ -180,11 +180,24 @@ class DatabaseHelper
         switch (self::getDbType()) {
             case 'sqlite':
                 //@link https://www.techonthenet.com/sqlite/functions/now.php
-                return "date('now')";
+                return "datetime('now')";
             case 'mysql':
                 return "NOW()";
             default:
                 return "NOW()";
+        }
+    }
+
+    public static function nowDateFunc()
+    {
+        switch (self::getDbType()) {
+            case 'sqlite':
+                //@link https://www.techonthenet.com/sqlite/functions/now.php
+                return "date('now')";
+            case 'mysql':
+                return "CURRENT_DATE()";
+            default:
+                return "CURRENT_DATE()";
         }
     }
 

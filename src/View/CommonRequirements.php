@@ -338,7 +338,7 @@ class CommonRequirements
     public static function fontAwesome5()
     {
         $version = self::config()->fa5_version;
-        Requirements::css("https://use.fontawesome.com/releases/v${version}/css/all.css");
+        Requirements::css("https://use.fontawesome.com/releases/v{$version}/css/all.css");
     }
 
     /**
