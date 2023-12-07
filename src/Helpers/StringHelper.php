@@ -73,4 +73,15 @@ class StringHelper
         $text = substr($text, 1);
         return $text;
     }
+
+    /**
+     * Alternative to deprecated utf8_encode
+     *
+     * @param string $str
+     * @return string
+     */
+    public static function toUtf8($str)
+    {
+        return mb_convert_encoding($str, "UTF-8");
+    }
 }
