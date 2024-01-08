@@ -58,7 +58,7 @@ class PathHelper
      */
     public static function themePath($url)
     {
-        return Director::baseFolder() . "/public" .  self::themeURL($url);
+        return Director::baseFolder() . "/public" .  strtok(self::themeURL($url), '?');
     }
 
     /**
@@ -67,6 +67,6 @@ class PathHelper
      */
     public static function resourcePath($url)
     {
-        return Director::baseFolder() . "/public" .  self::resourceURL($url);
+        return Director::baseFolder() . "/public" .  strtok(self::resourceURL($url), '?');
     }
 }
