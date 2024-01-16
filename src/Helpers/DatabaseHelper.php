@@ -45,17 +45,17 @@ class DatabaseHelper
 
     public static function disableFullGroupBy()
     {
-        DB::query("SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));");
+        DB::query("SET SESSION sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));");
     }
 
     public static function enableFullGroupBy()
     {
-        DB::query("SET sql_mode=(SELECT CONCAT(@@sql_mode, ',ONLY_FULL_GROUP_BY'));");
+        DB::query("SET SESSION sql_mode=(SELECT CONCAT(@@sql_mode, ',ONLY_FULL_GROUP_BY'));");
     }
 
     public static function hasFullGroupBy()
     {
-        $result = DB::query("SELECT @@sql_mode;")->value() ?? '';
+        $result = DB::query("SELECT @@SESSION.sql_mode;")->value() ?? '';
         return str_contains($result, "ONLY_FULL_GROUP_BY");
     }
 
