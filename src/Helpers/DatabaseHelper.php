@@ -43,6 +43,39 @@ class DatabaseHelper
         return $formatter->formatHTML($sql);
     }
 
+    public static function disableFullGroupBy()
+    {
+        DB::query("SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));");
+    }
+
+    public static function enableFullGroupBy()
+    {
+        DB::query("SET sql_mode=(SELECT CONCAT(@@sql_mode, ',ONLY_FULL_GROUP_BY'));");
+    }
+
+    public static function hasFullGroupBy()
+    {
+        $result = DB::query("SELECT @@GLOBAL.sql_mode;")->value() ?? '';
+        return str_contains($result, "ONLY_FULL_GROUP_BY");
+    }
+
+    /**
+     * @param callable $cb
+     * @return mixed Callback result
+     */
+    public static function withoutFullGroupBy($cb)
+    {
+        $hasFullGroupBy = self::hasFullGroupBy();
+        if ($hasFullGroupBy) {
+            self::disableFullGroupBy();
+        }
+        $result = $cb();
+        if ($hasFullGroupBy) {
+            self::enableFullGroupBy();
+        }
+        return $result;
+    }
+
     /**
      * Avoid the infamous Cannot filter "Table"."ID" against an empty set
      *
