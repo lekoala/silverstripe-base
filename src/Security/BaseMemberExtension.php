@@ -26,6 +26,7 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Security\IdentityStore;
 use SilverStripe\ORM\ValidationException;
 use SilverStripe\Security\MemberPassword;
+use SilverStripe\Security\PasswordEncryptor;
 use SilverStripe\Forms\ConfirmedPasswordField;
 use SilverStripe\Security\DefaultAdminService;
 use LeKoala\CommonExtensions\ValidationStatusExtension;
@@ -89,6 +90,8 @@ class BaseMemberExtension extends DataExtension
     public function isRecentPassword($password, $count = 1)
     {
         $max = $count + 1;
+
+        /** @var MemberPassword[] $previousPasswords */
         $previousPasswords = MemberPassword::get()
             ->where(['"MemberPassword"."MemberID"' => $this->owner->ID])
             ->sort('"Created" DESC, "ID" DESC')
@@ -107,6 +110,22 @@ class BaseMemberExtension extends DataExtension
             }
         }
         return null;
+    }
+
+    public function checkPassword($password)
+    {
+        if (!$password) {
+            return false;
+        }
+        /** @var Member $owner */
+        $owner = $this->owner;
+
+        if (!$owner->PasswordEncryption) {
+            return $password == $owner->Password;
+        }
+
+        $encryptor = PasswordEncryptor::create_for_algorithm($owner->PasswordEncryption);
+        return $encryptor->check($owner->Password ?? '', $password, $owner->Salt, $owner);
     }
 
     /**
