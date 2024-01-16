@@ -55,7 +55,7 @@ class DatabaseHelper
 
     public static function hasFullGroupBy()
     {
-        $result = DB::query("SELECT @@GLOBAL.sql_mode;")->value() ?? '';
+        $result = DB::query("SELECT @@sql_mode;")->value() ?? '';
         return str_contains($result, "ONLY_FULL_GROUP_BY");
     }
 
