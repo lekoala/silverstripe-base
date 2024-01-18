@@ -131,7 +131,7 @@ class BaseMemberExtension extends DataExtension
         $encryptor = PasswordEncryptor::create_for_algorithm($owner->PasswordEncryption);
         $result = $encryptor->check($owner->Password ?? '', $password, $owner->Salt, $owner);
         $validationResult = new ValidationResult();
-        if(!$result) {
+        if (!$result) {
             $validationResult->addError('Invalid password');
         }
         return $validationResult;
