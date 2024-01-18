@@ -118,23 +118,25 @@ class BaseMemberExtension extends DataExtension
      */
     public function checkPassword($password)
     {
-        $result = null;
-        if (!$password) {
-            $result = false;
-        }
         /** @var Member $owner */
         $owner = $this->owner;
+        $validationResult = new ValidationResult();
 
-        if (!$owner->PasswordEncryption) {
+        $result = null;
+        if (!$password) {
+            // Empty password
+            $result = false;
+        } elseif (!$owner->PasswordEncryption) {
+            // Plain password
             $result = $password == $owner->Password;
         }
 
-        $validationResult = new ValidationResult();
         if ($result === null) {
             $encryptor = PasswordEncryptor::create_for_algorithm($owner->PasswordEncryption);
             $result = $encryptor->check($owner->Password ?? '', $password, $owner->Salt, $owner);
         }
 
+        // Convert bool result to validationResult
         if ($result === false) {
             $validationResult->addError('Invalid password');
         }
