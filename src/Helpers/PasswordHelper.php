@@ -2,6 +2,7 @@
 
 namespace LeKoala\Base\Helpers;
 
+use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\Member;
 
 class PasswordHelper
@@ -88,5 +89,20 @@ class PasswordHelper
             }
         }
         return $translate;
+    }
+
+    /**
+     * @param bool|ValidationResult $result
+     * @return bool
+     */
+    public static function checkResult($result)
+    {
+        if (is_bool($result)) {
+            return $result;
+        }
+        if ($result instanceof ValidationResult) {
+            return $result->isValid();
+        }
+        return false;
     }
 }

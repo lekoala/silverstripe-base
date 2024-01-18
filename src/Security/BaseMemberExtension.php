@@ -112,6 +112,10 @@ class BaseMemberExtension extends DataExtension
         return null;
     }
 
+    /**
+     * @param string $password
+     * @return ValidationResult
+     */
     public function checkPassword($password)
     {
         if (!$password) {
@@ -125,7 +129,12 @@ class BaseMemberExtension extends DataExtension
         }
 
         $encryptor = PasswordEncryptor::create_for_algorithm($owner->PasswordEncryption);
-        return $encryptor->check($owner->Password ?? '', $password, $owner->Salt, $owner);
+        $result = $encryptor->check($owner->Password ?? '', $password, $owner->Salt, $owner);
+        $validationResult = new ValidationResult();
+        if(!$result) {
+            $validationResult->addError('Invalid password');
+        }
+        return $validationResult;
     }
 
     /**
