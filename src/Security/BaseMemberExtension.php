@@ -121,7 +121,6 @@ class BaseMemberExtension extends DataExtension
         $result = null;
         if (!$password) {
             $result = false;
-            return false;
         }
         /** @var Member $owner */
         $owner = $this->owner;
