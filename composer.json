@@ -31,7 +31,8 @@
         "lekoala/silverstripe-filepond": "*",
         "lekoala/silverstripe-form-elements": "*",
         "lekoala/silverstripe-phonenumber": "*",
-        "lekoala/silverstripe-common-extensions": "*"
+        "lekoala/silverstripe-common-extensions": "*",
+        "lekoala/silverstripe-member-audit": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5",

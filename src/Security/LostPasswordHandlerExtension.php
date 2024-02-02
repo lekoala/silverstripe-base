@@ -3,7 +3,9 @@
 namespace LeKoala\Base\Security;
 
 use SilverStripe\Core\Extension;
+use SilverStripe\Security\Member;
 use LeKoala\Base\Controllers\HasLogger;
+use LeKoala\MemberAudit\MemberAuditExtension;
 use SilverStripe\Security\DefaultAdminService;
 
 /**
@@ -24,14 +26,15 @@ class LostPasswordHandlerExtension extends Extension
      *      return $this->redirectToLostPassword();
      *  }
      *
-     * @param Member $member
-     * @return array
+     * @param ?Member $member
+     * @return void
      */
     public function forgotPassword(&$member)
     {
         // Attempt on invalid member
         if (!$member) {
-            self::getLogger()->debug("Invalid member " . $_POST['Email'] ?? '(undefined email)');
+            $email = $_POST['Email'] ?? '(undefined email)';
+            self::getLogger()->debug("Invalid member " . $email);
             return;
         }
         // Default admin cannot reset
@@ -41,14 +44,17 @@ class LostPasswordHandlerExtension extends Extension
             $member = null;
             return;
         }
-        // Avoid hammering / 2 min per request
-        $latestedAudit = $member->Audits()->filter('Event', 'password_requested')->first();
-        if ($latestedAudit && strtotime($latestedAudit->Created) >= strtotime('-2 minutes')) {
-            self::getLogger()->debug("Avoid hammering for #" . $member->ID);
-            $member = null;
-            return;
-        }
+        if ($member->hasExtension(MemberAuditExtension::class)) {
+            /** @var Member&MemberAuditExtension $member */
+            // Avoid hammering / 2 min per request
+            $latestedAudit = $member->Audits()->filter('Event', 'password_requested')->first();
+            if ($latestedAudit && strtotime($latestedAudit->Created) >= strtotime('-2 minutes')) {
+                self::getLogger()->debug("Avoid hammering for #" . $member->ID);
+                $member = null;
+                return;
+            }
 
-        $member->audit('password_requested');
+            $member->audit('password_requested');
+        }
     }
 }

@@ -19,8 +19,6 @@ en:
     LogAlert: 'Last updated on {updated}'
     LogSize: 'Total size is {size}'
     Logs: Logs
-    MemberAudit: 'Members audit events'
-    MemberAuditTab: 'Members Audit'
     MembersOnlyGroups: 'Only group members are shown. To add a user to a group, link it from an existing group.'
     RecentAdminLogins: 'Recent Admin Logins'
     RecentPasswordFailures: 'Recent Password Failures'
