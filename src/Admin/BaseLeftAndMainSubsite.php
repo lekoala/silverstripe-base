@@ -1,4 +1,5 @@
 <?php
+
 namespace LeKoala\Base\Admin;
 
 use SilverStripe\Core\Convert;
@@ -53,17 +54,14 @@ trait BaseLeftAndMainSubsite
             $currentState = $subsite->ID == $currentSubsiteID ? 'selected' : '';
 
             $SiteConfig = $subsite->SiteConfig();
-            if (!$SiteConfig) {
-                continue;
-            }
-            $PrimaryColor = $SiteConfig->dbObject('PrimaryColor');
+            $PrimaryColor = $SiteConfig ? $SiteConfig->dbObject('PrimaryColor') : null;
 
             $output->push(ArrayData::create([
                 'CurrentState' => $currentState,
                 'ID' => $subsite->ID,
                 'Title' => Convert::raw2xml($subsite->Title),
-                'BackgroundColor' => $PrimaryColor->Color(),
-                'Color' => $PrimaryColor->ContrastColor(),
+                'BackgroundColor' => $PrimaryColor ? $PrimaryColor->Color() : null,
+                'Color' => $PrimaryColor ? $PrimaryColor->ContrastColor() : null,
             ]));
         }
 

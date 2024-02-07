@@ -5,13 +5,9 @@
         <% include SilverStripe\\Admin\\LeftAndMain_MenuLogo %>
         <% include SilverStripe\\Admin\\LeftAndMain_MenuStatus %>
 
-        <%-- This is a bit slow and can be cached per subsite --%>
-        <% cached 'menusubsites', $CurrentSubsite.ID %>
-        <!-- subsite selection $CurrentSubsite.ID -->
         <% if $ListSubsites.Count > 1 %>
             <% include SilverStripe\\Subsites\\Controller\\SubsiteXHRController_subsitelist %>
         <% end_if %>
-        <% end_cached %>
     </div>
 
     <div class="flexbox-area-grow panel--scrollable panel--triple-toolbar cms-panel-content">
