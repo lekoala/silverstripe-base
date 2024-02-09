@@ -10,7 +10,6 @@ use LeKoala\Base\Theme\ThemeSiteConfigExtension;
 /**
  * Some useful stuff for your emails
  *
- * @link https://docs.silverstripe.org/en/5/developer_guides/email/
  * @property \SilverStripe\Control\Email\Email|\LeKoala\Base\Email\BaseEmailExtension $owner
  */
 class BaseEmailExtension extends Extension

@@ -7,7 +7,7 @@ use SilverStripe\Core\Extension;
 /**
  * Class \LeKoala\Base\Security\LoginHandlerExtension
  *
- * @property \LeKoala\Base\Security\TwoFactorLoginHandler|\SilverStripe\Security\MemberAuthenticator\CMSLoginHandler|\SilverStripe\Security\MemberAuthenticator\LoginHandler|\LeKoala\Base\Security\LoginHandlerExtension $owner
+ * @property \SilverStripe\Security\MemberAuthenticator\LoginHandler|\LeKoala\Base\Security\LoginHandlerExtension $owner
  */
 class LoginHandlerExtension extends Extension
 {

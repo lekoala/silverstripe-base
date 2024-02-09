@@ -8,6 +8,8 @@ SilverStripe\ORM\Connect\MySQLDatabase:
   connection_collation: utf8mb4_unicode_ci
   charset: utf8mb4
   collation: utf8mb4_unicode_ci
+SilverStripe\ORM\Connect\DBSchemaManager:
+  fix_table_case_on_build: false # slow
   check_and_repair_on_build: false # repair on build can slow things down a lot
 SilverStripe\ORM\DatabaseAdmin:
   show_record_counts: false # it's faster this way

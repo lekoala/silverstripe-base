@@ -16,6 +16,8 @@ use SilverStripe\ORM\DataExtension;
  *     - LeKoala\Base\Extensions\BootstrapPageExtension
  * LeKoala\Base\View\Alertify:
  *   theme: 'bootstrap'
+ *
+ * @property \LeKoala\Base\Extensions\BootstrapPageExtension $owner
  */
 class BootstrapPageExtension extends DataExtension
 {

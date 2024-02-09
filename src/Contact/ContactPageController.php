@@ -16,9 +16,9 @@ use SilverStripe\SiteConfig\SiteConfig;
 /**
  * Class \LeKoala\Base\Contact\ContactPageController
  *
- * @property \LeKoala\Base\Contact\ContactPage dataRecord
+ * @property \LeKoala\Base\Contact\ContactPage $dataRecord
  * @method \LeKoala\Base\Contact\ContactPage data()
- * @mixin \LeKoala\Base\Contact\ContactPage dataRecord
+ * @mixin \LeKoala\Base\Contact\ContactPage
  */
 class ContactPageController extends \PageController
 {

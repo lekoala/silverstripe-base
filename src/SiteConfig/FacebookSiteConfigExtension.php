@@ -18,8 +18,8 @@ use LeKoala\Base\View\CommonRequirements;
  * Facebook SiteConfig stuff
  *
  * SilverStripe\SiteConfig\SiteConfig:
- *   extensions:
- *     - LeKoala\Base\SiteConfig\FacebookSiteConfigExtension
+ * extensions:
+ *   - LeKoala\Base\SiteConfig\FacebookSiteConfigExtension
  *
  * @property \LeKoala\Base\SiteConfig\FacebookSiteConfigExtension $owner
  * @property string $FacebookPixelId

@@ -37,7 +37,7 @@ use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
  *
  * Most group of functions are grouped within traits when possible
  *
- * @property \SilverStripe\Security\Member&\LeKoala\Base\Security\BaseMemberExtension&\LeKoala\MemberAudit\MemberAuditExtension $owner
+ * @property \SilverStripe\Security\Member|\LeKoala\Base\Security\BaseMemberExtension $owner
  */
 class BaseMemberExtension extends DataExtension
 {

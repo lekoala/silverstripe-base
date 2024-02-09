@@ -25,6 +25,7 @@ use Symbiote\GridFieldExtensions\GridFieldOrderableRows;
  * Improved ModelAdmin
  * - Built in subsite support
  * - Helpers
+ *
  */
 abstract class BaseModelAdmin extends ModelAdmin
 {

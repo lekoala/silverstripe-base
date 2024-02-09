@@ -6,7 +6,7 @@ use SilverStripe\Core\Extension;
 /**
  * Class \LeKoala\Base\Subsite\SubsiteAdminExtension
  *
- * @property \LeKoala\Base\Subsite\SubsiteAdminExtension $owner
+ * @property \SilverStripe\Subsites\Admin\SubsiteAdmin|\LeKoala\Base\Subsite\SubsiteAdminExtension $owner
  */
 class SubsiteAdminExtension extends Extension
 {

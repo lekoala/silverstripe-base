@@ -8,6 +8,8 @@ use LeKoala\Base\Extensions\BasePageExtension;
 /**
  * Class \LeKoala\Base\Privacy\TermsAndConditionsPage
  *
+ * @method \SilverStripe\ORM\DataList|\AlternativeTerms[] AlternativeTermsAndConditions()
+ * @mixin \MyTermsAndConditionsExtension
  */
 class TermsAndConditionsPage extends Page
 {
