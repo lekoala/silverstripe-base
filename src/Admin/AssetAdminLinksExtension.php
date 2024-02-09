@@ -7,6 +7,8 @@ use SilverStripe\Core\Extension;
 
 /**
  * Somehow the url field was removed ?
+ *
+ * @property \SilverStripe\AssetAdmin\Controller\AssetAdmin|\LeKoala\Base\Admin\AssetAdminLinksExtension $owner
  */
 class AssetAdminLinksExtension extends Extension
 {

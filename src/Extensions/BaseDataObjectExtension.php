@@ -39,6 +39,8 @@ use SilverStripe\Forms\GridField\GridFieldFilterHeader;
  * - after delete, cleanup tables
  * - non versioned class should publish their own assets
  * - declarative cms fields : removed_fields, ...
+ *
+ * @property \SilverStripe\ORM\DataObject|\LeKoala\Base\Extensions\BaseDataObjectExtension $owner
  */
 class BaseDataObjectExtension extends DataExtension
 {

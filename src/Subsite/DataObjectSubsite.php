@@ -16,7 +16,7 @@ use SilverStripe\Subsites\State\SubsiteState;
 /**
  * Attach a dataobject to a subsite
  *
- * @property \LeKoala\Base\Subsite\DataObjectSubsite $owner
+ * @property \Invoice|\Event|\Viewing|\LeKoala\Base\Subsite\DataObjectSubsite $owner
  * @property int $SubsiteID
  * @method \SilverStripe\Subsites\Model\Subsite Subsite()
  */

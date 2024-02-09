@@ -11,6 +11,8 @@ use LeKoala\Base\Controllers\HasLogger;
 
 /**
  * Class \LeKoala\Base\Theme\ThemeControllerExtension
+ *
+ * @property \LeKoala\Base\Controllers\BaseContentController|\LeKoala\Base\Theme\ThemeControllerExtension $owner
  */
 class ThemeControllerExtension extends Extension
 {

@@ -17,7 +17,7 @@ use LeKoala\Base\Forms\SmartSortableUploadField;
 /**
  * Automatically publish files and images related to this data object
  *
- * @link https://github.com/bratiask/own-assets
+ * @property \LeKoala\Base\News\NewsItem|\LeKoala\Base\Extensions\SmartDataObjectExtension $owner
  */
 class SmartDataObjectExtension extends DataExtension
 {

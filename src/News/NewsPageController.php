@@ -18,9 +18,9 @@ use SilverStripe\View\Requirements;
 /**
  * Class \LeKoala\Base\News\NewsPageController
  *
- * @property \LeKoala\Base\News\NewsPage dataRecord
+ * @property \LeKoala\Base\News\NewsPage $dataRecord
  * @method \LeKoala\Base\News\NewsPage data()
- * @mixin \LeKoala\Base\News\NewsPage dataRecord
+ * @mixin \LeKoala\Base\News\NewsPage
  */
 class NewsPageController extends \PageController
 {

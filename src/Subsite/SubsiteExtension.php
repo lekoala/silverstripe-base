@@ -12,7 +12,7 @@ use SilverStripe\ORM\DataObject;
 /**
  * Improve subsites
  *
- * @property \LeKoala\Base\Subsite\SubsiteExtension $owner
+ * @property \SilverStripe\Subsites\Model\Subsite|\LeKoala\Base\Subsite\SubsiteExtension $owner
  */
 class SubsiteExtension extends DataExtension
 {

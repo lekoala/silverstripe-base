@@ -8,6 +8,7 @@ use SilverStripe\Control\HTTPRequest;
 /**
  * Send the server current time
  * Useful for server based countdown/time counters
+ *
  */
 class TimeController extends Controller
 {

@@ -15,6 +15,7 @@ use LeKoala\CommonExtensions\URLSegmentExtension;
 
 /**
  * Class \LeKoala\Base\Controllers\SearchController
+ *
  */
 class SearchController extends PageController
 {

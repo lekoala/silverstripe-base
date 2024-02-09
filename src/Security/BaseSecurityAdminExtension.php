@@ -27,7 +27,7 @@ use SilverStripe\Forms\GridField\GridFieldConfig_RecordViewer;
 /**
  * BaseSecurityAdminExtension
  *
- * @property \SilverStripe\Admin\SecurityAdmin&\LeKoala\Base\Security\BaseSecurityAdminExtension $owner
+ * @property \SilverStripe\Admin\SecurityAdmin|\LeKoala\Base\Security\BaseSecurityAdminExtension $owner
  */
 class BaseSecurityAdminExtension extends Extension
 {

@@ -16,7 +16,7 @@ use SilverStripe\ORM\FieldType\DBField;
 /**
  * A simple alternative to full text search
  *
- * @property \PageController|\LeKoala\Base\Controllers\SimpleSearchControllerExtension $owner
+ * @property \SilverStripe\CMS\Controllers\ContentController|\LeKoala\Base\Controllers\SimpleSearchControllerExtension $owner
  */
 class SimpleSearchControllerExtension extends Extension
 {
