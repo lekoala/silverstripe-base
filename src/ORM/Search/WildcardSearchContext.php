@@ -6,6 +6,7 @@ use Exception;
 use ReflectionProperty;
 use InvalidArgumentException;
 use SilverStripe\ORM\DataList;
+use SilverStripe\ORM\DataQuery;
 use SilverStripe\ORM\DataObject;
 use LeKoala\Base\Helpers\ClassHelper;
 use SilverStripe\ORM\Filters\SearchFilter;
@@ -29,7 +30,7 @@ use SilverStripe\Forms\GridField\GridFieldFilterHeader;
 class WildcardSearchContext extends SearchContext
 {
     /**
-     * @var array
+     * @var array<string>
      */
     protected $wildcardFilters = [];
 
@@ -68,6 +69,7 @@ class WildcardSearchContext extends SearchContext
      */
     public function replaceInGridField(GridField $gridField)
     {
+        /** @var GridFieldFilterHeader $component */
         $component = $gridField->getConfig()->getComponentByType(GridFieldFilterHeader::class);
         $this->replaceInFilterHeader($component);
     }
@@ -171,7 +173,7 @@ class WildcardSearchContext extends SearchContext
      *  for example "Comments__Name" instead of the filter name "Comments.Name".
      * @param array|bool|string $sort Database column to sort on.
      *  Falls back to {@link DataObject::$default_sort} if not provided.
-     * @param array|bool|string $limit
+     * @param ?int|array<string,int|null> $limit
      * @param DataList $existingQuery
      * @return DataList
      * @throws Exception
@@ -213,10 +215,12 @@ class WildcardSearchContext extends SearchContext
         $this->setSearchParams($searchParams);
 
         // If we use specific set of fields, make sure we have a value for them
-        if (empty($this->wildcardFilters) && $obj->hasField('Title')) {
-            $this->wildcardFilters = ['Title'];
-        } elseif (empty($this->wildcardFilters) && $obj->hasField('Name')) {
-            $this->wildcardFilters = ['Name'];
+        if (empty($this->wildcardFilters)) {
+            if ($obj->hasField('Title')) {
+                $this->wildcardFilters = ['Title'];
+            } elseif ($obj->hasField('Name')) {
+                $this->wildcardFilters = ['Name'];
+            }
         }
 
         // q holds the wildcard search
@@ -273,15 +277,18 @@ class WildcardSearchContext extends SearchContext
             if ($key === "q") {
                 continue;
             }
-            if ($this->filterPunctation) {
-                $value = str_replace(['.', '_', '-'], ' ', $value);
-            }
+            // Don't filter punction in advanced search
+            // if ($this->filterPunctation) {
+            //     $value = str_replace(['.', '_', '-'], ' ', $value);
+            // }
             $key = str_replace('__', '.', $key);
             $filter = $this->getRealFilter($key);
             $filter->setModel($this->modelClass);
             $filter->setValue($value);
             if (!$filter->isEmpty()) {
-                $query = $query->alterDataQuery(array($filter, 'apply'));
+                $query = $query->alterDataQuery(function (DataQuery $query) use ($filter) {
+                    $filter->apply($query);
+                });
             }
         }
 
