@@ -27,6 +27,31 @@ use \SilverStripe\View\Parsers\SQLFormatter as SS_SQLFormatter;
 class DatabaseHelper
 {
     /**
+     * Helps with queries that can cause a deadlock
+     *
+     * @param string $sql
+     * @param integer $max
+     * @param integer $sleepms
+     * @return boolean
+     */
+    public static function executeAndRetry(string $sql, int $max = 3, int $sleepms = 1000): bool
+    {
+        $tries = 0;
+        $res = false;
+        while ($tries < $max) {
+            try {
+                DB::query($sql);
+                $tries = $max;
+                $res = true;
+            } catch (Exception $ex) {
+                $tries++;
+                usleep($sleepms);
+            }
+        }
+        return $res;
+    }
+
+    /**
      * Format sql using built in formatter or custom one
      *
      * @param string $sql
