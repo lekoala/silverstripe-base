@@ -52,6 +52,31 @@ class DatabaseHelper
     }
 
     /**
+     * Helps with queries that can cause a deadlock
+     *
+     * @param callable $cb
+     * @param integer $max
+     * @param integer $sleepms
+     * @return boolean
+     */
+    public static function executeAndRetryCb($cb, int $max = 3, int $sleepms = 1000): bool
+    {
+        $tries = 0;
+        $res = false;
+        while ($tries < $max) {
+            try {
+                $cb();
+                $tries = $max;
+                $res = true;
+            } catch (Exception $ex) {
+                $tries++;
+                usleep($sleepms);
+            }
+        }
+        return $res;
+    }
+
+    /**
      * Format sql using built in formatter or custom one
      *
      * @param string $sql
