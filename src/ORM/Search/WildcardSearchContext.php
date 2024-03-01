@@ -86,6 +86,7 @@ class WildcardSearchContext extends SearchContext
         $reflection->setAccessible(true);
         $modelClass = $reflection->getValue($context);
 
+        //@phpstan-ignore-next-line
         return new static($modelClass, $context->getFields(), $context->getFilters());
     }
 
@@ -107,7 +108,7 @@ class WildcardSearchContext extends SearchContext
 
     /**
      * @param string $value
-     * @return array
+     * @return array<string,mixed>
      */
     public static function findShortcutInString($value)
     {
@@ -301,7 +302,7 @@ class WildcardSearchContext extends SearchContext
 
     /**
      * Get the value of wildcardFilters
-     * @return array
+     * @return array<string>
      */
     public function getWildcardFilters()
     {
@@ -311,7 +312,7 @@ class WildcardSearchContext extends SearchContext
     /**
      * Set the value of wildcardFilters
      *
-     * @param array $wildcardFilters
+     * @param array<string> $wildcardFilters
      * @return $this
      */
     public function setWildcardFilters(array $wildcardFilters)
@@ -332,7 +333,7 @@ class WildcardSearchContext extends SearchContext
     /**
      * Set the value of filterPunctation
      *
-     * @param array $filterPunctation
+     * @param bool $filterPunctation
      * @return $this
      */
     public function setFilterPunctuation($filterPunctation)
@@ -344,7 +345,7 @@ class WildcardSearchContext extends SearchContext
     /**
      * Get the value of defaultFilterClass
      */
-    public function getDefaultFilterClass()
+    public function getDefaultFilterClass(): string
     {
         return $this->defaultFilterClass;
     }
@@ -353,6 +354,7 @@ class WildcardSearchContext extends SearchContext
      * Set the value of defaultFilterClass
      *
      * @param string $defaultFilterClass
+     * @return $this
      */
     public function setDefaultFilterClass($defaultFilterClass)
     {
@@ -363,7 +365,7 @@ class WildcardSearchContext extends SearchContext
     /**
      * Get the value of expandSpace
      */
-    public function getExpandSpace()
+    public function getExpandSpace(): bool
     {
         return $this->expandSpace;
     }
@@ -372,6 +374,7 @@ class WildcardSearchContext extends SearchContext
      * Set the value of expandSpace
      *
      * @param boolean $expandSpace
+     * @return $this
      */
     public function setExpandSpace($expandSpace)
     {
