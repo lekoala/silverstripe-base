@@ -73,7 +73,7 @@ trait MasqueradeMember
     }
 
     /**
-     * @return MasqueradingMember
+     * @return MasqueradingMember|null
      */
     public function MasqueradingMember()
     {
@@ -82,6 +82,6 @@ trait MasqueradeMember
             $ID = $old['loggedInAs'];
             return Member::get()->byID($ID);
         }
-        return false;
+        return null;
     }
 }
