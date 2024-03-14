@@ -173,24 +173,25 @@ abstract class BaseModelAdmin extends ModelAdmin
     /**
      * Get the record asked by CustomLink or CMSInlineAction
      *
-     * @return bool|DataObject
+     * @return DataObject|null
      */
     public function getRequestedRecord()
     {
         $request = $this->getRequest();
-        $modelClass = true;
 
         // Look first in headers
         $class = $request->getHeader('X-RecordClassName');
         if (!$class) {
             $class = $request->requestVar('_RecordClassName');
         }
+        $ID = $request->param('ID');
         // ModelClass can be forwarded in a get var from CustomLink
         if (!$class) {
             $class = $request->getVar('ModelClass');
-            $modelClass = true;
+            if (!$ID) {
+                $ID = $request->getVar('ID');
+            }
         }
-        $ID = $request->param('ID');
         if (!$class) {
             // Help our fellow developpers
             if ($ID == 'field') {
@@ -201,20 +202,12 @@ abstract class BaseModelAdmin extends ModelAdmin
         if (!ClassHelper::isValidDataObject($class)) {
             throw new ValidationException("$class is not valid");
         }
-        if ($modelClass) {
-            // Record ID can be forwarded in a get var from CustomLink
-            if (!$ID) {
-                $ID = $request->getVar('ID');
-            }
-        } else {
-            if (!$ID || $ID == 'field') {
-                $ID = $request->getHeader('X-RecordID');
-            }
-            if (!$ID || $ID == 'field') {
-                $ID = (int) $request->requestVar('_RecordID');
-            }
+        if (!$ID || $ID == 'field') {
+            $ID = $request->getHeader('X-RecordID');
         }
-
+        if (!$ID || $ID == 'field') {
+            $ID = (int) $request->requestVar('_RecordID');
+        }
         return DataObject::get_by_id($class, $ID);
     }
 
