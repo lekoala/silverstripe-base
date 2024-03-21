@@ -8,6 +8,7 @@ SilverStripe\ORM\Connect\MySQLDatabase:
   connection_collation: utf8mb4_unicode_ci
   charset: utf8mb4
   collation: utf8mb4_unicode_ci
+  optimistic_connect: true
 SilverStripe\ORM\Connect\DBSchemaManager:
   fix_table_case_on_build: false # slow
   check_and_repair_on_build: false # repair on build can slow things down a lot
@@ -18,6 +19,13 @@ SilverStripe\ORM\DatabaseAdmin:
 # resulting in 191. This is because the maximum length of a utf8mb4 character is four bytes.
 # For a utf8 character it would be three bytes resulting in max index prefix length of 254.
 # https://github.com/silverstripe/silverstripe-framework/issues/8062
+---
+Name: base-mysql-live
+Except:
+  environment: dev
+---
+SilverStripe\ORM\Connect\MySQLDatabase:
+  optimistic_connect: true
 ---
 Name: base-fieldtypes
 After: '#corefieldtypes'

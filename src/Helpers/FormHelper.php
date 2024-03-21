@@ -22,7 +22,7 @@ class FormHelper
      * Decode or explode a given string
      *
      * @param string $str
-     * @return array
+     * @return array<mixed>
      */
     public static function decodeOrExplode($str)
     {
