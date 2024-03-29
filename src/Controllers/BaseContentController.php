@@ -77,7 +77,7 @@ class BaseContentController extends ContentController
     private static $enable_csp = false;
     /**
      * Never null due to dependencies
-     * @var Monolog\Logger
+     * @var \Monolog\Logger
      */
     public $logger;
     /**
