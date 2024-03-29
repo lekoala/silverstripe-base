@@ -49,7 +49,7 @@ class ThemeControllerExtension extends Extension
     }
 
     /**
-     * @return string
+     * @return bool
      */
     public static function getPreventLoadingThemeStyles()
     {
@@ -57,14 +57,17 @@ class ThemeControllerExtension extends Extension
     }
 
     /**
-     * @param string $preventLoadingThemeStyles
+     * @param bool $preventLoadingThemeStyles
      * @return void
      */
-    public static function setPreventLoadingThemeStyles($preventLoadingThemeStyles)
+    public static function setPreventLoadingThemeStyles($preventLoadingThemeStyles = true)
     {
         self::$preventLoadingThemeStyles = $preventLoadingThemeStyles;
     }
 
+    /**
+     * @return void
+     */
     public function onAfterInit()
     {
         if ($this->isAdminTheme()) {
@@ -74,10 +77,14 @@ class ThemeControllerExtension extends Extension
         $this->requireThemeStyles();
     }
 
+    /**
+     * @return void
+     */
     protected function requireGoogleFonts()
     {
         $googleFont = self::$customGoogleFont;
         if (!$googleFont) {
+            //@phpstan-ignore-next-line
             $SiteConfig = $this->owner->SiteConfig();
             $googleFont = $SiteConfig->GoogleFonts;
         }
@@ -88,6 +95,9 @@ class ThemeControllerExtension extends Extension
         }
     }
 
+    /**
+     * @return void
+     */
     protected function requireThemeStyles()
     {
         if (self::$preventLoadingThemeStyles) {
@@ -96,6 +106,7 @@ class ThemeControllerExtension extends Extension
 
         $themeDir = $this->getThemeDir();
         $cssPath = Director::baseFolder() . '/' . $themeDir . '/css';
+        //@phpstan-ignore-next-line
         $SiteConfig = $this->owner->SiteConfig();
 
         /**
@@ -107,38 +118,39 @@ class ThemeControllerExtension extends Extension
         $ignore = [];
         if (SiteConfig::config()->auto_include_css) {
             $files = glob($cssPath . '/*.css');
-
-            // Files are included in order, please name them accordingly
-            foreach ($files as $file) {
-                // Skip ignored files
-                if (in_array($file, $ignore)) {
-                    continue;
+            if ($files) {
+                // Files are included in order, please name them accordingly
+                foreach ($files as $file) {
+                    // Skip ignored files
+                    if (in_array($file, $ignore)) {
+                        continue;
+                    }
+                    // Skip theme files, they should be included through SiteConfig
+                    if (strpos($file, '-theme.css') !== false) {
+                        continue;
+                    }
+                    if (strpos($file, '-theme.min.css') !== false) {
+                        continue;
+                    }
+                    // Skip unminified files if we have a min file
+                    $minFile = str_replace('.css', '.min.css', $file);
+                    if (in_array($minFile, $files)) {
+                        // in dev, favor non minified files
+                        // if (Director::isDev()) {
+                        //     $ignore[] = $minFile;
+                        // } else {
+                        continue;
+                        // }
+                    }
+                    $name = basename($file);
+                    // Skip editor.css
+                    if ($name == 'editor.css' || $name == "editor.min.css") {
+                        continue;
+                    }
+                    // themedCSS use filename without extension
+                    $name = pathinfo($name, PATHINFO_FILENAME);
+                    Requirements::themedCSS($name);
                 }
-                // Skip theme files, they should be included through SiteConfig
-                if (strpos($file, '-theme.css') !== false) {
-                    continue;
-                }
-                if (strpos($file, '-theme.min.css') !== false) {
-                    continue;
-                }
-                // Skip unminified files if we have a min file
-                $minFile = str_replace('.css', '.min.css', $file);
-                if (in_array($minFile, $files)) {
-                    // in dev, favor non minified files
-                    // if (Director::isDev()) {
-                    //     $ignore[] = $minFile;
-                    // } else {
-                    continue;
-                    // }
-                }
-                $name = basename($file);
-                // Skip editor.css
-                if ($name == 'editor.css' || $name == "editor.min.css") {
-                    continue;
-                }
-                // themedCSS use filename without extension
-                $name = pathinfo($name, PATHINFO_FILENAME);
-                Requirements::themedCSS($name);
             }
         }
         if ($SiteConfig->CssTheme) {
@@ -164,6 +176,7 @@ class ThemeControllerExtension extends Extension
      */
     protected function replaceVarsInCssFile($cssFile)
     {
+        //@phpstan-ignore-next-line
         $SiteConfig = $this->owner->SiteConfig();
         $lastEdited = strtotime($SiteConfig->LastEdited);
         $themeDir = $this->getThemeDir();
@@ -190,9 +203,12 @@ class ThemeControllerExtension extends Extension
             }
         }
         $cssFileContent = file_get_contents($cssFile);
+        if (!$cssFileContent) {
+            return $cssURL;
+        }
         // Get css variables and use default values if they are not set in SiteConfig
         $declarationRegex = "/--(?P<name>[a-z-]*):\s?(?P<value>[\"'A-Za-z-#0-9(),\s]*)/";
-        $declarationsMatches = null;
+        $declarationsMatches = [];
         preg_match_all($declarationRegex, $cssFileContent, $declarationsMatches);
         $declarations = array_combine($declarationsMatches['name'], $declarationsMatches['value']);
         foreach ($declarations as $declarationName => $declarationValue) {
