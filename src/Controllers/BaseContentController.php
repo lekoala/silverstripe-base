@@ -32,6 +32,7 @@ use MySiteConfigExtension;
 use Random\Engine\Secure;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Environment;
+use LeKoala\Base\SiteConfig\SiteConfigExtension;
 
 /**
  * A more opiniated base controller for your app
@@ -60,11 +61,6 @@ class BaseContentController extends ContentController
         'logger' => '%$Psr\Log\LoggerInterface',
         'cache' => '%$Psr\SimpleCache\CacheInterface.app', // see _config/cache.yml,
     ];
-    /**
-     * @config
-     * @var string|null
-     */
-    private static $default_referrer_policy;
     /**
      * @config
      * @var bool
@@ -174,7 +170,7 @@ class BaseContentController extends ContentController
      */
     public function LogoSchemaMarkup()
     {
-        $sc = MySiteConfigExtension::currSiteConfig();
+        $sc = SiteConfigExtension::currSiteConfig();
         $logoLink = PathHelper::absoluteURL($sc->Logo()->Link());
 
         $arr = [];

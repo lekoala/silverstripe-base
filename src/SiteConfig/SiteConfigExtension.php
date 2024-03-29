@@ -13,7 +13,7 @@ use SilverStripe\Forms\TextareaField;
 use SilverStripe\SiteConfig\SiteConfig;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
-use LeKoala\Base\SiteConfig\SiteConfigExtension;
+use LeKoala\Base\Theme\ThemeSiteConfigExtension;
 
 /**
  * Class \LeKoala\Base\SiteConfigExtension
@@ -34,7 +34,9 @@ use LeKoala\Base\SiteConfig\SiteConfigExtension;
 class SiteConfigExtension extends DataExtension
 {
     const EXTERNAL_SERVICES_TAB = 'ExternalServices';
-
+    /**
+     * @var array<string,string>
+     */
     private static $db = [
         // Contact Details
         "ContactEmail" => "Email",
@@ -51,7 +53,9 @@ class SiteConfigExtension extends DataExtension
         "FooterText" => "HTMLText",
         "Copyright" => "HTMLText", // A custom copyright text, otherwise defaults to (year) - Legal Name
     ];
-
+    /**
+     * @var array<string>
+     */
     private static $translate = [
         "FooterText", "Copyright", "EmailFooter", "ContactInfos"
     ];
@@ -64,6 +68,10 @@ class SiteConfigExtension extends DataExtension
         return SiteConfig::current_site_config();
     }
 
+    /**
+     * @param FieldList $fields
+     * @return void
+     */
     public function updateCMSFields(FieldList $fields)
     {
         // Contact fields
@@ -115,12 +123,15 @@ class SiteConfigExtension extends DataExtension
         return 'https://www.google.com/maps/search/?api=1&query=' . urlencode($this->owner->ContactAddress);
     }
 
+    /**
+     * @return string
+     */
     public function LegalNameOrTitle()
     {
         if ($this->owner->LegalName) {
             return $this->owner->LegalName;
         }
-        return $this->owner->Title;
+        return $this->owner->Title ?? "";
     }
 
     /**
@@ -131,7 +142,7 @@ class SiteConfigExtension extends DataExtension
     public function ContactAddressSplit()
     {
         $text = new DBHTMLText('ContactAddress');
-        $addr = $this->owner->ContactAddress;
+        $addr = $this->owner->ContactAddress ?? "";
         $addr = explode(",", $addr);
         $addr = array_filter($addr, 'trim');
         $addr = implode("<br/>", $addr);
@@ -152,7 +163,7 @@ class SiteConfigExtension extends DataExtension
      */
     public function CopyrightFull()
     {
-        return '© ' . $this->CopyrightYear() . ' ' . $this->owner->LegalName;
+        return '© ' . $this->CopyrightYear() . ' ' . $this->LegalNameOrTitle();
     }
 
     /**
@@ -176,7 +187,7 @@ class SiteConfigExtension extends DataExtension
      */
     public function FormSpreeFormAction()
     {
-        $SiteConfig = SiteConfig::current_site_config();
+        $SiteConfig = self::currSiteConfig();
         $address = $SiteConfig->ContactEmail;
         if (!$address) {
             $address = Email::config()->admin_email;
