@@ -4,7 +4,6 @@ namespace LeKoala\Base\Helpers;
 
 use Exception;
 use InvalidArgumentException;
-use League\Csv\InvalidArgument;
 use SqlFormatter;
 use RuntimeException;
 use SilverStripe\ORM\DB;
@@ -12,7 +11,6 @@ use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataQuery;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\ManyManyList;
-use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\Queries\SQLInsert;
 use SilverStripe\ORM\Queries\SQLUpdate;
 use SilverStripe\SQLite\SQLite3Database;
@@ -93,19 +91,34 @@ class DatabaseHelper
         return $formatter->formatHTML($sql);
     }
 
+    /**
+     * Better to use yml
+     * SilverStripe\ORM\Connect\MySQLDatabase:
+     *   sql_mode: 'REAL_AS_FLOAT,PIPES_AS_CONCAT,ANSI_QUOTES,IGNORE_SPACE
+     * @return void
+     */
     public static function disableFullGroupBy()
     {
         DB::query("SET SESSION sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));");
     }
 
+    /**
+     * @return void
+     */
     public static function enableFullGroupBy()
     {
         DB::query("SET SESSION sql_mode=(SELECT CONCAT(@@sql_mode, ',ONLY_FULL_GROUP_BY'));");
     }
 
+    /**
+     * @return bool
+     */
     public static function hasFullGroupBy()
     {
-        $result = DB::query("SELECT @@SESSION.sql_mode;")->value() ?? '';
+        $result = DB::query("SELECT @@SESSION.sql_mode;")->value();
+        if (!$result) {
+            return false;
+        }
         return str_contains($result, "ONLY_FULL_GROUP_BY");
     }
 
@@ -129,8 +142,8 @@ class DatabaseHelper
     /**
      * Avoid the infamous Cannot filter "Table"."ID" against an empty set
      *
-     * @param array|string $IDs
-     * @return array|string The list or 0
+     * @param array<string|int>|int|string $IDs
+     * @return array<string|int>|int|string The list or 0
      */
     public static function getValidIDs($IDs)
     {
@@ -140,6 +153,12 @@ class DatabaseHelper
         return $IDs;
     }
 
+    /**
+     * @param DataObject $obj
+     * @param array<string> $fields
+     * @param bool $allFiles
+     * @return void
+     */
     public static function preventRemoval(DataObject &$obj, $fields = [], $allFiles = false)
     {
         if ($allFiles && $obj->hasMethod('getAllFileRelations')) {
@@ -164,7 +183,7 @@ class DatabaseHelper
      * Returns an order by clause with an order based on the list of fields
      *
      * @param string $field The field name
-     * @param array $list The list of values
+     * @param array<string> $list The list of values
      * @return string
      */
     public static function orderByField($field, $list)
@@ -210,12 +229,16 @@ class DatabaseHelper
             return 'mysql';
         } elseif ($conn instanceof \SilverStripe\SQLite\SQLite3Database) {
             return 'sqlite';
+            //@phpstan-ignore-next-line
         } elseif ($conn instanceof \SilverStripe\PostgreSQL\PostgreSQLConnector) {
             return 'postgres';
         }
         throw new Exception("Unsupported db type : " . get_class($conn));
     }
 
+    /**
+     * @return array{'connector':string,'type':string,'version':string,'major_version':int}
+     */
     public static function getDbVersion()
     {
         $conn = DB::get_conn();
@@ -258,6 +281,9 @@ class DatabaseHelper
         }
     }
 
+    /**
+     * @return string
+     */
     public static function nowFunc()
     {
         switch (self::getDbType()) {
@@ -271,6 +297,9 @@ class DatabaseHelper
         }
     }
 
+    /**
+     * @return string
+     */
     public static function nowDateFunc()
     {
         switch (self::getDbType()) {
@@ -285,7 +314,7 @@ class DatabaseHelper
     }
 
     /**
-     * @param array $values An array of properly quoted values or unquoted column names or function
+     * @param array<string> $values An array of properly quoted values or unquoted column names or function
      * @return string
      */
     public static function concat($values)
@@ -301,6 +330,9 @@ class DatabaseHelper
         }
     }
 
+    /**
+     * @return bool
+     */
     public static function supportsRank()
     {
         $supportFunction = false;
@@ -322,7 +354,7 @@ class DatabaseHelper
      * @param string $whereClause Additional where clause, eg: Status != 'ignored'
      * @param string $id The id field, ID by default
      * @param boolean $dense Have gaps or no gaps (no gaps by default)
-     * @return array
+     * @return array<mixed>
      */
     public static function rank($table, $field, $partitionBy, $whereClause = '', $id = "ID", $dense = true)
     {
@@ -369,10 +401,11 @@ SQL;
      * Might be easier to simply write a bunch of update statements in a transaction
      *
      * @param string $table
-     * @param array $values
+     * @param array<string> $values
      * @param string $valueField
      * @param string $targetField
      * @param string $idField
+     * @param string $nullValue
      * @return Query
      */
     public static function updateFromValues($table, $values, $valueField, $targetField = null, $idField = "ID", $nullValue = "NULL")
@@ -403,6 +436,11 @@ SQL;
         return DB::query($sql);
     }
 
+    /**
+     * @param string $table
+     * @param string $value
+     * @return string
+     */
     public static function alterAutoincrementStatement($table, $value)
     {
         switch (self::getDbType()) {
@@ -415,6 +453,11 @@ SQL;
         }
     }
 
+    /**
+     * @param string $table
+     * @param string $value
+     * @return Query
+     */
     public static function alterAutoincrement($table, $value)
     {
         return DB::query(self::alterAutoincrementStatement($table, $value));
@@ -422,13 +465,18 @@ SQL;
 
     /**
      * @param Query $query
-     * @return array|null
+     * @return array<mixed>|null
      */
     public static function firstFromQuery(Query $query)
     {
         return self::first($query->getIterator(), null);
     }
 
+    /**
+     * @param iterable<mixed> $iterable
+     * @param mixed $default
+     * @return mixed
+     */
     public static function first(iterable $iterable, $default = null)
     {
         foreach ($iterable as $item) {
@@ -440,9 +488,9 @@ SQL;
     /**
      * Mutate where array with in clause
      *
-     * @param array $arr
+     * @param array<mixed> $arr
      * @param string $field
-     * @param array|string $values
+     * @param array<mixed>|string $values
      * @return void
      */
     public static function inArray(&$arr, $field, $values)
@@ -462,6 +510,12 @@ SQL;
         }
     }
 
+    /**
+     * @param string $str
+     * @param array<string> $values
+     * @param string $field
+     * @return string
+     */
     public static function appendInClause($str, $values, $field = "ID")
     {
         if (empty($values)) {
@@ -474,10 +528,10 @@ SQL;
     /**
      * Join two where clauses either with AND or OR
      *
-     * @param array $baseWhere
-     * @param array $newWhere
+     * @param array<string,string> $baseWhere
+     * @param array<string,string> $newWhere
      * @param string $type
-     * @return array
+     * @return array<string,string>
      */
     public static function joinWhere($baseWhere, $newWhere, $type = "OR")
     {
@@ -508,14 +562,26 @@ SQL;
     /**
      * @param string $table
      * @param string $column
-     * @return array
+     * @param string|bool $ignoreNull true or blank
+     * @param string $where
+     * @return array<mixed>
      */
-    public static function findDuplicates($table, $column, $ignoreNull = true)
+    public static function findDuplicates($table, $column, $ignoreNull = true, $where = "")
     {
         $table = preg_replace('/[^a-zA-Z_]*/', '', $table);
         $where = '';
         if ($ignoreNull) {
-            $where = " WHERE $column IS NOT NULL";
+            $parts = explode(",", $column);
+            foreach ($parts as $idx => $p) {
+                $s = $where == "" ? "" : "AND";
+                $where .= " $s $p IS NOT NULL";
+                if ($ignoreNull == 'blank') {
+                    $where .= " AND $p != ''";
+                }
+            }
+        }
+        if ($where) {
+            $where = "WHERE $where";
         }
         $sql = <<<SQL
 SELECT
@@ -531,6 +597,12 @@ SQL;
         return iterator_to_array(DB::query($sql));
     }
 
+    /**
+     * @param string $table
+     * @param array<mixed> $data
+     * @param int $id
+     * @return Query
+     */
     public static function update($table, $data, $id)
     {
         $query = new SQLUpdate($table);
@@ -542,6 +614,11 @@ SQL;
         return $query->execute();
     }
 
+    /**
+     * @param string $table
+     * @param array<mixed> $data
+     * @return Query
+     */
     public static function insert($table, $data)
     {
         $query = new SQLInsert($table);
@@ -552,6 +629,72 @@ SQL;
         return $query->execute();
     }
 
+    /**
+     * @param string $table
+     * @param array<string,mixed> $array
+     * @return Query
+     */
+    public static function insertOrUpdate(string $table, array $array)
+    {
+        $fields = [];
+        $insertValues = [];
+        $updateValues = [];
+        $params = [];
+        foreach ($array as $col => $val) {
+            $fields[] = $col;
+            $insertValues[] = "?";
+            $updateValues[] = "`$col` = ?";
+            $params[] = $val;
+        }
+        $fields = implode(", ", $fields);
+        $insertValues = implode(", ", $insertValues);
+        $updateValues = implode(", ", $updateValues);
+        $doubleParams = $params + $params;
+        $query = "INSERT INTO $table ($fields) VALUES($insertValues) ON DUPLICATE KEY UPDATE $updateValues";
+        $res = DB::prepared_query($query, $doubleParams);
+        return $res;
+    }
+
+    /**
+     * @param string $srcTable
+     * @param string $targetTable
+     * @param array<string> $fields
+     * @param string $where
+     * @return Query
+     */
+    public static function insertOrUpdateFromTable(string $srcTable, string $targetTable, array $fields, string $where = '')
+    {
+        $sqlFields = implode(", ", $fields);
+        $assignments = [];
+        foreach ($fields as $f) {
+            $assignments[] = "$f = s.$f";
+        }
+        $sqlAssignments = implode(",\n", $assignments);
+        $query = "INSERT INTO $targetTable($sqlFields) SELECT $sqlFields FROM $srcTable as s";
+        if ($where) {
+            $query .= " WHERE $where";
+        }
+        $query .= " ON DUPLICATE KEY UPDATE $sqlAssignments";
+        $res = DB::query($query);
+        return $res;
+    }
+
+    /**
+     * Also check innodb_ft_min_token_size for small words
+     * @link https://dev.mysql.com/doc/refman/8.0/en/fulltext-stopwords.html
+     * @return array<string>
+     */
+    public static function getStopWordsList()
+    {
+        $query = DB::query('SELECT * FROM INFORMATION_SCHEMA.INNODB_FT_DEFAULT_STOPWORD');
+        return $query->column();
+    }
+
+    /**
+     * @param string $table
+     * @param array<mixed> $where
+     * @return int
+     */
     public static function fastCount($table, $where = [])
     {
         $table = preg_replace('/[^a-zA-Z_]*/', '', $table);
@@ -579,7 +722,7 @@ SQL;
      *
      * @param DataList $list
      * @param string $componentName
-     * @param array $fields
+     * @param array<string> $fields
      * @return DataList|ManyManyList
      */
     public static function inject($list, $componentName, $fields = [])
@@ -641,7 +784,7 @@ SQL;
      * @link https://github.com/silverstripe/silverstripe-framework/issues/10452
      * @param DataList $list
      * @param string $colName
-     * @return array
+     * @return array<mixed>
      */
     public static function uniqueCol(DataList $list, $colName)
     {
