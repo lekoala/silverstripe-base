@@ -13,6 +13,7 @@ use SilverStripe\Forms\TextareaField;
 use SilverStripe\SiteConfig\SiteConfig;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
+use LeKoala\Base\SiteConfig\SiteConfigExtension;
 
 /**
  * Class \LeKoala\Base\SiteConfigExtension
@@ -54,6 +55,14 @@ class SiteConfigExtension extends DataExtension
     private static $translate = [
         "FooterText", "Copyright", "EmailFooter", "ContactInfos"
     ];
+
+    /**
+     * @return SiteConfig|SiteConfigExtension|ThemeSiteConfigExtension
+     */
+    public static function currSiteConfig()
+    {
+        return SiteConfig::current_site_config();
+    }
 
     public function updateCMSFields(FieldList $fields)
     {
