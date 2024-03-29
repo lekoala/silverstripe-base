@@ -1,5 +1,5 @@
 ---
-Name: myassetsimage-vips
+Name: baseassetsimage-vips
 After: '#assetsimage'
 Only:
   classexists: '\Intervention\Image\Vips\Driver'
@@ -12,7 +12,7 @@ SilverStripe\Core\Injector\Injector:
     constructor:
       - { driver: vips }
 ---
-Name: myassetsimage-imagick
+Name: baseassetsimage-imagick
 After: '#assetsimage'
 Only:
   extensionloaded: 'imagick'
