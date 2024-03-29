@@ -1,4 +1,6 @@
 ---
+Name: myassetsimage-vips
+After: '#assetsimage'
 Only:
   classexists: '\Intervention\Image\Vips\Driver'
   extensionloaded: 'ffi'
@@ -9,3 +11,13 @@ SilverStripe\Core\Injector\Injector:
   Intervention\Image\ImageManager:
     constructor:
       - { driver: vips }
+---
+Name: myassetsimage-imagick
+After: '#assetsimage'
+Only:
+  extensionloaded: 'imagick'
+---
+SilverStripe\Core\Injector\Injector:
+  Intervention\Image\ImageManager:
+    constructor:
+      - { driver: imagick }
