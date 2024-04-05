@@ -13,6 +13,10 @@ class JsonHelper
      */
     public static function encode($data, int $flags = 0): string
     {
+        // Default flags
+        if ($flags === 0) {
+            $flags = JSON_INVALID_UTF8_SUBSTITUTE;
+        }
         $result = json_encode($data, $flags);
         if ($result === false) {
             throw new Exception(json_last_error_msg());
