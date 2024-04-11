@@ -20,6 +20,7 @@ use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Control\PjaxResponseNegotiator;
 use SilverStripe\Forms\GridField\GridFieldDeleteAction;
 use Symbiote\GridFieldExtensions\GridFieldOrderableRows;
+use LeKoala\Base\Forms\GridField\GridFieldExtension;
 
 /**
  * Improved ModelAdmin
