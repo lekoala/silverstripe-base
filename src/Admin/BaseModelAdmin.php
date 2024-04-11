@@ -279,10 +279,11 @@ abstract class BaseModelAdmin extends ModelAdmin
      * this method fetches the actual gridfield from the fields
      *
      * @param Form $form
-     * @return GridField
+     * @return GridField|GridFieldExtension
      */
     public function getGridFieldFrom(Form $form)
     {
+        //@phpstan-ignore-next-line
         return $form->Fields()->dataFieldByName($this->getSanitisedModelClass());
     }
 
