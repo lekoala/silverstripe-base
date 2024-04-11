@@ -245,6 +245,11 @@ abstract class BaseModelAdmin extends ModelAdmin
         return $list;
     }
 
+    /**
+     * @param int|null $id
+     * @param \SilverStripe\Forms\FieldList $fields
+     * @return \SilverStripe\Forms\Form A Form object with one tab per {@link \SilverStripe\Forms\GridField\GridField}
+     */
     public function getEditForm($id = null, $fields = null)
     {
         $form = parent::getEditForm($id, $fields);
