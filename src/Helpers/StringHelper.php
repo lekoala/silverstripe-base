@@ -84,4 +84,16 @@ class StringHelper
     {
         return mb_convert_encoding($str, "UTF-8");
     }
+
+    public static function truncate(?string $string, int $chars = 120, string $append = "..."): string
+    {
+        if ($string === null) {
+            return '';
+        }
+        $string = strip_tags($string);
+        if (strlen($string) > $chars) {
+            return substr($string, 0, $chars) . $append;
+        }
+        return $string;
+    }
 }
