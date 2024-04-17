@@ -3,6 +3,7 @@
 namespace LeKoala\Base\Controllers;
 
 use LeKoala\Multilingual\LangHelper;
+use SilverStripe\CMS\Model\SiteTree;
 
 trait LangHelpers
 {
@@ -36,7 +37,11 @@ trait LangHelpers
             return $this->LocaleLink($locale);
         }
         $link = LangHelper::withLocale($locale, function () {
-            return $this->data()->Link();
+            $localeData = SiteTree::get_by_id($this->data()->ClassName, $this->data()->ID);
+            if ($localeData) {
+                return $localeData->Link();
+            }
+            return $this->Link();
         });
         // Check that it contains the right prefix
         if (!str_starts_with($link, "/$lang/")) {
