@@ -146,7 +146,7 @@ class SubsiteHelper
     }
 
     /**
-     * @param string $ID
+     * @param string|int $ID
      * @param bool $flush
      * @return void
      */
@@ -155,6 +155,7 @@ class SubsiteHelper
         if (!self::usesSubsite()) {
             return;
         }
+        $ID = intval($ID);
         self::$previousSubsite = self::currentSubsiteID();
 
         // Do this otherwise changeSubsite has no effect if false

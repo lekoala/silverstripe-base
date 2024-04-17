@@ -9,7 +9,8 @@ use SilverStripe\Forms\FormField;
 
 /**
  * Utilities for fields
- * @property FormField $owner
+ *
+ * @property \SilverStripe\Forms\FormField|\LeKoala\Base\Forms\Extensions\BaseFieldExtension $owner
  */
 class BaseFieldExtension extends Extension
 {

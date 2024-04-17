@@ -3,6 +3,7 @@
 namespace LeKoala\Base\ORM;
 
 use SilverStripe\ORM\DataList;
+use SilverStripe\ORM\DataObject;
 
 class QueryHelper
 {

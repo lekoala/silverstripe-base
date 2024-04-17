@@ -9,7 +9,6 @@ use SilverStripe\Control\Controller;
 /**
  * This is merged into BaseFieldExtension
  *
- * @deprecated
  * @property \LeKoala\Base\Forms\Extensions\TooltipExtension $owner
  */
 class TooltipExtension extends Extension

@@ -20,11 +20,13 @@ use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Control\PjaxResponseNegotiator;
 use SilverStripe\Forms\GridField\GridFieldDeleteAction;
 use Symbiote\GridFieldExtensions\GridFieldOrderableRows;
+use LeKoala\Base\Forms\GridField\GridFieldExtension;
 
 /**
  * Improved ModelAdmin
  * - Built in subsite support
  * - Helpers
+ *
  */
 abstract class BaseModelAdmin extends ModelAdmin
 {
@@ -172,24 +174,25 @@ abstract class BaseModelAdmin extends ModelAdmin
     /**
      * Get the record asked by CustomLink or CMSInlineAction
      *
-     * @return bool|DataObject
+     * @return DataObject|null
      */
     public function getRequestedRecord()
     {
         $request = $this->getRequest();
-        $modelClass = true;
 
         // Look first in headers
         $class = $request->getHeader('X-RecordClassName');
         if (!$class) {
             $class = $request->requestVar('_RecordClassName');
         }
+        $ID = $request->param('ID');
         // ModelClass can be forwarded in a get var from CustomLink
         if (!$class) {
             $class = $request->getVar('ModelClass');
-            $modelClass = true;
+            if (!$ID) {
+                $ID = $request->getVar('ID');
+            }
         }
-        $ID = $request->param('ID');
         if (!$class) {
             // Help our fellow developpers
             if ($ID == 'field') {
@@ -200,20 +203,12 @@ abstract class BaseModelAdmin extends ModelAdmin
         if (!ClassHelper::isValidDataObject($class)) {
             throw new ValidationException("$class is not valid");
         }
-        if ($modelClass) {
-            // Record ID can be forwarded in a get var from CustomLink
-            if (!$ID) {
-                $ID = $request->getVar('ID');
-            }
-        } else {
-            if (!$ID || $ID == 'field') {
-                $ID = $request->getHeader('X-RecordID');
-            }
-            if (!$ID || $ID == 'field') {
-                $ID = (int) $request->requestVar('_RecordID');
-            }
+        if (!$ID || $ID == 'field') {
+            $ID = $request->getHeader('X-RecordID');
         }
-
+        if (!$ID || $ID == 'field') {
+            $ID = (int) $request->requestVar('_RecordID');
+        }
         return DataObject::get_by_id($class, $ID);
     }
 
@@ -251,6 +246,11 @@ abstract class BaseModelAdmin extends ModelAdmin
         return $list;
     }
 
+    /**
+     * @param int|null $id
+     * @param \SilverStripe\Forms\FieldList $fields
+     * @return \SilverStripe\Forms\Form A Form object with one tab per {@link \SilverStripe\Forms\GridField\GridField}
+     */
     public function getEditForm($id = null, $fields = null)
     {
         $form = parent::getEditForm($id, $fields);
@@ -285,10 +285,11 @@ abstract class BaseModelAdmin extends ModelAdmin
      * this method fetches the actual gridfield from the fields
      *
      * @param Form $form
-     * @return GridField
+     * @return GridField|GridFieldExtension
      */
     public function getGridFieldFrom(Form $form)
     {
+        //@phpstan-ignore-next-line
         return $form->Fields()->dataFieldByName($this->getSanitisedModelClass());
     }
 

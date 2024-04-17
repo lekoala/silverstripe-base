@@ -14,6 +14,7 @@ use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Control\RequestHandler;
 use LeKoala\Base\View\CommonRequirements;
+use SilverStripe\Control\HTTPRequest;
 
 /**
  * An extended class for forms:
@@ -130,6 +131,15 @@ class BaseForm extends Form
     public function getRequestedRecord()
     {
         $request = $this->getRequest();
+        return self::getRequestedRecordFromRequest($request);
+    }
+
+    /**
+     * @param HTTPRequest $request
+     * @return DataObject|null
+     */
+    public static function getRequestedRecordFromRequest($request)
+    {
         $class = $request->requestVar('_RecordClassName');
         if (!$class) {
             $class = $request->getHeader('X-RecordClassName');

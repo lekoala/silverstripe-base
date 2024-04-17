@@ -3,6 +3,8 @@
 namespace LeKoala\Base\Controllers;
 
 use \Exception;
+use LeKoala\Base\Helpers\JsonHelper;
+use LeKoala\Base\Helpers\PathHelper;
 use SilverStripe\i18n\i18n;
 use SilverStripe\View\SSViewer;
 use SilverStripe\Control\Cookie;
@@ -26,8 +28,11 @@ use SilverStripe\CMS\Controllers\ContentController;
 use SilverStripe\Control\HTTPRequest;
 use LeKoala\DeferBackend\DeferBackend;
 use LeKoala\Multilingual\LangHelper;
+use MySiteConfigExtension;
+use Random\Engine\Secure;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Environment;
+use LeKoala\Base\SiteConfig\SiteConfigExtension;
 
 /**
  * A more opiniated base controller for your app
@@ -50,7 +55,7 @@ class BaseContentController extends ContentController
     /**
      * Inject public dependencies into the controller
      *
-     * @var array
+     * @var array<string>
      */
     private static $dependencies = [
         'logger' => '%$Psr\Log\LoggerInterface',
@@ -58,28 +63,28 @@ class BaseContentController extends ContentController
     ];
     /**
      * @config
-     * @var string
+     * @var bool
      */
-    private static $default_referrer_policy;
+    private static $enable_hsts = false;
     /**
      * @config
-     * @var string
+     * @var bool
      */
-    private static $enable_hsts;
+    private static $enable_csp = false;
     /**
-     * @config
-     * @var string
-     */
-    private static $enable_csp;
-    /**
-     * @var Monolog\Logger
+     * Never null due to dependencies
+     * @var \Monolog\Logger
      */
     public $logger;
     /**
+     * Never null due to dependencies
      * @var CacheInterface
      */
     public $cache;
 
+    /**
+     * @return void
+     */
     protected function init()
     {
         // Guard resources
@@ -89,10 +94,12 @@ class BaseContentController extends ContentController
         }
 
         if (Director::isDev()) {
-            $FORCE_SUBSITE = Environment::getEnv('FORCE_SUBSITE');
-            if ($FORCE_SUBSITE) {
-                SubsiteHelper::changeSubsite($FORCE_SUBSITE);
-            }
+            // This should probably happen at middlewazre level
+            // $FORCE_SUBSITE = Environment::getEnv('FORCE_SUBSITE');
+            // if ($FORCE_SUBSITE) {
+            //     SubsiteHelper::changeSubsite($FORCE_SUBSITE, true);
+            //     $this->dataRecord->SubsiteID = $FORCE_SUBSITE;
+            // }
         }
 
         DeferBackend::replaceBackend();
@@ -163,8 +170,8 @@ class BaseContentController extends ContentController
      */
     public function LogoSchemaMarkup()
     {
-        $sc = SiteConfig::current_site_config();
-        $logoLink = Director::absoluteURL($sc->Logo()->Link() ?? "");
+        $sc = SiteConfigExtension::currSiteConfig();
+        $logoLink = PathHelper::absoluteURL($sc->Logo()->Link());
 
         $arr = [];
         $arr['@context'] = "https://schema.org";
@@ -173,7 +180,7 @@ class BaseContentController extends ContentController
         $arr['logo'] = $logoLink;
         $arr['name'] = $sc->getTitle();
 
-        return json_encode($arr);
+        return JsonHelper::encode($arr);
     }
 
     public function handleRequest(HTTPRequest $request): HTTPResponse
@@ -187,7 +194,7 @@ class BaseContentController extends ContentController
     }
 
     /**
-     * @return Controller
+     * @return Controller|null
      */
     public static function safeCurr()
     {
@@ -203,15 +210,17 @@ class BaseContentController extends ContentController
      */
     public function IsCurrentSegment($segment)
     {
+        //@phpstan-ignore-next-line
         return $segment == $this->URLSegment ? 'current' : 'link';
     }
 
     /**
-     * @param string $segment
+     * @param string $action
      * @return string
      */
     public function IsCurrentAction($action)
     {
+        //@phpstan-ignore-next-line
         return $action == $this->action ? 'current' : 'link';
     }
 
@@ -255,7 +264,7 @@ class BaseContentController extends ContentController
      */
     public function LogoutURL()
     {
-        $member = Member::currentUser();
+        $member = Security::getCurrentUser();
         if ($member && $member->IsMasquerading()) {
             return '/Security/end_masquerade';
         }
@@ -271,9 +280,6 @@ class BaseContentController extends ContentController
     protected function setLangFromRequest()
     {
         $request = $this->getRequest();
-        if (!$request) {
-            return;
-        }
         $lang = $request->getVar('lang');
         if ($lang) {
             if (strlen($lang) == 2) {
@@ -324,6 +330,7 @@ class BaseContentController extends ContentController
      */
     public function getLogger()
     {
+        //@phpstan-ignore-next-line
         return $this->logger;
     }
 }

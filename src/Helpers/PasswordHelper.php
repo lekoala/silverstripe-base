@@ -2,7 +2,9 @@
 
 namespace LeKoala\Base\Helpers;
 
+use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\Member;
+use Exception;
 
 class PasswordHelper
 {
@@ -65,6 +67,10 @@ class PasswordHelper
         return implode("; ", $rules);
     }
 
+    /**
+     * @param array<string> $rules
+     * @return array<string>
+     */
     protected static function translatePasswordRules(array $rules)
     {
         $translate = [];
@@ -88,5 +94,20 @@ class PasswordHelper
             }
         }
         return $translate;
+    }
+
+    /**
+     * @param bool|ValidationResult|mixed $result
+     * @return bool
+     */
+    public static function checkResult($result)
+    {
+        if (is_bool($result)) {
+            return $result;
+        }
+        if ($result instanceof ValidationResult) {
+            return $result->isValid();
+        }
+        throw new Exception("Unexpected result");
     }
 }

@@ -6,6 +6,7 @@ use Exception;
 use ReflectionProperty;
 use InvalidArgumentException;
 use SilverStripe\ORM\DataList;
+use SilverStripe\ORM\DataQuery;
 use SilverStripe\ORM\DataObject;
 use LeKoala\Base\Helpers\ClassHelper;
 use SilverStripe\ORM\Filters\SearchFilter;
@@ -29,7 +30,7 @@ use SilverStripe\Forms\GridField\GridFieldFilterHeader;
 class WildcardSearchContext extends SearchContext
 {
     /**
-     * @var array
+     * @var array<string>
      */
     protected $wildcardFilters = [];
 
@@ -68,6 +69,7 @@ class WildcardSearchContext extends SearchContext
      */
     public function replaceInGridField(GridField $gridField)
     {
+        /** @var GridFieldFilterHeader $component */
         $component = $gridField->getConfig()->getComponentByType(GridFieldFilterHeader::class);
         $this->replaceInFilterHeader($component);
     }
@@ -84,6 +86,7 @@ class WildcardSearchContext extends SearchContext
         $reflection->setAccessible(true);
         $modelClass = $reflection->getValue($context);
 
+        //@phpstan-ignore-next-line
         return new static($modelClass, $context->getFields(), $context->getFilters());
     }
 
@@ -105,7 +108,7 @@ class WildcardSearchContext extends SearchContext
 
     /**
      * @param string $value
-     * @return array
+     * @return array<string,mixed>
      */
     public static function findShortcutInString($value)
     {
@@ -171,7 +174,7 @@ class WildcardSearchContext extends SearchContext
      *  for example "Comments__Name" instead of the filter name "Comments.Name".
      * @param array|bool|string $sort Database column to sort on.
      *  Falls back to {@link DataObject::$default_sort} if not provided.
-     * @param array|bool|string $limit
+     * @param ?int|array<string,int|null> $limit
      * @param DataList $existingQuery
      * @return DataList
      * @throws Exception
@@ -213,10 +216,12 @@ class WildcardSearchContext extends SearchContext
         $this->setSearchParams($searchParams);
 
         // If we use specific set of fields, make sure we have a value for them
-        if (empty($this->wildcardFilters) && $obj->hasField('Title')) {
-            $this->wildcardFilters = ['Title'];
-        } elseif (empty($this->wildcardFilters) && $obj->hasField('Name')) {
-            $this->wildcardFilters = ['Name'];
+        if (empty($this->wildcardFilters)) {
+            if ($obj->hasField('Title')) {
+                $this->wildcardFilters = ['Title'];
+            } elseif ($obj->hasField('Name')) {
+                $this->wildcardFilters = ['Name'];
+            }
         }
 
         // q holds the wildcard search
@@ -273,15 +278,18 @@ class WildcardSearchContext extends SearchContext
             if ($key === "q") {
                 continue;
             }
-            if ($this->filterPunctation) {
-                $value = str_replace(['.', '_', '-'], ' ', $value);
-            }
+            // Don't filter punction in advanced search
+            // if ($this->filterPunctation) {
+            //     $value = str_replace(['.', '_', '-'], ' ', $value);
+            // }
             $key = str_replace('__', '.', $key);
             $filter = $this->getRealFilter($key);
             $filter->setModel($this->modelClass);
             $filter->setValue($value);
             if (!$filter->isEmpty()) {
-                $query = $query->alterDataQuery(array($filter, 'apply'));
+                $query = $query->alterDataQuery(function (DataQuery $query) use ($filter) {
+                    $filter->apply($query);
+                });
             }
         }
 
@@ -294,7 +302,7 @@ class WildcardSearchContext extends SearchContext
 
     /**
      * Get the value of wildcardFilters
-     * @return array
+     * @return array<string>
      */
     public function getWildcardFilters()
     {
@@ -304,7 +312,7 @@ class WildcardSearchContext extends SearchContext
     /**
      * Set the value of wildcardFilters
      *
-     * @param array $wildcardFilters
+     * @param array<string> $wildcardFilters
      * @return $this
      */
     public function setWildcardFilters(array $wildcardFilters)
@@ -325,7 +333,7 @@ class WildcardSearchContext extends SearchContext
     /**
      * Set the value of filterPunctation
      *
-     * @param array $filterPunctation
+     * @param bool $filterPunctation
      * @return $this
      */
     public function setFilterPunctuation($filterPunctation)
@@ -337,7 +345,7 @@ class WildcardSearchContext extends SearchContext
     /**
      * Get the value of defaultFilterClass
      */
-    public function getDefaultFilterClass()
+    public function getDefaultFilterClass(): string
     {
         return $this->defaultFilterClass;
     }
@@ -346,6 +354,7 @@ class WildcardSearchContext extends SearchContext
      * Set the value of defaultFilterClass
      *
      * @param string $defaultFilterClass
+     * @return $this
      */
     public function setDefaultFilterClass($defaultFilterClass)
     {
@@ -356,7 +365,7 @@ class WildcardSearchContext extends SearchContext
     /**
      * Get the value of expandSpace
      */
-    public function getExpandSpace()
+    public function getExpandSpace(): bool
     {
         return $this->expandSpace;
     }
@@ -365,6 +374,7 @@ class WildcardSearchContext extends SearchContext
      * Set the value of expandSpace
      *
      * @param boolean $expandSpace
+     * @return $this
      */
     public function setExpandSpace($expandSpace)
     {

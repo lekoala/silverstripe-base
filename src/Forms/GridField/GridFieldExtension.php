@@ -5,6 +5,8 @@ namespace LeKoala\Base\Forms\GridField;
 use Exception;
 use SilverStripe\Core\Extension;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
+use SilverStripe\Forms\GridField\GridField;
+use LeKoala\Base\Forms\GridField\GridFieldExtension;
 
 /**
  * Ease of use for day to day coding relative to GridField usage
@@ -13,7 +15,7 @@ use SilverStripe\Forms\GridField\GridFieldDataColumns;
  * - Helper methods for field labels
  * - Data columns helpers
  *
- * @property \LeKoala\Base\Forms\SimpleHasOneButtonField|\LeKoala\Base\Forms\FullGridField\FullGridField|\SilverShop\HasOneField\HasOneButtonField|\SilverStripe\Forms\GridField\GridField|\LeKoala\Base\Forms\GridField\GridFieldExtension $owner
+ * @property \SilverStripe\Forms\GridField\GridField|\LeKoala\Base\Forms\GridField\GridFieldExtension $owner
  */
 class GridFieldExtension extends Extension
 {
@@ -42,7 +44,7 @@ class GridFieldExtension extends Extension
     /**
      * Turn a list of fields into a consistent array with labels
      *
-     * @param string $fields
+     * @param array $fields
      * @return array
      */
     public function fieldLabels($fields)
@@ -76,6 +78,7 @@ class GridFieldExtension extends Extension
         if (!$cols) {
             throw new Exception('GridFieldDataColumns does not exist on this GridField');
         }
+        //@phpstan-ignore-next-line
         return $cols;
     }
 
@@ -91,7 +94,7 @@ class GridFieldExtension extends Extension
      * Shorhand for setting field labels
      *
      * @param array $displayFields
-     * @return GridField
+     * @return GridField|GridFieldExtension
      */
     public function setDisplayFields($displayFields)
     {
@@ -111,7 +114,7 @@ class GridFieldExtension extends Extension
      * Shorhand for setting field formatting
      *
      * @param array $fieldFormatting
-     * @return GridField
+     * @return GridField|GridFieldExtension
      */
     public function setFieldFormatting($fieldFormatting)
     {

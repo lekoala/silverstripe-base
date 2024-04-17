@@ -11,9 +11,9 @@ use SilverStripe\SiteConfig\SiteConfig;
 /**
  * Class \LeKoala\Base\Faq\FaqPageController
  *
- * @property \LeKoala\Base\Faq\FaqPage dataRecord
+ * @property \LeKoala\Base\Faq\FaqPage $dataRecord
  * @method \LeKoala\Base\Faq\FaqPage data()
- * @mixin \LeKoala\Base\Faq\FaqPage dataRecord
+ * @mixin \LeKoala\Base\Faq\FaqPage
  */
 class FaqPageController extends \PageController
 {

@@ -68,15 +68,17 @@ class ThemeSiteConfigExtension extends DataExtension
     public function onAfterWrite()
     {
         if ($this->owner->LogoID) {
+            /** @var \SilverStripe\Assets\Image $Logo */
             $Logo = $this->owner->Logo();
-            if (!$Logo->isPublished()) {
-                $Logo->doPublish();
+            if ($Logo->hasMethod('publishRecursive') && !$Logo->isPublished()) {
+                $Logo->publishRecursive();
             }
         }
         if ($this->owner->IconID) {
+            /** @var \SilverStripe\Assets\Image $Icon */
             $Icon = $this->owner->Icon();
-            if (!$Icon->isPublished()) {
-                $Icon->doPublish();
+            if ($Icon->hasMethod('publishRecursive') && !$Icon->isPublished()) {
+                $Icon->publishRecursive();
             }
         }
     }

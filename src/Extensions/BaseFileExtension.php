@@ -35,9 +35,11 @@ use SilverStripe\Assets\Flysystem\ProtectedAssetAdapter;
  * - Shorthands methods for standard sizes thumbnails (SmallAssetThumbnail, LargeAssetThumbnail)
  * - Smart cropping
  *
- * @property \SilverStripe\Assets\File|\SilverStripe\Assets\Folder|\SilverStripe\Assets\Image|\LeKoala\Base\Extensions\BaseFileExtension $owner
- * @property boolean $IsTemporary
+ * @property \SilverStripe\Assets\File|\LeKoala\Base\Extensions\BaseFileExtension $owner
+ * @property bool $IsTemporary
+ * @property int $FileSize
  * @property int $ObjectID
+ * @property string $ObjectClass
  * @method \SilverStripe\ORM\DataObject Object()
  */
 class BaseFileExtension extends DataExtension

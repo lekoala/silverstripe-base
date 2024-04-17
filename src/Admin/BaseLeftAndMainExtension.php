@@ -2,6 +2,7 @@
 
 namespace LeKoala\Base\Admin;
 
+use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 use SilverStripe\Admin\CMSMenu;
 use SilverStripe\View\SSViewer;
@@ -14,15 +15,13 @@ use SilverStripe\Core\Config\Config;
 use LeKoala\DeferBackend\CspProvider;
 use SilverStripe\Security\Permission;
 use LeKoala\DeferBackend\DeferBackend;
-use LeKoala\Base\Subsite\SubsiteHelper;
 use SilverStripe\SiteConfig\SiteConfig;
 use SilverStripe\Core\Injector\Injector;
 use LeKoala\Base\View\CommonRequirements;
 use SilverStripe\Core\Config\Configurable;
-use SilverStripe\Admin\AdminRootController;
+use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\Admin\LeftAndMainExtension;
-use SilverStripe\Core\Manifest\ModuleLoader;
-use SilverStripe\Subsites\State\SubsiteState;
+use LeKoala\Base\Theme\ThemeSiteConfigExtension;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorConfig;
 use SilverStripe\Forms\HTMLEditor\TinyMCECombinedGenerator;
 
@@ -30,13 +29,13 @@ use SilverStripe\Forms\HTMLEditor\TinyMCECombinedGenerator;
  * Available config
  *
  * LeKoala\Base\Admin\BaseLeftAndMainExtension:
- *   dark_theme: true
- *   help_enabled: false
- *   removed_items:
- *     - SilverStripe-CampaignAdmin-CampaignAdmin
- *     ...
+ * dark_theme: true
+ * help_enabled: false
+ * removed_items:
+ *   - SilverStripe-CampaignAdmin-CampaignAdmin
+ *   ...
  *
- * @property \LeKoala\Base\Admin\BaseModelAdmin|\SiteAdmin|\SilverStripe\Admin\CMSProfileController|\SilverStripe\Admin\LeftAndMain|\SilverStripe\Admin\ModelAdmin|\SilverStripe\Admin\SecurityAdmin|\SilverStripe\CampaignAdmin\CampaignAdmin|\SilverStripe\Reports\ReportAdmin|\SilverStripe\SiteConfig\SiteConfigLeftAndMain|\SilverStripe\VersionedAdmin\ArchiveAdmin|\SilverStripe\AssetAdmin\Controller\AssetAdmin|\SilverStripe\CMS\Controllers\CMSMain|\SilverStripe\CMS\Controllers\CMSPageAddController|\SilverStripe\CMS\Controllers\CMSPageEditController|\SilverStripe\CMS\Controllers\CMSPageHistoryController|\SilverStripe\CMS\Controllers\CMSPageSettingsController|\SilverStripe\CMS\Controllers\CMSPagesController|\SilverStripe\VersionedAdmin\Controllers\CMSPageHistoryViewerController|\SilverStripe\VersionedAdmin\Controllers\HistoryViewerController|\LeKoala\Base\Admin\BaseLeftAndMainExtension $owner
+ * @property \SilverStripe\Admin\LeftAndMain|\LeKoala\Base\Admin\BaseLeftAndMainExtension $owner
  */
 class BaseLeftAndMainExtension extends LeftAndMainExtension
 {
@@ -57,17 +56,17 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
 
     /**
      * @config
-     * @var array
+     * @var array<string>
      */
     private static $removed_items = [];
 
     /**
      * @config
-     * @var array
+     * @var array<string>
      */
     private static $reordered_items = [];
 
-    public function init()
+    public function init(): void
     {
         $SiteConfig = SiteConfig::current_site_config();
 
@@ -112,7 +111,7 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
         $this->requireAdminStyles();
     }
 
-    public function ShowAVWarning()
+    public function ShowAVWarning(): bool
     {
         if (Antivirus::isConfigured() && !Antivirus::isConfiguredAndWorking()) {
             return true;
@@ -135,6 +134,9 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
         Requirements::javascript($link);
     }
 
+    /**
+     * @return DBHTMLText
+     */
     public function BaseMenu()
     {
         return $this->owner->renderWith($this->owner->getTemplatesWithSuffix('_BaseMenu'));
@@ -209,6 +211,7 @@ class BaseLeftAndMainExtension extends LeftAndMainExtension
      */
     public function requireAdminStyles()
     {
+        /** @var SiteConfig|ThemeSiteConfigExtension $SiteConfig */
         $SiteConfig = SiteConfig::current_site_config();
         if (!$SiteConfig->PrimaryColor) {
             return;
@@ -232,6 +235,9 @@ CSS;
         Requirements::customCSS($styles, 'AdminMenuStyles');
     }
 
+    /**
+     * @return void
+     */
     protected function includeLastIcon()
     {
         if (!class_exists(LeKoala\Admini\LeftAndMain::class)) {
@@ -266,7 +272,7 @@ JS;
     }
 
     /**
-     * @return Monolog\Logger
+     * @return Logger
      */
     public function getLogger()
     {

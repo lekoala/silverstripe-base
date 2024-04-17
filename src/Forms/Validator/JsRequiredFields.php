@@ -31,6 +31,13 @@ class JsRequiredFields extends RequiredFields
         }
     }
 
+    public function addRequiredFields(...$fields)
+    {
+        foreach ($fields as $field) {
+            $this->addRequiredField($field);
+        }
+    }
+
     public static function requirements(Form $form)
     {
         CommonRequirements::modularBehaviour();

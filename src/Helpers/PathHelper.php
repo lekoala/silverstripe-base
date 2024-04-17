@@ -9,15 +9,28 @@ use SilverStripe\Core\Manifest\ModuleResourceLoader;
 class PathHelper
 {
     /**
+     * @param string|null $url
+     */
+    public static function absoluteURL(?string $url = null): string
+    {
+        $url = $url ?? "/";
+        $result = Director::absoluteURL($url);
+        if (is_bool($result)) {
+            $result = "/";
+        }
+        return $result;
+    }
+
+    /**
      * Keep in mind in admin we don't have our theme active and you can get something like this
      * "/_resources/app/images"
      *
      * @param string $url
      * @return string A public url
      */
-    public static function themeURL($url)
+    public static function themeURL($url): string
     {
-        return ThemeResourceLoader::themedResourceURL($url);
+        return ThemeResourceLoader::themedResourceURL($url) ?? "";
     }
 
     /**
@@ -31,7 +44,9 @@ class PathHelper
      */
     public static function resourceURL($url)
     {
-        return ModuleResourceLoader::resourceURL($url);
+        //@link https://github.com/silverstripe/silverstripe-framework/pull/11187
+        //@phpstan-ignore-next-line
+        return ModuleResourceLoader::resourceURL($url) ?? "";
     }
 
     /**
@@ -40,7 +55,7 @@ class PathHelper
      */
     public static function absoluteThemeURL($url)
     {
-        return Director::absoluteURL(self::themeURL($url));
+        return self::absoluteURL(self::themeURL($url));
     }
 
     /**
@@ -49,7 +64,7 @@ class PathHelper
      */
     public static function absoluteResourceURL($url)
     {
-        return Director::absoluteURL(self::resourceURL($url));
+        return self::absoluteURL(self::resourceURL($url));
     }
 
     /**
@@ -58,7 +73,7 @@ class PathHelper
      */
     public static function themePath($url)
     {
-        return Director::baseFolder() . "/public" .  self::themeURL($url);
+        return Director::baseFolder() . "/public" .  strtok(self::themeURL($url), '?');
     }
 
     /**
@@ -67,6 +82,6 @@ class PathHelper
      */
     public static function resourcePath($url)
     {
-        return Director::baseFolder() . "/public" .  self::resourceURL($url);
+        return Director::baseFolder() . "/public" .  strtok(self::resourceURL($url), '?');
     }
 }

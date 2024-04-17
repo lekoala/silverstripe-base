@@ -21,8 +21,6 @@ fr:
     LogAlert: 'Dernière mise à jour le {updated}'
     LogSize: 'Taille totale {size}'
     Logs: Logs
-    MemberAudit: 'Members audit events'
-    MemberAuditTab: 'Members Audit'
     MembersOnlyGroups: 'Only group members are shown. To add a user to a group, link it from an existing group.'
     RecentAdminLogins: 'Recent Admin Logins'
     RecentPasswordFailures: 'Recent Password Failures'

@@ -25,6 +25,7 @@ class GridFieldHelper
      */
     public static function getGridFieldFilterHeader(GridFieldConfig $config)
     {
+        //@phpstan-ignore-next-line
         return $config->getComponentByType(GridFieldFilterHeader::class);
     }
 
@@ -34,6 +35,7 @@ class GridFieldHelper
      */
     public static function getGridFieldDataColumns(GridFieldConfig $config)
     {
+        //@phpstan-ignore-next-line
         return $config->getComponentByType(GridFieldDataColumns::class);
     }
 
@@ -43,6 +45,7 @@ class GridFieldHelper
      */
     public static function getGridFieldPaginator(GridFieldConfig $config)
     {
+        //@phpstan-ignore-next-line
         return $config->getComponentByType(GridFieldPaginator::class);
     }
 
