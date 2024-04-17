@@ -35,6 +35,13 @@ trait LangHelpers
         if (method_exists($this, 'LocaleLink')) {
             return $this->LocaleLink($locale);
         }
-        return $this->Link();
+        $link = LangHelper::withLocale($locale, function () {
+            return $this->data()->Link();
+        });
+        // Check that it contains the right prefix
+        if (!str_starts_with($link, "/$lang/")) {
+            return "/$lang/";
+        }
+        return $link;
     }
 }
