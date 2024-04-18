@@ -80,7 +80,7 @@ class DBJson extends DBString
         if (!$this->value) {
             return [];
         }
-        return json_decode($this->value, JSON_OBJECT_AS_ARRAY);
+        return json_decode($this->value, true);
     }
 
     /**

@@ -89,7 +89,7 @@ class GoogleRecaptchaField extends LiteralField
             'response' => $token,
         ]);
 
-        $decoded = json_decode($result, JSON_OBJECT_AS_ARRAY);
+        $decoded = json_decode($result, true);
 
         if (!$decoded) {
             throw new ValidationException("JSON error : " . json_last_error_msg());

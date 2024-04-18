@@ -30,7 +30,7 @@ class FormHelper
             return [];
         }
         if (strpos($str, '[') === 0) {
-            return json_decode($str, JSON_OBJECT_AS_ARRAY);
+            return json_decode($str, true);
         }
         return explode(',', $str);
     }
