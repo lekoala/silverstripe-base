@@ -10,6 +10,7 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\AssetAdmin\Controller\AssetAdmin;
+use SilverStripe\Forms\FormField;
 
 /**
  * Improves the default uploader by uploading to a consistent default location
@@ -73,25 +74,27 @@ class SmartUploadField extends UploadField
     }
 
     /**
-     * @param UploadField $uf
+     * @param UploadField|FormField $uf
      * @param FieldList $fields
-     * @return $this
+     * @return SmartUploadField|null
      */
-    public static function replaceField(UploadField $uf, FieldList $fields)
+    public static function replaceField($uf, FieldList $fields)
     {
-        $name = $uf->getName();
-        $title = $uf->Title();
-        $items = $uf->getItems();
+        if ($uf instanceof UploadField) {
+            $name = $uf->getName();
+            $title = $uf->Title();
 
-        $new = new SmartUploadField($name, $title, $items);
+            $items = $uf->getItems();
 
-        $setFolderName = self::getProtectedValue($uf, "folderName");
-        if ($setFolderName) {
-            $new->setFolderName($uf);
+            $new = new SmartUploadField($name, $title, $items);
+            $setFolderName = self::getProtectedValue($uf, "folderName");
+            if ($setFolderName) {
+                $new->setFolderName($uf);
+            }
+            $fields->replaceField($name, $new);
+            return $new;
         }
-        $fields->replaceField($name, $new);
-
-        return $new;
+        return null;
     }
 
     /**
