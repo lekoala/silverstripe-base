@@ -42,7 +42,7 @@ class TaggableExtension extends DataExtension
      * Get all tags for objects of this class
      *
      * @param string|array $where
-     * @return DataList|Tag[]
+     * @return \SilverStripe\ORM\DataList|Tag[]
      */
     public function UsedTags($where = null)
     {

@@ -198,7 +198,7 @@ class NewsPageController extends \PageController
     }
 
     /**
-     * @return DataList|Tag[]
+     * @return \SilverStripe\ORM\DataList|Tag[]
      */
     public function TagsList()
     {
@@ -207,7 +207,7 @@ class NewsPageController extends \PageController
     }
 
     /**
-     * @return DataList|NewsCategory[]
+     * @return \SilverStripe\ORM\DataList|NewsCategory[]
      */
     public function CategoriesList()
     {

@@ -723,7 +723,7 @@ SQL;
      * @param DataList $list
      * @param string $componentName
      * @param array<string> $fields
-     * @return DataList|ManyManyList
+     * @return \SilverStripe\ORM\DataList|ManyManyList
      */
     public static function inject($list, $componentName, $fields = [])
     {

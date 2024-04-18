@@ -206,7 +206,7 @@ class BaseFileExtension extends DataExtension
      * It doesn't mean that the files are currently or still associated!!
      *
      * @param DataObject $record
-     * @return DataList|File[]
+     * @return \SilverStripe\ORM\DataList|File[]
      */
     public static function getObjectFiles(DataObject $record)
     {
