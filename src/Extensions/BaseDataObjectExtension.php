@@ -21,6 +21,7 @@ use SilverStripe\ORM\UnsavedRelationList;
 use LeKoala\Base\Forms\BuildableFieldList;
 use SilverStripe\Assets\Shortcodes\FileLink;
 use LeKoala\Base\Forms\GridField\GridFieldHelper;
+use LeKoala\Base\Helpers\DatabaseHelper;
 use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\Admin\ModelAdmin;
 use SilverStripe\Assets\Shortcodes\FileLinkTracking;
@@ -104,33 +105,34 @@ class BaseDataObjectExtension extends DataExtension
      * determine which table is used
      *
      * @param array $data
-     * @return Query
+     * @return Query|null
      */
     public function directUpdate($data)
     {
-        if (!$this->owner->ID) {
-            return;
+        $id = $this->owner->ID;
+        if (!$id) {
+            return null;
         }
         $schema = DataObjectSchema::singleton();
         $table = $schema->tableForField(get_class($this->owner), key($data));
-        $query = new SQLUpdate($table);
-        reset($data);
-        foreach ($data as $k => $v) {
-            $query->assign($k, $v);
-        }
-        $query->addWhere(['ID' => $this->owner->ID]);
-        return $query->execute();
+        return DatabaseHelper::update($table, $data, $id);
     }
 
+    /**
+     * @deprecated
+     * @param FormScaffolder $fs
+     * @return void
+     */
     public function updateFormScaffolder(FormScaffolder $fs)
     {
         $ignored_fields = $this->owner->config()->ignored_fields;
-        if (!empty($ignored_fields)) {
+        if (!empty($ignored_fields) && property_exists($fs, 'ignoreFields')) {
+            //@phpstan-ignore-next-line
             $fs->ignoreFields = $ignored_fields;
         }
     }
 
-    public function isBeingEdited()
+    public function isBeingEdited(): bool
     {
         if (!Controller::has_curr()) {
             return false;
