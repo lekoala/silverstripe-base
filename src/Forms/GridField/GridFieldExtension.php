@@ -6,7 +6,6 @@ use Exception;
 use SilverStripe\Core\Extension;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\Forms\GridField\GridField;
-use LeKoala\Base\Forms\GridField\GridFieldExtension;
 
 /**
  * Ease of use for day to day coding relative to GridField usage
