@@ -7,10 +7,13 @@ use LeKoala\Base\Extensions\BasePageExtension;
 
 /**
  * Class \LeKoala\Base\Privacy\PrivacyNoticePage
- *
+ * @mixin \LeKoala\Base\Extensions\BasePageExtension
  */
 class PrivacyNoticePage extends Page
 {
+    /**
+     * @var string
+     */
     private static $table_name = 'PrivacyNoticePage'; // When using namespace, specify table name
 
     public function requireDefaultRecords()

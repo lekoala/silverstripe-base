@@ -9,10 +9,13 @@ use LeKoala\Base\Extensions\BasePageExtension;
 
 /**
  * Class \LeKoala\Base\Privacy\CookiesRequiredPage
- *
+ * @mixin \LeKoala\Base\Extensions\BasePageExtension
  */
 class CookiesRequiredPage extends Page
 {
+    /**
+     * @var string
+     */
     private static $table_name = 'CookiesRequiredPage'; // When using namespace, specify table name
 
     public function index(HTTPRequest $request = null)
