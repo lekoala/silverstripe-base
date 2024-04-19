@@ -23,16 +23,17 @@ class GridFieldExtension extends Extension
      *
      * green,blue,amber,red
      *
-     * @param string $classes
+     * @param array<string> $classes
      * @param int $total
      * @param int $index
-     * @param DataObject $record
+     * @param \SilverStripe\ORM\DataObject $record
      * @return void
      */
     public function updateNewRowClasses(&$classes, $total, $index, $record)
     {
         // Use the extension point to forward the color decision to the record
-        if ($record->hasMethod('getRowClass')) {
+        if (method_exists($record, 'getRowClass')) {
+            /** @var string|null $class */
             $class = $record->getRowClass($total, $index, $record);
             if ($class) {
                 $classes[] = $class;
@@ -43,8 +44,8 @@ class GridFieldExtension extends Extension
     /**
      * Turn a list of fields into a consistent array with labels
      *
-     * @param array $fields
-     * @return array
+     * @param array<mixed> $fields
+     * @return array<string,string>
      */
     public function fieldLabels($fields)
     {
@@ -93,7 +94,7 @@ class GridFieldExtension extends Extension
      * Shorhand for setting field labels
      *
      * @param array $displayFields
-     * @return GridField|GridFieldExtension
+     * @return \SilverStripe\Forms\GridField\GridField|\LeKoala\Base\Forms\GridField\GridFieldExtension
      */
     public function setDisplayFields($displayFields)
     {
@@ -113,7 +114,7 @@ class GridFieldExtension extends Extension
      * Shorhand for setting field formatting
      *
      * @param array $fieldFormatting
-     * @return GridField|GridFieldExtension
+     * @return \SilverStripe\Forms\GridField\GridField|\LeKoala\Base\Forms\GridField\GridFieldExtension
      */
     public function setFieldFormatting($fieldFormatting)
     {
