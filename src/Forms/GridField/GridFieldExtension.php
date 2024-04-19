@@ -53,6 +53,7 @@ class GridFieldExtension extends Extension
         $singl = $class::singleton();
 
         $i = 0;
+        $arr = [];
         foreach ($fields as $index => $label) {
             if (is_numeric($index)) {
                 $key = $label;
