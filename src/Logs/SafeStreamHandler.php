@@ -2,33 +2,25 @@
 
 namespace LeKoala\Base\Logs;
 
-use Monolog\Logger;
 use Monolog\LogRecord;
 use Monolog\Handler\StreamHandler;
+use Monolog\Level;
+use SilverStripe\Control\Director;
 
-if (Logger::API < 3) {
-    class SafeStreamHandler extends StreamHandler
+class SafeStreamHandler extends StreamHandler
+{
+    public function __construct($stream, int|string|Level $level = Level::Debug, bool $bubble = true, ?int $filePermission = null, bool $useLocking = false)
     {
-        protected function write(array $record)
-        {
-            try {
-                parent::write($record);
-            } catch (\UnexpectedValueException $e) {
-                // Ignore
-            }
-        }
+        $stream = str_replace('{SS_BASE_FOLDER}', Director::baseFolder(), $stream);
+        parent::__construct($stream, $level, $bubble, $filePermission, $useLocking);
     }
-} else {
-    // Since v3, it uses a LogRecord class
-    class SafeStreamHandler extends StreamHandler
+
+    protected function write(LogRecord $record): void
     {
-        protected function write(LogRecord $record): void
-        {
-            try {
-                parent::write($record);
-            } catch (\UnexpectedValueException $e) {
-                // Ignore
-            }
+        try {
+            parent::write($record);
+        } catch (\UnexpectedValueException $e) {
+            // Ignore
         }
     }
 }
