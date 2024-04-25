@@ -172,7 +172,7 @@ class BaseDataObjectExtension extends DataExtension
      */
     public function getManyManyExtraData($relation, $id, $key, $default = null)
     {
-        /* @var $list ManyManyList */
+        /** @var \SilverStripe\ORM\ManyManyList $list */
         $list = $this->owner->$relation();
         if ($list instanceof UnsavedRelationList) {
             return $default;

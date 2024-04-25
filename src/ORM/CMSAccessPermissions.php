@@ -24,7 +24,7 @@ trait CMSAccessPermissions
         return Permission::check('CMS_ACCESS', 'any', $member);
     }
 
-    public function canDelete($member = null, $context = [])
+    public function canDelete($member = null)
     {
         return Permission::check('CMS_ACCESS', 'any', $member);
     }
