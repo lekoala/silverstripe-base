@@ -12,6 +12,7 @@ use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\Forms\GridField\GridFieldFilterHeader;
 use Symbiote\GridFieldExtensions\GridFieldAddExistingSearchButton;
 use Symbiote\GridFieldExtensions\GridFieldEditableColumns;
+use Exception;
 
 /**
  * Due to the dynamic nature of the config, your IDE will not recognize
@@ -89,11 +90,14 @@ class GridFieldHelper
     }
 
     /**
-     * @param GridField $gridField
+     * @param GridField|\SilverStripe\Forms\FormField $gridField
      * @return GridFieldConfig
      */
-    public static function getConfig(GridField $gridField)
+    public static function getConfig($gridField)
     {
+        if (!($gridField instanceof GridField)) {
+            throw new Exception("Not a gridfield");
+        }
         return $gridField->getConfig();
     }
 
