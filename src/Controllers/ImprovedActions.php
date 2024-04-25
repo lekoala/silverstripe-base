@@ -119,7 +119,7 @@ trait ImprovedActions
      * Controller's default action handler.  It will call the method named in "$Action", if that method
      * exists. If "$Action" isn't given, it will use "index" as a default.
      *
-     * @param HTTPRequest $request
+     * @param \SilverStripe\Control\HTTPRequest $request
      * @param string $action
      *
      * @return DBHTMLText|HTTPResponse
