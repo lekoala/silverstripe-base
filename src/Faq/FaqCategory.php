@@ -15,6 +15,12 @@ use LeKoala\Base\Faq\FaqItem;
  * @method \LeKoala\Base\Faq\FaqPage Page()
  * @method \SilverStripe\ORM\DataList|\LeKoala\Base\Faq\FaqItem[] Items()
  * @mixin \LeKoala\CommonExtensions\SortableExtension
+ * @mixin \LeKoala\Base\Extensions\BaseDataObjectExtension
+ * @mixin \SilverStripe\Assets\Shortcodes\FileLinkTracking
+ * @mixin \SilverStripe\Assets\AssetControlExtension
+ * @mixin \SilverStripe\CMS\Model\SiteTreeLinkTracking
+ * @mixin \SilverStripe\Versioned\RecursivePublishable
+ * @mixin \SilverStripe\Versioned\VersionedStateExtension
  */
 class FaqCategory extends DataObject
 {

@@ -25,6 +25,12 @@ use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
  * @property ?string $MapEmbed
  * @property ?string $SuccessContent
  * @method \SilverStripe\ORM\DataList|\LeKoala\Base\Contact\ContactSubmission[] Submissions()
+ * @mixin \LeKoala\Base\Extensions\BaseDataObjectExtension
+ * @mixin \SilverStripe\Assets\Shortcodes\FileLinkTracking
+ * @mixin \SilverStripe\Assets\AssetControlExtension
+ * @mixin \SilverStripe\CMS\Model\SiteTreeLinkTracking
+ * @mixin \SilverStripe\Versioned\RecursivePublishable
+ * @mixin \SilverStripe\Versioned\VersionedStateExtension
  */
 class ContactPage extends \Page
 {

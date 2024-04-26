@@ -19,6 +19,12 @@ use LeKoala\Base\Forms\SmartUploadField;
  * @method \LeKoala\Base\News\NewsPage Page()
  * @method \SilverStripe\ORM\DataList|\LeKoala\Base\News\NewsItem[] Items()
  * @mixin \LeKoala\CommonExtensions\URLSegmentExtension
+ * @mixin \LeKoala\Base\Extensions\BaseDataObjectExtension
+ * @mixin \SilverStripe\Assets\Shortcodes\FileLinkTracking
+ * @mixin \SilverStripe\Assets\AssetControlExtension
+ * @mixin \SilverStripe\CMS\Model\SiteTreeLinkTracking
+ * @mixin \SilverStripe\Versioned\RecursivePublishable
+ * @mixin \SilverStripe\Versioned\VersionedStateExtension
  */
 class NewsCategory extends DataObject
 {

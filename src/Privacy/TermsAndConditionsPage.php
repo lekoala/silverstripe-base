@@ -10,6 +10,12 @@ use LeKoala\Base\Extensions\BasePageExtension;
  *
  * @method \SilverStripe\ORM\DataList|\AlternativeTerms[] AlternativeTermsAndConditions()
  * @mixin \MyTermsAndConditionsExtension
+ * @mixin \LeKoala\Base\Extensions\BaseDataObjectExtension
+ * @mixin \SilverStripe\Assets\Shortcodes\FileLinkTracking
+ * @mixin \SilverStripe\Assets\AssetControlExtension
+ * @mixin \SilverStripe\CMS\Model\SiteTreeLinkTracking
+ * @mixin \SilverStripe\Versioned\RecursivePublishable
+ * @mixin \SilverStripe\Versioned\VersionedStateExtension
  */
 class TermsAndConditionsPage extends Page
 {
