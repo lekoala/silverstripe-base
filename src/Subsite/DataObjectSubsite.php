@@ -107,7 +107,7 @@ class DataObjectSubsite extends DataExtension
         } else {
             // On main site, allow choosing subsite
             $SubsiteIDField = DropdownField::create('SubsiteID', 'Subsite', Subsite::get()->map());
-            $fields->addFieldsToTab('Root.Main', $SubsiteIDField);
+            $fields->addFieldToTab('Root.Main', $SubsiteIDField);
             $SubsiteIDField->setHasEmptyDefault(true);
         }
     }

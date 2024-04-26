@@ -35,7 +35,7 @@ class TaggableExtension extends DataExtension
         });
         // Make sure we don't get an extra tab
         $fields->removeByName('Tags');
-        $fields->addFieldsToTab('Root.Main', $Tags);
+        $fields->addFieldToTab('Root.Main', $Tags);
     }
 
     /**

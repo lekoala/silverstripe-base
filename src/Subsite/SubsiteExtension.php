@@ -41,7 +41,7 @@ class SubsiteExtension extends DataExtension
             if ($Theme) {
                 $fields->insertAfter('Theme', $Domains);
             } else {
-                $fields->addFieldsToTab('Root.Main', $Domains);
+                $fields->addFieldToTab('Root.Main', $Domains);
             }
         }
     }

@@ -47,27 +47,27 @@ class ContactPage extends \Page
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
-        $fields->addFieldsToTab('Root.Details', new TextField('Address'));
-        $fields->addFieldsToTab('Root.Details', $Infos = new HTMLEditorField('Infos'));
+        $fields->addFieldToTab('Root.Details', new TextField('Address'));
+        $fields->addFieldToTab('Root.Details', $Infos = new HTMLEditorField('Infos'));
         $Infos->setRows(10);
         $Infos->addExtraClass('stacked');
-        $fields->addFieldsToTab('Root.Details', new CheckboxField('ShowInfosOnly'));
-        $fields->addFieldsToTab('Root.Details', new TextField('Phone'));
-        $fields->addFieldsToTab('Root.Details', new TextField('Email'));
+        $fields->addFieldToTab('Root.Details', new CheckboxField('ShowInfosOnly'));
+        $fields->addFieldToTab('Root.Details', new TextField('Phone'));
+        $fields->addFieldToTab('Root.Details', new TextField('Email'));
         //
-        $fields->addFieldsToTab('Root.Map', new TextField('Latitude'));
-        $fields->addFieldsToTab('Root.Map', new TextField('Longitude'));
-        $fields->addFieldsToTab('Root.Map', new LiteralField(
+        $fields->addFieldToTab('Root.Map', new TextField('Latitude'));
+        $fields->addFieldToTab('Root.Map', new TextField('Longitude'));
+        $fields->addFieldToTab('Root.Map', new LiteralField(
             'LatLonHelper',
             'You can use a website like <a href="https://www.latlong.net/" target="_blank">LatLong.net</a> to find your coordinates<br/><br/>'
         ));
-        $fields->addFieldsToTab('Root.Map', new TextareaField("MapEmbed"));
-        $fields->addFieldsToTab('Root.Map', new LiteralField(
+        $fields->addFieldToTab('Root.Map', new TextareaField("MapEmbed"));
+        $fields->addFieldToTab('Root.Map', new LiteralField(
             'MapEmbedHelper',
             'You can use a website like <a href="https://www.google.be/maps" target="_blank">Google Map</a> to create a map<br/><br/>'
         ));
 
-        $fields->addFieldsToTab('Root.Success', $SuccessContent = new HTMLEditorField('SuccessContent'));
+        $fields->addFieldToTab('Root.Success', $SuccessContent = new HTMLEditorField('SuccessContent'));
         $SuccessContent->setRows(10);
         $SuccessContent->addExtraClass('stacked');
 
@@ -77,7 +77,7 @@ class ContactPage extends \Page
         } else {
             $SubmissionsConfig = GridFieldConfig_RecordEditor::create();
             $Submissions = new GridField('Submissions', $this->fieldLabel('Submission'), $this->Submissions(), $SubmissionsConfig);
-            $fields->addFieldsToTab('Root.Submissions', $Submissions);
+            $fields->addFieldToTab('Root.Submissions', $Submissions);
         }
 
         return $fields;

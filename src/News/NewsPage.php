@@ -31,7 +31,7 @@ class NewsPage extends \Page
         $fields->replaceField('Content', $Items);
         $CategoriesConfig = GridFieldConfig_RecordEditor::create();
         $Categories = new GridField('Categories', $this->fieldLabel('Categories'), $this->Categories(), $CategoriesConfig);
-        $fields->addFieldsToTab('Root.Categories', $Categories);
+        $fields->addFieldToTab('Root.Categories', $Categories);
         return $fields;
     }
     /**
