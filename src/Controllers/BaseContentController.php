@@ -183,6 +183,10 @@ class BaseContentController extends ContentController
         return JsonHelper::encode($arr);
     }
 
+    /**
+     * @param HTTPRequest $request
+     * @return HTTPResponse
+     */
     public function handleRequest(HTTPRequest $request): HTTPResponse
     {
         $response = parent::handleRequest($request);

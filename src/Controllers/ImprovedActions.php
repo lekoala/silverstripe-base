@@ -103,7 +103,6 @@ trait ImprovedActions
 
     /**
      * @param string $action
-     *
      * @return bool
      */
     public function hasAction($action)
@@ -122,7 +121,7 @@ trait ImprovedActions
      * @param \SilverStripe\Control\HTTPRequest $request
      * @param string $action
      *
-     * @return DBHTMLText|HTTPResponse
+     * @return \SilverStripe\ORM\FieldType\DBHTMLText|\SilverStripe\Control\HTTPResponse
      */
     protected function handleAction($request, $action)
     {
