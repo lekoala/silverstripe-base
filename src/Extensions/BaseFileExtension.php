@@ -36,7 +36,7 @@ use SilverStripe\Assets\Flysystem\ProtectedAssetAdapter;
  * - Smart cropping
  *
  * @property \SilverStripe\Assets\File|\LeKoala\Base\Extensions\BaseFileExtension $owner
- * @property bool $IsTemporary
+ * @property bool|int $IsTemporary
  * @property int $FileSize
  * @property int $ObjectID
  * @property string $ObjectClass

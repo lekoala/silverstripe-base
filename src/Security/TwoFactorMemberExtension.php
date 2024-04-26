@@ -32,7 +32,7 @@ use SilverStripe\Security\DefaultAdminService;
  *
  * @property \SilverStripe\Security\Member|\LeKoala\Base\Security\TwoFactorMemberExtension $owner
  * @property ?string $PreferredTwoFactorMethod
- * @property bool $EnableTwoFactorAuth
+ * @property bool|int $EnableTwoFactorAuth
  * @property ?string $TOTPToken
  */
 class TwoFactorMemberExtension extends DataExtension

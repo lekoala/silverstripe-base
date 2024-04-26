@@ -17,7 +17,7 @@ use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
  *
  * @property ?string $Address
  * @property ?string $Infos
- * @property bool $ShowInfosOnly
+ * @property bool|int $ShowInfosOnly
  * @property ?string $Phone
  * @property ?string $Email
  * @property float $Latitude

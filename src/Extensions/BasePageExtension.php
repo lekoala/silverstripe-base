@@ -22,7 +22,7 @@ use SilverStripe\SiteConfig\SiteConfig;
  * Should be applied to SiteTree. Always applied in base-extensions
  *
  * @property \SilverStripe\CMS\Model\SiteTree|\LeKoala\Base\Extensions\BasePageExtension $owner
- * @property bool $ShowInFooter
+ * @property bool|int $ShowInFooter
  */
 class BasePageExtension extends DataExtension
 {
