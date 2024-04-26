@@ -19,17 +19,17 @@ use LeKoala\Base\Theme\ThemeSiteConfigExtension;
  * Class \LeKoala\Base\SiteConfigExtension
  *
  * @property \SilverStripe\SiteConfig\SiteConfig|\LeKoala\Base\SiteConfig\SiteConfigExtension $owner
- * @property string $ContactEmail
- * @property string $ContactPhone
- * @property string $ContactAddress
- * @property string $ContactInfos
- * @property string $LegalName
- * @property string $CompanyRegistrationNumber
- * @property string $LegalCourt
- * @property string $DefaultFromEmail
- * @property string $EmailFooter
- * @property string $FooterText
- * @property string $Copyright
+ * @property ?string $ContactEmail
+ * @property ?string $ContactPhone
+ * @property ?string $ContactAddress
+ * @property ?string $ContactInfos
+ * @property ?string $LegalName
+ * @property ?string $CompanyRegistrationNumber
+ * @property ?string $LegalCourt
+ * @property ?string $DefaultFromEmail
+ * @property ?string $EmailFooter
+ * @property ?string $FooterText
+ * @property ?string $Copyright
  */
 class SiteConfigExtension extends DataExtension
 {

@@ -14,14 +14,14 @@ use SilverStripe\Core\Convert;
 /**
  * Class \LeKoala\Base\Contact\ContactSubmission
  *
- * @property string $Name
- * @property string $Subject
- * @property string $Message
- * @property string $Email
- * @property string $Phone
- * @property string $Company
- * @property string $ExtraData
- * @property string $EmailResults
+ * @property ?string $Name
+ * @property ?string $Subject
+ * @property ?string $Message
+ * @property ?string $Email
+ * @property ?string $Phone
+ * @property ?string $Company
+ * @property ?string $ExtraData
+ * @property ?string $EmailResults
  * @property bool $EmailSent
  * @property int $PageID
  * @method \LeKoala\Base\Contact\ContactPage Page()

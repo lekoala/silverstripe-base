@@ -31,9 +31,9 @@ use SilverStripe\Security\DefaultAdminService;
  * https://philna.sh/blog/2022/12/07/better-two-factor-authentication-experiences-with-web-otp/
  *
  * @property \SilverStripe\Security\Member|\LeKoala\Base\Security\TwoFactorMemberExtension $owner
- * @property string $PreferredTwoFactorMethod
+ * @property ?string $PreferredTwoFactorMethod
  * @property bool $EnableTwoFactorAuth
- * @property string $TOTPToken
+ * @property ?string $TOTPToken
  */
 class TwoFactorMemberExtension extends DataExtension
 {

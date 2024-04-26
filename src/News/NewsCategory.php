@@ -11,8 +11,8 @@ use LeKoala\Base\Forms\SmartUploadField;
 /**
  * Class \LeKoala\Base\News\NewsCategory
  *
- * @property string $URLSegment
- * @property string $Title
+ * @property ?string $URLSegment
+ * @property ?string $Title
  * @property int $ImageID
  * @property int $PageID
  * @method \SilverStripe\Assets\Image Image()

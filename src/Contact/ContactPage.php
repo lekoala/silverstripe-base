@@ -15,15 +15,15 @@ use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
 /**
  * Class \LeKoala\Base\Contact\ContactPage
  *
- * @property string $Address
- * @property string $Infos
+ * @property ?string $Address
+ * @property ?string $Infos
  * @property bool $ShowInfosOnly
- * @property string $Phone
- * @property string $Email
+ * @property ?string $Phone
+ * @property ?string $Email
  * @property float $Latitude
  * @property float $Longitude
- * @property string $MapEmbed
- * @property string $SuccessContent
+ * @property ?string $MapEmbed
+ * @property ?string $SuccessContent
  * @method \SilverStripe\ORM\DataList|\LeKoala\Base\Contact\ContactSubmission[] Submissions()
  */
 class ContactPage extends \Page

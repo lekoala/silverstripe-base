@@ -10,8 +10,8 @@ use LeKoala\Base\Faq\FaqCategory;
  * Class \LeKoala\Base\Faq\FaqItem
  *
  * @property int $Sort
- * @property string $Title
- * @property string $Content
+ * @property ?string $Title
+ * @property ?string $Content
  * @property int $PageID
  * @property int $CategoryID
  * @method \LeKoala\Base\Faq\FaqPage Page()

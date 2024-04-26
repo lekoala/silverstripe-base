@@ -18,11 +18,11 @@ use SilverStripe\Security\Permission;
 /**
  * Class \LeKoala\Base\News\NewsItem
  *
- * @property string $EmbedURL
- * @property string $URLSegment
- * @property string $Title
- * @property string $Content
- * @property string $Published
+ * @property ?string $EmbedURL
+ * @property ?string $URLSegment
+ * @property ?string $Title
+ * @property ?string $Content
+ * @property ?string $Published
  * @property int $ViewCount
  * @property int $ImageID
  * @property int $FileID

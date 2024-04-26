@@ -9,7 +9,7 @@ use LeKoala\Base\Extensions\BasePageExtension;
 
 /**
  * Class \LeKoala\Base\Privacy\CookiesRequiredPage
- * @mixin \LeKoala\Base\Extensions\BasePageExtension
+ *
  */
 class CookiesRequiredPage extends Page
 {

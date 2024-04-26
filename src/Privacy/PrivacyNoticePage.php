@@ -7,7 +7,7 @@ use LeKoala\Base\Extensions\BasePageExtension;
 
 /**
  * Class \LeKoala\Base\Privacy\PrivacyNoticePage
- * @mixin \LeKoala\Base\Extensions\BasePageExtension
+ *
  */
 class PrivacyNoticePage extends Page
 {

@@ -22,7 +22,7 @@ use LeKoala\Base\View\CommonRequirements;
  *   - LeKoala\Base\SiteConfig\FacebookSiteConfigExtension
  *
  * @property \LeKoala\Base\SiteConfig\FacebookSiteConfigExtension $owner
- * @property string $FacebookPixelId
+ * @property ?string $FacebookPixelId
  */
 class FacebookSiteConfigExtension extends DataExtension
 {

@@ -10,7 +10,7 @@ use LeKoala\Base\Faq\FaqItem;
  * Class \LeKoala\Base\Faq\FaqCategory
  *
  * @property int $Sort
- * @property string $Title
+ * @property ?string $Title
  * @property int $PageID
  * @method \LeKoala\Base\Faq\FaqPage Page()
  * @method \SilverStripe\ORM\DataList|\LeKoala\Base\Faq\FaqItem[] Items()

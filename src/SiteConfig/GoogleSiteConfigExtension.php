@@ -22,9 +22,9 @@ use SilverStripe\SiteConfig\SiteConfig;
  *   - LeKoala\Base\SiteConfig\GoogleSiteConfigExtension
  *
  * @property \SilverStripe\SiteConfig\SiteConfig|\LeKoala\Base\SiteConfig\GoogleSiteConfigExtension $owner
- * @property string $GoogleAnalyticsCode
+ * @property ?string $GoogleAnalyticsCode
  * @property bool $GoogleAnalyticsWithoutCookies
- * @property string $GoogleMapsApiKey
+ * @property ?string $GoogleMapsApiKey
  */
 class GoogleSiteConfigExtension extends DataExtension
 {

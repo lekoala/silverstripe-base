@@ -22,16 +22,16 @@ use SilverStripe\AssetAdmin\Forms\UploadField;
  * Extend SiteConfig to make your website Themable
  *
  * @property \SilverStripe\SiteConfig\SiteConfig|\LeKoala\Base\Theme\ThemeSiteConfigExtension $owner
- * @property string $PrimaryColor
- * @property string $SecondaryColor
- * @property string $ThemeColor
- * @property string $MaskColor
- * @property string $HeaderFontFamily
+ * @property ?string $PrimaryColor
+ * @property ?string $SecondaryColor
+ * @property ?string $ThemeColor
+ * @property ?string $MaskColor
+ * @property ?string $HeaderFontFamily
  * @property int $HeaderFontWeight
- * @property string $BodyFontFamily
+ * @property ?string $BodyFontFamily
  * @property int $BodyFontWeight
- * @property string $CssTheme
- * @property string $GoogleFonts
+ * @property ?string $CssTheme
+ * @property ?string $GoogleFonts
  * @property int $LogoID
  * @property int $IconID
  * @property int $FaviconID
