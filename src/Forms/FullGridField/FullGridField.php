@@ -111,7 +111,7 @@ class FullGridField extends GridField
      *
      * This will disable filters (since it's the SQLSelect that will be used)
      *
-     * @param SQLSelect $select
+     * @param \SilverStripe\ORM\Queries\SQLSelect $select
      * @return $this
      */
     public function setSqlSelect($select)

@@ -41,7 +41,7 @@ class FullGridFieldCheckbox implements GridField_SaveHandler, GridField_ColumnPr
 
     /**
      *
-     * @var SQLSelect
+     * @var \SilverStripe\ORM\Queries\SQLSelect
      */
     protected $sqlSelect = null;
 
@@ -435,7 +435,7 @@ class FullGridFieldCheckbox implements GridField_SaveHandler, GridField_ColumnPr
     /**
      * Get the value of sqlSelect
      *
-     * @return SQLSelect
+     * @return \SilverStripe\ORM\Queries\SQLSelect
      */
     public function getSqlSelect()
     {
@@ -445,7 +445,7 @@ class FullGridFieldCheckbox implements GridField_SaveHandler, GridField_ColumnPr
     /**
      * Set the value of sqlSelect
      *
-     * @param SQLSelect $sqlSelect
+     * @param \SilverStripe\ORM\Queries\SQLSelect $sqlSelect
      * @return $this
      */
     public function setSqlSelect($sqlSelect)
