@@ -33,6 +33,22 @@
     return new Date(str);
   }
 
+  function onComplete($this, settings, url) {
+    if (settings.onComplete) {
+      settings.onComplete.call();
+    }
+    if (settings.selectors && settings.selectors.seconds) {
+      $(settings.selectors.seconds).text("00");
+    } else {
+      $this.text("00" + settings.labels.seconds);
+    }
+    if (settings.reloadOnComplete) {
+      window.location.reload();
+    } else if (url) {
+      window.location.replace(url);
+    }
+  }
+
   $.fn.extend({
     ServerCountdown: function (options) {
       this.defaultOptions = {
@@ -80,22 +96,15 @@
           settings.onInit.call();
         }
 
+        if(nowDate.getTime() > endDate.getTime()) {
+            onComplete($this, settings, url);
+            return;
+        }
+
         var compute = function () {
           if (data.diff <= 0) {
             clearInterval(interval);
-            if (settings.onComplete) {
-              settings.onComplete.call();
-            }
-            if (settings.selectors && settings.selectors.seconds) {
-              $(settings.selectors.seconds).text("00");
-            } else {
-              $this.text("00" + settings.labels.seconds);
-            }
-            if (settings.reloadOnComplete) {
-              window.location.reload();
-            } else if (url) {
-              window.location.replace(url);
-            }
+            onComplete($this, settings, url);
             return;
           }
 
