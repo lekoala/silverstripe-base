@@ -118,7 +118,7 @@ class InputMaskDateTimeField extends InputMaskField
     public static function secondsToTime($seconds)
     {
         $t = round($seconds);
-        return sprintf('%02d:%02d:%02d', ($t / 3600), ($t / 60 % 60), $t % 60);
+        return sprintf('%02d:%02d:%02d', round($t / 3600), round($t / 60) % 60, $t % 60);
     }
 
     /**
