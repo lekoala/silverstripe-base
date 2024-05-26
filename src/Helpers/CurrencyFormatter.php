@@ -177,7 +177,7 @@ trait CurrencyFormatter
 
     /**
      * @link https://github.com/mcuadros/currency-detector/blob/master/src/CurrencyDetector/Detector.php
-     * @param string|array $value
+     * @return string|float|int|array<mixed> Preserve the type that was passed
      */
     public static function unformatCurrency($value)
     {
@@ -194,6 +194,11 @@ trait CurrencyFormatter
             return 0;
         }
 
+        // Already converted
+        if (is_float($value) || is_int($value)) {
+            return $value;
+        }
+
         // If it contains -, it's a negative number
         $neg = false;
         if (strpos($value, '-') !== false) {
@@ -207,7 +212,7 @@ trait CurrencyFormatter
         $stringWithCommaOrDot = preg_replace('/([,\.])/', '', $cleanString, $separatorsCountToBeErased);
 
         // Remove any thousand separator followed by 3 digits before the end of the string
-        $removeThousandsSeparator = preg_replace('/(\.|,)(?=[0-9]{3,}$)/', '', $stringWithCommaOrDot);
+        $removeThousandsSeparator = preg_replace('/(\.|,)(?=[0-9]{3}$)/', '', $stringWithCommaOrDot);
 
         $value = str_replace(',', '.', $removeThousandsSeparator);
 
@@ -215,6 +220,7 @@ trait CurrencyFormatter
         if ($neg) {
             $value = -1 * abs($value);
         }
+        $value = (string) $value;
         return $value;
     }
 }
