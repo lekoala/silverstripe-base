@@ -109,7 +109,7 @@
         // Already finished
         if (data.diff < 0) {
           var time = trigger ? 5000 : -1;
-          onComplete($this, settings, url, 5000);
+          onComplete($this, settings, url, time);
           return;
         }
 
