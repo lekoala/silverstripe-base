@@ -33,6 +33,38 @@
     return new Date(str);
   }
 
+  function onComplete($this, settings, url, delay = 0) {
+    if (settings.selectors && settings.selectors.seconds) {
+      if (settings.selectors.days) {
+        $(settings.selectors.days).text("0");
+      }
+      if (settings.selectors.hours) {
+        $(settings.selectors.hours).text("00");
+      }
+      if (settings.selectors.minutes) {
+        $(settings.selectors.minutes).text("00");
+      }
+      if (settings.selectors.seconds) {
+        $(settings.selectors.seconds).text("00");
+      }
+    } else {
+      $this.text("00" + settings.labels.seconds);
+    }
+    if (settings.onComplete) {
+      settings.onComplete.call();
+    }
+    if (delay < 0) {
+      return;
+    }
+    setTimeout(() => {
+      if (settings.reloadOnComplete) {
+        window.location.reload();
+      } else if (url) {
+        window.location.replace(url);
+      }
+    }, delay);
+  }
+
   $.fn.extend({
     ServerCountdown: function (options) {
       this.defaultOptions = {
@@ -59,6 +91,7 @@
         var start = $this.data("start");
         var end = $this.data("end");
         var url = $this.data("url");
+        var trigger = $this.data("trigger");
 
         // Keep default state
         if (!start || !end) {
@@ -73,6 +106,13 @@
         var data = {};
         data.diff = endDate.getTime() - startDate.getTime();
 
+        // Already finished
+        if (data.diff < 0) {
+          var time = trigger ? 5000 : -1;
+          onComplete($this, settings, url, 5000);
+          return;
+        }
+
         // Compute our initial difference based on current time (useful for interval)
         data.initDiff = nowDate.getTime() - startDate.getTime();
 
@@ -82,20 +122,7 @@
 
         var compute = function () {
           if (data.diff <= 0) {
-            clearInterval(interval);
-            if (settings.onComplete) {
-              settings.onComplete.call();
-            }
-            if (settings.selectors && settings.selectors.seconds) {
-              $(settings.selectors.seconds).text("00");
-            } else {
-              $this.text("00" + settings.labels.seconds);
-            }
-            if (settings.reloadOnComplete) {
-              window.location.reload();
-            } else if (url) {
-              window.location.replace(url);
-            }
+            onComplete($this, settings, url);
             return;
           }
 
