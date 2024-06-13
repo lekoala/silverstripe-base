@@ -13,7 +13,7 @@ class QueryHelper
 
     /**
      * @param string $class
-     * @param int|string|array $idOrWhere
+     * @param int|string|array<mixed> $idOrWhere
      * @return DataObject
      */
     public static function findOne($class, $idOrWhere)
@@ -42,7 +42,7 @@ class QueryHelper
 
     /**
      * @param string $class
-     * @param array $filters
+     * @param array<mixed> $filters
      * @return DataList
      */
     public static function find($class, $filters = null)

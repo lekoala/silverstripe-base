@@ -421,7 +421,7 @@ class FullGridFieldCheckbox implements GridField_SaveHandler, GridField_ColumnPr
     /**
      * Set the value of filters
      *
-     * @param array $filters
+     * @param array<mixed> $filters
      *
      * @return $this
      */

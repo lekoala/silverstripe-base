@@ -85,7 +85,7 @@ class FullGridField extends GridField
      *
      * Cannot be used at the same time as setSqlSelect
      *
-     * @param array $filters
+     * @param array<mixed> $filters
      * @return $this
      */
     public function setFilters($filters)
