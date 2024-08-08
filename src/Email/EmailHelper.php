@@ -4,6 +4,9 @@ namespace LeKoala\Base\Email;
 
 use SilverStripe\Control\Email\Email;
 use SilverStripe\SiteConfig\SiteConfig;
+use SilverStripe\View\SSViewer;
+use SilverStripe\Security\Security;
+use SilverStripe\View\ViewableData;
 
 /**
  * Helper email class
@@ -36,6 +39,23 @@ class EmailHelper
             $email->addData("EmailContent", $body);
         }
 
+        return $email;
+    }
+
+    /**
+     * @link https://github.com/silverstripe/silverstripe-framework/issues/8628
+     * @param ViewableData $item
+     * @param ?string $template
+     * @param ?array $arguments
+     * @return Email
+     */
+    public static function templatedEmail(ViewableData $item, ?string $template = null, ?array $arguments = null): Email
+    {
+        $viewer = new SSViewer($template);
+        $content = $viewer->process($item, $arguments);
+        $email = Email::create()
+            ->setHTMLTemplate('SilverStripe\\Control\\Email\\Email')
+            ->addData('EmailContent', $content);
         return $email;
     }
 
