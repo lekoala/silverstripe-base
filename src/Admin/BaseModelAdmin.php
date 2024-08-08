@@ -257,7 +257,7 @@ abstract class BaseModelAdmin extends ModelAdmin
 
         $singl = singleton($this->modelClass);
 
-        $gridField = $this->getGridFieldFrom($form);
+        $gridField = $this->hasMethod('getGridField') ? $this->getGridField() : $this->getGridFieldFrom($form);
         if ($gridField) {
             $gridField->getConfig()->removeComponentsByType(GridFieldDeleteAction::class);
             if (self::config()->can_delete_from_list) {
