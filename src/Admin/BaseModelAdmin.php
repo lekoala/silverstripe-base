@@ -258,12 +258,14 @@ abstract class BaseModelAdmin extends ModelAdmin
         $singl = singleton($this->modelClass);
 
         $gridField = $this->getGridFieldFrom($form);
-        $gridField->getConfig()->removeComponentsByType(GridFieldDeleteAction::class);
-        if (self::config()->can_delete_from_list) {
-            $gridField->getConfig()->addComponent(new GridFieldDeleteAction(false));
-        }
-        if ($singl->hasExtension(SortableExtension::class)) {
-            $gridField->getConfig()->addComponent(new GridFieldOrderableRows());
+        if ($gridField) {
+            $gridField->getConfig()->removeComponentsByType(GridFieldDeleteAction::class);
+            if (self::config()->can_delete_from_list) {
+                $gridField->getConfig()->addComponent(new GridFieldDeleteAction(false));
+            }
+            if ($singl->hasExtension(SortableExtension::class)) {
+                $gridField->getConfig()->addComponent(new GridFieldOrderableRows());
+            }
         }
 
         return $form;
