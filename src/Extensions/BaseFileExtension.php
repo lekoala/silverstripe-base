@@ -80,7 +80,11 @@ class BaseFileExtension extends DataExtension
             $this->owner->ObjectClass = null;
         }
         if (!$this->owner->FileSize && $this->owner->FileID) {
-            $this->owner->FileSize = $this->owner->getAbsoluteSize();
+            $fs = $this->owner->getAbsoluteSize();
+            if (!$fs) {
+                $fs = filesize($this->owner->getFullPath());
+            }
+            $this->owner->FileSize = $fs;
         }
     }
 
@@ -108,7 +112,7 @@ class BaseFileExtension extends DataExtension
      * @param string|int $size
      * @return Image[]
      */
-    public static function findLargeImages($size = null)
+    public static function findLargeImages($size = null, $refresh = false)
     {
         $mem = FileHelper::memoryLimit();
         if (!$size) {
@@ -120,6 +124,17 @@ class BaseFileExtension extends DataExtension
         if ($size > $mem) {
             $size = $mem;
         }
+
+        if ($refresh) {
+            foreach (File::get() as $file) {
+                $size = $file->FileSize;
+                if ($size) {
+                    $file->FileSize = 0;
+                    $file->writeWithoutVersionIfPossible();
+                }
+            }
+        }
+
         $files = Image::get()->where("FileSize > '$size'")->toArray();
         return $files;
     }
@@ -250,10 +265,16 @@ class BaseFileExtension extends DataExtension
             if ($f instanceof Folder) {
                 continue;
             }
-
             $size = $f->getAbsoluteSize();
             if ($size) {
-                $f->writeWithoutVersionIfPossible();
+                self::quickUpdateFileSize($f->ID, $size);
+                continue;
+            }
+
+            // sometimes, getAbsoluteSize doesn't work
+            $filesize = filesize($f->getFullPath());
+            if ($filesize) {
+                self::quickUpdateFileSize($f->ID, $filesize);
                 continue;
             }
 
@@ -490,6 +511,13 @@ class BaseFileExtension extends DataExtension
         DB::query("UPDATE File SET ObjectClass = null WHERE ObjectID = 0 AND ObjectClass IS NOT NULL");
         DB::query("UPDATE File_Live SET ObjectClass = null WHERE ObjectID = 0 AND ObjectClass IS NOT NULL");
         DB::query("UPDATE File_Versions SET ObjectClass = null WHERE ObjectID = 0 AND ObjectClass IS NOT NULL");
+    }
+
+    public static function quickUpdateFileSize(int $id, int $fs)
+    {
+        DB::query("UPDATE File SET FileSize = $fs WHERE ID = $id");
+        DB::query("UPDATE File_Live SET FileSize = $fs WHERE ID = $id");
+        DB::query("UPDATE File_Versions SET FileSize = $fs WHERE RecordID = $id");
     }
 
     /**
