@@ -79,7 +79,7 @@ class BaseFileExtension extends DataExtension
         if (!$this->owner->ObjectID) {
             $this->owner->ObjectClass = null;
         }
-        if (!$this->owner->FileSize && $this->owner->File) {
+        if (!$this->owner->FileSize && $this->owner->FileID) {
             $this->owner->FileSize = $this->owner->getAbsoluteSize();
         }
     }
@@ -104,11 +104,15 @@ class BaseFileExtension extends DataExtension
         return $size;
     }
 
+    /**
+     * @param string|int $size
+     * @return Image[]
+     */
     public static function findLargeImages($size = null)
     {
         $mem = FileHelper::memoryLimit();
         if (!$size) {
-            $size = $mem;
+            $size = '4mb';
         }
         if (!is_numeric($size)) {
             $size = FileHelper::convertToByte($size);
@@ -116,7 +120,82 @@ class BaseFileExtension extends DataExtension
         if ($size > $mem) {
             $size = $mem;
         }
-        $files = Image::get()->where("FileSize > '$mem'")->toArray();
+        $files = Image::get()->where("FileSize > '$size'")->toArray();
+        return $files;
+    }
+
+    public static function compressLargeFiles(int $width = 1600, int $height = 1600)
+    {
+        Environment::setTimeLimitMax(0);
+        Environment::setMemoryLimitMax(0);
+
+        $targetSize = FileHelper::convertToByte('4mb');
+        $files = self::findLargeImages($targetSize);
+        $log = [];
+        foreach ($files as $file) {
+            $size = $file->getAbsoluteSize();
+            $path = $file->getFullPath();
+
+            if (!$size) {
+                $size = filesize($path);
+            }
+
+            list($w, $h) = getimagesize($path);
+            if (!$w || !$h) {
+                continue;
+            }
+
+            // It's already below target size
+            $result = null;
+            if ($size < $targetSize) {
+                $result = 'skipped (file size is too small)';
+                $file->FileSize = 0;
+                $file->writeWithoutVersionIfPossible();
+            } elseif ($w <= $width && $h <= $height) {
+                $result = 'skipped (dimensions are too small)';
+            }
+            if ($result) {
+                $log[] = [
+                    'ID' => $file->ID,
+                    'file' => $path,
+                    'result' => $result,
+                    'size' => $size,
+                    'size_readable' => FileHelper::humanFilesize($size),
+                    'w' => $w,
+                    'h' => $h,
+                    'new_size' => null,
+                ];
+                continue;
+            }
+
+            try {
+                $result = FileHelper::imageResize($path, $path, $width, $height);
+            } catch (\Throwable $e) {
+                $result = $e->getMessage();
+            }
+
+            $newSize = $file->getAbsoluteSize();
+            if (!$newSize) {
+                $newSize = filesize($path);
+            }
+            if ($newSize != $size && $result == true) {
+                $file->FileSize = 0;
+                $file->writeWithoutVersionIfPossible();
+            }
+
+            $log[] = [
+                'ID' => $file->ID,
+                'file' => $path,
+                'result' => $result,
+                'size' => $size,
+                'size_readable' => FileHelper::humanFilesize($size),
+                'w' => $w,
+                'h' => $h,
+                'new_size' => $newSize,
+            ];
+        }
+
+        return $log;
     }
 
     public static function moveFilesWithoutParent()
@@ -174,7 +253,7 @@ class BaseFileExtension extends DataExtension
 
             $size = $f->getAbsoluteSize();
             if ($size) {
-                $f->writeWithoutVersion();
+                $f->writeWithoutVersionIfPossible();
                 continue;
             }
 
