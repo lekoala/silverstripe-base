@@ -25,6 +25,7 @@ use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Core\Injector\InjectionCreator;
 use SilverStripe\AssetAdmin\Controller\AssetAdmin;
 use SilverStripe\Assets\Flysystem\ProtectedAssetAdapter;
+use SilverStripe\Assets\Storage\Sha1FileHashingService;
 
 /**
  * Improved File usage
@@ -129,6 +130,33 @@ class BaseFileExtension extends DataExtension
         return $files;
     }
 
+    public static function regenerateHashForId(int $id)
+    {
+        $service = new Sha1FileHashingService();
+
+        $file = File::get_by_id($id);
+        $hash = $file->getHash();
+
+        $stream  = $file->getStream();
+        if (!$stream) {
+            $filename = $file->getFilename();
+            $location = $file->getFullPath();
+            if (!is_file($location)) {
+                return false;
+            }
+            $stream = fopen($location, 'rb');
+        }
+
+        $fullhash = $service->computeFromStream($stream);
+
+        if ($hash != $fullhash) {
+            DB::query("UPDATE File SET FileHash = '" . $fullhash . "' WHERE ID = " . $file->ID);
+            DB::query("UPDATE File_Live SET FileHash = '" . $fullhash . "' WHERE ID = " . $file->ID);
+            return true;
+        }
+        return false;
+    }
+
     public static function compressLargeFiles(int $width = 1600, int $height = 1600)
     {
         Environment::setTimeLimitMax(0);
@@ -173,6 +201,8 @@ class BaseFileExtension extends DataExtension
                 continue;
             }
 
+            // keep in mind that hash will become invalid
+            // https://github.com/silverstripe/silverstripe-assets/issues/378
             try {
                 $result = FileHelper::imageResize($path, $path, $width, $height);
             } catch (\Throwable $e) {
@@ -508,6 +538,8 @@ class BaseFileExtension extends DataExtension
         DB::query("UPDATE File SET FileSize = $fs WHERE ID = $id");
         DB::query("UPDATE File_Live SET FileSize = $fs WHERE ID = $id");
         DB::query("UPDATE File_Versions SET FileSize = $fs WHERE RecordID = $id");
+
+        self::regenerateHashForId($id);
     }
 
     /**
