@@ -112,7 +112,7 @@ class BaseFileExtension extends DataExtension
      * @param string|int $size
      * @return Image[]
      */
-    public static function findLargeImages($size = null, $refresh = false)
+    public static function findLargeImages($size = null)
     {
         $mem = FileHelper::memoryLimit();
         if (!$size) {
@@ -123,16 +123,6 @@ class BaseFileExtension extends DataExtension
         }
         if ($size > $mem) {
             $size = $mem;
-        }
-
-        if ($refresh) {
-            foreach (File::get() as $file) {
-                $size = $file->FileSize;
-                if ($size) {
-                    $file->FileSize = 0;
-                    $file->writeWithoutVersionIfPossible();
-                }
-            }
         }
 
         $files = Image::get()->where("FileSize > '$size'")->toArray();
