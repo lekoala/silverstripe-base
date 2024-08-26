@@ -23,7 +23,7 @@ class CommonRequirements
      * @config
      * @var string
      */
-    private static $jquery_version = '3.6.3';
+    private static $jquery_version = '3.7.1';
 
     /**
      * @config

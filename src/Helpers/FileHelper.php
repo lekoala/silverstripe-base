@@ -2,6 +2,7 @@
 
 namespace LeKoala\Base\Helpers;
 
+use Exception;
 use RecursiveIteratorIterator;
 use RecursiveDirectoryIterator;
 use SilverStripe\Core\Environment;
@@ -146,18 +147,83 @@ class FileHelper
         return sprintf("%.{$decimals}f ", $bytes / pow(1024, $factor)) . ['B', 'KB', 'MB', 'GB', 'TB', 'PB'][$factor];
     }
 
+    public static function imageResize(string $src, string $dst, int $width, int $height, bool $crop = false)
+    {
+        $type = strtolower(pathinfo($src, PATHINFO_EXTENSION));
+        if ($type === 'jpeg') {
+            $type = 'jpg';
+        }
+
+        list($w, $h) = getimagesize($src);
+        if (!$w || !$h) {
+            throw new Exception("Unsupported picture type: `$type`!");
+        }
+
+        $img = match ($type) {
+            'bmp' => imagecreatefromwbmp($src),
+            'gif' => imagecreatefromgif($src),
+            'jpg' => imagecreatefromjpeg($src),
+            'png' => imagecreatefrompng($src),
+            'webp' => imagecreatefromwebp($src),
+            default => throw new Exception("Unsupported picture type: `$type`!"),
+        };
+
+        // resize if needed
+        if ($crop) {
+            if ($w < $width || $h < $height) {
+                return false;
+            }
+            $ratio = max($width / $w, $height / $h);
+            $x = round(($w - $width / $ratio) / 2);
+            $y = round(($h - $height / $ratio) / 2);
+            $h = round($height / $ratio);
+            $w = round($width / $ratio);
+        } else {
+            if ($w < $width && $h < $height) {
+                return false;
+            }
+            $ratio = min($width / $w, $height / $h);
+            $x = 0;
+            $y = 0;
+            $width = round($w * $ratio);
+            $height = round($h * $ratio);
+        }
+
+        $new = imagecreatetruecolor($width, $height);
+
+        // preserve transparency
+        if (in_array($type, ['gif', 'png', 'webp'])) {
+            imagealphablending($new, false);
+            imagesavealpha($new, true);
+        }
+
+        imagecopyresampled($new, $img, 0, 0, $x, $y, $width, $height, $w, $h);
+
+        $res = match ($type) {
+            'bmp' => imagewbmp($new, $dst),
+            'gif' => imagegif($new, $dst),
+            'jpg' => imagejpeg($new, $dst),
+            'png' => imagepng($new, $dst),
+            'webp' => imagewebp($new, $dst),
+        };
+        return $res;
+    }
+
     public static function canResizeImageBySize($x, $y, $rgb = 3, $maxMb = 32)
     {
         $max = $maxMb * 1024 * 1024;
         return ($x * $y * $rgb * 1.7 < $max - memory_get_usage());
     }
 
-    public static function convertToByte($val)
+    public static function convertToByte($val): int
     {
-        $val  = trim($val);
-
-        if (is_numeric($val)) {
-            return $val;
+        $val = (string)$val;
+        if (!$val) {
+            return 0;
+        }
+        $val = str_ireplace(['mb', 'gb', 'kb'], ['m', 'g', 'k'], $val);
+        if (function_exists('ini_parse_quantity')) {
+            return ini_parse_quantity($val);
         }
 
         $last = strtolower($val[strlen($val) - 1]);

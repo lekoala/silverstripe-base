@@ -25,6 +25,7 @@ use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Core\Injector\InjectionCreator;
 use SilverStripe\AssetAdmin\Controller\AssetAdmin;
 use SilverStripe\Assets\Flysystem\ProtectedAssetAdapter;
+use SilverStripe\Assets\Storage\Sha1FileHashingService;
 
 /**
  * Improved File usage
@@ -79,8 +80,12 @@ class BaseFileExtension extends DataExtension
         if (!$this->owner->ObjectID) {
             $this->owner->ObjectClass = null;
         }
-        if (!$this->owner->FileSize && $this->owner->File) {
-            $this->owner->FileSize = $this->owner->getAbsoluteSize();
+        if (!$this->owner->FileSize && $this->owner->FileID) {
+            $fs = $this->owner->getAbsoluteSize();
+            if (!$fs) {
+                $fs = filesize($this->owner->getFullPath());
+            }
+            $this->owner->FileSize = $fs;
         }
     }
 
@@ -104,11 +109,15 @@ class BaseFileExtension extends DataExtension
         return $size;
     }
 
+    /**
+     * @param string|int $size
+     * @return Image[]
+     */
     public static function findLargeImages($size = null)
     {
         $mem = FileHelper::memoryLimit();
         if (!$size) {
-            $size = $mem;
+            $size = '4mb';
         }
         if (!is_numeric($size)) {
             $size = FileHelper::convertToByte($size);
@@ -116,7 +125,112 @@ class BaseFileExtension extends DataExtension
         if ($size > $mem) {
             $size = $mem;
         }
-        $files = Image::get()->where("FileSize > '$mem'")->toArray();
+
+        $files = Image::get()->where("FileSize > '$size'")->toArray();
+        return $files;
+    }
+
+    public static function regenerateHashForId(int $id)
+    {
+        $service = new Sha1FileHashingService();
+
+        $file = File::get_by_id($id);
+        $hash = $file->getHash();
+
+        $stream  = $file->getStream();
+        if (!$stream) {
+            $filename = $file->getFilename();
+            $location = $file->getFullPath();
+            if (!is_file($location)) {
+                return false;
+            }
+            $stream = fopen($location, 'rb');
+        }
+
+        $fullhash = $service->computeFromStream($stream);
+
+        if ($hash != $fullhash) {
+            DB::query("UPDATE File SET FileHash = '" . $fullhash . "' WHERE ID = " . $file->ID);
+            DB::query("UPDATE File_Live SET FileHash = '" . $fullhash . "' WHERE ID = " . $file->ID);
+            return true;
+        }
+        return false;
+    }
+
+    public static function compressLargeFiles(int $width = 1600, int $height = 1600)
+    {
+        Environment::setTimeLimitMax(0);
+        Environment::setMemoryLimitMax(0);
+
+        $targetSize = FileHelper::convertToByte('4mb');
+        $files = self::findLargeImages($targetSize);
+        $log = [];
+        foreach ($files as $file) {
+            $size = $file->getAbsoluteSize();
+            $path = $file->getFullPath();
+
+            if (!$size) {
+                $size = filesize($path);
+            }
+
+            list($w, $h) = getimagesize($path);
+            if (!$w || !$h) {
+                continue;
+            }
+
+            // It's already below target size
+            $result = null;
+            if ($size < $targetSize) {
+                $result = 'skipped (file size is too small)';
+                $file->FileSize = 0;
+                $file->writeWithoutVersionIfPossible();
+            } elseif ($w <= $width && $h <= $height) {
+                $result = 'skipped (dimensions are too small)';
+            }
+            if ($result) {
+                $log[] = [
+                    'ID' => $file->ID,
+                    'file' => $path,
+                    'result' => $result,
+                    'size' => $size,
+                    'size_readable' => FileHelper::humanFilesize($size),
+                    'w' => $w,
+                    'h' => $h,
+                    'new_size' => null,
+                ];
+                continue;
+            }
+
+            // keep in mind that hash will become invalid
+            // https://github.com/silverstripe/silverstripe-assets/issues/378
+            try {
+                $result = FileHelper::imageResize($path, $path, $width, $height);
+            } catch (\Throwable $e) {
+                $result = $e->getMessage();
+            }
+
+            $newSize = $file->getAbsoluteSize();
+            if (!$newSize) {
+                $newSize = filesize($path);
+            }
+            if ($newSize != $size && $result == true) {
+                $file->FileSize = 0;
+                $file->writeWithoutVersionIfPossible();
+            }
+
+            $log[] = [
+                'ID' => $file->ID,
+                'file' => $path,
+                'result' => $result,
+                'size' => $size,
+                'size_readable' => FileHelper::humanFilesize($size),
+                'w' => $w,
+                'h' => $h,
+                'new_size' => $newSize,
+            ];
+        }
+
+        return $log;
     }
 
     public static function moveFilesWithoutParent()
@@ -171,10 +285,16 @@ class BaseFileExtension extends DataExtension
             if ($f instanceof Folder) {
                 continue;
             }
-
             $size = $f->getAbsoluteSize();
             if ($size) {
-                $f->writeWithoutVersion();
+                self::quickUpdateFileSize($f->ID, $size);
+                continue;
+            }
+
+            // sometimes, getAbsoluteSize doesn't work
+            $filesize = filesize($f->getFullPath());
+            if ($filesize) {
+                self::quickUpdateFileSize($f->ID, $filesize);
                 continue;
             }
 
@@ -411,6 +531,15 @@ class BaseFileExtension extends DataExtension
         DB::query("UPDATE File SET ObjectClass = null WHERE ObjectID = 0 AND ObjectClass IS NOT NULL");
         DB::query("UPDATE File_Live SET ObjectClass = null WHERE ObjectID = 0 AND ObjectClass IS NOT NULL");
         DB::query("UPDATE File_Versions SET ObjectClass = null WHERE ObjectID = 0 AND ObjectClass IS NOT NULL");
+    }
+
+    public static function quickUpdateFileSize(int $id, int $fs)
+    {
+        DB::query("UPDATE File SET FileSize = $fs WHERE ID = $id");
+        DB::query("UPDATE File_Live SET FileSize = $fs WHERE ID = $id");
+        DB::query("UPDATE File_Versions SET FileSize = $fs WHERE RecordID = $id");
+
+        self::regenerateHashForId($id);
     }
 
     /**

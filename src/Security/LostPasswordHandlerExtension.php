@@ -6,6 +6,7 @@ use SilverStripe\Core\Extension;
 use SilverStripe\Security\Member;
 use LeKoala\Base\Controllers\HasLogger;
 use LeKoala\MemberAudit\MemberAuditExtension;
+use SilverStripe\Control\Director;
 use SilverStripe\Security\DefaultAdminService;
 
 /**
@@ -44,7 +45,7 @@ class LostPasswordHandlerExtension extends Extension
             $member = null;
             return;
         }
-        if ($member->hasExtension(MemberAuditExtension::class)) {
+        if ($member->hasExtension(MemberAuditExtension::class) && Director::isLive()) {
             /** @var Member&MemberAuditExtension $member */
             // Avoid hammering / 2 min per request
             $latestedAudit = $member->Audits()->filter('Event', 'password_requested')->first();

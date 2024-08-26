@@ -155,6 +155,20 @@ class BaseMemberExtension extends DataExtension
     }
 
     /**
+     * @link https://github.com/lekoala/silverstripe-member-audit
+     * @param mixed $event
+     * @param mixed $data
+     * @return int
+     */
+    public function baseAudit($event, $data = null)
+    {
+        if ($this->owner->hasMethod('audit')) {
+            return $this->owner->audit($event, $data);
+        }
+        return 0;
+    }
+
+    /**
      * This is called by Member::validateCanLogin which is typically called in MemberAuthenticator::authenticate::authenticateMember
      * which is used in LoginHandler::doLogin::checkLogin
      *
@@ -203,7 +217,7 @@ class BaseMemberExtension extends DataExtension
             // Cms user is not trusted => cannot login
             if ($isCmsUser && !$trusted) {
                 // No 2fa method to validate important account on invalid ips
-                $this->owner->audit('invalid_ip_admin', ['ip' => $requestIp]);
+                $this->baseAudit('invalid_ip_admin', ['ip' => $requestIp]);
                 $result->addError(_t('BaseMemberExtension.ADMIN_IP_INVALID', "Your ip address {address} is not whitelisted for this account level", ['address' => $requestIp]));
             }
         }
@@ -211,12 +225,12 @@ class BaseMemberExtension extends DataExtension
 
     public function onValidationDisable()
     {
-        $this->owner->audit('Validation Status Changed', ['Status' => ValidationStatusExtension::VALIDATION_STATUS_DISABLED]);
+        $this->baseAudit('Validation Status Changed', ['Status' => ValidationStatusExtension::VALIDATION_STATUS_DISABLED]);
     }
 
     public function onValidationApprove()
     {
-        $this->owner->audit('Validation Status Changed', ['Status' => ValidationStatusExtension::VALIDATION_STATUS_APPROVED]);
+        $this->baseAudit('Validation Status Changed', ['Status' => ValidationStatusExtension::VALIDATION_STATUS_APPROVED]);
     }
 
     /**
@@ -264,6 +278,7 @@ class BaseMemberExtension extends DataExtension
      */
     public function memberAutoLoggedIn()
     {
+        //
     }
 
     public function beforeMemberLoggedOut($request)
@@ -284,6 +299,7 @@ class BaseMemberExtension extends DataExtension
      */
     public function updateMemberFormFields(FieldList $fields)
     {
+        //
     }
 
     public function updateMemberPasswordField($password)
@@ -328,14 +344,14 @@ class BaseMemberExtension extends DataExtension
     public function onAfterChangePassword($password, $valid)
     {
         if ($valid->isValid()) {
-            $this->owner->audit('password_changed_success');
+            $this->baseAudit('password_changed_success');
 
             // email sending is controlled by Member::config()->notify_password_change
 
             // Can prove useful to send custom toast message or notification
             self::getSession()->set('PasswordChanged', 1);
         } else {
-            $this->owner->audit('password_changed_error');
+            $this->baseAudit('password_changed_error');
         }
     }
 
