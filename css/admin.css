@@ -250,6 +250,10 @@ body.cms {
     background-color: #ebccd1;
 }
 
+.cms table.grid-field__table tr.faded {
+    opacity: 0.5;
+}
+
 .cms table.grid-field__table tbody tr.even:hover,
 .cms table.grid-field__table tbody tr:hover {
     background-color: #f0f4f7;
