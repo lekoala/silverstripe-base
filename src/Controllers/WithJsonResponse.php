@@ -1,7 +1,9 @@
 <?php
+
 namespace LeKoala\Base\Controllers;
 
 use SilverStripe\Control\HTTPResponse;
+use SilverStripe\Control\Director;
 
 trait WithJsonResponse
 {
