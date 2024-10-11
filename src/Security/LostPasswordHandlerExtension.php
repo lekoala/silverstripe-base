@@ -40,7 +40,7 @@ class LostPasswordHandlerExtension extends Extension
         }
         // Default admin cannot reset
         $username = DefaultAdminService::getDefaultAdminUsername();
-        if ($member->Email == $username) {
+        if ($member->Email == $username && Director::isLive()) {
             self::getLogger()->debug("Default admin cannot reset his password");
             $member = null;
             return;
