@@ -13,6 +13,7 @@ use SilverStripe\Core\Extensible;
 use SilverStripe\Security\Member;
 use SilverStripe\Core\Manifest\Module;
 use SilverStripe\Core\Manifest\ClassLoader;
+use SilverStripe\View\ViewableData;
 
 /**
  *
@@ -71,7 +72,7 @@ class ClassHelper
 
         $extendedClasses = [];
         foreach ($classes as $class) {
-            if (Extensible::has_extension($class, $extension, $strict)) {
+            if (ViewableData::has_extension($class, $extension, $strict)) {
                 $extendedClasses[] = $class;
             }
         }
