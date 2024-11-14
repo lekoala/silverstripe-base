@@ -12,9 +12,10 @@ class QueryHelper
     const RANDOM = 'random';
 
     /**
-     * @param string $class
+     * @template T of DataObject
+     * @param class-string<T> $class
      * @param int|string|array<mixed> $idOrWhere
-     * @return DataObject
+     * @return T
      */
     public static function findOne($class, $idOrWhere)
     {
@@ -41,9 +42,10 @@ class QueryHelper
     }
 
     /**
-     * @param string $class
+     * @template T of DataObject
+     * @param class-string<T> $class
      * @param array<mixed> $filters
-     * @return DataList
+     * @return DataList<T>
      */
     public static function find($class, $filters = null)
     {
