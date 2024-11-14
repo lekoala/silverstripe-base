@@ -11,10 +11,8 @@ use SilverStripe\Core\ClassInfo;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\ORM\ManyManyList;
 use SilverStripe\ORM\Connect\Query;
-use SilverStripe\ORM\DataExtension;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\ORM\DataObjectSchema;
-use SilverStripe\ORM\Queries\SQLUpdate;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\ManyManyThroughList;
 use SilverStripe\ORM\UnsavedRelationList;
@@ -26,6 +24,7 @@ use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\Admin\ModelAdmin;
 use SilverStripe\Assets\Shortcodes\FileLinkTracking;
 use SilverStripe\Control\Controller;
+use SilverStripe\Core\Extension;
 use SilverStripe\Forms\FormScaffolder;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\Forms\GridField\GridFieldDeleteAction;
@@ -43,7 +42,7 @@ use SilverStripe\Forms\GridField\GridFieldFilterHeader;
  *
  * @property \SilverStripe\ORM\DataObject|\LeKoala\Base\Extensions\BaseDataObjectExtension $owner
  */
-class BaseDataObjectExtension extends DataExtension
+class BaseDataObjectExtension extends Extension
 {
     public function updateCMSFields(FieldList $fields)
     {
@@ -82,7 +81,8 @@ class BaseDataObjectExtension extends DataExtension
 
         // remove tracking tabs
         $fields->removeByName([
-            'LinkTracking', 'FileTracking'
+            'LinkTracking',
+            'FileTracking'
         ]);
     }
 

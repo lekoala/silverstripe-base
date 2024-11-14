@@ -4,10 +4,10 @@ namespace LeKoala\Base\Subsite;
 
 use SilverStripe\ORM\DataQuery;
 use SilverStripe\Core\ClassInfo;
+use SilverStripe\Core\Extension;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\HiddenField;
-use SilverStripe\ORM\DataExtension;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\ORM\Queries\SQLSelect;
 use SilverStripe\Subsites\Model\Subsite;
@@ -20,7 +20,7 @@ use SilverStripe\Subsites\State\SubsiteState;
  * @property int $SubsiteID
  * @method \SilverStripe\Subsites\Model\Subsite Subsite()
  */
-class DataObjectSubsite extends DataExtension
+class DataObjectSubsite extends Extension
 {
     private static $has_one = [
         'Subsite' => Subsite::class,

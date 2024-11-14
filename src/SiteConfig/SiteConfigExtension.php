@@ -7,13 +7,13 @@ use LeKoala\FormElements\TelInputField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\HeaderField;
-use SilverStripe\ORM\DataExtension;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Forms\TextareaField;
 use SilverStripe\SiteConfig\SiteConfig;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use LeKoala\Base\Theme\ThemeSiteConfigExtension;
+use SilverStripe\Core\Extension;
 
 /**
  * Class \LeKoala\Base\SiteConfigExtension
@@ -31,7 +31,7 @@ use LeKoala\Base\Theme\ThemeSiteConfigExtension;
  * @property ?string $FooterText
  * @property ?string $Copyright
  */
-class SiteConfigExtension extends DataExtension
+class SiteConfigExtension extends Extension
 {
     const EXTERNAL_SERVICES_TAB = 'ExternalServices';
     /**

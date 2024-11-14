@@ -6,9 +6,9 @@ namespace LeKoala\Base\Tags;
 use SilverStripe\ORM\DB;
 use LeKoala\Base\Tags\Tag;
 use LeKoala\FormElements\BsTagsMultiField;
+use SilverStripe\Core\Extension;
 use SilverStripe\ORM\DataList;
 use SilverStripe\Forms\FieldList;
-use SilverStripe\ORM\DataExtension;
 
 /**
  * Provides cross objects tag functionnality
@@ -16,7 +16,7 @@ use SilverStripe\ORM\DataExtension;
  * @property \LeKoala\Base\News\NewsItem|\LeKoala\Base\Tags\TaggableExtension $owner
  * @method \SilverStripe\ORM\ManyManyList|\LeKoala\Base\Tags\Tag[] Tags()
  */
-class TaggableExtension extends DataExtension
+class TaggableExtension extends Extension
 {
     private static $many_many = [
         "Tags" => Tag::class

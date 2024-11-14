@@ -11,7 +11,6 @@ use SilverStripe\ORM\DataObject;
 use LeKoala\Base\View\Statically;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Environment;
-use SilverStripe\ORM\DataExtension;
 use LeKoala\Base\Helpers\FileHelper;
 use LeKoala\Base\Security\Antivirus;
 use SilverStripe\Core\Config\Config;
@@ -26,6 +25,7 @@ use SilverStripe\Core\Injector\InjectionCreator;
 use SilverStripe\AssetAdmin\Controller\AssetAdmin;
 use SilverStripe\Assets\Flysystem\ProtectedAssetAdapter;
 use SilverStripe\Assets\Storage\Sha1FileHashingService;
+use SilverStripe\Core\Extension;
 
 /**
  * Improved File usage
@@ -43,7 +43,7 @@ use SilverStripe\Assets\Storage\Sha1FileHashingService;
  * @property string $ObjectClass
  * @method \SilverStripe\ORM\DataObject Object()
  */
-class BaseFileExtension extends DataExtension
+class BaseFileExtension extends Extension
 {
     use Configurable;
 

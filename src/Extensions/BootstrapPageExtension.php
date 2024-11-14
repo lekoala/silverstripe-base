@@ -5,8 +5,8 @@ namespace LeKoala\Base\Extensions;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\View\SSViewer;
 use SilverStripe\Control\Cookie;
+use SilverStripe\Core\Extension;
 use SilverStripe\View\ArrayData;
-use SilverStripe\ORM\DataExtension;
 
 /**
  * Not enabled by default please use the following config
@@ -19,7 +19,7 @@ use SilverStripe\ORM\DataExtension;
  *
  * @property \LeKoala\Base\Extensions\BootstrapPageExtension $owner
  */
-class BootstrapPageExtension extends DataExtension
+class BootstrapPageExtension extends Extension
 {
     /**
      * Return "" or "active" depending on if this is the {@link SiteTree::isCurrent()} current page.

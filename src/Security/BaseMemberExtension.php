@@ -10,7 +10,6 @@ use SilverStripe\Security\Member;
 use LeKoala\Base\Helpers\IPHelper;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Environment;
-use SilverStripe\ORM\DataExtension;
 use SilverStripe\Security\Security;
 use LeKoala\Base\Helpers\FormHelper;
 use LeKoala\CmsActions\CustomAction;
@@ -28,6 +27,7 @@ use SilverStripe\Security\MemberPassword;
 use SilverStripe\Security\PasswordEncryptor;
 use SilverStripe\Security\DefaultAdminService;
 use LeKoala\CommonExtensions\ValidationStatusExtension;
+use SilverStripe\Core\Extension;
 use SilverStripe\Forms\GridField\GridFieldAddNewButton;
 use SilverStripe\Security\MemberAuthenticator\MemberAuthenticator;
 use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
@@ -39,7 +39,7 @@ use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
  *
  * @property \SilverStripe\Security\Member|\LeKoala\Base\Security\BaseMemberExtension $owner
  */
-class BaseMemberExtension extends DataExtension
+class BaseMemberExtension extends Extension
 {
     use MasqueradeMember;
     use HasSession;

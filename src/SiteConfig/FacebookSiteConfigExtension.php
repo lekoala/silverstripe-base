@@ -6,13 +6,9 @@ use SilverStripe\ORM\ArrayList;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\TextField;
 use SilverStripe\Control\Director;
-use SilverStripe\ORM\DataExtension;
-use SilverStripe\View\Requirements;
-use LeKoala\Base\View\CookieConsent;
 use LeKoala\Base\Forms\Bootstrap\Tab;
-use SilverStripe\Forms\CheckboxField;
 use SilverStripe\SiteConfig\SiteConfig;
-use LeKoala\Base\View\CommonRequirements;
+use SilverStripe\Core\Extension;
 
 /**
  * Facebook SiteConfig stuff
@@ -24,7 +20,7 @@ use LeKoala\Base\View\CommonRequirements;
  * @property \LeKoala\Base\SiteConfig\FacebookSiteConfigExtension $owner
  * @property ?string $FacebookPixelId
  */
-class FacebookSiteConfigExtension extends DataExtension
+class FacebookSiteConfigExtension extends Extension
 {
     private static $db = [
         "FacebookPixelId" => "Varchar(59)",

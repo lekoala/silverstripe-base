@@ -4,17 +4,16 @@ namespace LeKoala\Base\Subsite;
 
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Control\Director;
-use SilverStripe\ORM\DataExtension;
+use SilverStripe\Core\Extension;
 use SilverStripe\SiteConfig\SiteConfig;
 use SilverStripe\Subsites\Model\SubsiteDomain;
-use SilverStripe\ORM\DataObject;
 
 /**
  * Improve subsites
  *
  * @property \SilverStripe\Subsites\Model\Subsite|\LeKoala\Base\Subsite\SubsiteExtension $owner
  */
-class SubsiteExtension extends DataExtension
+class SubsiteExtension extends Extension
 {
     /**
      * @var boolean

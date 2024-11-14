@@ -6,20 +6,20 @@ use SilverStripe\Assets\File;
 use SilverStripe\Assets\Folder;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Assets\Filesystem;
-use SilverStripe\ORM\DataExtension;
 use LeKoala\Base\Helpers\ClassHelper;
 use SilverStripe\Versioned\Versioned;
 use LeKoala\Base\Forms\SmartUploadField;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 use LeKoala\Base\Forms\SmartSortableUploadField;
+use SilverStripe\Core\Extension;
 
 /**
  * Automatically publish files and images related to this data object
  *
  * @property \LeKoala\Base\News\NewsItem|\LeKoala\Base\Extensions\SmartDataObjectExtension $owner
  */
-class SmartDataObjectExtension extends DataExtension
+class SmartDataObjectExtension extends Extension
 {
     public function onAfterWrite()
     {

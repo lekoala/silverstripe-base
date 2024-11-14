@@ -2,8 +2,8 @@
 
 namespace LeKoala\Base\Privacy;
 
+use SilverStripe\Core\Extension;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\ORM\DataExtension;
 
 /**
  * Class \LeKoala\Base\Privacy\PrivacyMemberExtension
@@ -12,7 +12,7 @@ use SilverStripe\ORM\DataExtension;
  * @property ?string $PrivacyChecked
  * @property ?string $TermsChecked
  */
-class PrivacyMemberExtension extends DataExtension
+class PrivacyMemberExtension extends Extension
 {
     private static $db = [
         "PrivacyChecked" => "DBDatetime",

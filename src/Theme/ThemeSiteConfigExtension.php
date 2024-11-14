@@ -17,6 +17,7 @@ use SilverStripe\ORM\DataExtension;
 use SilverStripe\Forms\DropdownField;
 use LeKoala\Base\ORM\FieldType\DBColor;
 use SilverStripe\AssetAdmin\Forms\UploadField;
+use SilverStripe\Core\Extension;
 
 /**
  * Extend SiteConfig to make your website Themable
@@ -39,7 +40,7 @@ use SilverStripe\AssetAdmin\Forms\UploadField;
  * @method \SilverStripe\Assets\Image Icon()
  * @method \SilverStripe\Assets\File Favicon()
  */
-class ThemeSiteConfigExtension extends DataExtension
+class ThemeSiteConfigExtension extends Extension
 {
     use KnowsThemeDir;
     private static $db = [

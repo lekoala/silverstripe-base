@@ -20,10 +20,10 @@ use SilverStripe\Core\Injector\Injector;
 use LeKoala\Base\View\CommonRequirements;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\ORM\FieldType\DBHTMLText;
-use SilverStripe\Admin\LeftAndMainExtension;
 use LeKoala\Base\Theme\ThemeSiteConfigExtension;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorConfig;
 use SilverStripe\Forms\HTMLEditor\TinyMCECombinedGenerator;
+use SilverStripe\Core\Extension;
 
 /**
  * Available config
@@ -37,7 +37,7 @@ use SilverStripe\Forms\HTMLEditor\TinyMCECombinedGenerator;
  *
  * @property \SilverStripe\Admin\LeftAndMain|\LeKoala\Base\Admin\BaseLeftAndMainExtension $owner
  */
-class BaseLeftAndMainExtension extends LeftAndMainExtension
+class BaseLeftAndMainExtension extends Extension
 {
     use Configurable;
     use BaseLeftAndMainSubsite;

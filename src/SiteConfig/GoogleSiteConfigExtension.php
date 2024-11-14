@@ -5,12 +5,12 @@ namespace LeKoala\Base\SiteConfig;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\TextField;
 use SilverStripe\Control\Director;
-use SilverStripe\ORM\DataExtension;
 use SilverStripe\View\Requirements;
 use LeKoala\Base\View\CookieConsent;
 use LeKoala\Base\Forms\Bootstrap\Tab;
 use SilverStripe\Forms\CheckboxField;
 use LeKoala\Base\View\CommonRequirements;
+use SilverStripe\Core\Extension;
 use SilverStripe\Security\Security;
 use SilverStripe\SiteConfig\SiteConfig;
 
@@ -26,7 +26,7 @@ use SilverStripe\SiteConfig\SiteConfig;
  * @property bool|int $GoogleAnalyticsWithoutCookies
  * @property ?string $GoogleMapsApiKey
  */
-class GoogleSiteConfigExtension extends DataExtension
+class GoogleSiteConfigExtension extends Extension
 {
     private static $db = [
         "GoogleAnalyticsCode" => "Varchar(59)", // GA_MEASUREMENT_ID : UA-XXXXXXX-Y

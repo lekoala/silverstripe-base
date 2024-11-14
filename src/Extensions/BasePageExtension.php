@@ -7,13 +7,12 @@ use SilverStripe\ORM\DB;
 use SilverStripe\i18n\i18n;
 use SilverStripe\Core\Convert;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\ORM\DataExtension;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Controller;
 use SilverStripe\ErrorPage\ErrorPage;
 use SilverStripe\Forms\CheckboxField;
-use SilverStripe\Versioned\Versioned;
 use LeKoala\Base\Subsite\SubsiteHelper;
+use SilverStripe\Core\Extension;
 use SilverStripe\SiteConfig\SiteConfig;
 
 /**
@@ -24,7 +23,7 @@ use SilverStripe\SiteConfig\SiteConfig;
  * @property \SilverStripe\CMS\Model\SiteTree|\LeKoala\Base\Extensions\BasePageExtension $owner
  * @property bool|int $ShowInFooter
  */
-class BasePageExtension extends DataExtension
+class BasePageExtension extends Extension
 {
     private static $db = [
         "ShowInFooter" => "Boolean"

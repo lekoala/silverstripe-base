@@ -6,10 +6,8 @@ use PragmaRX\Google2FA\Google2FA;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Security\Member;
 use LeKoala\Base\Forms\AlertField;
-use LeKoala\Base\Helpers\ClassHelper;
 use LeKoala\Base\Helpers\IPHelper;
 use SilverStripe\Control\Director;
-use SilverStripe\ORM\DataExtension;
 use SilverStripe\Security\Security;
 use LeKoala\CmsActions\CustomAction;
 use SilverStripe\Control\Controller;
@@ -18,6 +16,7 @@ use SilverStripe\Security\Permission;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\SiteConfig\SiteConfig;
 use LeKoala\Base\Security\BaseAuthenticator;
+use SilverStripe\Core\Extension;
 use SilverStripe\Forms\ToggleCompositeField;
 use SilverStripe\Security\DefaultAdminService;
 
@@ -35,7 +34,7 @@ use SilverStripe\Security\DefaultAdminService;
  * @property bool|int $EnableTwoFactorAuth
  * @property ?string $TOTPToken
  */
-class TwoFactorMemberExtension extends DataExtension
+class TwoFactorMemberExtension extends Extension
 {
     const METHOD_TOTP = 'totp';
     const METHOD_TEXT = 'text_message';

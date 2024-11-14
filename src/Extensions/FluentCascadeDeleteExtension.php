@@ -3,7 +3,7 @@
 namespace LeKoala\Base\Extensions;
 
 use SilverStripe\Core\ClassInfo;
-use SilverStripe\ORM\DataExtension;
+use SilverStripe\Core\Extension;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\Queries\SQLDelete;
 use SilverStripe\Versioned\Versioned;
@@ -29,7 +29,7 @@ use TractorCow\Fluent\Model\Locale;
  *
  * @property \LeKoala\Base\Extensions\FluentCascadeDeleteExtension $owner
  */
-class FluentCascadeDeleteExtension extends DataExtension
+class FluentCascadeDeleteExtension extends Extension
 {
     public function updateDeleteTables(&$queriedTables)
     {
