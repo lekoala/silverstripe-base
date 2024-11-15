@@ -261,19 +261,17 @@ class TwoFactorLoginHandler extends LoginHandler
     {
         $session = $request->getSession();
         $member = $this->getTwoFactorMember();
-        if ($member->validateTOTP($data['SecondFactor'])) {
+        if ($member && $member->validateTOTP($data['SecondFactor'])) {
             $data = $session->get('TwoFactorLoginHandler.Data');
             if (!$member) {
                 return $this->redirectBack();
             }
             $this->performLogin($member, $data, $request);
-
             return $this->redirectAfterSuccessfulLogin();
         }
 
         // Fail to login redirects back to form
         $session->set('TwoFactorLoginHandler.ErrorMessage', _t('TwoFactorLoginHandler.ERRORMESSAGE', 'The provided token is invalid, please try again.'));
-
         return $this->redirect($this->getStep2Link());
     }
 
