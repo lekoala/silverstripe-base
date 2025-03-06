@@ -2,6 +2,9 @@
 
 namespace LeKoala\Base\Helpers;
 
+use Laminas\Escaper\Escaper;
+use SilverStripe\Core\Convert;
+
 /**
  * Helps to deal with strings
  */
@@ -95,5 +98,42 @@ class StringHelper
             return substr($string, 0, $chars) . $append;
         }
         return $string;
+    }
+
+    public static function escJs($input)
+    {
+        if ($input === null || $input === '') {
+            return '';
+        }
+        if (class_exists(Escaper::class)) {
+            $escaper = new Escaper('utf-8');
+            return $escaper->escapeJs($input);
+        }
+        return Convert::raw2js($input);
+    }
+
+    public static function escUrl($input)
+    {
+        if ($input === null || $input === '') {
+            return '';
+        }
+        if (class_exists(Escaper::class)) {
+            $escaper = new Escaper('utf-8');
+            return $escaper->escapeUrl($input);
+        }
+        return rawurlencode($input);
+    }
+
+    public static function escHtmlAtt($input)
+    {
+        if ($input === null || $input === '') {
+            return '';
+        }
+        if (class_exists(Escaper::class)) {
+            $escaper = new Escaper('utf-8');
+            return $escaper->escapeHtmlAttr($input);
+        }
+        // Will not work for unquoted attributes
+        return Convert::raw2htmlatt($input);
     }
 }
