@@ -50,15 +50,14 @@ class TwoFactorLoginHandler extends LoginHandler
         // Successful login
         /** @var Member|BaseMemberExtension|TwoFactorMemberExtension $member */
         if ($member = $this->checkLogin($data, $request, $result)) {
-            $session = $request->getSession();
-            $session->set('TwoFactorLoginHandler.MemberID', $member->ID);
-
             if ($member->NeedTwoFactorAuth()) {
+                $session = $request->getSession();
+                $session->set('TwoFactorLoginHandler.MemberID', $member->ID);
                 // Don't forget to clear this afterwards
                 // Never store password
                 unset($data['Password']);
                 $session->set('TwoFactorLoginHandler.Data', $data);
-                return $this->redirect($this->getStep2Link());
+                return $this->redirect(self::getStep2Link());
             }
 
             // 2FA is enabled but not needed, log in as normal
@@ -87,8 +86,7 @@ class TwoFactorLoginHandler extends LoginHandler
         /** @skipUpgrade */
         if (array_key_exists('Email', $data)) {
             $rememberMe = (isset($data['Remember']) && Security::config()->get('autologin_enabled') === true);
-            $this
-                ->getRequest()
+            $request
                 ->getSession()
                 ->set('SessionForms.MemberLoginForm.Email', $data['Email'])
                 ->set('SessionForms.MemberLoginForm.Remember', $rememberMe);
@@ -227,10 +225,10 @@ class TwoFactorLoginHandler extends LoginHandler
         // Fail to login redirects back to form
         $session->set('TwoFactorLoginHandler.ErrorMessage', _t('TwoFactorLoginHandler.ERRORMESSAGE', 'The provided token is invalid, please try again.'));
 
-        return $this->redirect($this->getStep2Link());
+        return $this->redirect(self::getStep2Link());
     }
 
-    public function getStep2Link()
+    public static function getStep2Link()
     {
         return '/Security/login/default/step2';
     }
@@ -272,7 +270,7 @@ class TwoFactorLoginHandler extends LoginHandler
 
         // Fail to login redirects back to form
         $session->set('TwoFactorLoginHandler.ErrorMessage', _t('TwoFactorLoginHandler.ERRORMESSAGE', 'The provided token is invalid, please try again.'));
-        return $this->redirect($this->getStep2Link());
+        return $this->redirect(self::getStep2Link());
     }
 
     public function performLogin($member, $data, HTTPRequest $request)

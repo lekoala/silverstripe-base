@@ -45,6 +45,8 @@ SilverStripe\Core\Injector\Injector:
     class: 'LeKoala\Base\Security\MemberLoginForm'
   SilverStripe\Security\MemberAuthenticator\MemberAuthenticator:
     class: 'LeKoala\Base\Security\BaseAuthenticator'
+  SilverStripe\Security\MemberAuthenticator\ChangePasswordHandler:
+    class: 'LeKoala\Base\Security\TwoFactorChangePasswordHandler'
   SilverStripe\Security\Security:
     properties:
       Authenticators:

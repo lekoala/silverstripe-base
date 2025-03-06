@@ -26,9 +26,6 @@ use SilverStripe\Security\DefaultAdminService;
  * LeKoala\Base\Security\BaseAuthenticator:
  *   enable_2fa: true
  *
- * TODO: consider implementing OTP
- * https://philna.sh/blog/2022/12/07/better-two-factor-authentication-experiences-with-web-otp/
- *
  * @property \SilverStripe\Security\Member|\LeKoala\Base\Security\TwoFactorMemberExtension $owner
  * @property ?string $PreferredTwoFactorMethod
  * @property bool|int $EnableTwoFactorAuth
