@@ -2,6 +2,7 @@
 
 namespace LeKoala\Base\Forms\GridField;
 
+use SilverStripe\Core\Convert;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridField_HTMLProvider;
 
@@ -51,6 +52,7 @@ class GridFieldQuickFilters implements GridField_HTMLProvider
             if (in_array($filterValue, $currFilters)) {
                 $checked = ' checked="checked"';
             }
+            $filterLabel = Convert::raw2xml($filterLabel);
             $it = '<label><input type="checkbox" name="quickfilters[]" value="' . $filterValue .  '"' . $checked . ' /> ' . $filterLabel . '</label>';
             $html .= $it;
         }
