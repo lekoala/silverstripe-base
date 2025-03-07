@@ -12,11 +12,9 @@ use SilverStripe\Control\Director;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Security\Security;
-use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Forms\RequiredFields;
-use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Core\Injector\Injector;
 use LeKoala\Base\Security\BaseMemberExtension;
 use LeKoala\Base\TextMessage\ProviderInterface;
@@ -43,20 +41,13 @@ class TwoFactorLoginHandler extends LoginHandler
         'totpStepForm',
     ];
 
-    private function sleepUntilTargetTime(float $st, float $targetTime)
-    {
-        $et = microtime(true) - $st;
-        if ($et < $targetTime) {
-            usleep(intval(($targetTime - $et) * 1000000));
-        }
-    }
-
     public function doLogin($data, MemberLoginForm $form, HTTPRequest $request)
     {
-        // Provides constant time login times regardless of what the authenticate method is doing
-        $targetTime = 0.4 + (random_int(-10, 10) / 100);
-        $st = microtime(true);
+        return ConstantTimeOperation::execute(fn() => $this->doActualLogin($data, $form, $request));
+    }
 
+    protected function doActualLogin($data, MemberLoginForm $form, HTTPRequest $request)
+    {
         $this->extend('beforeLogin');
 
         // Successful login
@@ -70,7 +61,6 @@ class TwoFactorLoginHandler extends LoginHandler
                 unset($data['Password']);
                 $session->set('TwoFactorLoginHandler.Data', $data);
 
-                $this->sleepUntilTargetTime($st, $targetTime);
                 return $this->redirect(self::getStep2Link());
             }
 
@@ -81,7 +71,6 @@ class TwoFactorLoginHandler extends LoginHandler
             // Allow operations on the member after successful login
             $this->extend('afterLogin', $member);
 
-            $this->sleepUntilTargetTime($st, $targetTime);
             return $this->redirectAfterSuccessfulLogin();
         }
 
@@ -110,7 +99,6 @@ class TwoFactorLoginHandler extends LoginHandler
         }
 
         // Fail to login redirects back to form
-        $this->sleepUntilTargetTime($st, $targetTime);
         return $form->getRequestHandler()->redirectBackToForm();
     }
 

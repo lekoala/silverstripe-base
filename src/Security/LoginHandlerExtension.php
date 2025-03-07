@@ -13,10 +13,12 @@ class LoginHandlerExtension extends Extension
 {
     public function beforeLogin()
     {
+        // empty
     }
 
     public function afterLogin($member)
     {
+        // Forward to member method
         if ($member->hasMethod('afterLogin')) {
             $member->afterLogin();
         }
@@ -24,5 +26,6 @@ class LoginHandlerExtension extends Extension
 
     public function failedLogin()
     {
+        // empty
     }
 }

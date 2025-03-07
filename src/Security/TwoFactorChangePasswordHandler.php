@@ -114,14 +114,16 @@ class TwoFactorChangePasswordHandler extends ChangePasswordHandler
         $member->write();
 
         // Two factor authentication
-        if ($member->NeedTwoFactorAuth()) {
-            $session = $this->getRequest()->getSession();
-            $session->set('TwoFactorLoginHandler.MemberID', $member->ID);
-            // Don't forget to clear this afterwards
-            // Never store password
-            unset($data['Password']);
-            $session->set('TwoFactorLoginHandler.Data', $data);
-            return $this->redirect(TwoFactorLoginHandler::getStep2Link());
+        if (TwoFactorMemberExtension::isEnabled()) {
+            if ($member->NeedTwoFactorAuth()) {
+                $session = $this->getRequest()->getSession();
+                $session->set('TwoFactorLoginHandler.MemberID', $member->ID);
+                // Don't forget to clear this afterwards
+                // Never store password
+                unset($data['Password']);
+                $session->set('TwoFactorLoginHandler.Data', $data);
+                return $this->redirect(TwoFactorLoginHandler::getStep2Link());
+            }
         }
 
         if ($member->canLogin()) {
