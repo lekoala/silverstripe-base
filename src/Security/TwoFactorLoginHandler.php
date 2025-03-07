@@ -47,7 +47,7 @@ class TwoFactorLoginHandler extends LoginHandler
     {
         $et = microtime(true) - $st;
         if ($et < $targetTime) {
-            usleep(round(($targetTime - $et) * 1000000));
+            usleep(intval(($targetTime - $et) * 1000000));
         }
     }
 
