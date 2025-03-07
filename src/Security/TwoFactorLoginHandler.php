@@ -43,8 +43,20 @@ class TwoFactorLoginHandler extends LoginHandler
         'totpStepForm',
     ];
 
+    private function sleepUntilTargetTime(float $st, float $targetTime)
+    {
+        $et = microtime(true) - $st;
+        if ($et < $targetTime) {
+            usleep(round(($targetTime - $et) * 1000000));
+        }
+    }
+
     public function doLogin($data, MemberLoginForm $form, HTTPRequest $request)
     {
+        // Provides constant time login times regardless of what the authenticate method is doing
+        $targetTime = 0.4 + (random_int(-10, 10) / 100);
+        $st = microtime(true);
+
         $this->extend('beforeLogin');
 
         // Successful login
@@ -57,6 +69,8 @@ class TwoFactorLoginHandler extends LoginHandler
                 // Never store password
                 unset($data['Password']);
                 $session->set('TwoFactorLoginHandler.Data', $data);
+
+                $this->sleepUntilTargetTime($st, $targetTime);
                 return $this->redirect(self::getStep2Link());
             }
 
@@ -67,19 +81,22 @@ class TwoFactorLoginHandler extends LoginHandler
             // Allow operations on the member after successful login
             $this->extend('afterLogin', $member);
 
+            $this->sleepUntilTargetTime($st, $targetTime);
             return $this->redirectAfterSuccessfulLogin();
         }
 
         $this->extend('failedLogin');
 
-        $message = implode("; ", array_map(
-            function ($message) {
-                return $message['message'];
-            },
-            $result->getMessages()
-        ));
+        if ($result) {
+            $message = implode("; ", array_map(
+                function ($message) {
+                    return $message['message'];
+                },
+                $result->getMessages()
+            ));
 
-        $form->sessionMessage($message, 'bad');
+            $form->sessionMessage($message, 'bad');
+        }
 
         // Failed login
 
@@ -93,6 +110,7 @@ class TwoFactorLoginHandler extends LoginHandler
         }
 
         // Fail to login redirects back to form
+        $this->sleepUntilTargetTime($st, $targetTime);
         return $form->getRequestHandler()->redirectBackToForm();
     }
 
