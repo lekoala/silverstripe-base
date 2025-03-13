@@ -534,3 +534,15 @@ select.ag-cell-edit-input {
 .btn-success {
     color: #fff !important;
 }
+
+/* Sticky first table header */
+
+@media (min-width: 673px) {
+    .sticky-table-header table.grid-field__table thead tr.sortable-header,
+    .sticky-table-header table.grid-field__table thead tr.ss-gridfield-title-header {
+        position: sticky;
+        top: -24px;
+        background: #FAFBFC;
+        z-index: 9999;
+    }
+}
