@@ -8,6 +8,7 @@ use SilverStripe\ORM\ArrayList;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\Requirements;
 use LeKoala\Base\Subsite\SubsiteHelper;
+use SilverStripe\SiteConfig\SiteConfig;
 use SilverStripe\Subsites\Model\Subsite;
 
 /**
@@ -50,10 +51,19 @@ trait BaseLeftAndMainSubsite
 
         $output = ArrayList::create();
 
+        $siteConfigsBySubsite = Subsite::withDisabledSubsiteFilter(function () {
+            $siteConfigs = SiteConfig::get();
+            $siteConfigsBySubsite = [];
+            foreach ($siteConfigs as $sc) {
+                $siteConfigsBySubsite[$sc->SubsiteID] = $sc;
+            };
+            return $siteConfigsBySubsite;
+        });
+
         foreach ($list as $subsite) {
             $currentState = $subsite->ID == $currentSubsiteID ? 'selected' : '';
 
-            $SiteConfig = $subsite->SiteConfig();
+            $SiteConfig = $siteConfigsBySubsite[$subsite->ID] ?? $subsite->SiteConfig();
             $PrimaryColor = $SiteConfig ? $SiteConfig->dbObject('PrimaryColor') : null;
 
             $output->push(ArrayData::create([
