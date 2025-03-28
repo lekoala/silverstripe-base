@@ -12,9 +12,18 @@ use SilverStripe\Subsites\Model\SubsiteDomain;
  * Improve subsites
  *
  * @property \SilverStripe\Subsites\Model\Subsite|\LeKoala\Base\Subsite\SubsiteExtension $owner
+ * @property bool $IgnoreDefaultPages
+ * @extends \SilverStripe\Core\Extension<object>
  */
 class SubsiteExtension extends Extension
 {
+    /**
+     * @var array<string,string>
+     */
+    private static $db = [
+        'IgnoreDefaultPages' => 'Boolean',
+    ];
+
     /**
      * @var boolean
      */
@@ -54,8 +63,6 @@ class SubsiteExtension extends Extension
 
     public function onBeforeDelete()
     {
-        parent::onBeforeDelete();
-
         if (self::$delete_related) {
             // Delete SiteConfig
             $SiteConfig = SiteConfig::get()->filter('SubsiteID', $this->owner->ID)->first();

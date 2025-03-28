@@ -14,6 +14,7 @@ use SilverStripe\Forms\CheckboxField;
 use LeKoala\Base\Subsite\SubsiteHelper;
 use SilverStripe\Core\Extension;
 use SilverStripe\SiteConfig\SiteConfig;
+use SilverStripe\Subsites\Model\Subsite;
 
 /**
  * Useful utilities for pages
@@ -67,6 +68,10 @@ class BasePageExtension extends Extension
             }
         }
         SubsiteHelper::withSubsites(function ($SubsiteID = 0) use ($segment, $class, $data, $checkType) {
+            $subsite = Subsite::get_by_id($SubsiteID);
+            if ($subsite && $subsite->IgnoreDefaultPages) {
+                return;
+            }
             if ($checkType) {
                 $page = DataObject::get_one($class);
             } else {
