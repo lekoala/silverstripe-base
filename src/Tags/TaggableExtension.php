@@ -14,7 +14,7 @@ use SilverStripe\Forms\FieldList;
  * Provides cross objects tag functionnality
  *
  * @property \LeKoala\Base\News\NewsItem|\LeKoala\Base\Tags\TaggableExtension $owner
- * @method \SilverStripe\ORM\ManyManyList|\LeKoala\Base\Tags\Tag[] Tags()
+ * @method \SilverStripe\ORM\ManyManyList<\LeKoala\Base\Tags\Tag> Tags()
  */
 class TaggableExtension extends Extension
 {

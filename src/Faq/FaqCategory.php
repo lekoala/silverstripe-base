@@ -13,7 +13,7 @@ use LeKoala\Base\Faq\FaqItem;
  * @property ?string $Title
  * @property int $PageID
  * @method \LeKoala\Base\Faq\FaqPage Page()
- * @method \SilverStripe\ORM\DataList|\LeKoala\Base\Faq\FaqItem[] Items()
+ * @method \SilverStripe\ORM\DataList<\LeKoala\Base\Faq\FaqItem> Items()
  * @mixin \LeKoala\CommonExtensions\SortableExtension
  * @mixin \LeKoala\Base\Extensions\BaseDataObjectExtension
  * @mixin \SilverStripe\Assets\Shortcodes\FileLinkTracking

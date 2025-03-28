@@ -32,8 +32,8 @@ use SilverStripe\Security\Permission;
  * @method \SilverStripe\Assets\File File()
  * @method \LeKoala\Base\News\NewsPage Page()
  * @method \LeKoala\Base\News\NewsCategory Category()
- * @method \SilverStripe\ORM\ManyManyList|\LeKoala\Base\Tags\Tag[] Tags()
- * @method \SilverStripe\ORM\ManyManyList|\SilverStripe\Assets\Image[] Images()
+ * @method \SilverStripe\ORM\ManyManyList<\LeKoala\Base\Tags\Tag> Tags()
+ * @method \SilverStripe\ORM\ManyManyList<\SilverStripe\Assets\Image> Images()
  * @mixin \LeKoala\CommonExtensions\URLSegmentExtension
  * @mixin \LeKoala\Base\Extensions\SmartDataObjectExtension
  * @mixin \LeKoala\Base\Tags\TaggableExtension

@@ -24,7 +24,7 @@ use SilverStripe\Security\DefaultAdminService;
  * This extension is needed if you configure 2fa with:
  *
  * LeKoala\Base\Security\BaseAuthenticator:
- *   enable_2fa: true
+ * enable_2fa: true
  *
  * @property \SilverStripe\Security\Member|\LeKoala\Base\Security\TwoFactorMemberExtension $owner
  * @property ?string $PreferredTwoFactorMethod

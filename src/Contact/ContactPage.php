@@ -24,7 +24,7 @@ use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
  * @property float $Longitude
  * @property ?string $MapEmbed
  * @property ?string $SuccessContent
- * @method \SilverStripe\ORM\DataList|\LeKoala\Base\Contact\ContactSubmission[] Submissions()
+ * @method \SilverStripe\ORM\DataList<\LeKoala\Base\Contact\ContactSubmission> Submissions()
  * @mixin \LeKoala\Base\Extensions\BaseDataObjectExtension
  * @mixin \SilverStripe\Assets\Shortcodes\FileLinkTracking
  * @mixin \SilverStripe\Assets\AssetControlExtension
