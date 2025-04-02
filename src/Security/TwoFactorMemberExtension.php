@@ -248,7 +248,7 @@ class TwoFactorMemberExtension extends Extension
             $fields->addFieldToTab('Root.Main', ToggleCompositeField::create(
                 null,
                 _t('TwoFactorMemberExtension.CMSTOGGLEQRCODELABEL', 'Second Factor Token Secret'),
-                LiteralField::create(null, sprintf("<img src=\"%s\" loading=\"lazy\" style=\"width:200px;height:auto;margin-left:10px\" />", $qrcodeURI))
+                LiteralField::create(null, sprintf("<img src=\"%s\" loading=\"lazy\" style=\"width:200px;height:auto;margin-left:10px\" title=\"%s\" />", $qrcodeURI, $this->owner->TOTPToken))
             ));
         }
 
