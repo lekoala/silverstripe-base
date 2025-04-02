@@ -243,7 +243,7 @@ class TwoFactorMemberExtension extends Extension
             $fields->removeByName('TOTPToken');
         }
         $fields->removeByName('TOTPToken');
-        if ($this->owner->TOTPToken && strlen($this->owner->TOTPToken)) {
+        if ($this->owner->TOTPToken && strlen($this->owner->TOTPToken) && Permission::check('ADMIN')) {
             $qrcodeURI = $this->GoogleAuthenticatorQRCode();
             $fields->addFieldToTab('Root.Main', ToggleCompositeField::create(
                 null,
