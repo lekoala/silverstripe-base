@@ -66,6 +66,13 @@
     return confirm($(this).data("confirm"));
   });
 
+  // Slow actions with loader
+  $(document).on("click", "button[data-loading]", function(event) {
+    var svgLoader = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="16" height="16"><circle fill="#005B9E" stroke="#005B9E" stroke-width="16" r="15" cx="40" cy="100"><animate attributeName="opacity" calcMode="spline" dur="2" values="1;0;1;" keySplines=".5 0 .5 1;.5 0 .5 1" repeatCount="indefinite" begin="-.4"></animate></circle><circle fill="#005B9E" stroke="#005B9E" stroke-width="16" r="15" cx="100" cy="100"><animate attributeName="opacity" calcMode="spline" dur="2" values="1;0;1;" keySplines=".5 0 .5 1;.5 0 .5 1" repeatCount="indefinite" begin="-.2"></animate></circle><circle fill="#005B9E" stroke="#005B9E" stroke-width="16" r="15" cx="160" cy="100"><animate attributeName="opacity" calcMode="spline" dur="2" values="1;0;1;" keySplines=".5 0 .5 1;.5 0 .5 1" repeatCount="indefinite" begin="0"></animate></circle></svg>`;
+    // var original = $(this).text();
+    $(this).html(svgLoader);
+  });
+
   // Confirmable boxes
   $(document).on("click", "input.confirmable", function (event) {
     var $cb = $(this);
