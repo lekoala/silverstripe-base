@@ -60,6 +60,12 @@ class EmailHelper
         return $email;
     }
 
+    public static function isValid(?string $email): bool
+    {
+        $email = $email ?? null;
+        return filter_var($email, FILTER_VALIDATE_EMAIL);
+    }
+
     /**
      * Match all words and whitespace, will be terminated by '<'
      *
@@ -131,6 +137,10 @@ class EmailHelper
         return $email->getHtmlBody() ?? "";
     }
 
+    /**
+     * @param string|array<string,string> $recipients
+     * @return array<string,string>
+     */
     public static function getRecipientsAsArray($recipients)
     {
         if (is_array($recipients)) {

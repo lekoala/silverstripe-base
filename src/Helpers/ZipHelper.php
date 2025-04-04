@@ -79,6 +79,9 @@ class ZipHelper
      */
     public static function unzipTo($file, $dir)
     {
+        if (!is_file($file)) {
+            throw new Exception("File $file does not exist");
+        }
         $ZipArchive = new ZipArchive;
         $res = $ZipArchive->open($file);
         if ($res === true) {
@@ -103,8 +106,9 @@ class ZipHelper
 
         $title = $filter->filter($title) . '.zip';
 
-        if (ob_get_contents())
+        if (ob_get_contents()) {
             ob_end_clean();
+        }
 
         if (!is_readable($file)) {
             die("File $file is not readable");
