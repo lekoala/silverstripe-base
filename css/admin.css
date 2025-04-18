@@ -543,6 +543,6 @@ select.ag-cell-edit-input {
         position: sticky;
         top: -24px;
         background: #FAFBFC;
-        z-index: 5000;
+        z-index: 1000; /* go below dropdown */
     }
 }
