@@ -12,7 +12,7 @@ use SilverStripe\Subsites\Model\SubsiteDomain;
  * Improve subsites
  *
  * @property \SilverStripe\Subsites\Model\Subsite|\LeKoala\Base\Subsite\SubsiteExtension $owner
- * @property bool $IgnoreDefaultPages
+ * @property bool|int $IgnoreDefaultPages
  * @extends \SilverStripe\Core\Extension<object>
  */
 class SubsiteExtension extends Extension
