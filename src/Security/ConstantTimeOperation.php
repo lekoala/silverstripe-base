@@ -8,9 +8,12 @@ use RuntimeException;
 /**
  * Timing attacks are a common threat vector for online services.
  * Using a constant code execution time greatly reduces the risk.
+ *
+ * Also see Security::withMinimumExecutionTime
  */
 class ConstantTimeOperation
 {
+    // Also see Security::secure_min_execution_time in 5.4+
     public static int $defaultMs = 500;
     public static int $variableMs = 100;
 
