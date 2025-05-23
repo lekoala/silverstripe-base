@@ -26,6 +26,7 @@ use SilverStripe\Forms\HTMLEditor\TinyMCECombinedGenerator;
 use SilverStripe\Core\Extension;
 use SilverStripe\Control\Middleware\AllowedHostsMiddleware;
 use SilverStripe\Control\Director;
+use SilverStripe\Security\SudoMode\SudoModeService;
 
 /**
  * Available config
@@ -118,11 +119,15 @@ class BaseLeftAndMainExtension extends Extension
 
     /**
      * You probably want to avoid a warning each time
+     * '*' is only supported in 5.4 and throws an error on 5.3-
      * @link https://docs.silverstripe.org/en/5/developer_guides/security/secure_coding/#request-hostname-forgery
      * @return void
      */
     public static function writeAllowedHosts(): void
     {
+        if (!class_exists(\SilverStripe\Security\SudoMode\SudoModeService::class)) {
+            return;
+        }
         $allowedHostsMiddleware = Injector::inst()->get(AllowedHostsMiddleware::class, true);
         if ($allowedHostsMiddleware) {
             if (empty($allowedHostsMiddleware->getAllowedHosts())) {
