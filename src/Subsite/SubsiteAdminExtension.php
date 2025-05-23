@@ -42,7 +42,14 @@ class SubsiteAdminExtension extends Extension
         $hosts = implode(',', self::generateHostsList());
         $env = Director::baseFolder() . '/.env';
         if (is_file($env) && is_writable($env)) {
-            file_put_contents($env, "\nSS_ALLOWED_HOSTS=\"$hosts\"", FILE_APPEND);
+            $content = file_get_contents($env);
+            if (!str_contains($content, 'SS_ALLOWED_HOSTS')) {
+                file_put_contents($env, "\nSS_ALLOWED_HOSTS=\"$hosts\"", FILE_APPEND);
+            } else {
+                $content = preg_replace('/SS_ALLOWED_HOSTS=\".*\"/', '', $content);
+                $content .= "\nSS_ALLOWED_HOSTS=\"$hosts\"";
+                file_put_contents($env, $content);
+            }
         }
     }
 
