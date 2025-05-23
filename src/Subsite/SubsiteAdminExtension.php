@@ -46,7 +46,7 @@ class SubsiteAdminExtension extends Extension
             if (!str_contains($content, 'SS_ALLOWED_HOSTS')) {
                 file_put_contents($env, "\nSS_ALLOWED_HOSTS=\"$hosts\"", FILE_APPEND);
             } else {
-                $content = preg_replace('/SS_ALLOWED_HOSTS=\".*\"/', '', $content);
+                $content = preg_replace('/\nSS_ALLOWED_HOSTS=\".*\"/', '', $content);
                 $content .= "\nSS_ALLOWED_HOSTS=\"$hosts\"";
                 file_put_contents($env, $content);
             }
