@@ -125,6 +125,12 @@
     return true;
   });
 
+  $(document).on("change", ".reload-on-change", function (event) {
+    var url = new URL(location.href);
+    url.searchParams.set($(this).attr("name"), $(this).val());
+    location.assign(url.href);
+  });
+
   $.entwine("ss", function ($) {
     // Bulk manager shortcuts
     $(".col-bulkSelect").entwine({
