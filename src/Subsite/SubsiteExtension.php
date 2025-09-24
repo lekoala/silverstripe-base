@@ -2,6 +2,8 @@
 
 namespace LeKoala\Base\Subsite;
 
+use LeKoala\CmsActions\CustomAction;
+use LeKoala\CmsActions\CustomLink;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Extension;
@@ -13,6 +15,7 @@ use SilverStripe\Subsites\Model\SubsiteDomain;
  *
  * @property \SilverStripe\Subsites\Model\Subsite|\LeKoala\Base\Subsite\SubsiteExtension $owner
  * @property bool|int $IgnoreDefaultPages
+ * @property bool|int $HideFromMenu
  * @extends \SilverStripe\Core\Extension<object>
  */
 class SubsiteExtension extends Extension
@@ -22,6 +25,7 @@ class SubsiteExtension extends Extension
      */
     private static $db = [
         'IgnoreDefaultPages' => 'Boolean',
+        'HideFromMenu' => 'Boolean',
     ];
 
     /**
@@ -52,6 +56,12 @@ class SubsiteExtension extends Extension
                 $fields->addFieldToTab('Root.Main', $Domains);
             }
         }
+    }
+
+    public function updateCMSActions(FieldList $actions)
+    {
+        $actions->push($doAccessSubsite = new CustomLink("doAccessSubsite", "Access subsite", "/admin?SubsiteID=" . $this->owner->ID));
+        $doAccessSubsite->setNoAjax(true);
     }
 
     public function onBeforeWrite()

@@ -8,6 +8,9 @@ use SilverStripe\Control\Middleware\AllowedHostsMiddleware;
 use SilverStripe\Security\Permission;
 use SilverStripe\Control\Director;
 use SilverStripe\Subsites\Model\SubsiteDomain;
+use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\GridField\GridFieldDeleteAction;
+use SilverStripe\Forms\Form;
 
 /**
  * Class \LeKoala\Base\Subsite\SubsiteAdminExtension
@@ -24,6 +27,15 @@ class SubsiteAdminExtension extends Extension
     public function Backlink()
     {
         return 'admin/subsites';
+    }
+
+    /**
+     * @param GridField $grid
+     * @return void
+     */
+    public function updateGridField($grid)
+    {
+        $grid->getConfig()->removeComponentsByType(GridFieldDeleteAction::class);
     }
 
     public function init(): void
