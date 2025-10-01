@@ -24,6 +24,9 @@ use LeKoala\Base\Theme\ThemeSiteConfigExtension;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorConfig;
 use SilverStripe\Forms\HTMLEditor\TinyMCECombinedGenerator;
 use SilverStripe\Core\Extension;
+use SilverStripe\Control\Middleware\AllowedHostsMiddleware;
+use SilverStripe\Control\Director;
+use SilverStripe\Security\SudoMode\SudoModeService;
 
 /**
  * Available config
@@ -109,6 +112,31 @@ class BaseLeftAndMainExtension extends Extension
 
         Requirements::javascript("base/javascript/admin.js");
         $this->requireAdminStyles();
+
+        // Env
+        self::writeAllowedHosts();
+    }
+
+    /**
+     * You probably want to avoid a warning each time
+     * '*' is only supported in 5.4 and throws an error on 5.3-
+     * @link https://docs.silverstripe.org/en/5/developer_guides/security/secure_coding/#request-hostname-forgery
+     * @return void
+     */
+    public static function writeAllowedHosts(): void
+    {
+        if (!class_exists(\SilverStripe\Security\SudoMode\SudoModeService::class)) {
+            return;
+        }
+        $allowedHostsMiddleware = Injector::inst()->get(AllowedHostsMiddleware::class, true);
+        if ($allowedHostsMiddleware) {
+            if (empty($allowedHostsMiddleware->getAllowedHosts())) {
+                $env = Director::baseFolder() . '/.env';
+                if (is_file($env) && is_writable($env)) {
+                    file_put_contents($env, "\nSS_ALLOWED_HOSTS=\"*\"", FILE_APPEND);
+                }
+            }
+        }
     }
 
     public function ShowAVWarning(): bool
@@ -240,7 +268,7 @@ CSS;
      */
     protected function includeLastIcon()
     {
-        if (!class_exists(LeKoala\Admini\LeftAndMain::class)) {
+        if (!class_exists(\LeKoala\Admini\LeftAndMain::class)) {
             return;
         }
         $preconnect = <<<HTML

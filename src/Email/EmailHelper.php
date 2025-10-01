@@ -7,6 +7,7 @@ use SilverStripe\SiteConfig\SiteConfig;
 use SilverStripe\View\SSViewer;
 use SilverStripe\Security\Security;
 use SilverStripe\View\ViewableData;
+use ReflectionMethod;
 
 /**
  * Helper email class
@@ -57,6 +58,12 @@ class EmailHelper
             ->setHTMLTemplate('SilverStripe\\Control\\Email\\Email')
             ->addData('EmailContent', $content);
         return $email;
+    }
+
+    public static function isValid(?string $email): bool
+    {
+        $email = $email ?? null;
+        return filter_var($email, FILTER_VALIDATE_EMAIL);
     }
 
     /**
@@ -117,6 +124,23 @@ class EmailHelper
         return $content;
     }
 
+    public static function forceEmailRender(Email $email)
+    {
+        $reflectionMethod = new ReflectionMethod($email, 'updateHtmlAndTextWithRenderedTemplates');
+        $reflectionMethod->setAccessible(true);
+        $reflectionMethod->invoke($email);
+    }
+
+    public static function getEmailBody(Email $email)
+    {
+        self::forceEmailRender($email);
+        return $email->getHtmlBody() ?? "";
+    }
+
+    /**
+     * @param string|array<string,string> $recipients
+     * @return array<string,string>
+     */
     public static function getRecipientsAsArray($recipients)
     {
         if (is_array($recipients)) {

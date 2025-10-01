@@ -62,6 +62,7 @@ class FullGridField extends GridField
             ));
         }
 
+        /** @var FullGridFieldCheckbox $comp */
         $comp = $this->getConfig()->getComponentByType(FullGridFieldCheckbox::class);
         if (!$comp) {
             $this->httpError(400, 'No checkbox component');
@@ -75,6 +76,12 @@ class FullGridField extends GridField
 
         $response = Controller::curr()->getResponse();
         $response->addHeader('X-Status', rawurlencode($message));
+        $response->setBody(json_encode([
+            'data' => $data,
+            'model' => $this->getModelClass(),
+            'relation' => $comp->getSaveList($this),
+            'message' => $message,
+        ]));
 
         return $response;
     }

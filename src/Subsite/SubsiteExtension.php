@@ -2,6 +2,8 @@
 
 namespace LeKoala\Base\Subsite;
 
+use LeKoala\CmsActions\CustomAction;
+use LeKoala\CmsActions\CustomLink;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Extension;
@@ -12,9 +14,20 @@ use SilverStripe\Subsites\Model\SubsiteDomain;
  * Improve subsites
  *
  * @property \SilverStripe\Subsites\Model\Subsite|\LeKoala\Base\Subsite\SubsiteExtension $owner
+ * @property bool|int $IgnoreDefaultPages
+ * @property bool|int $HideFromMenu
+ * @extends \SilverStripe\Core\Extension<object>
  */
 class SubsiteExtension extends Extension
 {
+    /**
+     * @var array<string,string>
+     */
+    private static $db = [
+        'IgnoreDefaultPages' => 'Boolean',
+        'HideFromMenu' => 'Boolean',
+    ];
+
     /**
      * @var boolean
      */
@@ -45,6 +58,12 @@ class SubsiteExtension extends Extension
         }
     }
 
+    public function updateCMSActions(FieldList $actions)
+    {
+        $actions->push($doAccessSubsite = new CustomLink("doAccessSubsite", "Access subsite", "/admin?SubsiteID=" . $this->owner->ID));
+        $doAccessSubsite->setNoAjax(true);
+    }
+
     public function onBeforeWrite()
     {
         if ($this->owner->ID && Director::isDev()) {
@@ -54,8 +73,6 @@ class SubsiteExtension extends Extension
 
     public function onBeforeDelete()
     {
-        parent::onBeforeDelete();
-
         if (self::$delete_related) {
             // Delete SiteConfig
             $SiteConfig = SiteConfig::get()->filter('SubsiteID', $this->owner->ID)->first();

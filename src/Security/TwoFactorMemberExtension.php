@@ -24,10 +24,7 @@ use SilverStripe\Security\DefaultAdminService;
  * This extension is needed if you configure 2fa with:
  *
  * LeKoala\Base\Security\BaseAuthenticator:
- *   enable_2fa: true
- *
- * TODO: consider implementing OTP
- * https://philna.sh/blog/2022/12/07/better-two-factor-authentication-experiences-with-web-otp/
+ * enable_2fa: true
  *
  * @property \SilverStripe\Security\Member|\LeKoala\Base\Security\TwoFactorMemberExtension $owner
  * @property ?string $PreferredTwoFactorMethod
@@ -246,12 +243,12 @@ class TwoFactorMemberExtension extends Extension
             $fields->removeByName('TOTPToken');
         }
         $fields->removeByName('TOTPToken');
-        if ($this->owner->TOTPToken && strlen($this->owner->TOTPToken)) {
+        if ($this->owner->TOTPToken && strlen($this->owner->TOTPToken) && Permission::check('ADMIN')) {
             $qrcodeURI = $this->GoogleAuthenticatorQRCode();
             $fields->addFieldToTab('Root.Main', ToggleCompositeField::create(
                 null,
                 _t('TwoFactorMemberExtension.CMSTOGGLEQRCODELABEL', 'Second Factor Token Secret'),
-                LiteralField::create(null, sprintf("<img src=\"%s\" loading=\"lazy\" style=\"width:200px;height:auto;margin-left:10px\" />", $qrcodeURI))
+                LiteralField::create(null, sprintf("<img src=\"%s\" loading=\"lazy\" style=\"width:200px;height:auto;margin-left:10px\" title=\"%s\" />", $qrcodeURI, $this->owner->TOTPToken))
             ));
         }
 

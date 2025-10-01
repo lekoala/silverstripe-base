@@ -14,6 +14,10 @@ use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use LeKoala\Base\Theme\ThemeSiteConfigExtension;
 use SilverStripe\Core\Extension;
+use SilverStripe\ORM\ValidationResult;
+use Egulias\EmailValidator\EmailValidator;
+use Egulias\EmailValidator\Validation\RFCValidation;
+use LeKoala\Base\Helpers\ValidatorHelper;
 
 /**
  * Class \LeKoala\Base\SiteConfigExtension
@@ -57,7 +61,10 @@ class SiteConfigExtension extends Extension
      * @var array<string>
      */
     private static $translate = [
-        "FooterText", "Copyright", "EmailFooter", "ContactInfos"
+        "FooterText",
+        "Copyright",
+        "EmailFooter",
+        "ContactInfos"
     ];
 
     /**
@@ -111,6 +118,16 @@ class SiteConfigExtension extends Extension
         $fields->addFieldToTab('Root.Footer', $Copyright);
 
         $this->owner->extend("updateBaseCMSFields", $fields);
+    }
+
+    public function validate(ValidationResult $result)
+    {
+        if ($this->owner->ContactEmail && !ValidatorHelper::isValidRfcEmail($this->owner->ContactEmail)) {
+            $result->addFieldError('ContactEmail', _t('SiteConfigExtension.Emailisnotvalid', 'Email is not valid'));
+        }
+        if ($this->owner->DefaultFromEmail && !ValidatorHelper::isValidRfcEmail($this->owner->DefaultFromEmail)) {
+            $result->addFieldError('DefaultFromEmail', _t('SiteConfigExtension.Emailisnotvalid', 'Email is not valid'));
+        }
     }
 
     /**

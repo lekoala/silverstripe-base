@@ -13,8 +13,8 @@ use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
 /**
  * Class \LeKoala\Base\Faq\FaqPage
  *
- * @method \SilverStripe\ORM\DataList|\LeKoala\Base\Faq\FaqItem[] Items()
- * @method \SilverStripe\ORM\DataList|\LeKoala\Base\Faq\FaqCategory[] Categories()
+ * @method \SilverStripe\ORM\DataList<\LeKoala\Base\Faq\FaqItem> Items()
+ * @method \SilverStripe\ORM\DataList<\LeKoala\Base\Faq\FaqCategory> Categories()
  * @mixin \LeKoala\Base\Extensions\BaseDataObjectExtension
  * @mixin \SilverStripe\Assets\Shortcodes\FileLinkTracking
  * @mixin \SilverStripe\Assets\AssetControlExtension

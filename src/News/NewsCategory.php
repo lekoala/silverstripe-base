@@ -17,7 +17,7 @@ use LeKoala\Base\Forms\SmartUploadField;
  * @property int $PageID
  * @method \SilverStripe\Assets\Image Image()
  * @method \LeKoala\Base\News\NewsPage Page()
- * @method \SilverStripe\ORM\DataList|\LeKoala\Base\News\NewsItem[] Items()
+ * @method \SilverStripe\ORM\DataList<\LeKoala\Base\News\NewsItem> Items()
  * @mixin \LeKoala\CommonExtensions\URLSegmentExtension
  * @mixin \LeKoala\Base\Extensions\BaseDataObjectExtension
  * @mixin \SilverStripe\Assets\Shortcodes\FileLinkTracking

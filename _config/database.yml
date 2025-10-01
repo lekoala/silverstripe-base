@@ -63,6 +63,10 @@ SilverStripe\Core\Injector\Injector:
     class: LeKoala\Base\ORM\FieldType\DBUntranslatedVarchar
   Email:
     class: LeKoala\Base\ORM\FieldType\DBEmail
+  SafeVarchar:
+    class: LeKoala\Base\ORM\FieldType\DBSafeVarchar
+  SafeText:
+    class: LeKoala\Base\ORM\FieldType\DBSafeText
 ---
 Name: base-searchfilters
 After: '#coresearchfilters'

@@ -8,7 +8,7 @@ use LeKoala\Base\Extensions\BasePageExtension;
 /**
  * Class \LeKoala\Base\Privacy\TermsAndConditionsPage
  *
- * @method \SilverStripe\ORM\DataList|\AlternativeTerms[] AlternativeTermsAndConditions()
+ * @method \SilverStripe\ORM\DataList<\AlternativeTerms> AlternativeTermsAndConditions()
  * @mixin \MyTermsAndConditionsExtension
  * @mixin \LeKoala\Base\Extensions\BaseDataObjectExtension
  * @mixin \SilverStripe\Assets\Shortcodes\FileLinkTracking

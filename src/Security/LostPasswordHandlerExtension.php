@@ -48,8 +48,8 @@ class LostPasswordHandlerExtension extends Extension
         if ($member->hasExtension(MemberAuditExtension::class) && Director::isLive()) {
             /** @var Member&MemberAuditExtension $member */
             // Avoid hammering / 2 min per request
-            $latestedAudit = $member->Audits()->filter('Event', 'password_requested')->first();
-            if ($latestedAudit && strtotime($latestedAudit->Created) >= strtotime('-2 minutes')) {
+            $lastAudit = $member->Audits()->filter('Event', 'password_requested')->first();
+            if ($lastAudit && strtotime($lastAudit->Created) >= strtotime('-2 minutes')) {
                 self::getLogger()->debug("Avoid hammering for #" . $member->ID);
                 $member = null;
                 return;

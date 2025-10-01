@@ -12,11 +12,9 @@ use SilverStripe\Control\Director;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Security\Security;
-use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Forms\RequiredFields;
-use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Core\Injector\Injector;
 use LeKoala\Base\Security\BaseMemberExtension;
 use LeKoala\Base\TextMessage\ProviderInterface;
@@ -45,20 +43,25 @@ class TwoFactorLoginHandler extends LoginHandler
 
     public function doLogin($data, MemberLoginForm $form, HTTPRequest $request)
     {
+        return ConstantTimeOperation::execute(fn() => $this->doActualLogin($data, $form, $request));
+    }
+
+    protected function doActualLogin($data, MemberLoginForm $form, HTTPRequest $request)
+    {
         $this->extend('beforeLogin');
 
         // Successful login
         /** @var Member|BaseMemberExtension|TwoFactorMemberExtension $member */
         if ($member = $this->checkLogin($data, $request, $result)) {
-            $session = $request->getSession();
-            $session->set('TwoFactorLoginHandler.MemberID', $member->ID);
-
             if ($member->NeedTwoFactorAuth()) {
+                $session = $request->getSession();
+                $session->set('TwoFactorLoginHandler.MemberID', $member->ID);
                 // Don't forget to clear this afterwards
                 // Never store password
                 unset($data['Password']);
                 $session->set('TwoFactorLoginHandler.Data', $data);
-                return $this->redirect($this->getStep2Link());
+
+                return $this->redirect(self::getStep2Link());
             }
 
             // 2FA is enabled but not needed, log in as normal
@@ -73,22 +76,23 @@ class TwoFactorLoginHandler extends LoginHandler
 
         $this->extend('failedLogin');
 
-        $message = implode("; ", array_map(
-            function ($message) {
-                return $message['message'];
-            },
-            $result->getMessages()
-        ));
+        if ($result) {
+            $message = implode("; ", array_map(
+                function ($message) {
+                    return $message['message'];
+                },
+                $result->getMessages()
+            ));
 
-        $form->sessionMessage($message, 'bad');
+            $form->sessionMessage($message, 'bad');
+        }
 
         // Failed login
 
         /** @skipUpgrade */
         if (array_key_exists('Email', $data)) {
             $rememberMe = (isset($data['Remember']) && Security::config()->get('autologin_enabled') === true);
-            $this
-                ->getRequest()
+            $request
                 ->getSession()
                 ->set('SessionForms.MemberLoginForm.Email', $data['Email'])
                 ->set('SessionForms.MemberLoginForm.Remember', $rememberMe);
@@ -227,10 +231,10 @@ class TwoFactorLoginHandler extends LoginHandler
         // Fail to login redirects back to form
         $session->set('TwoFactorLoginHandler.ErrorMessage', _t('TwoFactorLoginHandler.ERRORMESSAGE', 'The provided token is invalid, please try again.'));
 
-        return $this->redirect($this->getStep2Link());
+        return $this->redirect(self::getStep2Link());
     }
 
-    public function getStep2Link()
+    public static function getStep2Link()
     {
         return '/Security/login/default/step2';
     }
@@ -272,7 +276,7 @@ class TwoFactorLoginHandler extends LoginHandler
 
         // Fail to login redirects back to form
         $session->set('TwoFactorLoginHandler.ErrorMessage', _t('TwoFactorLoginHandler.ERRORMESSAGE', 'The provided token is invalid, please try again.'));
-        return $this->redirect($this->getStep2Link());
+        return $this->redirect(self::getStep2Link());
     }
 
     public function performLogin($member, $data, HTTPRequest $request)

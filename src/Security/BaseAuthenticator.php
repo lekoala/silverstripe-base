@@ -13,6 +13,7 @@ use SilverStripe\Security\MemberPassword;
 use SilverStripe\Security\PasswordEncryptor;
 use SilverStripe\Security\MemberAuthenticator\LoginHandler;
 use SilverStripe\Security\MemberAuthenticator\MemberAuthenticator;
+use SilverStripe\Control\HTTPRequest;
 
 /**
  * Improve authentification to allow 2fa

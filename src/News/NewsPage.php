@@ -12,8 +12,8 @@ use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
 /**
  * Class \LeKoala\Base\News\NewsPage
  *
- * @method \SilverStripe\ORM\DataList|\LeKoala\Base\News\NewsItem[] Items()
- * @method \SilverStripe\ORM\DataList|\LeKoala\Base\News\NewsCategory[] Categories()
+ * @method \SilverStripe\ORM\DataList<\LeKoala\Base\News\NewsItem> Items()
+ * @method \SilverStripe\ORM\DataList<\LeKoala\Base\News\NewsCategory> Categories()
  * @mixin \LeKoala\Base\Extensions\BaseDataObjectExtension
  * @mixin \SilverStripe\Assets\Shortcodes\FileLinkTracking
  * @mixin \SilverStripe\Assets\AssetControlExtension

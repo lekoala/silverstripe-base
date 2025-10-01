@@ -21,6 +21,7 @@ use SilverStripe\Forms\GridField\GridField_HTMLProvider;
 use SilverStripe\Forms\GridField\GridField_ColumnProvider;
 use SilverStripe\Forms\GridField\GridField_DataManipulator;
 use SilverStripe\Forms\HiddenField;
+use SilverStripe\ORM\DataObject;
 
 /**
  * The checkbox handles adding or removing the record to the relation
@@ -213,6 +214,12 @@ class FullGridFieldCheckbox implements GridField_SaveHandler, GridField_ColumnPr
         }
     }
 
+    public function getSaveList(GridField $grid)
+    {
+        $name = $grid->getName();
+        return $this->saveToRelation ? $this->saveToRelation : $name;
+    }
+
     public function handleInstantSave(GridField $grid, $data)
     {
         $checked = $data['checked'];
@@ -227,7 +234,7 @@ class FullGridFieldCheckbox implements GridField_SaveHandler, GridField_ColumnPr
         $recordClassName = ClassHelper::unsanitiseClassName($recordInfosParts[0]);
         $recordID = $recordInfosParts[1];
 
-        /* @var $record DataObject */
+        /** @var DataObject $record */
         $record = $recordClassName::get()->byID($recordID);
         if (!$record) {
             throw new Exception("Record $recordID of class $recordClassName not found");
@@ -236,12 +243,14 @@ class FullGridFieldCheckbox implements GridField_SaveHandler, GridField_ColumnPr
             throw new Exception("Cannot edit record");
         }
 
-        $name = $grid->getName();
-
-        $rel = $this->saveToRelation ? $this->saveToRelation : $name;
+        $rel = $this->getSaveList($grid);
 
         /** @var ManyManyList $list */
         $list = $record->$rel();
+
+        if (!$list instanceof ManyManyList) {
+            throw new Exception("Invalid list type: " . get_class($list));
+        }
 
         $msg = "Something wrong happened";
         if ($checked) {
