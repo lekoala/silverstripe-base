@@ -266,6 +266,12 @@ abstract class BaseModelAdmin extends ModelAdmin
             if ($singl->hasExtension(SortableExtension::class)) {
                 $gridField->getConfig()->addComponent(new GridFieldOrderableRows());
             }
+
+            $existingField = $form->Fields()->dataFieldByName($this->sanitiseClassName($this->modelClass));
+            if ($existingField) {
+                $gridField->setForm($form);
+                $form->Fields()->replaceField($existingField->getName(), $gridField);
+            }
         }
 
         return $form;
