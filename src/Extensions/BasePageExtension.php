@@ -67,44 +67,51 @@ class BasePageExtension extends Extension
                 $checkType = false;
             }
         }
-        SubsiteHelper::withSubsites(function ($SubsiteID = 0) use ($segment, $class, $data, $checkType) {
-            $subsite = Subsite::get_by_id($SubsiteID);
-            if ($subsite && $subsite->IgnoreDefaultPages) {
-                return;
-            }
-            if ($checkType) {
-                $page = DataObject::get_one($class);
-            } else {
-                $page = SiteTree::get_by_link($segment);
-            }
-            if ($page) {
-                // We have a page but the class does not match
-                if ($page->ClassName != $class) {
-                    $page->ClassName = $class;
+        if (SubsiteHelper::usesSubsite()) {
+            // Keep in mind that even though Subsite SubsiteHelper::withSubsites does nothing
+            // the callback function is still parsed and will fail if Subsite class is not defined
+            SubsiteHelper::withSubsites(function ($SubsiteID = 0) use ($segment, $class, $data, $checkType) {
+                if (!class_exists(Subsite::class)) {
+                    return;
+                }
+                $subsite = Subsite::get_by_id($SubsiteID);
+                if ($subsite && $subsite->IgnoreDefaultPages) {
+                    return;
+                }
+                if ($checkType) {
+                    $page = DataObject::get_one($class);
+                } else {
+                    $page = SiteTree::get_by_link($segment);
+                }
+                if ($page) {
+                    // We have a page but the class does not match
+                    if ($page->ClassName != $class) {
+                        $page->ClassName = $class;
+                        $page->writeAll();
+                        $page->flushCache();
+                        DB::alteration_message($class . ' repaired', 'repaired');
+                    } else {
+                        // Do nothing, a page already exists
+                    }
+                } else {
+                    $page = new $class();
+                    $page->SubsiteID = $SubsiteID;
+                    foreach ($data as $k => $v) {
+                        $page->$k = $v;
+                    }
+                    $page->URLSegment = $segment;
                     $page->writeAll();
                     $page->flushCache();
-                    DB::alteration_message($class . ' repaired', 'repaired');
-                } else {
-                    // Do nothing, a page already exists
-                }
-            } else {
-                $page = new $class();
-                $page->SubsiteID = $SubsiteID;
-                foreach ($data as $k => $v) {
-                    $page->$k = $v;
-                }
-                $page->URLSegment = $segment;
-                $page->writeAll();
-                $page->flushCache();
 
-                $site = 'main site';
-                if ($SubsiteID) {
-                    $site = 'subsite ' . $SubsiteID;
-                }
+                    $site = 'main site';
+                    if ($SubsiteID) {
+                        $site = 'subsite ' . $SubsiteID;
+                    }
 
-                DB::alteration_message($class . ' created on ' . $site, 'created');
-            }
-        });
+                    DB::alteration_message($class . ' created on ' . $site, 'created');
+                }
+            });
+        }
     }
 
     protected function createMetaTag($property, $content)
