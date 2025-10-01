@@ -21,6 +21,7 @@ use SilverStripe\Control\PjaxResponseNegotiator;
 use SilverStripe\Forms\GridField\GridFieldDeleteAction;
 use Symbiote\GridFieldExtensions\GridFieldOrderableRows;
 use LeKoala\Base\Forms\GridField\GridFieldExtension;
+use SilverStripe\Forms\GridField\GridFieldPaginator;
 
 /**
  * Improved ModelAdmin
@@ -259,6 +260,12 @@ abstract class BaseModelAdmin extends ModelAdmin
 
         $gridField = $this->hasMethod('getGridField') ? $this->getGridField() : $this->getGridFieldFrom($form);
         if ($gridField) {
+            /** @var GridFieldPaginator $paginator */
+            $paginator = $gridField->getConfig()->getComponentByType(GridFieldPaginator::class);
+            if ($paginator) {
+                $paginator->setItemsPerPage(self::config()->get('page_length'));
+            }
+
             $gridField->getConfig()->removeComponentsByType(GridFieldDeleteAction::class);
             if (self::config()->can_delete_from_list) {
                 $gridField->getConfig()->addComponent(new GridFieldDeleteAction(false));
