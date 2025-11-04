@@ -131,7 +131,7 @@
         location.assign(url.href);
     });
 
-    $(documnet).on("click", ".js-stop-propagation", function (event) {
+    $(document).on("click", ".js-stop-propagation", function (event) {
         event.stopPropagation();
     });
 
