@@ -92,9 +92,9 @@ class BaseSecurityAdminExtension extends Extension
         if (in_array($segment, ['security_audit', 'members_audit', 'logs', 'users', 'groups'])) {
             $config->removeComponentsByType(GridFieldImportButton::class);
         }
-        if ($segment === "users") {
-            $config->removeComponentsByType(GridFieldFilterHeader::class);
-        }
+        // if ($segment === "users") {
+        //     $config->removeComponentsByType(GridFieldFilterHeader::class);
+        // }
     }
 
     /**
@@ -180,7 +180,7 @@ class BaseSecurityAdminExtension extends Extension
             $filter = GridFieldHelper::getGridFieldFilterHeader($members->getConfig());
             if ($filter) {
                 $wildCardHeader = WildcardSearchContext::fromContext($filter->getSearchContext($members));
-                // $wildCardHeader->setWildcardFilters(['FirstName', 'Surname', 'Email']);
+                $wildCardHeader->setWildcardFilters(['FirstName', 'Surname', 'Email']);
                 $wildCardHeader->replaceInFilterHeader($filter);
             }
         }
