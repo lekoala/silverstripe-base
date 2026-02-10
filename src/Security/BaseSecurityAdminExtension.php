@@ -6,6 +6,7 @@ use SilverStripe\Forms\Form;
 use SilverStripe\Core\Extension;
 use SilverStripe\Security\Member;
 use LeKoala\Base\Forms\AlertField;
+use LeKoala\Base\Forms\GridField\BetterGridFieldAddExistingAutocompleter;
 use SilverStripe\Control\Director;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Security\Security;
@@ -21,8 +22,10 @@ use SilverStripe\Forms\GridField\GridField;
 use LeKoala\Base\Forms\GridField\GridFieldHelper;
 use SilverStripe\Forms\GridField\GridFieldConfig;
 use LeKoala\Base\ORM\Search\WildcardSearchContext;
+use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
 use SilverStripe\Forms\GridField\GridFieldImportButton;
 use SilverStripe\Forms\GridField\GridFieldConfig_RecordViewer;
+use SilverStripe\Forms\GridField\GridFieldFilterHeader;
 
 /**
  * BaseSecurityAdminExtension
@@ -86,8 +89,11 @@ class BaseSecurityAdminExtension extends Extension
     {
         $url = explode("/", $this->owner->getRequest()->getURL());
         $segment = $url[2] ?? "";
-        if (in_array($segment, ['security_audit', 'members_audit', 'logs'])) {
+        if (in_array($segment, ['security_audit', 'members_audit', 'logs', 'users', 'groups'])) {
             $config->removeComponentsByType(GridFieldImportButton::class);
+        }
+        if ($segment === "users") {
+            $config->removeComponentsByType(GridFieldFilterHeader::class);
         }
     }
 
@@ -172,9 +178,11 @@ class BaseSecurityAdminExtension extends Extension
 
             // Better search
             $filter = GridFieldHelper::getGridFieldFilterHeader($members->getConfig());
-            $wildCardHeader = WildcardSearchContext::fromContext($filter->getSearchContext($members));
-            // $wildCardHeader->setWildcardFilters(['FirstName', 'Surname', 'Email']);
-            $wildCardHeader->replaceInFilterHeader($filter);
+            if ($filter) {
+                $wildCardHeader = WildcardSearchContext::fromContext($filter->getSearchContext($members));
+                // $wildCardHeader->setWildcardFilters(['FirstName', 'Surname', 'Email']);
+                $wildCardHeader->replaceInFilterHeader($filter);
+            }
         }
 
         $url = explode("/", $this->owner->getRequest()->getURL());
