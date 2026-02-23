@@ -29,7 +29,6 @@ use SilverStripe\ORM\DataObject;
  */
 class FullGridFieldCheckbox implements GridField_SaveHandler, GridField_ColumnProvider, GridField_HTMLProvider, GridField_DataManipulator
 {
-
     /**
      * @var array
      */
@@ -182,7 +181,7 @@ class FullGridFieldCheckbox implements GridField_SaveHandler, GridField_ColumnPr
 
         $rel = $this->saveToRelation ? $this->saveToRelation : $name;
 
-        /* @var $list ManyManyList */
+        /** @var ManyManyList $list */
         $list = $record->$rel();
 
         $currentIds = $list->getIDList();
@@ -259,7 +258,7 @@ class FullGridFieldCheckbox implements GridField_SaveHandler, GridField_ColumnPr
                 $cb = $this->onAdd;
                 $cb($id, $rel, $record);
             }
-            $msg = "Record added";
+            $msg = "Record added to {$record->getTitle()}";
         } else {
             if (in_array($id, $this->cannotBeRemovedIDs)) {
                 // Do nothing
@@ -269,7 +268,7 @@ class FullGridFieldCheckbox implements GridField_SaveHandler, GridField_ColumnPr
                     $cb = $this->onRemove;
                     $cb($id, $rel, $record);
                 }
-                $msg = "Record removed";
+                $msg = "Record removed from {$record->getTitle()}";
             }
         }
 

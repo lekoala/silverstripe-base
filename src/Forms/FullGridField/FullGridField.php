@@ -297,9 +297,9 @@ class FullGridField extends GridField
         $config->addComponent(new GridFieldDataColumns());
         //        $config->addComponent(new GridFieldPageCount('toolbar-header-right'));
         //        $config->addComponent($pagination = new GridFieldPaginator(50));
-        $config->addComponent(new FullGridFieldCheckbox);
-        $config->addComponent(new GridFieldDetailForm);
-        $config->addComponent(new FullGridFieldEditButton);
+        $config->addComponent(new FullGridFieldCheckbox());
+        $config->addComponent(new GridFieldDetailForm());
+        $config->addComponent(new FullGridFieldEditButton());
 
         //        $sort->setThrowExceptionOnBadDataType(false);
         //        $filter->setThrowExceptionOnBadDataType(false);

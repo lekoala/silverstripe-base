@@ -1,4 +1,5 @@
 <?php
+
 namespace LeKoala\Base\Forms\FullGridField;
 
 use SilverStripe\View\SSViewer;
@@ -11,7 +12,6 @@ use SilverStripe\Forms\GridField\GridFieldEditButton;
  */
 class FullGridFieldEditButton extends GridFieldEditButton
 {
-
     protected $ids = null;
 
     /**

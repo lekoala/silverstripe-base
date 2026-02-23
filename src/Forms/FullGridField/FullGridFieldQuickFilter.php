@@ -1,11 +1,11 @@
 <?php
+
 namespace LeKoala\Base\Forms\FullGridField;
 
 use SilverStripe\Forms\GridField\GridField_HTMLProvider;
 
 class FullGridFieldQuickFilter implements GridField_HTMLProvider
 {
-
     /**
      * The HTML fragment to write this component into
      */
