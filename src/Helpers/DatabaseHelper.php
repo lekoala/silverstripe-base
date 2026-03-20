@@ -790,4 +790,43 @@ SQL;
     {
         return array_unique($list->columnUnique($colName));
     }
+
+    /**
+     * Normalize an ID list for safe use in an SQL IN() clause.
+     *
+     * Accepted values:
+     * - array<int|string>: list of IDs
+     * - string: comma-separated IDs (with whitespace allowed)
+     * - int: single ID
+     *
+     * Returns a comma-separated string of positive integers, or false when invalid.
+     *
+     * @param array<int|string>|int|string|null $idList
+     * @return string|false
+     */
+    public static function normalizeIdsForInClause($idList)
+    {
+        if ($idList === null || $idList === '') {
+            return false;
+        }
+
+        $ids = [];
+        if (is_array($idList)) {
+            $ids = $idList;
+        } elseif (is_string($idList)) {
+            $ids = preg_split('/\s*,\s*/', trim($idList), -1, PREG_SPLIT_NO_EMPTY);
+        } elseif (is_int($idList) || ctype_digit((string) $idList)) {
+            $ids = [(int) $idList];
+        } else {
+            return false;
+        }
+
+        $ids = array_filter(array_map('intval', $ids), fn($id) => $id > 0);
+        $ids = array_values(array_unique($ids));
+        if (empty($ids)) {
+            return false;
+        }
+
+        return implode(',', $ids);
+    }
 }
