@@ -3,6 +3,8 @@
 Name: base-cache-before
 Before:
   - '#corecache'
+Only:
+  classexists: '\Predis\Client'
 ---
 SilverStripe\Core\Injector\Injector:
   RedisClient:
