@@ -401,7 +401,7 @@ SQL;
      * Might be easier to simply write a bunch of update statements in a transaction
      *
      * @param string $table
-     * @param array<string> $values
+     * @param array<string,mixed> $values
      * @param string $valueField
      * @param string $targetField
      * @param string $idField
@@ -828,5 +828,43 @@ SQL;
         }
 
         return implode(',', $ids);
+    }
+
+    /**
+     * @param string $expression eg: '"Created"'
+     * @param string $precision one of: day, month, year, hour
+     * @return string
+     */
+    public static function dateFormat(string $expression, string $precision): string
+    {
+        $sqlite = DatabaseHelper::getDbType() === 'sqlite';
+
+        switch ($precision) {
+            case 'day':
+                return $sqlite
+                    ? sprintf("strftime('%%Y-%%m-%%d', %s)", $expression)
+                    : sprintf("DATE_FORMAT(%s, '%%Y-%%m-%%d')", $expression);
+
+            case 'month':
+                return $sqlite
+                    ? sprintf("strftime('%%Y-%%m', %s)", $expression)
+                    : sprintf("DATE_FORMAT(%s, '%%Y-%%m')", $expression);
+
+            case 'year':
+                return $sqlite
+                    ? sprintf("strftime('%%Y', %s)", $expression)
+                    : sprintf("DATE_FORMAT(%s, '%%Y')", $expression);
+
+            case 'hour':
+                return $sqlite
+                    ? sprintf("strftime('%%Y-%%m-%%d %%H:00', %s)", $expression)
+                    : sprintf("DATE_FORMAT(%s, '%%Y-%%m-%%d %%H:00')", $expression);
+
+            default:
+                throw new InvalidArgumentException(sprintf(
+                    'Unsupported date precision: %s',
+                    $precision
+                ));
+        }
     }
 }
