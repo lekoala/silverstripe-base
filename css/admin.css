@@ -497,6 +497,11 @@ select.ag-cell-edit-input {
     height: 35px;
 }
 
+.ts-wrapper.multi .ts-control {
+    height: auto;
+    min-height: 35px;
+}
+
 /* Hide undefined custom elements */
 /* @link https://www.abeautifulsite.net/posts/flash-of-undefined-custom-elements/ */
 :not(:defined) {
