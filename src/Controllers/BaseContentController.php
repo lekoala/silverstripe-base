@@ -153,10 +153,11 @@ class BaseContentController extends ContentController
         $this->logger = $this->logger->withName('app');
 
         if ($SiteConfig->LogoID) {
-            $LogoSchemaMarkup = $this->getCache()->get('LogoSchemaMarkup');
+            $schemaCacheKey = 'LogoSchemaMarkup_' . i18n::get_locale();
+            $LogoSchemaMarkup = $this->getCache()->get($schemaCacheKey);
             if (!$LogoSchemaMarkup) {
                 $LogoSchemaMarkup = $this->LogoSchemaMarkup();
-                $this->getCache()->set('LogoSchemaMarkup', $LogoSchemaMarkup, 3600);
+                $this->getCache()->set($schemaCacheKey, $LogoSchemaMarkup, 3600);
             }
             Requirements::insertHeadTags('<script type="application/ld+json">' . $LogoSchemaMarkup . '</script>', 'LogoSchemaMarkup');
         }

@@ -114,10 +114,11 @@ class BasePageExtension extends Extension
         }
     }
 
-    protected function createMetaTag($property, $content)
+    protected function createMetaTag($property, $content, $name = false)
     {
         $content = Convert::raw2att($content);
-        return "<meta property=\"{$property}\" content=\"{$content}\" />\n";
+        $attribute = $name ? 'name' : 'property';
+        return "<meta {$attribute}=\"{$property}\" content=\"{$content}\" />\n";
     }
 
     public function getShareDescription()
@@ -125,7 +126,15 @@ class BasePageExtension extends Extension
         if ($this->owner->MetaDescription) {
             return $this->owner->MetaDescription;
         }
-        return preg_replace('/\s+/', ' ', $this->owner->dbObject('Content')->Summary());
+        $description = preg_replace('/\s+/', ' ', $this->owner->dbObject('Content')->Summary());
+        if (!$description && $this->owner->hasField('ShortDescription')) {
+            $description = $this->owner->ShortDescription;
+        }
+        if (!$description) {
+            $siteTitle = SiteConfig::current_site_config()->Title;
+            $description = $this->owner->Title . ' - ' . $siteTitle;
+        }
+        return trim($description);
     }
 
     /**
@@ -167,7 +176,16 @@ class BasePageExtension extends Extension
         if (!$descriptionText && $sourceObject->hasField('Content')) {
             $descriptionText = preg_replace('/\s+/', ' ', $sourceObject->dbObject('Content')->Summary());
         }
-        $descriptionText = trim($descriptionText);
+        $descriptionText = html_entity_decode(trim(strip_tags((string) $descriptionText)), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $descriptionText = preg_replace('/\s+/', ' ', $descriptionText);
+        if (mb_strlen($descriptionText) > 160) {
+            $descriptionText = mb_substr($descriptionText, 0, 157);
+            $lastSpace = mb_strrpos($descriptionText, ' ');
+            if ($lastSpace !== false) {
+                $descriptionText = mb_substr($descriptionText, 0, $lastSpace);
+            }
+            $descriptionText .= '...';
+        }
         $imageLink = '';
         if ($sourceObject->hasMethod('getMetaImage')) {
             $imageLink = $sourceObject->getMetaImage();
@@ -186,7 +204,7 @@ class BasePageExtension extends Extension
         $tags = '';
         // Regular tags
         if ($descriptionText) {
-            $tags .= $this->createMetaTag("description", $descriptionText);
+            $tags .= $this->createMetaTag("description", $descriptionText, true);
         }
         // OpenGraph
         $tags .= "\n<!-- OpenGraph Meta Tags -->\n";
