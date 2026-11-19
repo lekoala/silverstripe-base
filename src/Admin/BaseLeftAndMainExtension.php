@@ -9,7 +9,6 @@ use SilverStripe\View\SSViewer;
 use SilverStripe\Core\Environment;
 use SilverStripe\View\Requirements;
 use LeKoala\Base\Security\Antivirus;
-use LeKoala\Multilingual\LangHelper;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Config\Config;
 use LeKoala\DeferBackend\CspProvider;
@@ -75,8 +74,6 @@ class BaseLeftAndMainExtension extends Extension
 
         // Never have comments as it can break ajax requests
         // Config::modify()->set(SSViewer::class, 'source_file_comments', false);
-
-        LangHelper::persistLocale();
 
         $this->removeMenuItems();
         $this->reorderMenuItems();

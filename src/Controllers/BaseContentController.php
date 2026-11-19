@@ -5,9 +5,7 @@ namespace LeKoala\Base\Controllers;
 use \Exception;
 use LeKoala\Base\Helpers\JsonHelper;
 use LeKoala\Base\Helpers\PathHelper;
-use SilverStripe\i18n\i18n;
 use SilverStripe\View\SSViewer;
-use SilverStripe\Control\Cookie;
 use SilverStripe\Control\Session;
 use SilverStripe\Security\Member;
 use SilverStripe\Control\Director;
@@ -27,7 +25,6 @@ use SilverStripe\ORM\Connect\DatabaseException;
 use SilverStripe\CMS\Controllers\ContentController;
 use SilverStripe\Control\HTTPRequest;
 use LeKoala\DeferBackend\DeferBackend;
-use LeKoala\Multilingual\LangHelper;
 use MySiteConfigExtension;
 use Random\Engine\Secure;
 use SilverStripe\Control\HTTPResponse;
@@ -49,7 +46,6 @@ class BaseContentController extends ContentController
     use Messaging;
     use PageGetters;
     use TimeHelpers;
-    use LangHelpers;
     use MenuHelpers;
 
     /**
@@ -139,10 +135,6 @@ class BaseContentController extends ContentController
         if (CookieConsent::IsEnabled()) {
             CookieConsent::requirements();
         }
-        LangHelper::persistLocaleIfCookiesAreAllowed();
-
-        $this->setLangFromRequest();
-
         try {
             FlashMessage::checkFlashMessage($this->getSession());
         } catch (Exception $ex) {
@@ -275,28 +267,6 @@ class BaseContentController extends ContentController
         return '/Security/logout';
     }
 
-
-    /**
-     * Allow lang to be set by the request. This must happen after parent::init()
-     *
-     * @return void
-     */
-    protected function setLangFromRequest()
-    {
-        $request = $this->getRequest();
-        $lang = $request->getVar('lang');
-        if ($lang) {
-            if (strlen($lang) == 2) {
-                $lang = LangHelper::get_locale_from_lang($lang);
-            }
-            Cookie::set('ChosenLocale', $lang);
-        }
-        $chosenLocale = Cookie::get('ChosenLocale');
-        // Only set if locale has a valid format
-        if ($chosenLocale && preg_match('/^[a-z]{2}_[A-Z]{2}$/', $chosenLocale)) {
-            i18n::set_locale($chosenLocale);
-        }
-    }
 
     /**
      * Get the session for this app

@@ -25,7 +25,6 @@
         "wilr/silverstripe-googlesitemaps": "^2 || ^3",
         "lekoala/silverstripe-cms-actions": "*",
         "lekoala/silverstripe-defer-backend": "*",
-        "lekoala/silverstripe-multilingual": "*",
         "lekoala/silverstripe-devtoolkit": "*",
         "lekoala/silverstripe-geotools": "*",
         "lekoala/silverstripe-filepond": "*",
