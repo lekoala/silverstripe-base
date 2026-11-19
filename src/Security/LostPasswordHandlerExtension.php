@@ -45,17 +45,17 @@ class LostPasswordHandlerExtension extends Extension
             $member = null;
             return;
         }
-        if ($member->hasExtension(MemberAuditExtension::class) && Director::isLive()) {
-            /** @var Member&MemberAuditExtension $member */
-            // Avoid hammering / 2 min per request
-            $lastAudit = $member->Audits()->filter('Event', 'password_requested')->first();
-            if ($lastAudit && strtotime($lastAudit->Created) >= strtotime('-2 minutes')) {
-                self::getLogger()->debug("Avoid hammering for #" . $member->ID);
-                $member = null;
-                return;
-            }
+        // if ($member->hasExtension(MemberAuditExtension::class) && Director::isLive()) {
+        //     /** @var Member&MemberAuditExtension $member */
+        //     // Avoid hammering / 2 min per request
+        //     $lastAudit = $member->Audits()->filter('Event', 'password_requested')->first();
+        //     if ($lastAudit && strtotime($lastAudit->Created) >= strtotime('-2 minutes')) {
+        //         self::getLogger()->debug("Avoid hammering for #" . $member->ID);
+        //         $member = null;
+        //         return;
+        //     }
 
-            $member->audit('password_requested');
-        }
+        //     $member->audit('password_requested');
+        // }
     }
 }

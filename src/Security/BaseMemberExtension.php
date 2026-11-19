@@ -155,7 +155,6 @@ class BaseMemberExtension extends Extension
     }
 
     /**
-     * @link https://github.com/lekoala/silverstripe-member-audit
      * @param mixed $event
      * @param mixed $data
      * @return int
