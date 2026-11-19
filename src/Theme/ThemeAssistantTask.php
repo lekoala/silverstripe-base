@@ -5,6 +5,9 @@ namespace LeKoala\Base\Theme;
 use LeKoala\DevToolkit\BuildTaskTools;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\Control\Director;
+use SilverStripe\PolyExecution\PolyOutput;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
 
 /**
  * Some useful features to help you when building your themes
@@ -14,16 +17,18 @@ class ThemeAssistantTask extends BuildTask
     use KnowsThemeDir;
     use BuildTaskTools;
 
-    protected $description = 'Helps you building themes';
-    private static $segment = 'ThemeAssistantTask';
+    protected static string $commandName = 'theme-assistant';
+    protected string $title = 'Theme assistant';
+    protected static string $description = 'Generate the SCSS component index for the active theme.';
 
-    public function isEnabled()
+    public function isEnabled(): bool
     {
         return Director::isDev();
     }
 
-    public function run($request)
+    protected function execute(InputInterface $input, PolyOutput $output): int
     {
+        $this->setTaskContext($input, $output);
         $componentsFolder = $this->getComponentsScssFolder();
         if (is_dir($componentsFolder)) {
             $this->message("Building components");
@@ -42,19 +47,21 @@ class ThemeAssistantTask extends BuildTask
         } else {
             $this->message("There is no 'components' folder in your theme. Create one and put your sass files in there.");
         }
+
+        return Command::SUCCESS;
     }
 
-    protected function getScssFolder($name = '')
+    protected function getScssFolder(string $name = ''): string
     {
         return Director::baseFolder() . DIRECTORY_SEPARATOR . $this->getThemeDir() . '/sass/' . $name;
     }
 
-    protected function getComponentsScssFolder()
+    protected function getComponentsScssFolder(): string
     {
         return $this->getScssFolder('components');
     }
 
-    protected function getVendorScssFolder()
+    protected function getVendorScssFolder(): string
     {
         return $this->getScssFolder('vendor');
     }

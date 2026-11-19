@@ -5,7 +5,7 @@ namespace LeKoala\Base\News;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\DataList;
 use LeKoala\Base\News\NewsItem;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\Model\List\ArrayList;
 use SilverStripe\View\ArrayData;
 use SilverStripe\ORM\GroupedList;
 use SilverStripe\ORM\PaginatedList;

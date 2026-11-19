@@ -6,7 +6,7 @@ use SilverStripe\Control\Email\Email;
 use SilverStripe\SiteConfig\SiteConfig;
 use SilverStripe\View\SSViewer;
 use SilverStripe\Security\Security;
-use SilverStripe\View\ViewableData;
+use SilverStripe\Model\ModelData;
 use ReflectionMethod;
 
 /**
@@ -45,12 +45,12 @@ class EmailHelper
 
     /**
      * @link https://github.com/silverstripe/silverstripe-framework/issues/8628
-     * @param ViewableData $item
+     * @param ModelData $item
      * @param ?string $template
      * @param ?array $arguments
      * @return Email
      */
-    public static function templatedEmail(ViewableData $item, ?string $template = null, ?array $arguments = null): Email
+    public static function templatedEmail(ModelData $item, ?string $template = null, ?array $arguments = null): Email
     {
         $viewer = new SSViewer($template);
         $content = $viewer->process($item, $arguments);

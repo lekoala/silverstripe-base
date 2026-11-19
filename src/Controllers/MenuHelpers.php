@@ -3,7 +3,7 @@
 namespace LeKoala\Base\Controllers;
 
 use SilverStripe\ORM\DataList;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\Model\List\ArrayList;
 use SilverStripe\Security\Member;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Security\Security;

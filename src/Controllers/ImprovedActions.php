@@ -7,7 +7,7 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\Control\Director;
 use LeKoala\Base\Helpers\ClassHelper;
 use LeKoala\Base\Subsite\SubsiteHelper;
-use SilverStripe\ORM\ValidationException;
+use SilverStripe\Core\Validation\ValidationException;
 
 /**
  * Improves SilverStripe defaults actions

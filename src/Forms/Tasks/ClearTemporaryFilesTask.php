@@ -5,6 +5,10 @@ namespace LeKoala\Base\Forms\Tasks;
 use SilverStripe\Dev\BuildTask;
 use LeKoala\Base\Extensions\BaseFileExtension;
 use LeKoala\DevToolkit\BuildTaskTools;
+use SilverStripe\PolyExecution\PolyOutput;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 
 /**
  */
@@ -12,22 +16,21 @@ class ClearTemporaryFilesTask extends BuildTask
 {
     use BuildTaskTools;
 
-    protected $description = 'Clear all temporary files from ajax uploads that didn\'t get attached to a record.';
-    private static $segment = 'ClearTemporaryFilesTask';
+    protected static string $commandName = 'clear-temporary-files';
+    protected string $title = 'Clear temporary upload files';
+    protected static string $description =
+        'Clear temporary files from AJAX uploads that were not attached to a record.';
 
-    public function run($request)
+    protected function execute(InputInterface $input, PolyOutput $output): int
     {
-        $this->request = $request;
-        $this->addOption("go", "Tick this to remove the files", false);
-        $options = $this->askOptions();
-
-        $go = $options['go'];
+        $this->setTaskContext($input, $output);
+        $go = (bool) $this->taskOption('go');
 
         $files = BaseFileExtension::clearTemporaryUploads($go);
 
         if (empty($files)) {
             $this->message("No temporary file to delete");
-            return;
+            return Command::SUCCESS;
         }
         if ($go) {
             $this->message("Deleting the following files");
@@ -37,5 +40,17 @@ class ClearTemporaryFilesTask extends BuildTask
         foreach ($files as $file) {
             $this->message($file->Filename);
         }
+
+        return Command::SUCCESS;
+    }
+
+    /**
+     * @return array<InputOption>
+     */
+    public function getOptions(): array
+    {
+        return [
+            new InputOption('go', null, InputOption::VALUE_NONE, 'Delete listed temporary files'),
+        ];
     }
 }

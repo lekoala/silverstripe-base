@@ -22,7 +22,7 @@ use SilverStripe\Core\Config\Configurable;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use LeKoala\Base\Theme\ThemeSiteConfigExtension;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorConfig;
-use SilverStripe\Forms\HTMLEditor\TinyMCECombinedGenerator;
+use SilverStripe\TinyMCE\TinyMCECombinedGenerator;
 use SilverStripe\Core\Extension;
 use SilverStripe\Control\Middleware\AllowedHostsMiddleware;
 use SilverStripe\Control\Director;

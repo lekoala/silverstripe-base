@@ -4,7 +4,7 @@ namespace LeKoala\Base\Admin;
 
 use SilverStripe\Forms\Form;
 use SilverStripe\Core\Convert;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\Model\List\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\View\ArrayData;
 use SilverStripe\Admin\ModelAdmin;
@@ -12,7 +12,7 @@ use LeKoala\Base\Helpers\ClassHelper;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use LeKoala\Base\Subsite\SubsiteHelper;
-use SilverStripe\ORM\ValidationException;
+use SilverStripe\Core\Validation\ValidationException;
 use SilverStripe\Admin\AdminRootController;
 use SilverStripe\Forms\GridField\GridField;
 use LeKoala\CommonExtensions\SortableExtension;

@@ -13,7 +13,6 @@ use SilverStripe\Control\Director;
 use SilverStripe\Forms\FieldGroup;
 use LeKoala\Base\Helpers\ZipHelper;
 use SilverStripe\Forms\HeaderField;
-use SilverStripe\ORM\DataExtension;
 use SilverStripe\Forms\DropdownField;
 use LeKoala\Base\ORM\FieldType\DBColor;
 use SilverStripe\AssetAdmin\Forms\UploadField;

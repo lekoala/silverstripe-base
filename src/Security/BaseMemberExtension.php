@@ -4,7 +4,7 @@ namespace LeKoala\Base\Security;
 
 use Exception;
 use SilverStripe\ORM\DB;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\Model\List\ArrayList;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Security\Member;
 use LeKoala\Base\Helpers\IPHelper;
@@ -22,7 +22,7 @@ use SilverStripe\Security\LoginAttempt;
 use LeKoala\Base\Controllers\HasSession;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Security\IdentityStore;
-use SilverStripe\ORM\ValidationException;
+use SilverStripe\Core\Validation\ValidationException;
 use SilverStripe\Security\MemberPassword;
 use SilverStripe\Security\PasswordEncryptor;
 use SilverStripe\Security\DefaultAdminService;

@@ -147,7 +147,7 @@ class NewsItem extends DataObject
         $segment = date('Y-m-d', strtotime($this->Published)) . '-' . $segment;
     }
 
-    public function forTemplate()
+    public function forTemplate(): string
     {
         return $this->renderWith('LeKoala\Base\News\NewsItem');
     }

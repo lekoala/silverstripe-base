@@ -5,7 +5,7 @@ use Exception;
 use SilverStripe\Core\Environment;
 use SilverStripe\View\Requirements;
 use SilverStripe\Forms\LiteralField;
-use SilverStripe\ORM\ValidationException;
+use SilverStripe\Core\Validation\ValidationException;
 
 /**
  * A simple google recaptcha v2 checkbox integration for your forms

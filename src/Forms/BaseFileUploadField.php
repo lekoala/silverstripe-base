@@ -11,6 +11,7 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Forms\FileHandleField;
 use SilverStripe\Control\NullHTTPRequest;
 use SilverStripe\Forms\FileUploadReceiver;
+use SilverStripe\Core\Validation\ValidationResult;
 
 /**
  * A base class that use file upload receiver
@@ -188,19 +189,19 @@ abstract class BaseFileUploadField extends FormField implements FileHandleField
     /**
      * Checks if the number of files attached adheres to the $allowedMaxFileNumber defined
      *
-     * @param Validator $validator
-     * @return bool
+     * @return ValidationResult
      */
-    public function validate($validator)
+    public function validate(): ValidationResult
     {
         $maxFiles = $this->getAllowedMaxFileNumber();
         $count = count($this->getItems());
+        $result = parent::validate();
 
         if ($maxFiles < 1 || $count <= $maxFiles) {
-            return true;
+            return $result;
         }
-        $validator->validationError($this->getName(), '');
-        return false;
+        $result->addFieldError($this->getName(), '');
+        return $result;
     }
 
     /**

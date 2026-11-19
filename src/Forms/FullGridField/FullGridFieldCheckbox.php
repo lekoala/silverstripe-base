@@ -6,7 +6,7 @@ use Closure;
 use Exception;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\DataList;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\Model\List\ArrayList;
 use SilverStripe\ORM\ManyManyList;
 use SilverStripe\View\Requirements;
 use SilverStripe\Forms\LiteralField;

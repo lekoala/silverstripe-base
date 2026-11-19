@@ -4,7 +4,7 @@ namespace LeKoala\Base\Admin;
 
 use SilverStripe\Core\Convert;
 use SilverStripe\Admin\CMSMenu;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\Model\List\ArrayList;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\Requirements;
 use LeKoala\Base\Subsite\SubsiteHelper;
