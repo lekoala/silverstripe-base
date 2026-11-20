@@ -4,7 +4,7 @@ namespace LeKoala\Base\Contact;
 
 use LeKoala\Base\Forms\BaseForm;
 use LeKoala\Base\Forms\BuildableFieldList;
-use SilverStripe\Forms\RequiredFields;
+use SilverStripe\Forms\Validation\RequiredFieldsValidator as RequiredFields;
 use LeKoala\Base\Forms\GoogleRecaptchaField;
 
 /**

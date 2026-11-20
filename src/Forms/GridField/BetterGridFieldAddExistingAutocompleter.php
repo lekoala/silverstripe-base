@@ -5,7 +5,7 @@ namespace LeKoala\Base\Forms\GridField;
 use LeKoala\Base\ORM\Search\WildcardSearchContext;
 use LogicException;
 use ReflectionObject;
-use SilverStripe\ORM\SS_List;
+use SilverStripe\Model\List\SS_List;
 use SilverStripe\Core\Convert;
 use SilverStripe\ORM\DataList;
 use SilverStripe\View\SSViewer;

@@ -8,7 +8,7 @@ use SilverStripe\Security\Security;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\GraphQL\Controller;
 use SilverStripe\Security\Permission;
-use SilverStripe\ORM\ValidationResult;
+use SilverStripe\Core\Validation\ValidationResult;
 use SilverStripe\Security\MemberPassword;
 use SilverStripe\Security\PasswordEncryptor;
 use SilverStripe\Security\MemberAuthenticator\LoginHandler;

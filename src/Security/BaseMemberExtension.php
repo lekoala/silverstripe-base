@@ -17,7 +17,7 @@ use SilverStripe\GraphQL\Controller;
 use SilverStripe\Admin\SecurityAdmin;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Security\Permission;
-use SilverStripe\ORM\ValidationResult;
+use SilverStripe\Core\Validation\ValidationResult;
 use SilverStripe\Security\LoginAttempt;
 use LeKoala\Base\Controllers\HasSession;
 use SilverStripe\Core\Injector\Injector;
@@ -147,7 +147,7 @@ class BaseMemberExtension extends Extension
      * @param ValidationResult $validationResult
      * @return void
      */
-    public function validate(ValidationResult $validationResult)
+    protected function updateValidate(ValidationResult $validationResult): void
     {
         if ($this->owner->Email && !filter_var($this->owner->Email, FILTER_VALIDATE_EMAIL)) {
             $validationResult->addError("Email is not valid");

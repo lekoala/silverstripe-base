@@ -134,10 +134,6 @@ class BaseDataObjectExtension extends Extension
 
     public function isBeingEdited(): bool
     {
-        if (!Controller::has_curr()) {
-            return false;
-        }
-        /** @var LeftAndMain $ctrl  */
         $ctrl = Controller::curr();
         if (!$ctrl instanceof LeftAndMain) {
             return false;

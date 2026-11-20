@@ -2,7 +2,7 @@
 
 namespace LeKoala\Base\Forms;
 
-use SilverStripe\ORM\SS_List;
+use SilverStripe\Model\List\SS_List;
 use SilverStripe\Assets\Image;
 use SilverStripe\ORM\DataObjectInterface;
 use LeKoala\Blocks\Block;

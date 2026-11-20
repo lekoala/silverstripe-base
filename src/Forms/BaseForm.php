@@ -11,7 +11,7 @@ use SilverStripe\Forms\Validator;
 use SilverStripe\View\Requirements;
 use LeKoala\Base\Helpers\ClassHelper;
 use SilverStripe\Control\HTTPResponse;
-use SilverStripe\Forms\RequiredFields;
+use SilverStripe\Forms\Validation\RequiredFieldsValidator as RequiredFields;
 use SilverStripe\Control\RequestHandler;
 use LeKoala\Base\View\CommonRequirements;
 use SilverStripe\Control\HTTPRequest;

@@ -39,7 +39,7 @@ class DBBetterPercentage extends DBPercentage
      *
      * @return InputMaskPercentageField
      */
-    public function scaffoldFormField($title = null, $params = null)
+    public function scaffoldFormField($title = null, $params = []): ?\SilverStripe\Forms\FormField
     {
         $field = new InputMaskPercentageField($this->name, $title);
         // In SilverStripe, percentage are stored like 1% = 0.01
@@ -55,7 +55,7 @@ class DBBetterPercentage extends DBPercentage
         return number_format($this->value * 100, $this->decimalSize - 2);
     }
 
-    public function saveInto($dataObject)
+    public function saveInto($dataObject): void
     {
         DBDecimal::saveInto($dataObject);
 

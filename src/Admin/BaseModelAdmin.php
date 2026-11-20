@@ -6,7 +6,7 @@ use SilverStripe\Forms\Form;
 use SilverStripe\Core\Convert;
 use SilverStripe\Model\List\ArrayList;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\View\ArrayData;
+use SilverStripe\Model\ArrayData;
 use SilverStripe\Admin\ModelAdmin;
 use LeKoala\Base\Helpers\ClassHelper;
 use SilverStripe\Control\HTTPRequest;
@@ -163,7 +163,12 @@ abstract class BaseModelAdmin extends ModelAdmin
         );
     }
 
-    public static function getRequiredPermissions()
+    /**
+     * Get the permissions for this admin section.
+     *
+     * @return array|string|false
+     */
+    public static function getRequiredPermissions(): array|string|false
     {
         // This is needed to avoid BaseModelAdmin to be displayed as a valid permission
         if (get_called_class() == self::class) {

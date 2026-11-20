@@ -3,7 +3,7 @@
 namespace LeKoala\Base\Forms\FullGridField;
 
 use SilverStripe\View\SSViewer;
-use SilverStripe\View\ArrayData;
+use SilverStripe\Model\ArrayData;
 use SilverStripe\Control\Controller;
 use SilverStripe\Forms\GridField\GridFieldEditButton;
 

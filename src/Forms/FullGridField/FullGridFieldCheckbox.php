@@ -4,7 +4,7 @@ namespace LeKoala\Base\Forms\FullGridField;
 
 use Closure;
 use Exception;
-use SilverStripe\ORM\SS_List;
+use SilverStripe\Model\List\SS_List;
 use SilverStripe\ORM\DataList;
 use SilverStripe\Model\List\ArrayList;
 use SilverStripe\ORM\ManyManyList;

@@ -19,7 +19,7 @@ class DBBetterDecimal extends DBDecimal
      *
      * @return CleaveField
      */
-    public function scaffoldFormField($title = null, $params = null)
+    public function scaffoldFormField($title = null, $params = []): \LeKoala\FormElements\CleaveField
     {
         $field = new CleaveField($this->name, $title);
         $field->setCleaveType('numeral');
@@ -32,7 +32,7 @@ class DBBetterDecimal extends DBDecimal
     /**
      * @return float
      */
-    public function Nice()
+    public function Nice(): string
     {
         return number_format($this->value, $this->decimalSize, $this->getCurrencyDecimalSeparator(), $this->getCurrencyGroupingSeparator());
     }

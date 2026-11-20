@@ -33,7 +33,7 @@ class FastDropdownField extends DropdownField
 
         // Add all options
         foreach ($this->getSourceEmpty() as $value => $title) {
-            $selected = $this->isSelectedValue($value, $this->Value());
+            $selected = $this->isSelectedValue($value, $this->getValue());
             if ($selected) {
                 $selected = ' selected="selected"';
             }

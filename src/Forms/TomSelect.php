@@ -4,7 +4,7 @@ namespace LeKoala\Base\Forms;
 
 use SilverStripe\ORM\DB;
 use SilverStripe\i18n\i18n;
-use SilverStripe\ORM\ArrayLib;
+use SilverStripe\Core\ArrayLib;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\View\Requirements;
 use SilverStripe\Control\Controller;

@@ -14,7 +14,7 @@ use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use LeKoala\Base\Theme\ThemeSiteConfigExtension;
 use SilverStripe\Core\Extension;
-use SilverStripe\ORM\ValidationResult;
+use SilverStripe\Core\Validation\ValidationResult;
 use Egulias\EmailValidator\EmailValidator;
 use Egulias\EmailValidator\Validation\RFCValidation;
 use LeKoala\Base\Helpers\ValidatorHelper;
@@ -120,7 +120,7 @@ class SiteConfigExtension extends Extension
         $this->owner->extend("updateBaseCMSFields", $fields);
     }
 
-    public function validate(ValidationResult $result)
+    protected function updateValidate(ValidationResult $result): void
     {
         if ($this->owner->ContactEmail && !ValidatorHelper::isValidRfcEmail($this->owner->ContactEmail)) {
             $result->addFieldError('ContactEmail', _t('SiteConfigExtension.Emailisnotvalid', 'Email is not valid'));

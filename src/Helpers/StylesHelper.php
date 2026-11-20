@@ -2,7 +2,7 @@
 
 namespace LeKoala\Base\Helpers;
 
-use SilverStripe\ORM\ArrayLib;
+use SilverStripe\Core\ArrayLib;
 use SilverStripe\Control\Director;
 
 class StylesHelper

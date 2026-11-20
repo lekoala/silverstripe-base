@@ -2,7 +2,7 @@
 
 namespace LeKoala\Base\Helpers;
 
-use SilverStripe\ORM\ValidationResult;
+use SilverStripe\Core\Validation\ValidationResult;
 use SilverStripe\Security\Member;
 use Exception;
 

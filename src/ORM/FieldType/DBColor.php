@@ -26,7 +26,7 @@ class DBColor extends DBVarchar
         parent::__construct($name, 16, $options);
     }
 
-    public function scaffoldFormField($title = null, $params = null)
+    public function scaffoldFormField($title = null, $params = []): ?\SilverStripe\Forms\FormField
     {
         $field = ColorField::create($this->name, $title);
         return $field;

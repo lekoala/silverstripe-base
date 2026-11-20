@@ -52,7 +52,7 @@ class BaseFieldExtension extends Extension
     public function setTooltip($value)
     {
         $this->owner->setAttribute('title', $value);
-        $curr = Controller::has_curr() ? Controller::curr() : null;
+        $curr = Controller::curr();
         if ($curr && $curr->hasMethod('UseBootstrap5') && $curr->UseBootstrap5()) {
             $this->owner->setAttribute('data-bs-toggle', 'tooltip');
         } else {
@@ -71,7 +71,7 @@ class BaseFieldExtension extends Extension
      */
     public function setTooltipIcon($value)
     {
-        $curr = Controller::has_curr() ? Controller::curr() : null;
+        $curr = Controller::curr();
         // Not working in cms
         if ($curr && $curr instanceof LeftAndMain) {
             return $this->setTooltip($value);

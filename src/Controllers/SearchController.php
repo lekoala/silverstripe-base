@@ -4,7 +4,7 @@ namespace LeKoala\Base\Controllers;
 
 use PageController;
 use SilverStripe\Model\List\ArrayList;
-use SilverStripe\ORM\PaginatedList;
+use SilverStripe\Model\List\PaginatedList;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Core\Config\Config;
 use LeKoala\Base\Helpers\ClassHelper;

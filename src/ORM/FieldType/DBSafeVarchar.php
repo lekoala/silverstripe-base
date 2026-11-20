@@ -11,7 +11,7 @@ use SilverStripe\ORM\FieldType\DBVarchar;
  */
 class DBSafeVarchar extends DBVarchar
 {
-    public function setValue($value, $record = null, $markChanged = true)
+    public function setValue($value, $record = null, $markChanged = true): static
     {
         if ($value !== null) {
             $value = strip_tags($value);
@@ -19,7 +19,7 @@ class DBSafeVarchar extends DBVarchar
         return parent::setValue($value, $record, $markChanged);
     }
 
-    public function HTMLATT()
+    public function HTMLATT(): string
     {
         return StringHelper::escHtmlAtt($this->RAW());
     }

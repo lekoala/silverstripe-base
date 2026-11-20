@@ -13,7 +13,7 @@ use LeKoala\CmsActions\CustomAction;
 use SilverStripe\Control\Controller;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Security\Permission;
-use SilverStripe\ORM\ValidationResult;
+use SilverStripe\Core\Validation\ValidationResult;
 use SilverStripe\SiteConfig\SiteConfig;
 use LeKoala\Base\Security\BaseAuthenticator;
 use SilverStripe\Core\Extension;

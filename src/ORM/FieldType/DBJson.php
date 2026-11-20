@@ -23,7 +23,7 @@ class DBJson extends DBString
      * (non-PHPdoc)
      * @see DBField::requireField()
      */
-    public function requireField()
+    public function requireField(): void
     {
         $charset = Config::inst()->get(MySQLDatabase::class, 'charset');
         $collation = Config::inst()->get(MySQLDatabase::class, 'collation');
@@ -47,7 +47,7 @@ class DBJson extends DBString
      * @param string $title
      * @return \HiddenField
      */
-    public function scaffoldSearchField($title = null)
+    public function scaffoldSearchField($title = null): HiddenField
     {
         return HiddenField::create($this->getName());
     }
@@ -56,7 +56,7 @@ class DBJson extends DBString
      * @param string $params
      * @return \HiddenField
      */
-    public function scaffoldFormField($title = null, $params = null)
+    public function scaffoldFormField($title = null, $params = []): HiddenField
     {
         return HiddenField::create($this->getName());
     }
@@ -99,7 +99,7 @@ class DBJson extends DBString
         return json_encode(json_decode($this->value), JSON_PRETTY_PRINT);
     }
 
-    public function saveInto($dataObject)
+    public function saveInto($dataObject): void
     {
         if ($this->value && is_array($this->value)) {
             $this->value = json_encode($this->value);
@@ -141,7 +141,7 @@ class DBJson extends DBString
      * @param boolean $markChanged
      * @return $this
      */
-    public function setValue($value, $record = null, $markChanged = true)
+    public function setValue($value, $record = null, $markChanged = true): static
     {
         if (is_array($value)) {
             $value = json_encode($value);
@@ -149,7 +149,7 @@ class DBJson extends DBString
         return parent::setValue($value, $record, $markChanged);
     }
 
-    public function prepValueForDB($value)
+    public function prepValueForDB($value): array|string|null
     {
         if (is_array($value)) {
             $value = json_encode($value);
@@ -161,7 +161,7 @@ class DBJson extends DBString
      * We return false because we can accept array and convert it to string
      * @return boolean
      */
-    public function scalarValueOnly()
+    public function scalarValueOnly(): bool
     {
         return false;
     }

@@ -4,7 +4,7 @@ namespace LeKoala\Base\Forms;
 
 use ReflectionObject;
 use LeKoala\Blocks\Block;
-use SilverStripe\ORM\SS_List;
+use SilverStripe\Model\List\SS_List;
 use SilverStripe\Assets\Image;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\ORM\DataObjectInterface;

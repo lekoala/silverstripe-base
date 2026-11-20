@@ -3,9 +3,10 @@
 namespace LeKoala\Base\Cache;
 
 use Predis\Client;
-use SilverStripe\Core\Injector\Injector;
+use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Core\Cache\CacheFactory;
-use Symfony\Component\Cache\Simple\RedisCache;
+use Symfony\Component\Cache\Adapter\RedisAdapter;
+use Symfony\Component\Cache\Psr16Cache;
 
 /**
  * For windows support, see here
@@ -35,7 +36,7 @@ class RedisCacheFactory implements CacheFactory
     /**
      * @inheritdoc
      */
-    public function create($service, array $params = array())
+    public function create(string $service, array $params = []): CacheInterface
     {
         $namespace = isset($params['namespace'])
             ? $params['namespace'] . '_' . md5(BASE_PATH)
@@ -43,10 +44,6 @@ class RedisCacheFactory implements CacheFactory
 
         $defaultLifetime = isset($params['defaultLifetime']) ? $params['defaultLifetime'] : 0;
 
-        return Injector::inst()->createWithArgs(RedisCache::class, [
-            $this->redisClient,
-            $namespace,
-            $defaultLifetime
-        ]);
+        return new Psr16Cache(new RedisAdapter($this->redisClient ?? new Client(), $namespace, $defaultLifetime));
     }
 }

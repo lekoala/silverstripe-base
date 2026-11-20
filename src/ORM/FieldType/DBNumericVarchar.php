@@ -62,7 +62,7 @@ class DBNumericVarchar extends DBVarchar
      *
      * @return CleaveField
      */
-    public function scaffoldFormField($title = null, $params = null)
+    public function scaffoldFormField($title = null, $params = []): \LeKoala\FormElements\CleaveField
     {
         $field = new CleaveField($this->name, $title);
         $field->setCleaveType('numeral');

@@ -22,7 +22,7 @@ class DBBetterCurrency extends DBCurrency
      *
      * @return string
      */
-    public function Nice()
+    public function Nice(): string
     {
         return $this->Amount();
     }
@@ -33,7 +33,7 @@ class DBBetterCurrency extends DBCurrency
      *
      * @return NumericField
      */
-    public function scaffoldFormField($title = null, $params = null)
+    public function scaffoldFormField($title = null, $params = []): \LeKoala\FormElements\CleaveField
     {
         $field = new CleaveField($this->name, $title);
         $field->setCleaveType('numeral');

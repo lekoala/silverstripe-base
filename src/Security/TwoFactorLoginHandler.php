@@ -14,7 +14,7 @@ use SilverStripe\Forms\HeaderField;
 use SilverStripe\Security\Security;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Forms\RequiredFields;
+use SilverStripe\Forms\Validation\RequiredFieldsValidator as RequiredFields;
 use SilverStripe\Core\Injector\Injector;
 use LeKoala\Base\Security\BaseMemberExtension;
 use LeKoala\Base\TextMessage\ProviderInterface;

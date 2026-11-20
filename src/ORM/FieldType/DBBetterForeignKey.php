@@ -19,7 +19,7 @@ use SilverStripe\ORM\FieldType\DBForeignKey;
  */
 class DBBetterForeignKey extends DBForeignKey
 {
-    public function scaffoldFormField($title = null, $params = null)
+    public function scaffoldFormField($title = null, $params = []): ?\SilverStripe\Forms\FormField
     {
         if (empty($this->object)) {
             return null;

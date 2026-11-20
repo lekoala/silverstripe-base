@@ -3,11 +3,11 @@
 namespace LeKoala\Base\Forms\Validator;
 
 use SilverStripe\Forms\Form;
-use SilverStripe\ORM\ArrayLib;
+use SilverStripe\Core\ArrayLib;
 use SilverStripe\Forms\FileField;
 use SilverStripe\Forms\FormField;
 use SilverStripe\View\Requirements;
-use SilverStripe\Forms\RequiredFields;
+use SilverStripe\Forms\Validation\RequiredFieldsValidator as RequiredFields;
 use LeKoala\Base\View\CommonRequirements;
 
 /**
@@ -55,11 +55,11 @@ class JsRequiredFields extends RequiredFields
 
     /**
      * @param Form $form
-     * @return $this
+     * @return static
      */
-    public function setForm($form)
+    public function setForm(Form $form): static
     {
-        $this->form = $form;
+        parent::setForm($form);
         self::requirements($form);
 
         return $this;

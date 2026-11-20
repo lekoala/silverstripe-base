@@ -12,7 +12,7 @@ use LeKoala\FormElements\FlatpickrField;
  */
 class DBBetterDate extends DBDate
 {
-    public function scaffoldFormField($title = null, $params = null)
+    public function scaffoldFormField($title = null, $params = []): ?\SilverStripe\Forms\FormField
     {
         $field = FlatpickrField::create($this->name, $title);
         // $field->setDateTimeOptions();

@@ -2,7 +2,7 @@
 
 namespace LeKoala\Base\ORM\FieldType;
 
-use SilverStripe\ORM\ArrayLib;
+use SilverStripe\Core\ArrayLib;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\ORM\FieldType\DBEnum;
 
@@ -37,7 +37,7 @@ class DBNiceEnum extends DBEnum
      * @param string $emptyString
      * @return DropdownField
      */
-    public function formField($title = null, $name = null, $hasEmpty = false, $value = "", $emptyString = null)
+    public function formField($title = null, $name = null, $hasEmpty = false, $value = "", $emptyString = null): DropdownField
     {
         if (!$title) {
             $title = $this->getName();
@@ -61,7 +61,7 @@ class DBNiceEnum extends DBEnum
     {
         $method = 'list' . ucfirst($this->name);
         $class = $this->class;
-        if (!method_exists($class, $method)) {
+        if (!$class || !method_exists($class, $method)) {
             return ArrayLib::valuekey($this->getEnum());
         }
         return $class::$method();
@@ -70,7 +70,7 @@ class DBNiceEnum extends DBEnum
     /**
      * @return array
      */
-    public function enumValues($hasEmpty = false)
+    public function enumValues($hasEmpty = false): array
     {
         $arr = $this->toArray();
         if ($hasEmpty) {

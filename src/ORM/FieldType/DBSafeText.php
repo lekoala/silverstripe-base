@@ -11,7 +11,7 @@ use LeKoala\Base\Helpers\StringHelper;
  */
 class DBSafeText extends DBText
 {
-    public function setValue($value, $record = null, $markChanged = true)
+    public function setValue($value, $record = null, $markChanged = true): static
     {
         if ($value !== null) {
             $value = strip_tags($value);
@@ -19,7 +19,7 @@ class DBSafeText extends DBText
         return parent::setValue($value, $record, $markChanged);
     }
 
-    public function HTMLATT()
+    public function HTMLATT(): string
     {
         return StringHelper::escHtmlAtt($this->RAW());
     }

@@ -19,8 +19,9 @@ trait HasSession
      */
     public static function getSession()
     {
-        if (Controller::has_curr()) {
-            $ctrl = Controller::curr();
+        $session = null;
+        $ctrl = Controller::curr();
+        if ($ctrl) {
             $request = $ctrl->getRequest();
             try {
                 $session = $request->getSession();

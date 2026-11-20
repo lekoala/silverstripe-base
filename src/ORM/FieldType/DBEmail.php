@@ -15,7 +15,7 @@ class DBEmail extends DBUntranslatedVarchar
         parent::__construct($name, 254, $options);
     }
 
-    public function scaffoldFormField($title = null, $params = null)
+    public function scaffoldFormField($title = null, $params = []): ?\SilverStripe\Forms\FormField
     {
         // Set field with appropriate size
         $field = InputMaskField::create($this->name, $title);

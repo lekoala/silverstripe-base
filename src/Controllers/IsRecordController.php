@@ -4,7 +4,7 @@ namespace LeKoala\Base\Controllers;
 
 use Exception;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\ORM\PaginatedList;
+use SilverStripe\Model\List\PaginatedList;
 use SilverStripe\Control\HTTPRequest;
 use LeKoala\CommonExtensions\URLSegmentExtension;
 

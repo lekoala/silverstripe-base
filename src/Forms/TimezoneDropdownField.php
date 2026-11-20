@@ -2,7 +2,7 @@
 
 namespace LeKoala\Base\Forms;
 
-use SilverStripe\ORM\ArrayLib;
+use SilverStripe\Core\ArrayLib;
 
 /**
  * A timezone dropdown

@@ -14,7 +14,7 @@ use SilverStripe\ORM\FieldType\DBVarchar;
 class DBWebsite extends DBVarchar
 {
 
-    public function scaffoldFormField($title = null, $params = null)
+    public function scaffoldFormField($title = null, $params = []): ?\SilverStripe\Forms\FormField
     {
         $field = new InputMaskField($this->name, $title);
         $field->setAlias(InputMaskField::ALIAS_URL);

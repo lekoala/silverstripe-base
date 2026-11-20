@@ -4,7 +4,7 @@ namespace LeKoala\Base\Controllers;
 
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPResponse;
-use SilverStripe\ORM\ValidationResult;
+use SilverStripe\Core\Validation\ValidationResult;
 use LeKoala\Base\Subsite\SubsiteHelper;
 
 trait Messaging
